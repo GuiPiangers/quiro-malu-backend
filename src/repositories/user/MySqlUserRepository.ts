@@ -1,5 +1,5 @@
-import { consult } from "../../database/mySqlConnection";
-import { UserDTO } from "../../models/entities/User";
+import { query } from "../database/mySqlConnection";
+import { UserDTO } from "../../core/authentication/models/User";
 import { IUserRepository } from "./IUserRepository";
 
 export class MySqlUserRepository implements IUserRepository {
@@ -7,20 +7,20 @@ export class MySqlUserRepository implements IUserRepository {
         const sql = "SELECT * FROM users WHERE id = ?"
         const errorMessage = `Não foi possível realizar a busca`
 
-        return consult(errorMessage, sql, id)
+        return query(errorMessage, sql, id)
     }
 
     getByEmail(email: string): Promise<UserDTO[]> {
         const sql = "SELECT * FROM users WHERE email = ?"
         const errorMessage = `Não foi possível realizar a busca`
 
-        return consult(errorMessage, sql, email)
+        return query(errorMessage, sql, email)
     }
 
-    create(data: UserDTO): Promise<void> {
+    save(data: UserDTO): Promise<void> {
         const sql = "INSERT INTO users SET ?"
         const errorMessage = "Falha ao adicionar o usuário"
 
-        return consult(errorMessage, sql, data)
+        return query(errorMessage, sql, data)
     }
 }
