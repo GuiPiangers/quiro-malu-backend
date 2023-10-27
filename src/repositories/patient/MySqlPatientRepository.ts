@@ -1,6 +1,6 @@
-import { PatientDTO } from "@quiromalu/core/src/models/entities/Patient";
+import { PatientDTO } from "../../core/patients/models/Patient";
 import { query } from "../server/mySqlConnection";
-import { IPatientRepository } from "@quiromalu/core/src/repositories/patient/IPatientRepository";
+import { IPatientRepository } from "../../repositories/patient/IPatientRepository";
 
 export class MySqlPatientRepository implements IPatientRepository {
     save(data: PatientDTO, userId: string): Promise<void> {

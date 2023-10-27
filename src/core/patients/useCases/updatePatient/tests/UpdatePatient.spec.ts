@@ -1,17 +1,21 @@
-import { PatientDTO } from "../../../models/entities/Patient"
-import { Id } from "../../../models/shared/Id"
-import { IPatientRepository } from "../../../repositories/patient/IPatientRepository"
-import { InMemoryPatientRepository } from "../../../repositories/patient/inMemory/InMemoryPatientRepository"
+import { PatientDTO } from "../../../models/Patient"
+import { Id } from "../../../../shared/Id"
+import { IPatientRepository } from "../../../../../repositories/patient/IPatientRepository"
+import { InMemoryPatientRepository } from "../../../../../repositories/patient/inMemory/InMemoryPatientRepository"
 import { UpdatePatientUseCase } from "../UpdatePatientUseCase"
+import { ILocationRepository } from "../../../../../repositories/location/ILocationRepository"
+import { InMemoryLocation } from "../../../../../repositories/location/InMemoryLocation"
 
 describe("Update patient", () => {
 
     let patientRepository: IPatientRepository
     let updatePatientUseCase: UpdatePatientUseCase
+    let locationRepository: ILocationRepository
 
     beforeAll(() => {
         patientRepository = new InMemoryPatientRepository()
-        updatePatientUseCase = new UpdatePatientUseCase(patientRepository)
+        locationRepository = new InMemoryLocation()
+        updatePatientUseCase = new UpdatePatientUseCase(patientRepository, locationRepository)
     })
 
     it("Should not be able to update a CPF patient to an existing CPF", async () => {

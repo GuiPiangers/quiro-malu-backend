@@ -1,4 +1,4 @@
-import { UserDTO } from "../patients/models/entities/User";
+import { UserDTO } from "../src/core/authentication/models/User";
 
 declare global {
     namespace Express {

@@ -1,4 +1,4 @@
-import { Entity } from "../shared/Entity";
+import { Entity } from "../../shared/Entity";
 
 export interface AnamneseDTO {
     id?: string

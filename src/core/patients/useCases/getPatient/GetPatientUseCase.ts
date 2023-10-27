@@ -1,5 +1,5 @@
-import { ILocationRepository } from "../../repositories/location/ILocatinRepository";
-import { IPatientRepository } from "../../repositories/patient/IPatientRepository";
+import { ILocationRepository } from "../../../../repositories/location/ILocationRepository";
+import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
 
 export class GetPatientUseCase {
     constructor(
@@ -9,7 +9,7 @@ export class GetPatientUseCase {
 
     async execute(patientId: string, userId: string) {
         const getPatient = this.patientRepository.getById(patientId, userId)
-        const getLocation = this.locationRepository.getLocation(patientId)
+        const getLocation = this.locationRepository.getLocation(patientId, userId)
         const [[patient], [location]] = await Promise.all([getPatient, getLocation])
 
         if (location) {

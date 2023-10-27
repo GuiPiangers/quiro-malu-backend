@@ -1,6 +1,6 @@
-import { Patient, PatientDTO } from "../../models/entities/Patient";
-import { ILocationRepository } from "../../repositories/location/ILocatinRepository";
-import { IPatientRepository } from "../../repositories/patient/IPatientRepository";
+import { Patient, PatientDTO } from "../../models/Patient";
+import { ILocationRepository } from "../../../../repositories/location/ILocationRepository";
+import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
 
 export class UpdatePatientUseCase {
   constructor(private patientRepository: IPatientRepository, private locationRepository: ILocationRepository) { }
@@ -17,10 +17,10 @@ export class UpdatePatientUseCase {
     const updatePatient = this.patientRepository.update(patientDTO, id!, userId);
 
     if (location) {
-      const [validateLocation] = await this.locationRepository.getLocation(id!)
+      const [validateLocation] = await this.locationRepository.getLocation(id!, userId)
 
       if (validateLocation) {
-        const updateLocation = this.locationRepository.update(location, id!)
+        const updateLocation = this.locationRepository.update(location, id!, userId)
         await Promise.all([updatePatient, updateLocation])
       }
       else {

@@ -1,4 +1,4 @@
-import { IPatientRepository } from "../../repositories/patient/IPatientRepository";
+import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
 
 export class ListPatientsUseCase {
   constructor(private patientsRepository: IPatientRepository) { }

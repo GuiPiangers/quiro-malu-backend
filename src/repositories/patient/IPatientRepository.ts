@@ -1,4 +1,4 @@
-import { PatientDTO } from "../../models/entities/Patient";
+import { PatientDTO } from "../../core/patients/models/Patient";
 
 export interface IPatientRepository {
     save(patient: PatientDTO, userId: string): Promise<void>;

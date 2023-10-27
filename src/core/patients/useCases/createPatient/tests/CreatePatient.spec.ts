@@ -1,17 +1,20 @@
-import { Patient, PatientDTO } from "../../../models/entities/Patient"
-import { Id } from "../../../models/shared/Id"
-import { IPatientRepository } from "../../../repositories/patient/IPatientRepository"
-import { InMemoryPatientRepository } from "../../../repositories/patient/inMemory/InMemoryPatientRepository"
+import { PatientDTO } from "../../../models/Patient"
+import { IPatientRepository } from "../../../../../repositories/patient/IPatientRepository"
+import { InMemoryPatientRepository } from "../../../../../repositories/patient/inMemory/InMemoryPatientRepository"
 import { CreatePatientUseCase } from "../CreatePatientUseCase"
+import { ILocationRepository } from "../../../../../repositories/location/ILocationRepository"
+import { InMemoryLocation } from "../../../../../repositories/location/InMemoryLocation"
 
 describe("Create patients", () => {
 
     let patientRepository: IPatientRepository
     let createPatientUseCase: CreatePatientUseCase
+    let locationRepository: ILocationRepository
 
     beforeAll(() => {
         patientRepository = new InMemoryPatientRepository()
-        createPatientUseCase = new CreatePatientUseCase(patientRepository)
+        locationRepository = new InMemoryLocation()
+        createPatientUseCase = new CreatePatientUseCase(patientRepository, locationRepository)
     })
 
     it("Should not be able to cadastre a patient with an existing CPF", async () => {

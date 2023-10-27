@@ -1,4 +1,4 @@
-import { UserDTO } from "../../../models/entities/User";
+import { UserDTO } from "../../../core/authentication/models/User";
 import { IUserRepository } from "../IUserRepository";
 
 export class InMemoryUserRepository implements IUserRepository {

@@ -9,7 +9,7 @@ export class GetUserProfileController {
         try {
             const id = request.user.id
 
-            const user = await this.getUserProfileUseCase.execute(id)
+            const user = await this.getUserProfileUseCase.execute(id!)
             const { password: _, ...loggedUser } = user
 
             return response.json(loggedUser)

@@ -1,6 +1,6 @@
-import { PatientDTO } from "../../../models/entities/Patient"
-import { IPatientRepository } from "../../../repositories/patient/IPatientRepository"
-import { InMemoryPatientRepository } from "../../../repositories/patient/inMemory/InMemoryPatientRepository"
+import { PatientDTO } from "../../../models/Patient"
+import { IPatientRepository } from "../../../../../repositories/patient/IPatientRepository"
+import { InMemoryPatientRepository } from "../../../../../repositories/patient/inMemory/InMemoryPatientRepository"
 import { ListPatientsUseCase } from "../ListPatientsUseCase"
 
 describe("List patients", () => {

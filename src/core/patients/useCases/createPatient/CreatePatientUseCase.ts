@@ -1,7 +1,7 @@
-import { Patient, PatientDTO } from "../../models/entities/Patient";
-import { Location } from "../../models/shared/Location";
-import { ILocationRepository } from "../../repositories/location/ILocatinRepository";
-import { IPatientRepository } from "../../repositories/patient/IPatientRepository";
+import { Patient, PatientDTO } from "../../models/Patient";
+import { Location } from "../../../shared/Location";
+import { ILocationRepository } from "../../../../repositories/location/ILocationRepository";
+import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
 
 export class CreatePatientUseCase {
   constructor(private patientRepository: IPatientRepository, private locationRepository: ILocationRepository) { }

@@ -1,6 +1,6 @@
-import { UserDTO } from "../../../models/entities/User"
-import { IUserRepository } from "../../../repositories/user/IUserRepository"
-import { InMemoryUserRepository } from "../../../repositories/user/inMemory/InMemoryUserRepository"
+import { UserDTO } from "../../../models/User"
+import { IUserRepository } from "../../../../../repositories/user/IUserRepository"
+import { InMemoryUserRepository } from "../../../../../repositories/user/inMemory/InMemoryUserRepository"
 import { GetUserProfileUseCase } from "../GetUserProfileUseCase"
 
 describe("get user", () => {

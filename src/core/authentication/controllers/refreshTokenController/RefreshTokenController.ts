@@ -9,7 +9,7 @@ export class RefreshTokenController implements IController {
         try {
             const userId = request.user.id
             const { refreshTokenId } = request.body
-            const token = await this.refreshTokenUseCase.execute(refreshTokenId, userId)
+            const token = await this.refreshTokenUseCase.execute(refreshTokenId, userId!)
             return response.json(token)
         } catch (err: any) {
             return response.status(400).json({

@@ -1,4 +1,4 @@
-import { PatientDTO } from "../../../models/entities/Patient";
+import { PatientDTO } from "../../../core/patients/models/Patient";
 import { IPatientRepository } from "../IPatientRepository";
 
 interface inMemoryInterface extends PatientDTO {

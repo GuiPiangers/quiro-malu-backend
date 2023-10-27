@@ -1,4 +1,4 @@
-import { RefreshTokenDTO } from '../../../models/entities/RefreshToken';
+import { RefreshTokenDTO } from '../../../core/authentication/models/RefreshToken';
 import { IRefreshTokenProvider } from '../IRefreshTokenProvider'
 
 export class InMemoryRefreshToken implements IRefreshTokenProvider {
