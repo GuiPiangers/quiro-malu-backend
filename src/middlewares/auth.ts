@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from 'jsonwebtoken'
 import * as dotenv from 'dotenv'
+import { ApiError } from "../utils/ApiError";
 dotenv.config()
 
 type JwtPayload = {
@@ -10,15 +11,19 @@ type JwtPayload = {
 export const authMiddleware = async (request: Request, response: Response, next: NextFunction) => {
     try {
         const { authorization } = request.headers
-        if (!authorization) throw new Error('Acesso não autorizado')
-
+        if (!authorization) throw new ApiError('Acesso não autorizado', 401)
         const token = authorization.split(' ')[1]
-        const verifyToken = await jwt.verify(token, process.env.JWT_SECRET)
-        request.user = verifyToken as JwtPayload
+        if (!token) throw new ApiError('Acesso não autorizado', 401)
+
+        const verifyToken = await jwt.verify(token, process.env.JWT_SECRET!)
+        request.user = verifyToken as unknown as JwtPayload
         return next()
 
-    } catch (err) {
-        response.json({ message: err }).status(401)
+    } catch (err: any) {
+        const statusCode = err.statusCode ?? 401
+        return response.status(statusCode).json({
+            message: err.message || 'Unexpected error.'
+        })
     }
 
 

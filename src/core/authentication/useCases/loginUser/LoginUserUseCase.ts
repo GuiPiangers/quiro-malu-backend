@@ -4,6 +4,7 @@ import { IRefreshTokenProvider } from "../../../../repositories/token/IRefreshTo
 import { IGenerateTokenProvider } from "../../../../repositories/token/IGenerateTokenProvider";
 import { IUserRepository } from "../../../../repositories/user/IUserRepository";
 import { Crypto } from "../../../shared/helpers/Crypto";
+import { ApiError } from "../../../../utils/ApiError";
 
 export class LoginUserUseCase {
     constructor(
@@ -14,10 +15,10 @@ export class LoginUserUseCase {
 
     async execute(email: string, password: string) {
         const [user] = await this.userRepository.getByEmail(email)
-        if (!user || !user.id) throw new Error("Email ou senha inválidos")
+        if (!user || !user.id) throw new ApiError("Email ou senha inválidos", 400)
 
         const passwordMatch = await Crypto.compareHash(password, user.password)
-        if (!passwordMatch) throw new Error('Email ou senha inválidos')
+        if (!passwordMatch) throw new ApiError('Email ou senha inválidos', 400)
 
         const token = await this.generateTokenProvider.execute(user.id)
         const expiresIn = dayjs().add(15, "days").unix()
@@ -29,7 +30,14 @@ export class LoginUserUseCase {
             id: refreshToken.id
         })
 
-        return { token, refreshToken }
+        return {
+            token,
+            refreshToken: refreshToken.id,
+            user: {
+                email: user.email,
+                name: user.name
+            }
+        }
     }
 
 }

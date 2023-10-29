@@ -17,7 +17,7 @@ router.post('/register', (request, response) => {
 router.post('/login', (request, response) => {
     loginUserController.handle(request, response)
 })
-router.post('/refresh-token', authMiddleware, (request, response) => {
+router.post('/refresh-token', (request, response) => {
     refreshTokenController.handle(request, response)
 })
 router.get('/profile', authMiddleware, (request, response) => {

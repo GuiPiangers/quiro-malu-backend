@@ -13,7 +13,10 @@ export class CreatePatientController {
             response.status(201).send({ message: "Criado com sucesso!" })
         }
         catch (err: any) {
-            response.status(400).json({ message: err.message })
+            const statusCode = err.statusCode ?? 500
+            return response.status(statusCode).json({
+                message: err.message || 'Unexpected error.'
+            })
         }
     }
 }

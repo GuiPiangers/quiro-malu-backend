@@ -1,3 +1,5 @@
+import { ApiError } from "../../utils/ApiError";
+
 export class Name {
   constructor(
     readonly value: string,
@@ -9,20 +11,20 @@ export class Name {
   ) {
     const { min = 3, max = 120, compoundName = false } = config
 
-    if (!value) throw new Error("O nome é obrigatório");
+    if (!value) throw new ApiError("O nome é obrigatório");
 
     if (min > max)
-      throw new Error("valor mínimo não pode ser maior que o valor máximo");
+      throw new ApiError("valor mínimo não pode ser maior que o valor máximo", 400);
 
     if (value.length < min)
-      throw new Error(`Deve ser informado no mínimo ${min} caracteres`);
+      throw new ApiError(`Deve ser informado no mínimo ${min} caracteres`, 400);
 
     if (value.length > max)
-      throw new Error(`Deve ser informado no máximo ${max} caracteres`);
+      throw new ApiError(`Deve ser informado no máximo ${max} caracteres`, 400);
 
     const secondName = value.split(" ")[1];
     if (compoundName && !secondName)
-      throw new Error(`Deve ser informado o nome completo (nome e sobrenome)`);
+      throw new ApiError(`Deve ser informado o nome completo (nome e sobrenome)`, 400);
 
     this.value = this.capitaliseName(value);
   }

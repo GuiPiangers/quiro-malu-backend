@@ -1,3 +1,4 @@
+import { ApiError } from "../../utils/ApiError"
 import { Name } from "./Name"
 
 export interface StateDTO {
@@ -12,7 +13,7 @@ export class State {
         props: StateDTO,
     ) {
         this._name = new Name(props.name)
-        if (props.acronym && props.acronym?.length !== 2) throw new Error('O acrônimo deve conter apenas 2 caracteres')
+        if (props.acronym && props.acronym?.length !== 2) throw new ApiError('O acrônimo deve conter apenas 2 caracteres', 400)
         this.acronym = props.acronym?.toUpperCase()
     }
 

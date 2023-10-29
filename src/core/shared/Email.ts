@@ -1,7 +1,9 @@
+import { ApiError } from "../../utils/ApiError";
+
 export class Email {
   constructor(readonly value: string) {
-    if (!value.includes("@")) throw new Error("email inválido");
+    if (!value.includes("@")) throw new ApiError("email inválido", 400);
     const [, domain] = value.split("@");
-    if (!domain.includes(".")) throw new Error("email inválido");
+    if (!domain.includes(".")) throw new ApiError("email inválido", 400);
   }
 }

@@ -1,5 +1,6 @@
 import mysql from 'mysql2'
 import * as dotenv from 'dotenv'
+import { ApiError } from '../../utils/ApiError';
 dotenv.config()
 
 const connection = mysql.createConnection({
@@ -10,7 +11,7 @@ const connection = mysql.createConnection({
 });
 
 connection.connect(err => {
-    if (err) throw new Error("falha ao realizar a conexão com o banco de dados" + err)
+    if (err) throw new ApiError("falha ao realizar a conexão com o banco de dados" + err, 500)
 
     console.log('Conexão realizada com sucesso')
 })

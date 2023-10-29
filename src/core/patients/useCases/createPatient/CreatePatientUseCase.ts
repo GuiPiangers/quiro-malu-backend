@@ -2,6 +2,7 @@ import { Patient, PatientDTO } from "../../models/Patient";
 import { Location } from "../../../shared/Location";
 import { ILocationRepository } from "../../../../repositories/location/ILocationRepository";
 import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
+import { ApiError } from "../../../../utils/ApiError";
 
 export class CreatePatientUseCase {
   constructor(private patientRepository: IPatientRepository, private locationRepository: ILocationRepository) { }
@@ -12,7 +13,7 @@ export class CreatePatientUseCase {
 
     if (patient.cpf) {
       const [verifyCpf] = await this.patientRepository.getByCpf(patient.cpf, userId)
-      if (verifyCpf) throw new Error('Já existe um usuário cadastrado com esse CPF')
+      if (verifyCpf) throw new ApiError('Já existe um usuário cadastrado com esse CPF', 400)
     }
 
     await this.patientRepository.save(patientDTO, userId);

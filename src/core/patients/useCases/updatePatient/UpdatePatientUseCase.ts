@@ -1,6 +1,7 @@
 import { Patient, PatientDTO } from "../../models/Patient";
 import { ILocationRepository } from "../../../../repositories/location/ILocationRepository";
 import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
+import { ApiError } from "../../../../utils/ApiError";
 
 export class UpdatePatientUseCase {
   constructor(private patientRepository: IPatientRepository, private locationRepository: ILocationRepository) { }
@@ -11,7 +12,7 @@ export class UpdatePatientUseCase {
 
     if (patient.cpf) {
       const [verifyPatient] = await this.patientRepository.getByCpf(patient.cpf, userId)
-      if (verifyPatient && verifyPatient.id !== patient.id) throw new Error('Já existe um usuário cadastrado com esse CPF')
+      if (verifyPatient && verifyPatient.id !== patient.id) throw new ApiError('Já existe um usuário cadastrado com esse CPF', 400)
     }
 
     const updatePatient = this.patientRepository.update(patientDTO, id!, userId);
