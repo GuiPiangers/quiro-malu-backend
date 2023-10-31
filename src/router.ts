@@ -8,6 +8,7 @@ import { createPatientController } from "./core/patients/controllers/createPatie
 import { listPatientsController } from "./core/patients/controllers/listPatientsController";
 import { getPatientController } from "./core/patients/controllers/getPatientController";
 import { updatePatientController } from "./core/patients/controllers/updatePatientContoller";
+import { logoutController } from "./core/authentication/controllers/logout";
 
 const router = Router()
 
@@ -16,6 +17,9 @@ router.post('/register', (request, response) => {
 })
 router.post('/login', (request, response) => {
     loginUserController.handle(request, response)
+})
+router.post('/logout', (request, response) => {
+    logoutController.handle(request, response)
 })
 router.post('/refresh-token', (request, response) => {
     refreshTokenController.handle(request, response)
