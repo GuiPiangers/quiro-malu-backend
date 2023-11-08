@@ -10,7 +10,7 @@ export class MySqlLocationRepository implements ILocationRepository {
 
         return query(errorMessage, sql, {
             ...data,
-            state: data.state?.name || null,
+            state: data.state,
             userId: userId,
             patientId: patientId
         })

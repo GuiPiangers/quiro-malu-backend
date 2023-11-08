@@ -8,7 +8,7 @@ export class CreateUserController {
         try {
             const { name, password, email, phone } = request.body
             await this.createUserUseCase.execute({ name, password, email, phone })
-            response.status(201).send("Criado com sucesso!")
+            response.status(201).json({ name, password, email, phone })
         }
         catch (err: any) {
             const statusCode = err.statusCode ?? 500

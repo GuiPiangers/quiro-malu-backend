@@ -7,6 +7,7 @@ export class CreatePatientController {
     async handle(request: Request, response: Response) {
         try {
             const data = request.body as PatientDTO
+            console.log(data)
             const userId = request.user.id
 
             await this.createPatientUseCase.execute(data, userId!)

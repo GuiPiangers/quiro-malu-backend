@@ -7,7 +7,8 @@ export class GetPatientController {
     async handle(request: Request, response: Response): Promise<void> {
         try {
             const userId = request.user.id
-            const { id: patientId } = request.body
+            const { id: patientId } = request.params
+            console.log(patientId)
             const patients = await this.listPatientsUseCase.execute(patientId, userId!)
 
             response.json(patients)

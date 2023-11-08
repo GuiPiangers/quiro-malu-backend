@@ -34,10 +34,10 @@ router.post('/patients', authMiddleware, (request, response) => {
 router.get('/patients', authMiddleware, (request, response) => {
     listPatientsController.handle(request, response)
 })
-router.post('/patient', authMiddleware, (request, response) => {
+router.get('/patients/:id', authMiddleware, (request, response) => {
     getPatientController.handle(request, response)
 })
-router.patch('/patient', authMiddleware, (request, response) => {
+router.patch('/patients', authMiddleware, (request, response) => {
     updatePatientController.handle(request, response)
 })
 

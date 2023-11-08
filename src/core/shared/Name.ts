@@ -24,7 +24,7 @@ export class Name {
 
     const secondName = value.split(" ")[1];
     if (compoundName && !secondName)
-      throw new ApiError(`Deve ser informado o nome completo (nome e sobrenome)`, 400);
+      throw new ApiError(`O valor deve ser um nome composto`, 400);
 
     this.value = this.capitaliseName(value);
   }
