@@ -16,7 +16,7 @@ export class MySqlPatientRepository implements IPatientRepository {
         return query(errorMessage, sql, [data, patientId, userId])
     }
     getAll(userId: string): Promise<PatientDTO[]> {
-        const sql = "SELECT name, phone, id, dateOfBirth  FROM patients WHERE userId = ?"
+        const sql = "SELECT name, phone, id, dateOfBirth  FROM patients WHERE userId = ? ORDER BY updateAt DESC"
         const errorMessage = `Não foi possível realizar a busca`
         return query(errorMessage, sql, [userId])
     }
