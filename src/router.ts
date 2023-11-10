@@ -9,6 +9,7 @@ import { listPatientsController } from "./core/patients/controllers/listPatients
 import { getPatientController } from "./core/patients/controllers/getPatientController";
 import { updatePatientController } from "./core/patients/controllers/updatePatientContoller";
 import { logoutController } from "./core/authentication/controllers/logout";
+import { deletePatientController } from "./core/patients/controllers/deletePatientsController";
 
 const router = Router()
 
@@ -39,6 +40,9 @@ router.get('/patients/:id', authMiddleware, (request, response) => {
 })
 router.patch('/patients', authMiddleware, (request, response) => {
     updatePatientController.handle(request, response)
+})
+router.delete('/patients', authMiddleware, (request, response) => {
+    deletePatientController.handle(request, response)
 })
 
 export { router }

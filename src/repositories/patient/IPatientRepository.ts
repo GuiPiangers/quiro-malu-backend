@@ -6,4 +6,5 @@ export interface IPatientRepository {
     getAll(userId: string): Promise<PatientDTO[]>
     getByCpf(cpf: string, userId: string): Promise<PatientDTO[]>
     getById(patientId: string, userId: string): Promise<PatientDTO[]>;
+    delete(patientId: string, userId: string): Promise<void>
 }

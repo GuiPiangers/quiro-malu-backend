@@ -21,14 +21,20 @@ export class MySqlPatientRepository implements IPatientRepository {
         return query(errorMessage, sql, [userId])
     }
     getByCpf(cpf: string, userId: string): Promise<PatientDTO[]> {
-        const sql = "SELECT * FROM patients WHERE cpf = ? and userId = ?"
+        const sql = "SELECT * FROM patients WHERE cpf = ? AND userId = ?"
         const errorMessage = `Não foi possível realizar a busca`
 
         return query(errorMessage, sql, [cpf, userId])
     }
     getById(patientId: string, userId: string): Promise<PatientDTO[]> {
-        const sql = "SELECT * FROM patients WHERE id = ? and userId = ?"
+        const sql = "SELECT * FROM patients WHERE id = ? AND userId = ?"
         const errorMessage = `Não foi possível realizar a busca`
+
+        return query(errorMessage, sql, [patientId, userId])
+    }
+    delete(patientId: string, userId: string): Promise<void> {
+        const sql = "DELETE FROM patients WHERE id = ? AND userId = ?"
+        const errorMessage = `Não foi possível deletar o paciente`
 
         return query(errorMessage, sql, [patientId, userId])
     }
