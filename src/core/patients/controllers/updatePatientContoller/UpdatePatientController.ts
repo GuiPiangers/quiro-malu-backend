@@ -13,7 +13,7 @@ export class UpdatePatientController {
             const patientDTO = patient.getPatientDTO()
 
             await this.updatePatientUseCase.execute(patientDTO, userId!)
-            response.status(201).send("Atualizado com sucesso!")
+            response.status(201).json({ message: 'Atualizado com sucesso!' })
         }
         catch (err: any) {
             const statusCode = err.statusCode ?? 500

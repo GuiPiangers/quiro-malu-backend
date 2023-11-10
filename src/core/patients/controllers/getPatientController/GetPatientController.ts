@@ -8,7 +8,6 @@ export class GetPatientController {
         try {
             const userId = request.user.id
             const { id: patientId } = request.params
-            console.log(patientId)
             const patients = await this.listPatientsUseCase.execute(patientId, userId!)
 
             response.json(patients)
