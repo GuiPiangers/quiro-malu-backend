@@ -15,7 +15,9 @@ export class SetDiagnosticController {
         catch (err: any) {
             const statusCode = err.statusCode ?? 500
             return response.status(statusCode).json({
-                message: err.message || 'Unexpected error.'
+                message: err.message || 'Unexpected error.',
+                statusCode: err.statusCode ?? 500,
+                type: err.type,
             })
         }
     }

@@ -9,14 +9,16 @@ export class GetDiagnosticController {
             const userId = request.user.id
             const { patientId } = request.params
             console.log(patientId)
-            const diagnosticData = await this.listDiagnosticUseCase.execute(patientId, userId!)
+            const { diagnostic, treatmentPlan } = await this.listDiagnosticUseCase.execute(patientId, userId!)
 
-            response.json(diagnosticData)
+            response.json({ diagnostic, treatmentPlan, patientId })
         }
         catch (err: any) {
             const statusCode = err.statusCode ?? 500
             response.status(statusCode).json({
-                message: err.message || 'Unexpected error.'
+                message: err.message || 'Unexpected error.',
+                statusCode: err.statusCode ?? 500,
+                type: err.type,
             })
         }
     }

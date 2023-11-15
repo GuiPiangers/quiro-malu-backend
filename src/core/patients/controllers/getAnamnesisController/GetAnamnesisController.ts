@@ -8,15 +8,16 @@ export class GetAnamnesisController {
         try {
             const userId = request.user.id
             const { patientId } = request.params
-            console.log(patientId)
-            const AnamnesisData = await this.listAnamnesisUseCase.execute(patientId, userId!)
+            const { patientId: _, ...AnamnesisData } = await this.listAnamnesisUseCase.execute(patientId, userId!)
 
-            response.json(AnamnesisData)
+            response.json({ patientId, ...AnamnesisData })
         }
         catch (err: any) {
             const statusCode = err.statusCode ?? 500
             response.status(statusCode).json({
-                message: err.message || 'Unexpected error.'
+                message: err.message || 'Unexpected error.',
+                statusCode: err.statusCode ?? 500,
+                type: err.type,
             })
         }
     }

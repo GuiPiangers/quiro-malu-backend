@@ -12,7 +12,7 @@ export class CreatePatientUseCase {
 
     if (patient.cpf) {
       const [verifyCpf] = await this.patientRepository.getByCpf(patient.cpf, userId)
-      if (verifyCpf) throw new ApiError('Já existe um usuário cadastrado com esse CPF', 400)
+      if (verifyCpf) throw new ApiError('Já existe um usuário cadastrado com esse CPF', 400, 'cpf')
     }
 
     await this.patientRepository.save(patientDTO, userId);
