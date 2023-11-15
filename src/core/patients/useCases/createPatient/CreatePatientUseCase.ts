@@ -1,5 +1,4 @@
 import { Patient, PatientDTO } from "../../models/Patient";
-import { Location } from "../../../shared/Location";
 import { ILocationRepository } from "../../../../repositories/location/ILocationRepository";
 import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
 import { ApiError } from "../../../../utils/ApiError";
