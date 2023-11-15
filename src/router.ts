@@ -10,6 +10,7 @@ import { getPatientController } from "./core/patients/controllers/getPatientCont
 import { updatePatientController } from "./core/patients/controllers/updatePatientContoller";
 import { logoutController } from "./core/authentication/controllers/logout";
 import { deletePatientController } from "./core/patients/controllers/deletePatientsController";
+import { setAnamnesisController } from "./core/patients/controllers/setAnamnesisController";
 
 const router = Router()
 
@@ -41,8 +42,13 @@ router.get('/patients/:id', authMiddleware, (request, response) => {
 router.patch('/patients', authMiddleware, (request, response) => {
     updatePatientController.handle(request, response)
 })
+
 router.delete('/patients', authMiddleware, (request, response) => {
     deletePatientController.handle(request, response)
+})
+
+router.put('/patients/anamnesis', authMiddleware, (request, response) => {
+    setAnamnesisController.handle(request, response)
 })
 
 export { router }
