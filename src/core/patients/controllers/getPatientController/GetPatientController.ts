@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { GetPatientUseCase } from "../../useCases/getPatient/GetPatientUseCase";
+import { responseError } from "../../../../utils/ResponseError";
 
 export class GetPatientController {
     constructor(private listPatientsUseCase: GetPatientUseCase) { }
@@ -13,12 +14,7 @@ export class GetPatientController {
             response.json(patients)
         }
         catch (err: any) {
-            const statusCode = err.statusCode ?? 500
-            response.status(statusCode).json({
-                message: err.message || 'Unexpected error.',
-                statusCode: err.statusCode ?? 500,
-                type: err.type,
-            })
+            responseError(response, err)
         }
     }
 

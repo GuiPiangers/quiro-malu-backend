@@ -1,4 +1,3 @@
-import { ILocationRepository } from "../../../../repositories/location/ILocationRepository";
 import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
 
 export class DeletePatientUseCase {

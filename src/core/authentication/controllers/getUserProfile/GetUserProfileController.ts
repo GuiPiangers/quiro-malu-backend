@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { GetUserProfileUseCase } from "../../useCases/getUser/GetUserProfileUseCase";
+import { responseError } from "../../../../utils/ResponseError";
 
 export class GetUserProfileController {
     constructor(private getUserProfileUseCase: GetUserProfileUseCase) { }
@@ -14,10 +15,7 @@ export class GetUserProfileController {
 
             return response.json(loggedUser)
         } catch (err: any) {
-            const statusCode = err.statusCode ?? 500
-            return response.status(statusCode).json({
-                message: err.message || 'Unexpected error.'
-            })
+            return responseError(response, err)
         }
     }
 }

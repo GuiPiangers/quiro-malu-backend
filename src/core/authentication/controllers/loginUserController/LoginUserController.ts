@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { LoginUserUseCase } from "../..//useCases/loginUser/LoginUserUseCase";
+import { responseError } from "../../../../utils/ResponseError";
 
 export class LoginUserController {
     constructor(private loginUserUseCase: LoginUserUseCase) { }
@@ -11,10 +12,7 @@ export class LoginUserController {
 
             return response.json({ token, refreshToken, user }).status(200)
         } catch (err: any) {
-            const statusCode = err.statusCode ?? 500
-            return response.status(statusCode).json({
-                message: err.message || 'Unexpected error.'
-            })
+            return responseError(response, err)
         }
     }
 }

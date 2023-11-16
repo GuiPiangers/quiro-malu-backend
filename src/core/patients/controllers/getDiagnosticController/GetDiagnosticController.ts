@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { GetDiagnosticUseCase } from "../../useCases/getDiagnostic/GetDiagnosticUseCase";
+import { responseError } from "../../../../utils/ResponseError";
 
 export class GetDiagnosticController {
     constructor(private listDiagnosticUseCase: GetDiagnosticUseCase) { }
@@ -8,18 +9,12 @@ export class GetDiagnosticController {
         try {
             const userId = request.user.id
             const { patientId } = request.params
-            console.log(patientId)
             const { diagnostic, treatmentPlan } = await this.listDiagnosticUseCase.execute(patientId, userId!)
 
             response.json({ diagnostic, treatmentPlan, patientId })
         }
         catch (err: any) {
-            const statusCode = err.statusCode ?? 500
-            response.status(statusCode).json({
-                message: err.message || 'Unexpected error.',
-                statusCode: err.statusCode ?? 500,
-                type: err.type,
-            })
+            responseError(response, err)
         }
     }
 

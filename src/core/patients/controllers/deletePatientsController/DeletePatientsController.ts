@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { DeletePatientUseCase } from "../../useCases/deletePatient/DeletePatientUseCase";
+import { responseError } from "../../../../utils/ResponseError";
 
 export class DeletePatientsController {
     constructor(private deletePatientsUseCase: DeletePatientUseCase) { }
@@ -11,12 +12,7 @@ export class DeletePatientsController {
 
             response.json({ message: 'Paciente deletado com sucesso!' })
         } catch (err: any) {
-            const statusCode = err.statusCode ?? 500
-            response.status(statusCode).json({
-                message: err.message || 'Unexpected error.',
-                statusCode: err.statusCode ?? 500,
-                type: err.type,
-            })
+            responseError(response, err)
         }
     }
 

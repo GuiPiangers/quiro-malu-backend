@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { LogoutUseCase } from "../../useCases/logout/logoutUseCase";
+import { responseError } from "../../../../utils/ResponseError";
 
 export class LogoutController {
     constructor(private logoutUseCase: LogoutUseCase) { }
@@ -10,10 +11,7 @@ export class LogoutController {
             await this.logoutUseCase.execute(refreshTokenId)
             return response.json({ message: 'deslogado com sucesso' })
         } catch (err: any) {
-            const statusCode = err.statusCode ?? 500
-            return response.status(statusCode).json({
-                message: err.message || 'Unexpected error.'
-            })
+            return responseError(response, err)
         }
     }
 }

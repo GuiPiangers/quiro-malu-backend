@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UpdatePatientUseCase } from "../../useCases/updatePatient/UpdatePatientUseCase";
 import { Patient, PatientDTO } from "../../models/Patient";
+import { responseError } from "../../../../utils/ResponseError";
 
 export class UpdatePatientController {
     constructor(private updatePatientUseCase: UpdatePatientUseCase) { }
@@ -16,12 +17,7 @@ export class UpdatePatientController {
             response.status(201).json({ message: 'Atualizado com sucesso!' })
         }
         catch (err: any) {
-            const statusCode = err.statusCode ?? 500
-            response.status(statusCode).json({
-                message: err.message || 'Unexpected error.',
-                statusCode: err.statusCode ?? 500,
-                type: err.type,
-            })
+            responseError(response, err)
         }
     }
 }

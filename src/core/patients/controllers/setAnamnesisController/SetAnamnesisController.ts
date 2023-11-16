@@ -1,6 +1,7 @@
 import { SetAnamnesisUseCase } from "../../useCases/setAnamnesis/SetAnamnesisUseCase";
 import { Request, Response } from "express";
 import { AnamnesisDTO } from "../../models/Anamnesis";
+import { responseError } from "../../../../utils/ResponseError";
 
 export class SetAnamnesisController {
     constructor(private setAnamnesisUseCase: SetAnamnesisUseCase) { }
@@ -13,12 +14,7 @@ export class SetAnamnesisController {
             response.status(201).json({ message: "Criado com sucesso!" })
         }
         catch (err: any) {
-            const statusCode = err.statusCode ?? 500
-            return response.status(statusCode).json({
-                message: err.message || 'Unexpected error.',
-                statusCode: err.statusCode ?? 500,
-                type: err.type,
-            })
+            return responseError(response, err)
         }
     }
 }
