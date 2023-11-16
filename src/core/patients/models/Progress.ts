@@ -8,6 +8,8 @@ export interface ProgressDTO {
     actualProblem: string | null
     procedures: string | null
     date: string | null
+    createAt?: string
+    updateAt?: string
 }
 
 export class Progress extends Entity {
