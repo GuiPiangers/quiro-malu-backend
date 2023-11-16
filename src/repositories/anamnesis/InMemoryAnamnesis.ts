@@ -1,7 +1,7 @@
 import { AnamnesisDTO } from "../../core/patients/models/Anamnesis"
 import { IAnamnesisRepository } from "./IAnamnesisRepository"
 
-export class InMemoryLocation implements IAnamnesisRepository {
+export class InMemoryAnamnesis implements IAnamnesisRepository {
     private dbLocation: (AnamnesisDTO & { patientId: string, userId: string })[] = []
     async save({ patientId, ...data }: AnamnesisDTO, userId: string): Promise<void> {
         this.dbLocation.push({ ...data, patientId, userId })

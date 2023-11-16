@@ -6,6 +6,9 @@ interface inMemoryInterface extends PatientDTO {
 }
 
 export class InMemoryPatientRepository implements IPatientRepository {
+    delete(patientId: string, userId: string): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
     private dbPatients: inMemoryInterface[] = []
 
     async update(data: PatientDTO, userId: string): Promise<void> {

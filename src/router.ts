@@ -14,6 +14,9 @@ import { setAnamnesisController } from "./core/patients/controllers/setAnamnesis
 import { setDiagnosticController } from "./core/patients/controllers/setDiagnosticController";
 import { getDiagnosticController } from "./core/patients/controllers/getDiagnosticController";
 import { getAnamnesisController } from "./core/patients/controllers/getAnamnesisController";
+import { setProgressController } from "./core/patients/controllers/setProgressController";
+import { getProgressController } from "./core/patients/controllers/getProgressController";
+import { listProgressController } from "./core/patients/controllers/listProgressController";
 
 const router = Router()
 
@@ -61,6 +64,17 @@ router.get('/patients/diagnostic/:patientId', authMiddleware, (request, response
 })
 router.put('/patients/diagnostic', authMiddleware, (request, response) => {
     setDiagnosticController.handle(request, response)
+})
+
+router.put('/patients/progress', authMiddleware, (request, response) => {
+    setProgressController.handle(request, response)
+})
+
+router.get('/patients/progress/:patientId', authMiddleware, (request, response) => {
+    listProgressController.handle(request, response)
+})
+router.get('/patients/progress/:patientId/:id', authMiddleware, (request, response) => {
+    getProgressController.handle(request, response)
 })
 
 export { router }

@@ -1,7 +1,7 @@
 import { DiagnosticDTO } from "../../core/patients/models/Diagnostic"
 import { IDiagnosticRepository } from "./IDiagnosticRepository"
 
-export class InMemoryLocation implements IDiagnosticRepository {
+export class InMemoryDiagnostic implements IDiagnosticRepository {
     private dbLocation: (DiagnosticDTO & { patientId: string, userId: string })[] = []
     async save({ patientId, ...data }: DiagnosticDTO, userId: string): Promise<void> {
         this.dbLocation.push({ ...data, patientId, userId })

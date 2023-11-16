@@ -3,6 +3,7 @@ import { Entity } from "../../shared/Entity";
 import { Name } from "../../shared/Name";
 import { Phone } from "../../shared/Phone";
 import { Location, LocationDTO } from "../../shared/Location";
+import { DateTime } from "../../shared/Date";
 
 export interface PatientDTO {
     id?: string
@@ -16,7 +17,7 @@ export interface PatientDTO {
 
 export class Patient extends Entity {
     readonly name: Name
-    readonly dateOfBirth: string | null
+    readonly dateOfBirth: DateTime | null
     readonly gender: "masculino" | "feminino" | null
     private _phone: Phone
     private _cpf: Cpf | null
@@ -30,7 +31,7 @@ export class Patient extends Entity {
         this._phone = new Phone(phone)
         this._location = location ? new Location(location) : null
         this._cpf = cpf ? new Cpf(cpf) : null
-        this.dateOfBirth = dateOfBirth ? dateOfBirth : null
+        this.dateOfBirth = dateOfBirth ? new DateTime(dateOfBirth, { onlyPassDate: true }) : null
         this.gender = gender ? gender : null
 
     }
@@ -47,7 +48,7 @@ export class Patient extends Entity {
             cpf: this.cpf,
             location: location,
             phone: this.phone,
-            dateOfBirth: this.dateOfBirth,
+            dateOfBirth: this.dateOfBirth?.date,
             gender: this.gender
         }
     }
