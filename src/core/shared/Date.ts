@@ -8,7 +8,6 @@ type DateTimeConfig = {
 export class DateTime {
     constructor(readonly value: string, { onlyPassDate, onlyFutureDate }: DateTimeConfig = {}) {
         if (!this.isValidDate(value)) throw new ApiError('A data informada não é válida', 400, 'date')
-
         const date = new Date(value)
         const now = new Date()
 
@@ -19,7 +18,10 @@ export class DateTime {
             if (date < now) throw new ApiError('A data informada precisa ser anterior a data atual', 400, 'date')
         }
 
-        this.value = new Date(value).toISOString()
+        const dateValue = date.toISOString().substring(0, 10)
+        const timeValue = date.toTimeString().substring(0, 5)
+
+        this.value = `${dateValue}T${timeValue}`
     }
 
     private isValidDate(dateString: string) {
@@ -30,6 +32,7 @@ export class DateTime {
     get date() {
         return this.value.substring(0, 10)
     }
+
     get time() {
         return this.value.substring(11, 5)
     }

@@ -8,7 +8,6 @@ export class SetProgressUseCase {
         const progress = new Progress(data)
         const progressDTO = progress.getDTO()
         const [progressAlreadyExist] = await this.ProgressRepository.get(progressDTO.id!, progressDTO.patientId, userId)
-
         if (!data.patientId) throw new ApiError('Deve ser informado o patientId')
 
         if (progressAlreadyExist) {
@@ -17,6 +16,7 @@ export class SetProgressUseCase {
         else {
             await this.ProgressRepository.save(progressDTO, userId);
         }
+
         return progressDTO
     }
 }

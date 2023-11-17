@@ -34,7 +34,7 @@ export class Progress extends Entity {
             patientId: this.patientId,
             service: this.service || null,
             actualProblem: this.actualProblem || null,
-            date: this.date?.date || null,
+            date: this.date?.value || null,
             procedures: this.procedures || null,
         }
     }
