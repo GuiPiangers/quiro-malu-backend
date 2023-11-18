@@ -17,6 +17,7 @@ import { getAnamnesisController } from "./core/patients/controllers/getAnamnesis
 import { setProgressController } from "./core/patients/controllers/setProgressController";
 import { getProgressController } from "./core/patients/controllers/getProgressController";
 import { listProgressController } from "./core/patients/controllers/listProgressController";
+import { deleteProgressController } from "./core/patients/controllers/deleteProgressController";
 
 const router = Router()
 
@@ -68,6 +69,9 @@ router.put('/patients/diagnostic', authMiddleware, (request, response) => {
 
 router.put('/patients/progress', authMiddleware, (request, response) => {
     setProgressController.handle(request, response)
+})
+router.delete('/patients/progress', authMiddleware, (request, response) => {
+    deleteProgressController.handle(request, response)
 })
 
 router.get('/patients/progress/:patientId', authMiddleware, (request, response) => {

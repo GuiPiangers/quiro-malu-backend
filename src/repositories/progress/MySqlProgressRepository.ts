@@ -30,7 +30,7 @@ export class MySqlProgressRepository implements IProgressRepository {
     }
 
     list(patientId: string, userId: string): Promise<ProgressDTO[]> {
-        const sql = "SELECT * FROM progress WHERE patientId = ? AND userId = ?"
+        const sql = "SELECT * FROM progress WHERE patientId = ? AND userId = ? ORDER BY date DESC"
         const errorMessage = `Não foi possível realizar a busca`
 
         return query(errorMessage, sql, [patientId, userId])
