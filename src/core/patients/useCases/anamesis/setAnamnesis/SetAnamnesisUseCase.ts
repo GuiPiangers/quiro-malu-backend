@@ -1,5 +1,5 @@
-import { Anamnesis, AnamnesisDTO } from "../../models/Anamnesis";
-import { IAnamnesisRepository } from "../../../../repositories/anamnesis/IAnamnesisRepository";
+import { Anamnesis, AnamnesisDTO } from "../../../models/Anamnesis";
+import { IAnamnesisRepository } from "../../../../../repositories/anamnesis/IAnamnesisRepository";
 
 export class SetAnamnesisUseCase {
     constructor(private anamnesisRepository: IAnamnesisRepository) { }

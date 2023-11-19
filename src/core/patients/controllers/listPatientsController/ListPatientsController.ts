@@ -7,7 +7,10 @@ export class ListPatientsController {
     async handle(request: Request, response: Response): Promise<void> {
         try {
             const userId = request.user.id
-            const patients = await this.listPatientsUseCase.execute(userId!)
+            const { page } = request.query
+            const patients = await this.listPatientsUseCase.execute({ userId: userId!, page: +page! as number })
+
+            console.log(patients)
 
             response.json(patients)
         } catch (err: any) {

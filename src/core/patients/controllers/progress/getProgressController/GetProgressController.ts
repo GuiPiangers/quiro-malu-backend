@@ -1,8 +1,8 @@
-import { GetProgressUseCase } from "../../useCases/getProgress/GetProgressUseCase";
+import { GetProgressUseCase } from "../../../useCases/progress/getProgress/GetProgressUseCase";
 import { Request, Response } from "express";
-import { ProgressDTO } from "../../models/Progress";
-import { responseError } from "../../../../utils/ResponseError";
-import { ApiError } from "../../../../utils/ApiError";
+import { ProgressDTO } from "../../../models/Progress";
+import { responseError } from "../../../../../utils/ResponseError";
+import { ApiError } from "../../../../../utils/ApiError";
 
 export class GetProgressController {
     constructor(private getProgressUseCase: GetProgressUseCase) { }
@@ -13,7 +13,7 @@ export class GetProgressController {
 
             if (!id) throw new ApiError('O id e o patientId devem ser informados', 400)
 
-            const progress = await this.getProgressUseCase.execute(id, patientId, userId!)
+            const progress = await this.getProgressUseCase.execute({ id, patientId, userId: userId! })
             response.status(200).json(progress)
         }
         catch (err: any) {

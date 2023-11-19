@@ -1,4 +1,4 @@
-import { IAnamnesisRepository } from "../../../../repositories/anamnesis/IAnamnesisRepository";
+import { IAnamnesisRepository } from "../../../../../repositories/anamnesis/IAnamnesisRepository";
 
 export class GetAnamnesisUseCase {
     constructor(

@@ -1,7 +1,7 @@
-import { SetProgressUseCase } from "../../useCases/setProgress/SetProgressUseCase";
+import { SetProgressUseCase } from "../../../useCases/progress/setProgress/SetProgressUseCase";
 import { Request, Response } from "express";
-import { ProgressDTO } from "../../models/Progress";
-import { responseError } from "../../../../utils/ResponseError";
+import { ProgressDTO } from "../../../models/Progress";
+import { responseError } from "../../../../../utils/ResponseError";
 
 export class SetProgressController {
     constructor(private setProgressUseCase: SetProgressUseCase) { }
@@ -10,7 +10,7 @@ export class SetProgressController {
             const data = request.body as ProgressDTO
             const userId = request.user.id
 
-            const progress = await this.setProgressUseCase.execute(data, userId!)
+            const progress = await this.setProgressUseCase.execute({ ...data, userId: userId! })
             response.status(201).json(progress)
         }
         catch (err: any) {

@@ -1,5 +1,5 @@
-import { MySqlProgressRepository } from "../../../../repositories/progress/MySqlProgressRepository";
-import { ListProgressUseCase } from "../../useCases/listProgress/ListProgressUseCase";
+import { MySqlProgressRepository } from "../../../../../repositories/progress/MySqlProgressRepository";
+import { ListProgressUseCase } from "../../../useCases/progress/listProgress/ListProgressUseCase";
 import { ListProgressController } from "./ListProgressController";
 
 const ProgressRepository = new MySqlProgressRepository()

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { GetDiagnosticUseCase } from "../../useCases/getDiagnostic/GetDiagnosticUseCase";
+import { GetDiagnosticUseCase } from "../../useCases/diagnostic/getDiagnostic/GetDiagnosticUseCase";
 import { responseError } from "../../../../utils/ResponseError";
 
 export class GetDiagnosticController {

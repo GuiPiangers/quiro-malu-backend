@@ -1,4 +1,4 @@
-import { SetAnamnesisUseCase } from "../../useCases/setAnamnesis/SetAnamnesisUseCase";
+import { SetAnamnesisUseCase } from "../../useCases/anamesis/setAnamnesis/SetAnamnesisUseCase";
 import { Request, Response } from "express";
 import { AnamnesisDTO } from "../../models/Anamnesis";
 import { responseError } from "../../../../utils/ResponseError";

@@ -1,5 +1,5 @@
 import { MySqlAnamnesisRepository } from "../../../../repositories/anamnesis/MySqlAnamnesisRepository";
-import { SetAnamnesisUseCase } from "../../useCases/setAnamnesis/SetAnamnesisUseCase";
+import { SetAnamnesisUseCase } from "../../useCases/anamesis/setAnamnesis/SetAnamnesisUseCase";
 import { SetAnamnesisController } from "./SetAnamnesisController";
 
 const anamnesisRepository = new MySqlAnamnesisRepository()

@@ -1,5 +1,5 @@
-import { MySqlProgressRepository } from "../../../../repositories/progress/MySqlProgressRepository";
-import { DeleteProgressUseCase } from "../../useCases/deleteProgress/DeleteProgressUseCase";
+import { MySqlProgressRepository } from "../../../../../repositories/progress/MySqlProgressRepository";
+import { DeleteProgressUseCase } from "../../../useCases/progress/deleteProgress/DeleteProgressUseCase";
 import { DeleteProgressController } from "./DeleteProgressController";
 
 const ProgressRepository = new MySqlProgressRepository()

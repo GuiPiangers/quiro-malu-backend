@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { GetAnamnesisUseCase } from "../../useCases/getAnamnesis/GetAnamnesisUseCase";
+import { GetAnamnesisUseCase } from "../../useCases/anamesis/getAnamnesis/GetAnamnesisUseCase";
 import { responseError } from "../../../../utils/ResponseError";
 
 export class GetAnamnesisController {

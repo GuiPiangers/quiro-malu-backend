@@ -1,6 +1,6 @@
-import { Diagnostic, DiagnosticDTO } from "../../models/Diagnostic";
-import { IDiagnosticRepository } from "../../../../repositories/diagnostic/IDiagnosticRepository";
-import { ApiError } from "../../../../utils/ApiError";
+import { Diagnostic, DiagnosticDTO } from "../../../models/Diagnostic";
+import { IDiagnosticRepository } from "../../../../../repositories/diagnostic/IDiagnosticRepository";
+import { ApiError } from "../../../../../utils/ApiError";
 
 export class SetDiagnosticUseCase {
     constructor(private DiagnosticRepository: IDiagnosticRepository) { }

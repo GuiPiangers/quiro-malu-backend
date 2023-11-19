@@ -4,7 +4,7 @@ import { IProgressRepository } from "./IProgressRepository";
 
 export class MySqlProgressRepository implements IProgressRepository {
 
-    save({ patientId, ...data }: ProgressDTO, userId: string): Promise<void> {
+    save({ patientId, userId, ...data }: ProgressDTO & { userId: string }): Promise<void> {
         const sql = "INSERT INTO progress SET ?"
         const errorMessage = "Falha ao adicionar o usuário"
 
@@ -15,28 +15,28 @@ export class MySqlProgressRepository implements IProgressRepository {
         })
     }
 
-    update({ id, patientId, ...data }: ProgressDTO, userId: string): Promise<void> {
+    update({ id, patientId, userId, ...data }: ProgressDTO & { userId: string }): Promise<void> {
         const sql = "UPDATE progress SET ? WHERE id = ? AND patientId = ? AND userId = ?"
         const errorMessage = "Falha ao adicionar o usuário"
 
         return query(errorMessage, sql, [data, id, patientId, userId])
     }
 
-    get(id: string, patientId: string, userId: string): Promise<ProgressDTO[]> {
+    get({ id, patientId, userId }: { id: string, patientId: string, userId: string }): Promise<ProgressDTO[]> {
         const sql = "SELECT * FROM progress WHERE id = ? AND patientId = ? AND userId = ?"
         const errorMessage = `Não foi possível realizar a busca`
 
         return query(errorMessage, sql, [id, patientId, userId])
     }
 
-    list(patientId: string, userId: string): Promise<ProgressDTO[]> {
+    list({ patientId, userId }: { patientId: string, userId: string }): Promise<ProgressDTO[]> {
         const sql = "SELECT * FROM progress WHERE patientId = ? AND userId = ? ORDER BY date DESC"
         const errorMessage = `Não foi possível realizar a busca`
 
         return query(errorMessage, sql, [patientId, userId])
     }
 
-    async delete(id: string, patientId: string, userId: string): Promise<void> {
+    async delete({ id, patientId, userId }: { id: string, patientId: string, userId: string }): Promise<void> {
         const sql = "DELETE FROM progress WHERE id = ? AND patientId = ? AND userId = ?"
         const errorMessage = `Não foi possível realizar a busca`
 

@@ -14,10 +14,10 @@ import { setAnamnesisController } from "./core/patients/controllers/setAnamnesis
 import { setDiagnosticController } from "./core/patients/controllers/setDiagnosticController";
 import { getDiagnosticController } from "./core/patients/controllers/getDiagnosticController";
 import { getAnamnesisController } from "./core/patients/controllers/getAnamnesisController";
-import { setProgressController } from "./core/patients/controllers/setProgressController";
-import { getProgressController } from "./core/patients/controllers/getProgressController";
-import { listProgressController } from "./core/patients/controllers/listProgressController";
-import { deleteProgressController } from "./core/patients/controllers/deleteProgressController";
+import { setProgressController } from "./core/patients/controllers/progress/setProgressController";
+import { getProgressController } from "./core/patients/controllers/progress/getProgressController";
+import { listProgressController } from "./core/patients/controllers/progress/listProgressController";
+import { deleteProgressController } from "./core/patients/controllers/progress/deleteProgressController";
 
 const router = Router()
 

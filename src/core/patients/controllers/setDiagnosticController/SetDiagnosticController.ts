@@ -1,4 +1,4 @@
-import { SetDiagnosticUseCase } from "../../useCases/setDiagnostic/SetDiagnosticUseCase";
+import { SetDiagnosticUseCase } from "../../useCases/diagnostic/setDiagnostic/SetDiagnosticUseCase";
 import { Request, Response } from "express";
 import { DiagnosticDTO } from "../../models/Diagnostic";
 import { responseError } from "../../../../utils/ResponseError";

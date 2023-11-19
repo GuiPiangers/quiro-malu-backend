@@ -3,6 +3,7 @@ import { query } from "../server/mySqlConnection";
 import { IPatientRepository } from "../../repositories/patient/IPatientRepository";
 
 export class MySqlPatientRepository implements IPatientRepository {
+
     save(data: PatientDTO, userId: string): Promise<void> {
         const sql = "INSERT INTO patients SET ?"
         const errorMessage = "Falha ao adicionar o usuário"
@@ -15,11 +16,17 @@ export class MySqlPatientRepository implements IPatientRepository {
 
         return query(errorMessage, sql, [data, patientId, userId])
     }
-    getAll(userId: string): Promise<PatientDTO[]> {
-        const sql = "SELECT name, phone, id, dateOfBirth  FROM patients WHERE userId = ? ORDER BY updateAt DESC"
+    getAll(userId: string, config: { limit: number, offSet: number }): Promise<PatientDTO[]> {
+        const sql = "SELECT name, phone, id, dateOfBirth  FROM patients WHERE userId = ? ORDER BY updateAt DESC LIMIT ? OFFSET ?"
+        const errorMessage = `Não foi possível realizar a busca`
+        return query(errorMessage, sql, [userId, config.limit, config.offSet])
+    }
+    countAll(userId: string): Promise<[{ total: number }]> {
+        const sql = "SELECT COUNT(id) AS total FROM patients WHERE userId = ?"
         const errorMessage = `Não foi possível realizar a busca`
         return query(errorMessage, sql, [userId])
     }
+
     getByCpf(cpf: string, userId: string): Promise<PatientDTO[]> {
         const sql = "SELECT * FROM patients WHERE cpf = ? AND userId = ?"
         const errorMessage = `Não foi possível realizar a busca`

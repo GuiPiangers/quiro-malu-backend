@@ -1,4 +1,4 @@
-import { IDiagnosticRepository } from "../../../../repositories/diagnostic/IDiagnosticRepository";
+import { IDiagnosticRepository } from "../../../../../repositories/diagnostic/IDiagnosticRepository";
 
 export class GetDiagnosticUseCase {
     constructor(
