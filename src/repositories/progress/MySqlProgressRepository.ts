@@ -4,6 +4,7 @@ import { IProgressRepository } from "./IProgressRepository";
 
 export class MySqlProgressRepository implements IProgressRepository {
 
+
     save({ patientId, userId, ...data }: ProgressDTO & { userId: string }): Promise<void> {
         const sql = "INSERT INTO progress SET ?"
         const errorMessage = "Falha ao adicionar o usuário"
@@ -29,8 +30,15 @@ export class MySqlProgressRepository implements IProgressRepository {
         return query(errorMessage, sql, [id, patientId, userId])
     }
 
-    list({ patientId, userId }: { patientId: string, userId: string }): Promise<ProgressDTO[]> {
-        const sql = "SELECT * FROM progress WHERE patientId = ? AND userId = ? ORDER BY date DESC"
+    list({ patientId, userId, config }: { patientId: string, userId: string, config?: { limit: number, offSet: number } }): Promise<ProgressDTO[]> {
+        const sql = "SELECT * FROM progress WHERE patientId = ? AND userId = ? ORDER BY date DESC LIMIT ? OFFSET ?"
+        const errorMessage = `Não foi possível realizar a busca`
+
+        return query(errorMessage, sql, [patientId, userId, config?.limit, config?.offSet])
+    }
+
+    count({ patientId, userId }: { patientId: string; userId: string; }): Promise<[{ total: number }]> {
+        const sql = "SELECT COUNT(id) AS total FROM progress WHERE patientId = ? AND userId = ?"
         const errorMessage = `Não foi possível realizar a busca`
 
         return query(errorMessage, sql, [patientId, userId])

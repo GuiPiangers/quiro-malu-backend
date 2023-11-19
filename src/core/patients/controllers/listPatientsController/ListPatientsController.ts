@@ -10,8 +10,6 @@ export class ListPatientsController {
             const { page } = request.query
             const patients = await this.listPatientsUseCase.execute({ userId: userId!, page: +page! as number })
 
-            console.log(patients)
-
             response.json(patients)
         } catch (err: any) {
             responseError(response, err)

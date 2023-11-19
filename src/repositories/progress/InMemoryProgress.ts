@@ -2,6 +2,9 @@ import { ProgressDTO } from "../../core/patients/models/Progress"
 import { IProgressRepository } from "./IProgressRepository"
 
 export class InMemoryLocation implements IProgressRepository {
+    count(data: { patientId: string; userId: string }): Promise<number[]> {
+        throw new Error("Method not implemented.")
+    }
     private dbLocation: (ProgressDTO & { patientId: string, userId: string })[] = []
 
     async save({ patientId, userId, ...data }: ProgressDTO & { userId: string }): Promise<void> {
