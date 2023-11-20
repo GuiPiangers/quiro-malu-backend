@@ -6,5 +6,6 @@ export interface IServiceRepository {
     list(data: { userId: string, config?: { limit: number, offSet: number } }): Promise<ServiceDTO[]>
     count({ userId }: { userId: string }): Promise<[{ total: number }]>
     get(data: { id: string, userId: string }): Promise<ServiceDTO[]>;
+    getByName(data: { name: string, userId: string }): Promise<ServiceDTO[]>;
     delete(data: { id: string, userId: string }): Promise<void>
 }

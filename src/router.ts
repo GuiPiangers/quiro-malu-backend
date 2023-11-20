@@ -18,6 +18,11 @@ import { setProgressController } from "./core/patients/controllers/progress/setP
 import { getProgressController } from "./core/patients/controllers/progress/getProgressController";
 import { listProgressController } from "./core/patients/controllers/progress/listProgressController";
 import { deleteProgressController } from "./core/patients/controllers/progress/deleteProgressController";
+import { listServiceController } from "./core/service/controllers/listServicesController";
+import { getServiceController } from "./core/service/controllers/getServiceController";
+import { createServiceController } from "./core/service/controllers/createServiceController";
+import { deleteServiceController } from "./core/service/controllers/deleteServiceController";
+import { updateServiceController } from "./core/service/controllers/updateServiceController";
 
 const router = Router()
 
@@ -79,6 +84,23 @@ router.get('/patients/progress/:patientId', authMiddleware, (request, response) 
 })
 router.get('/patients/progress/:patientId/:id', authMiddleware, (request, response) => {
     getProgressController.handle(request, response)
+})
+
+
+router.get('/services', authMiddleware, (request, response) => {
+    listServiceController.handle(request, response)
+})
+router.get('/services/:id', authMiddleware, (request, response) => {
+    getServiceController.handle(request, response)
+})
+router.post('/services', authMiddleware, (request, response) => {
+    createServiceController.handle(request, response)
+})
+router.patch('/services', authMiddleware, (request, response) => {
+    updateServiceController.handle(request, response)
+})
+router.delete('/services', authMiddleware, (request, response) => {
+    deleteServiceController.handle(request, response)
 })
 
 export { router }
