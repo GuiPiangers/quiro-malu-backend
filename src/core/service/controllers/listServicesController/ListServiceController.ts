@@ -9,8 +9,8 @@ export class ListServiceController {
             const { page } = request.query
             const userId = request.user.id
 
-            const Service = await this.listServiceUseCase.execute({ userId: userId!, page: +page! as number })
-            response.status(200).json(Service)
+            const service = await this.listServiceUseCase.execute({ userId: userId!, page: +page! as number })
+            response.status(200).json(service)
         }
         catch (err: any) {
             return responseError(response, err)
