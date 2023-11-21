@@ -18,8 +18,8 @@ export class DateTime {
             if (date < now) throw new ApiError('A data informada precisa ser anterior a data atual', 400, 'date')
         }
 
-        const dateValue = date.toISOString().substring(0, 10)
-        const timeValue = date.toTimeString().substring(0, 5)
+        const dateValue = date.toLocaleDateString().split('/').reverse().join('-').substring(0, 10)
+        const timeValue = date.toLocaleTimeString().substring(0, 5)
 
         this.value = `${dateValue}T${timeValue}`
     }

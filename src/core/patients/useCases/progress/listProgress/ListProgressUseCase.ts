@@ -14,7 +14,6 @@ export class ListProgressUseCase {
         const totalProgress = this.ProgressRepository.count({ patientId, userId })
 
         const [progress, total] = await Promise.all([progressData, totalProgress])
-
         return { progress, total: total[0]['total'], limit }
     }
 }

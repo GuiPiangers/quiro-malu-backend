@@ -11,6 +11,7 @@ export class SetProgressController {
             const userId = request.user.id
 
             const progress = await this.setProgressUseCase.execute({ ...data, userId: userId! })
+
             response.status(201).json(progress)
         }
         catch (err: any) {
