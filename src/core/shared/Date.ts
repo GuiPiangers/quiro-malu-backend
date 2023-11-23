@@ -15,7 +15,7 @@ export class DateTime {
             if (date > now) throw new ApiError('A data informada precisa ser anterior a data atual', 400, 'date')
         }
         if (onlyFutureDate && !onlyPassDate) {
-            if (date < now) throw new ApiError('A data informada precisa ser anterior a data atual', 400, 'date')
+            if (date < now) throw new ApiError('A data informada precisa ser posterior a data atual', 400, 'date')
         }
 
         const dateValue = date.toLocaleDateString().split('/').reverse().join('-').substring(0, 10)

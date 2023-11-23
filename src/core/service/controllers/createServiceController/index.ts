@@ -2,8 +2,8 @@ import { MySqlServiceRepository } from "../../../../repositories/service/MySqlSe
 import { CreateServiceUseCase } from "../../useCases/createService/CreateServiceUseCase";
 import { CreateServiceController } from "./CreateServiceController";
 
-const ServiceRepository = new MySqlServiceRepository()
-const createServiceUseCase = new CreateServiceUseCase(ServiceRepository)
+const serviceRepository = new MySqlServiceRepository()
+const createServiceUseCase = new CreateServiceUseCase(serviceRepository)
 const createServiceController = new CreateServiceController(createServiceUseCase)
 
 export { createServiceController }

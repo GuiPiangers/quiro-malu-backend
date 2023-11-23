@@ -2,8 +2,8 @@ import { MySqlServiceRepository } from "../../../../repositories/service/MySqlSe
 import { DeleteServiceUseCase } from "../../useCases/deleteService/DeleteServiceUseCase";
 import { DeleteServiceController } from "./DeleteServiceController";
 
-const ServiceRepository = new MySqlServiceRepository()
-const deleteServiceUseCase = new DeleteServiceUseCase(ServiceRepository)
+const serviceRepository = new MySqlServiceRepository()
+const deleteServiceUseCase = new DeleteServiceUseCase(serviceRepository)
 const deleteServiceController = new DeleteServiceController(deleteServiceUseCase)
 
 export { deleteServiceController }

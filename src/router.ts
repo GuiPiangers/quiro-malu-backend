@@ -23,6 +23,11 @@ import { getServiceController } from "./core/service/controllers/getServiceContr
 import { createServiceController } from "./core/service/controllers/createServiceController";
 import { deleteServiceController } from "./core/service/controllers/deleteServiceController";
 import { updateServiceController } from "./core/service/controllers/updateServiceController";
+import { listSchedulingController } from "./core/scheduling/controllers/listSchedulingController";
+import { getSchedulingController } from "./core/scheduling/controllers/getSchedulingController";
+import { createSchedulingController } from "./core/scheduling/controllers/createSchedulingController";
+import { updateSchedulingController } from "./core/scheduling/controllers/updateSchedulingController";
+import { deleteSchedulingController } from "./core/scheduling/controllers/deleteServiceController";
 
 const router = Router()
 
@@ -101,6 +106,22 @@ router.patch('/services', authMiddleware, (request, response) => {
 })
 router.delete('/services', authMiddleware, (request, response) => {
     deleteServiceController.handle(request, response)
+})
+
+router.get('/schedules/:patientId', authMiddleware, (request, response) => {
+    listSchedulingController.handle(request, response)
+})
+router.get('/schedules/:patientId/:id', authMiddleware, (request, response) => {
+    getSchedulingController.handle(request, response)
+})
+router.post('/schedules', authMiddleware, (request, response) => {
+    createSchedulingController.handle(request, response)
+})
+router.patch('/schedules', authMiddleware, (request, response) => {
+    updateSchedulingController.handle(request, response)
+})
+router.delete('/schedules', authMiddleware, (request, response) => {
+    deleteSchedulingController.handle(request, response)
 })
 
 export { router }
