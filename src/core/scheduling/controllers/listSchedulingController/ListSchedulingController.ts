@@ -6,11 +6,14 @@ export class ListSchedulingController {
     constructor(private listSchedulingUseCase: ListSchedulingUseCase) { }
     async handle(request: Request, response: Response) {
         try {
-            const { page } = request.query
-            const { patientId } = request.params
+            const { page, date } = request.query
             const userId = request.user.id
 
-            const scheduling = await this.listSchedulingUseCase.execute({ patientId, userId: userId!, page: +page! as number })
+            const scheduling = await this.listSchedulingUseCase.execute({
+                userId: userId!,
+                page: +page! as number,
+                date: date as string
+            })
             response.status(200).json(scheduling)
         }
         catch (err: any) {

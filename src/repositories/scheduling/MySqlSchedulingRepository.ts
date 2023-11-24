@@ -15,15 +15,17 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
 
         return query(errorMessage, sql, [data, id, data.patientId, userId])
     }
-    list({ userId, patientId, config, }: { userId: string, patientId: string, config?: { limit: number, offSet: number } }): Promise<SchedulingDTO[]> {
-        const sql = "SELECT *  FROM scheduling WHERE patientId = ? AND userId = ? ORDER BY updateAt DESC LIMIT ? OFFSET ?"
+    list({ userId, date, config, }: { userId: string, date: string, config?: { limit: number, offSet: number } }): Promise<SchedulingDTO[]> {
+        console.log(userId, date, config)
+
+        const sql = "SELECT * FROM scheduling WHERE userId = ? AND date_format(date, '%Y-%m-%d') = ? ORDER BY updateAt DESC LIMIT ? OFFSET ?"
         const errorMessage = `Não foi possível realizar a busca`
-        return query(errorMessage, sql, [patientId, userId, config?.limit, config?.offSet])
+        return query(errorMessage, sql, [userId, date, config?.limit, config?.offSet])
     }
-    count({ patientId, userId }: { patientId: string, userId: string }): Promise<[{ total: number }]> {
-        const sql = "SELECT COUNT(id) AS total FROM scheduling WHERE patientId = ? AND userId = ?"
+    count({ date, userId }: { date: string, userId: string }): Promise<[{ total: number }]> {
+        const sql = "SELECT COUNT(id) AS total FROM scheduling WHERE userId = ? AND date_format(date, '%Y-%m-%d') = ?"
         const errorMessage = `Não foi possível realizar a busca`
-        return query(errorMessage, sql, [patientId, userId])
+        return query(errorMessage, sql, [userId, date])
     }
 
     get({ patientId, id, userId }: { id: string, patientId: string, userId: string }): Promise<SchedulingDTO[]> {

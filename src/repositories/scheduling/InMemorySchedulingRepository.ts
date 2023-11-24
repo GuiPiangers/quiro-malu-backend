@@ -1,37 +1,37 @@
-import { ServiceDTO } from "../../core/service/models/Service";
-import { IServiceRepository } from "./IServiceRepository";
+import { SchedulingDTO } from "../../core/scheduling/models/Scheduling";
+import { ISchedulingRepository } from "./ISchedulingRepository";
 
-interface inMemoryInterface extends ServiceDTO {
+interface inMemoryInterface extends SchedulingDTO {
     userId: string
 }
 
-export class InMemoryServiceRepository implements IServiceRepository {
+export class InMemorySchedulingRepository implements ISchedulingRepository {
     count({ userId }: { userId: string }): Promise<[{ total: number; }]> {
         throw new Error("Method not implemented.");
     }
     delete({ }: { id: string, userId: string }): Promise<void> {
         throw new Error("Method not implemented.");
     }
-    private dbServices: inMemoryInterface[] = []
+    private dbSchedules: inMemoryInterface[] = []
 
-    async update({ userId, ...data }: ServiceDTO & { userId: string }): Promise<void> {
-        const index = this.dbServices.findIndex(service => {
-            return service.userId === userId && service.id === data.id
+    async update({ userId, ...data }: SchedulingDTO & { userId: string }): Promise<void> {
+        const index = this.dbSchedules.findIndex(Scheduling => {
+            return Scheduling.userId === userId && Scheduling.id === data.id
         })
-        this.dbServices[index] = { ...data, userId }
+        this.dbSchedules[index] = { ...data, userId }
     }
 
-    async save({ userId, ...data }: ServiceDTO & { userId: string }): Promise<void> {
-        this.dbServices.push({ ...data, userId })
+    async save({ userId, ...data }: SchedulingDTO & { userId: string }): Promise<void> {
+        this.dbSchedules.push({ ...data, userId })
     }
 
-    async list({ userId }: { userId: string }): Promise<ServiceDTO[]> {
-        return this.dbServices.filter(Service => Service.userId === userId)
+    async list({ userId }: { userId: string }): Promise<SchedulingDTO[]> {
+        return this.dbSchedules.filter(Scheduling => Scheduling.userId === userId)
     }
 
-    async get({ id, userId }: { id: string, userId: string }): Promise<ServiceDTO[]> {
-        return this.dbServices.filter(Service => {
-            return Service.id === id && Service.userId === userId
+    async get({ id, userId }: { id: string, userId: string }): Promise<SchedulingDTO[]> {
+        return this.dbSchedules.filter(Scheduling => {
+            return Scheduling.id === id && Scheduling.userId === userId
         })
     }
 }

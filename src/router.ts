@@ -108,7 +108,7 @@ router.delete('/services', authMiddleware, (request, response) => {
     deleteServiceController.handle(request, response)
 })
 
-router.get('/schedules/:patientId', authMiddleware, (request, response) => {
+router.get('/schedules', authMiddleware, (request, response) => {
     listSchedulingController.handle(request, response)
 })
 router.get('/schedules/:patientId/:id', authMiddleware, (request, response) => {
