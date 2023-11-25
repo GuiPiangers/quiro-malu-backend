@@ -25,8 +25,8 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
         this.dbSchedules.push({ ...data, userId })
     }
 
-    async list({ userId }: { userId: string }): Promise<SchedulingDTO[]> {
-        return this.dbSchedules.filter(Scheduling => Scheduling.userId === userId)
+    async list({ userId }: { userId: string }): Promise<(SchedulingDTO & { patient: string, phone: string })[]> {
+        throw new Error("Method not implemented.");
     }
 
     async get({ id, userId }: { id: string, userId: string }): Promise<SchedulingDTO[]> {
