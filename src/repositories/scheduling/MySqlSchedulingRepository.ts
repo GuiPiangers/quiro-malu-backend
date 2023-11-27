@@ -26,6 +26,11 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
         const errorMessage = `Não foi possível realizar a busca`
         return query(errorMessage, sql, [userId, date])
     }
+    qdtSchedulesByDay({ month, year, userId }: { month: number, year: number, userId: string }): Promise<{ formattedDate: string, qtd: number }[]> {
+        const sql = "SELECT date_format(date, '%Y-%m-%d') as formattedDate, count(id) as qtd from scheduling WHERE month(date) = ? AND year(date) = ? AND userId = ? group by formattedDate"
+        const errorMessage = `Não foi possível realizar a busca`
+        return query(errorMessage, sql, [month, year, userId])
+    }
 
     get({ patientId, id, userId }: { id: string, patientId: string, userId: string }): Promise<SchedulingDTO[]> {
         const sql = "SELECT * FROM scheduling WHERE id = ? AND patientId = ? AND userId = ?"

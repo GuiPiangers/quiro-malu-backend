@@ -6,6 +6,9 @@ interface inMemoryInterface extends SchedulingDTO {
 }
 
 export class InMemorySchedulingRepository implements ISchedulingRepository {
+    qdtSchedulesByDay(data: { month: number; year: number; userId: string; }): Promise<{ formattedDate: string; qtd: number; }[]> {
+        throw new Error("Method not implemented.");
+    }
     count({ userId }: { userId: string }): Promise<[{ total: number; }]> {
         throw new Error("Method not implemented.");
     }
