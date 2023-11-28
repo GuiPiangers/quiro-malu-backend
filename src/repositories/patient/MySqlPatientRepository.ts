@@ -16,15 +16,16 @@ export class MySqlPatientRepository implements IPatientRepository {
 
         return query(errorMessage, sql, [data, patientId, userId])
     }
-    getAll(userId: string, config: { limit: number, offSet: number }): Promise<PatientDTO[]> {
-        const sql = "SELECT name, phone, id, dateOfBirth  FROM patients WHERE userId = ? ORDER BY updateAt DESC LIMIT ? OFFSET ?"
+    getAll(userId: string, config: { limit: number, offSet: number, search?: { name?: string } }): Promise<PatientDTO[]> {
+        const sql = "SELECT * FROM patients WHERE userId = ? AND name like ? ORDER BY updateAt DESC LIMIT ? OFFSET ?"
         const errorMessage = `Não foi possível realizar a busca`
-        return query(errorMessage, sql, [userId, config.limit, config.offSet])
+        return query(errorMessage, sql, [userId, `%${config.search?.name}%`, config.limit, config.offSet])
     }
-    countAll(userId: string): Promise<[{ total: number }]> {
-        const sql = "SELECT COUNT(id) AS total FROM patients WHERE userId = ?"
+
+    countAll(userId: string, search?: { name?: string }): Promise<[{ total: number }]> {
+        const sql = "SELECT COUNT(id) AS total FROM patients WHERE userId = ? AND name like ?"
         const errorMessage = `Não foi possível realizar a busca`
-        return query(errorMessage, sql, [userId])
+        return query(errorMessage, sql, [userId, `%${search?.name}%`])
     }
 
     getByCpf(cpf: string, userId: string): Promise<PatientDTO[]> {
