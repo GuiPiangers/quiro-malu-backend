@@ -23,7 +23,7 @@ export class ListPatientsUseCase {
     const countPatients = this.patientsRepository.countAll(userId, search)
 
     const [patients, total] = await Promise.all([getPatients, countPatients])
-    console.log(patients)
+
     if (search?.name && search?.name.length > 0) {
       return patients.sort((a, b) => {
         const aIndex = uniformString(a.name).match(uniformString(search.name!))?.index || -1
