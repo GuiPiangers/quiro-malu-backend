@@ -1,5 +1,5 @@
 import { PatientDTO } from "../../core/patients/models/Patient";
-import { query } from "../server/mySqlConnection";
+import connection, { escapeSansQuotes, order, query } from "../server/mySqlConnection";
 import { IPatientRepository } from "../../repositories/patient/IPatientRepository";
 
 export class MySqlPatientRepository implements IPatientRepository {
@@ -16,8 +16,9 @@ export class MySqlPatientRepository implements IPatientRepository {
 
         return query(errorMessage, sql, [data, patientId, userId])
     }
-    getAll(userId: string, config: { limit: number, offSet: number, search?: { name?: string } }): Promise<PatientDTO[]> {
-        const sql = "SELECT * FROM patients WHERE userId = ? AND name like ? ORDER BY updateAt DESC LIMIT ? OFFSET ?"
+    getAll(userId: string, config: { limit: number, offSet: number, search?: { name?: string }, orderBy?: { field: string, orientation: 'ASC' | 'DESC' }[] }): Promise<PatientDTO[]> {
+        const orderBy = config.orderBy?.map(({ field, orientation }) => order({ field, orientation })) || null
+        const sql = `SELECT * FROM patients WHERE userId = ? AND name like ? ORDER BY ${orderBy}  LIMIT ? OFFSET ?`
         const errorMessage = `Não foi possível realizar a busca`
         return query(errorMessage, sql, [userId, `%${config.search?.name}%`, config.limit, config.offSet])
     }

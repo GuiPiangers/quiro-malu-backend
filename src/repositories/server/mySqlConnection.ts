@@ -16,6 +16,16 @@ connection.connect(err => {
     console.log('Conexão realizada com sucesso')
 })
 
+export function escapeSansQuotes(criterion: string) {
+    const value = connection.escape(criterion).match(/^'(.+)'$/)
+    if (value)
+        return value[1];
+}
+
+export function order({ field, orientation }: { field: string, orientation: string }) {
+    return (escapeSansQuotes(`${field} ${orientation}`) || '').replace(/[\\]/g, '')
+}
+
 export const query = <T>(
     errorMessage: string,
     sql: string,

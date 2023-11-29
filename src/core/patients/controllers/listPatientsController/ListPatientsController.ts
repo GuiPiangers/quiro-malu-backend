@@ -7,11 +7,12 @@ export class ListPatientsController {
     async handle(request: Request, response: Response): Promise<void> {
         try {
             const userId = request.user.id
-            const { page, search } = request.query
+            const { page, search, orderBy } = request.query
             const patients = await this.listPatientsUseCase.execute({
                 userId: userId!,
                 page: +page! as number,
-                search: search ? JSON.parse(search as string) : { name: '' }
+                search: search ? JSON.parse(search as string) : { name: '' },
+                orderBy: orderBy && JSON.parse(orderBy as string)
             })
 
             response.json(patients)
