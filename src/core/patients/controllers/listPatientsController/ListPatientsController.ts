@@ -14,7 +14,6 @@ export class ListPatientsController {
                 search: search ? JSON.parse(search as string) : { name: '' },
                 orderBy: orderBy && JSON.parse(orderBy as string)
             })
-
             response.json(patients)
         } catch (err: any) {
             responseError(response, err)

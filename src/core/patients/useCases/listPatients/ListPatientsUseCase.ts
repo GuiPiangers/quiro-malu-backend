@@ -17,19 +17,21 @@ export class ListPatientsUseCase {
     const getPatients = this.patientsRepository.getAll(userId, {
       limit,
       offSet,
-      search,
+      search: search || { name: '' },
       orderBy: orderBy || [{ field: orderField, orientation: 'DESC' }]
     })
-    const countPatients = this.patientsRepository.countAll(userId, search)
+    const countPatients = this.patientsRepository.countAll(userId, search || { name: '' })
 
     const [patients, total] = await Promise.all([getPatients, countPatients])
 
     if (search?.name && search?.name.length > 0) {
-      return patients.sort((a, b) => {
-        const aIndex = uniformString(a.name).match(uniformString(search.name!))?.index || -1
-        const bIndex = uniformString(b.name).match(uniformString(search.name!))?.index || -1
-        return aIndex - bIndex
-      })
+      return {
+        patients: patients.sort((a, b) => {
+          const aIndex = uniformString(a.name).match(uniformString(search.name!))?.index || -1
+          const bIndex = uniformString(b.name).match(uniformString(search.name!))?.index || -1
+          return aIndex - bIndex
+        }), total: total[0]['total'], limit
+      }
     }
 
     return { patients, total: total[0]['total'], limit }
