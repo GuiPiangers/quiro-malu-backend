@@ -10,8 +10,8 @@ export class CreatePatientController {
             const data = request.body as PatientDTO
             const userId = request.user.id
 
-            await this.createPatientUseCase.execute(data, userId!)
-            response.status(201).json({ message: "Criado com sucesso!" })
+            const res = await this.createPatientUseCase.execute(data, userId!)
+            response.status(201).json(res)
         }
         catch (err: any) {
             return responseError(response, err)

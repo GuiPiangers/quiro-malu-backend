@@ -21,6 +21,6 @@ export class CreatePatientUseCase {
       await this.locationRepository.save(location, patient.id, userId)
     }
 
-    return patient
+    return patientDTO
   }
 }
