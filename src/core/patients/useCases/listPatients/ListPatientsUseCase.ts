@@ -13,7 +13,7 @@ export class ListPatientsUseCase {
     const limit = 20
     const offSet = page ? limit * (page - 1) : 0
     const orderField = search?.name ? `(name like "${search?.name}%")` : 'updateAt'
-
+    console.log('po')
     const getPatients = this.patientsRepository.getAll(userId, {
       limit,
       offSet,
