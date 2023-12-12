@@ -7,7 +7,7 @@ export class UpdateSchedulingUseCase {
 
   async execute({ userId, ...data }: SchedulingDTO & { userId: string }) {
     const { id: _, ...scheduling } = new Scheduling(data).getDTO()
-
+    console.log(data, scheduling)
     if (!data.id) throw new ApiError('O id deve ser informado', 400, 'Scheduling')
 
     await this.SchedulingRepository.update({ userId, id: data.id, ...scheduling });
