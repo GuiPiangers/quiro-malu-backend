@@ -14,7 +14,6 @@ export class ListSchedulingUseCase {
         const schedulingData = this.SchedulingRepository.list({
             userId,
             date,
-            config: { limit, offSet }
         })
         const totalScheduling = this.SchedulingRepository.count({
             userId,
