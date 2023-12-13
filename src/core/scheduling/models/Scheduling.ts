@@ -44,4 +44,27 @@ export class Scheduling extends Entity {
             service: this.service,
         }
     }
+
+    isAvailableDate(data: SchedulingDTO[]): boolean {
+        return data.some(schedulingValue => {
+            const date = new Date(schedulingValue.date)
+            date.setSeconds(this.duration)
+
+            const schedulingDate = new Date(this.date.value)
+            schedulingDate.setSeconds(this.duration)
+
+            const schedulingStart = this.date.value
+            const schedulingEnd = new DateTime(schedulingDate.toISOString()).value
+
+            const start = new DateTime(schedulingValue.date).value
+            const end = new DateTime(date.toISOString()).value
+
+            const unavailableStartDate = start <= schedulingStart && schedulingStart < end
+            const unavailableEndDate = start < schedulingEnd && schedulingEnd < end
+
+            return unavailableEndDate || unavailableStartDate
+        })
+
+
+    }
 }
