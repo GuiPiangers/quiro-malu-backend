@@ -6,6 +6,6 @@ export interface ISchedulingRepository {
     list(data: { userId: string, date: string, config?: { limit: number, offSet: number } }): Promise<(SchedulingDTO & { patient: string, phone: string })[]>
     count(data: { userId: string, date: string }): Promise<[{ total: number }]>
     qdtSchedulesByDay(data: { month: number, year: number, userId: string }): Promise<{ formattedDate: string, qtd: number }[]>
-    get(data: { id: string, patientId: string, userId: string }): Promise<SchedulingDTO[]>;
-    delete(data: { id: string, patientId: string, userId: string }): Promise<void>
+    get(data: { id: string, userId: string }): Promise<SchedulingDTO[]>;
+    delete(data: { id: string, userId: string }): Promise<void>
 }

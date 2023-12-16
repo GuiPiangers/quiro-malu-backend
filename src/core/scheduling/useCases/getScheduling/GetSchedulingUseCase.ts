@@ -5,8 +5,8 @@ export class GetSchedulingUseCase {
         private SchedulingRepository: ISchedulingRepository
     ) { }
 
-    async execute({ id, patientId, userId }: { id: string, patientId: string, userId: string }) {
-        const [schedulingData] = await this.SchedulingRepository.get({ id, patientId, userId })
+    async execute({ id, userId }: { id: string, userId: string }) {
+        const [schedulingData] = await this.SchedulingRepository.get({ id, userId })
         return schedulingData
     }
 }

@@ -5,7 +5,7 @@ export class DeleteSchedulingUseCase {
         private SchedulingRepository: ISchedulingRepository,
     ) { }
 
-    async execute({ id, patientId, userId }: { id: string, patientId: string, userId: string }) {
-        await this.SchedulingRepository.delete({ id, patientId, userId })
+    async execute({ id, userId }: { id: string, userId: string }) {
+        await this.SchedulingRepository.delete({ id, userId })
     }
 }

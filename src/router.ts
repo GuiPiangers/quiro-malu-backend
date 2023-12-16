@@ -27,7 +27,7 @@ import { listSchedulingController } from "./core/scheduling/controllers/listSche
 import { getSchedulingController } from "./core/scheduling/controllers/getSchedulingController";
 import { createSchedulingController } from "./core/scheduling/controllers/createSchedulingController";
 import { updateSchedulingController } from "./core/scheduling/controllers/updateSchedulingController";
-import { deleteSchedulingController } from "./core/scheduling/controllers/deleteServiceController";
+import { deleteSchedulingController } from "./core/scheduling/controllers/deleteSchedulingController";
 import { qtdSchedulesController } from "./core/scheduling/controllers/getQtdSchedulesByDayController";
 
 const router = Router()
@@ -115,7 +115,7 @@ router.get('/schedules', authMiddleware, (request, response) => {
 router.get('/schedules/qtd', authMiddleware, (request, response) => {
     qtdSchedulesController.handle(request, response)
 })
-router.get('/schedules/:patientId/:id', authMiddleware, (request, response) => {
+router.get('/schedules/:id', authMiddleware, (request, response) => {
     getSchedulingController.handle(request, response)
 })
 router.post('/schedules', authMiddleware, (request, response) => {

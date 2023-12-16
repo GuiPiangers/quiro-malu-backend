@@ -8,11 +8,11 @@ export class DeleteSchedulingController {
     async handle(request: Request, response: Response): Promise<void> {
         try {
             const userId = request.user.id
-            const { id, patientId } = request.body
+            const { id } = request.body
 
-            if (!id || !patientId) throw new ApiError('Deve ser informado o Id e o PatientId', 400)
+            if (!id) throw new ApiError('Deve ser informado o Id e o PatientId', 400)
 
-            await this.deleteSchedulingUseCase.execute({ id, patientId, userId: userId! })
+            await this.deleteSchedulingUseCase.execute({ id, userId: userId! })
 
             response.json({ message: 'Paciente deletado com sucesso!' })
         } catch (err: any) {

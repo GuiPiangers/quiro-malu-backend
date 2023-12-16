@@ -32,18 +32,18 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
         return query(errorMessage, sql, [month, year, userId])
     }
 
-    get({ patientId, id, userId }: { id: string, patientId: string, userId: string }): Promise<SchedulingDTO[]> {
-        const sql = "SELECT * FROM scheduling WHERE id = ? AND patientId = ? AND userId = ?"
+    get({ id, userId }: { id: string, userId: string }): Promise<SchedulingDTO[]> {
+        const sql = "SELECT * FROM scheduling WHERE id = ? AND userId = ?"
         const errorMessage = `Não foi possível realizar a busca`
 
-        return query(errorMessage, sql, [id, patientId, userId])
+        return query(errorMessage, sql, [id, userId])
     }
 
-    delete({ id, patientId, userId }: { id: string, patientId: string, userId: string }): Promise<void> {
-        const sql = "DELETE FROM scheduling WHERE id = ? AND patientId = ? AND userId = ?"
+    delete({ id, userId }: { id: string, userId: string }): Promise<void> {
+        const sql = "DELETE FROM scheduling WHERE id = ? AND userId = ?"
         const errorMessage = `Não foi possível deletar o serviço`
 
-        return query(errorMessage, sql, [id, patientId, userId])
+        return query(errorMessage, sql, [id, userId])
     }
 
 }
