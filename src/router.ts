@@ -35,6 +35,10 @@ import { createPatientTable } from "./repositories/server/database/createPatient
 import { createLocationTable } from "./repositories/server/database/createLocationTable";
 import { createServicesTable } from "./repositories/server/database/createServicesTable";
 import { createSchedulingTable } from "./repositories/server/database/createSchedulingTable";
+import { createAnamnesisTable } from "./repositories/server/database/createAnamnesisTable";
+import { createDiagnosticTable } from "./repositories/server/database/createDiagnosticTable";
+import { createProgressTable } from "./repositories/server/database/createProgressTable";
+import { createRefreshTokenTable } from "./repositories/server/database/createRefreshTokenTable";
 
 const router = Router()
 
@@ -44,6 +48,10 @@ router.get('/', (request, response) => {
     createLocationTable()
     createServicesTable()
     createSchedulingTable()
+    createAnamnesisTable()
+    createDiagnosticTable()
+    createProgressTable()
+    createRefreshTokenTable()    
     response.send('ola')
 })
 

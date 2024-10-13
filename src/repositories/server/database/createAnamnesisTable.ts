@@ -13,7 +13,7 @@ export async function createAnamnesisTable(){
         medicines TEXT,
         underwentSurgery BOOLEAN,
         surgeries TEXT,
-        FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+        FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY (patientId) REFERENCES patients(id) ON DELETE CASCADE ON UPDATE CASCADE
         )`
     const errorMessage = `Não foi possível criar a tabela`

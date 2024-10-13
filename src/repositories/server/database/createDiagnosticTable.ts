@@ -5,7 +5,7 @@ export async function createDiagnosticTable(){
         userId VARCHAR(50),
         diagnostic TEXT,
         treatmentPlan TEXT,
-        FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+        FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY (patientId) REFERENCES patients(id) ON DELETE CASCADE ON UPDATE CASCADE
         )`
     const errorMessage = `Não foi possível criar a tabela`
