@@ -29,7 +29,12 @@ import { createSchedulingController } from "./core/scheduling/controllers/create
 import { updateSchedulingController } from "./core/scheduling/controllers/updateSchedulingController";
 import { deleteSchedulingController } from "./core/scheduling/controllers/deleteSchedulingController";
 import { qtdSchedulesController } from "./core/scheduling/controllers/getQtdSchedulesByDayController";
-import { createLocationTable, createPatientTable, createUserTable } from "./repositories/server/database/database";
+
+import { createUserTable } from "./repositories/server/database/createUserTable";
+import { createPatientTable } from "./repositories/server/database/createPatientTable";
+import { createLocationTable } from "./repositories/server/database/createLocationTable";
+import { createServicesTable } from "./repositories/server/database/createServicesTable";
+import { createSchedulingTable } from "./repositories/server/database/createSchedulingTable";
 
 const router = Router()
 
@@ -37,6 +42,8 @@ router.get('/', (request, response) => {
     createUserTable()
     createPatientTable()
     createLocationTable()
+    createServicesTable()
+    createSchedulingTable()
     response.send('ola')
 })
 
