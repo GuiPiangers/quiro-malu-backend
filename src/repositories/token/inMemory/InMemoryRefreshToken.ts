@@ -2,6 +2,9 @@ import { RefreshTokenDTO } from '../../../core/authentication/models/RefreshToke
 import { IRefreshTokenProvider } from '../IRefreshTokenProvider'
 
 export class InMemoryRefreshToken implements IRefreshTokenProvider {
+    delete(id: string): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
     private refreshTokens: RefreshTokenDTO[] = []
 
     async generate(refreshToken: RefreshTokenDTO): Promise<void> {

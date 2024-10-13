@@ -26,7 +26,7 @@ export class Patient extends Entity {
     constructor(props: PatientDTO) {
         const { id, phone, name, cpf, location, dateOfBirth, gender } = props
 
-        super(id)
+        super(id || `${Date.now()}`)
         this.name = new Name(name, { compoundName: true })
         this._phone = new Phone(phone)
         this._location = location ? new Location(location) : null

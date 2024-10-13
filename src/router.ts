@@ -29,8 +29,16 @@ import { createSchedulingController } from "./core/scheduling/controllers/create
 import { updateSchedulingController } from "./core/scheduling/controllers/updateSchedulingController";
 import { deleteSchedulingController } from "./core/scheduling/controllers/deleteSchedulingController";
 import { qtdSchedulesController } from "./core/scheduling/controllers/getQtdSchedulesByDayController";
+import { createLocationTable, createPatientTable, createUserTable } from "./repositories/server/database/database";
 
 const router = Router()
+
+router.get('/', (request, response) => {
+    createUserTable()
+    createPatientTable()
+    createLocationTable()
+    response.send('ola')
+})
 
 router.post('/register', (request, response) => {
     createUserController.handle(request, response)

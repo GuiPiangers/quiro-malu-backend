@@ -20,7 +20,7 @@ export class Progress extends Entity {
     readonly procedures: string | null
 
     constructor({ id, service, actualProblem, date, procedures, patientId }: ProgressDTO) {
-        super(id)
+        super(id || `${Date.now()}`)
         this.patientId = patientId
         this.service = service
         this.actualProblem = actualProblem

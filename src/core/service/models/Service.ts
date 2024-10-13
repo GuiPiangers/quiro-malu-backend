@@ -13,7 +13,7 @@ export class Service extends Entity {
     readonly duration: number
 
     constructor({ id, duration, value, name }: ServiceDTO) {
-        super(id)
+        super(id || `${Date.now()}`)
         this.name = name
         this.duration = duration
         this.value = value

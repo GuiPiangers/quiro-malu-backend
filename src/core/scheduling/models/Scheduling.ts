@@ -22,7 +22,7 @@ export class Scheduling extends Entity {
     readonly updateAt?: string
 
     constructor({ id, date, duration, status, patientId, createAt, service, updateAt }: SchedulingDTO) {
-        super(id)
+        super(id || `${Date.now()}`)
         this.patientId = patientId
         this.date = new DateTime(date, { onlyFutureDate: true })
         this.service = service || null
