@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "dev": "tsnd --transpile-only --respawn --ignore-watch node_modules ./src/server.ts"
+    "dev": "tsnd --transpile-only --respawn --ignore-watch node_modules ./src/server.ts",
+    "migration": "tsnd ./src/repositories/server/database/index.ts"
   },
   "keywords": [],
   "author": "",
