@@ -1,5 +1,5 @@
 import { PatientDTO } from "../../core/patients/models/Patient";
-import connection, { escapeSansQuotes, order, query } from "../server/mySqlConnection";
+import connection, { escapeSansQuotes, order, query } from "../../server/mySqlConnection";
 import { IPatientRepository } from "../../repositories/patient/IPatientRepository";
 
 export class MySqlPatientRepository implements IPatientRepository {

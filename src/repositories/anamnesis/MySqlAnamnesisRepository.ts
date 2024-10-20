@@ -1,4 +1,4 @@
-import { query } from "../server/mySqlConnection";
+import { query } from "../../server/mySqlConnection";
 import { IAnamnesisRepository } from "./IAnamnesisRepository";
 import { AnamnesisDTO } from "../../core/patients/models/Anamnesis";
 

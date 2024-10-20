@@ -1,4 +1,4 @@
-import { query } from "../server/mySqlConnection";
+import { query } from "../../server/mySqlConnection";
 import { DiagnosticDTO } from "../../core/patients/models/Diagnostic";
 import { IDiagnosticRepository } from "./IDiagnosticRepository";
 

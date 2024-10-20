@@ -1,5 +1,5 @@
 import { ServiceDTO } from "../../core/service/models/Service";
-import { query } from "../server/mySqlConnection";
+import { query } from "../../server/mySqlConnection";
 import { IServiceRepository } from "../service/IServiceRepository";
 
 export class MySqlServiceRepository implements IServiceRepository {

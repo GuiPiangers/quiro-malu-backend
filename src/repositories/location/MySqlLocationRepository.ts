@@ -1,4 +1,4 @@
-import { query } from "../server/mySqlConnection";
+import { query } from "../../server/mySqlConnection";
 import { ILocationRepository } from "./ILocationRepository";
 import { LocationDTO } from "../../core/shared/Location";
 

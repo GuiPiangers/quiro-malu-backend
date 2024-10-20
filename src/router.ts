@@ -30,15 +30,15 @@ import { updateSchedulingController } from "./core/scheduling/controllers/update
 import { deleteSchedulingController } from "./core/scheduling/controllers/deleteSchedulingController";
 import { qtdSchedulesController } from "./core/scheduling/controllers/getQtdSchedulesByDayController";
 
-import { createUserTable } from "./repositories/server/database/createUserTable";
-import { createPatientTable } from "./repositories/server/database/createPatientTable";
-import { createLocationTable } from "./repositories/server/database/createLocationTable";
-import { createServicesTable } from "./repositories/server/database/createServicesTable";
-import { createSchedulingTable } from "./repositories/server/database/createSchedulingTable";
-import { createAnamnesisTable } from "./repositories/server/database/createAnamnesisTable";
-import { createDiagnosticTable } from "./repositories/server/database/createDiagnosticTable";
-import { createProgressTable } from "./repositories/server/database/createProgressTable";
-import { createRefreshTokenTable } from "./repositories/server/database/createRefreshTokenTable";
+import { createUserTable } from "./server/database/createUserTable";
+import { createPatientTable } from "./server/database/createPatientTable";
+import { createLocationTable } from "./server/database/createLocationTable";
+import { createServicesTable } from "./server/database/createServicesTable";
+import { createSchedulingTable } from "./server/database/createSchedulingTable";
+import { createAnamnesisTable } from "./server/database/createAnamnesisTable";
+import { createDiagnosticTable } from "./server/database/createDiagnosticTable";
+import { createProgressTable } from "./server/database/createProgressTable";
+import { createRefreshTokenTable } from "./server/database/createRefreshTokenTable";
 
 const router = Router()
 

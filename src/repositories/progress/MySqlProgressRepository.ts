@@ -1,4 +1,4 @@
-import { query } from "../server/mySqlConnection";
+import { query } from "../../server/mySqlConnection";
 import { ProgressDTO } from "../../core/patients/models/Progress";
 import { IProgressRepository } from "./IProgressRepository";
 

@@ -1,6 +1,6 @@
 import mysql from 'mysql2'
 import * as dotenv from 'dotenv'
-import { ApiError } from '../../utils/ApiError';
+import { ApiError } from '../utils/ApiError';
 dotenv.config()
 
 const connection = mysql.createConnection({

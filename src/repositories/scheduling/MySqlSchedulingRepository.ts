@@ -1,5 +1,5 @@
 import { SchedulingDTO } from "../../core/scheduling/models/Scheduling";
-import { query } from "../server/mySqlConnection";
+import { query } from "../../server/mySqlConnection";
 import { ISchedulingRepository } from "../scheduling/ISchedulingRepository";
 
 export class MySqlSchedulingRepository implements ISchedulingRepository {

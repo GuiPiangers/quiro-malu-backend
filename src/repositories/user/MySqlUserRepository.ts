@@ -1,4 +1,4 @@
-import { query } from "../server/mySqlConnection";
+import { query } from "../../server/mySqlConnection";
 import { UserDTO } from "../../core/authentication/models/User";
 import { IUserRepository } from "./IUserRepository";
 

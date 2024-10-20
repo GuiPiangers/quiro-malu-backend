@@ -1,4 +1,4 @@
-import { query } from "../server/mySqlConnection";
+import { query } from "../../server/mySqlConnection";
 import { RefreshTokenDTO } from "../../core/authentication/models/RefreshToken";
 import { IRefreshTokenProvider } from "./IRefreshTokenProvider";
 
