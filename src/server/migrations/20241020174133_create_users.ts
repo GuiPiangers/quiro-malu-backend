@@ -9,6 +9,7 @@ export async function up(knex: Knex): Promise<void> {
       table.string("email", 50).unique();
       table.string("phone", 18);
       table.string("password", 50).notNullable();
+      table.timestamps(true, true);
     })
     .then(() => {
       console.log(`Created table ${ETableNames.USERS}`);
