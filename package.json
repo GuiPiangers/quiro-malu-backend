@@ -6,7 +6,10 @@
   "scripts": {
     "test": "jest",
     "dev": "tsnd --transpile-only --respawn --ignore-watch node_modules ./src/server.ts",
-    "migration": "tsnd ./src/repositories/server/database/index.ts"
+    "knex:migrate": "knex --knexfile ./src/server/knex/knexfile.ts migrate:latest",
+    "knex:rollback": "knex --knexfile ./src/server/knex/knexfile.ts migrate:rollback",
+    "knex:rollback-all": "knex --knexfile ./src/server/knex/knexfile.ts migrate:rollback --all",
+    "knex:seed": "knex --knexfile ./src/server/knex/knexfile.ts seed:run"
   },
   "keywords": [],
   "author": "",

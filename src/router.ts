@@ -40,115 +40,130 @@ import { createDiagnosticTable } from "./server/database/createDiagnosticTable";
 import { createProgressTable } from "./server/database/createProgressTable";
 import { createRefreshTokenTable } from "./server/database/createRefreshTokenTable";
 
-const router = Router()
+const router = Router();
 
-router.get('/', (request, response) => {
-    createUserTable()
-    createPatientTable()
-    createLocationTable()
-    createServicesTable()
-    createSchedulingTable()
-    createAnamnesisTable()
-    createDiagnosticTable()
-    createProgressTable()
-    createRefreshTokenTable()    
-    response.send('ola')
-})
+router.get("/", (request, response) => {
+  createUserTable();
+  createPatientTable();
+  createLocationTable();
+  createServicesTable();
+  createSchedulingTable();
+  createAnamnesisTable();
+  createDiagnosticTable();
+  createProgressTable();
+  createRefreshTokenTable();
+  response.send("ola");
+});
 
-router.post('/register', (request, response) => {
-    createUserController.handle(request, response)
-})
-router.post('/login', (request, response) => {
-    loginUserController.handle(request, response)
-})
-router.post('/logout', (request, response) => {
-    logoutController.handle(request, response)
-})
-router.post('/refresh-token', (request, response) => {
-    refreshTokenController.handle(request, response)
-})
-router.get('/profile', authMiddleware, (request, response) => {
-    getUserProfileController.handle(request, response)
-})
+router.post("/register", (request, response) => {
+  createUserController.handle(request, response);
+});
+router.post("/login", (request, response) => {
+  loginUserController.handle(request, response);
+});
+router.post("/logout", (request, response) => {
+  logoutController.handle(request, response);
+});
+router.post("/refresh-token", (request, response) => {
+  refreshTokenController.handle(request, response);
+});
+router.get("/profile", authMiddleware, (request, response) => {
+  getUserProfileController.handle(request, response);
+});
 
-router.post('/patients', authMiddleware, (request, response) => {
-    createPatientController.handle(request, response)
-})
-router.get('/patients', authMiddleware, (request, response) => {
-    listPatientsController.handle(request, response)
-})
-router.get('/patients/:id', authMiddleware, (request, response) => {
-    getPatientController.handle(request, response)
-})
-router.patch('/patients', authMiddleware, (request, response) => {
-    updatePatientController.handle(request, response)
-})
-router.delete('/patients', authMiddleware, (request, response) => {
-    deletePatientController.handle(request, response)
-})
+router.post("/patients", authMiddleware, (request, response) => {
+  createPatientController.handle(request, response);
+});
+router.get("/patients", authMiddleware, (request, response) => {
+  listPatientsController.handle(request, response);
+});
+router.get("/patients/:id", authMiddleware, (request, response) => {
+  getPatientController.handle(request, response);
+});
+router.patch("/patients", authMiddleware, (request, response) => {
+  updatePatientController.handle(request, response);
+});
+router.delete("/patients", authMiddleware, (request, response) => {
+  deletePatientController.handle(request, response);
+});
 
-router.get('/patients/anamnesis/:patientId', authMiddleware, (request, response) => {
-    getAnamnesisController.handle(request, response)
-})
-router.put('/patients/anamnesis', authMiddleware, (request, response) => {
-    setAnamnesisController.handle(request, response)
-})
+router.get(
+  "/patients/anamnesis/:patientId",
+  authMiddleware,
+  (request, response) => {
+    getAnamnesisController.handle(request, response);
+  },
+);
+router.put("/patients/anamnesis", authMiddleware, (request, response) => {
+  setAnamnesisController.handle(request, response);
+});
 
-router.get('/patients/diagnostic/:patientId', authMiddleware, (request, response) => {
-    getDiagnosticController.handle(request, response)
-})
-router.put('/patients/diagnostic', authMiddleware, (request, response) => {
-    setDiagnosticController.handle(request, response)
-})
+router.get(
+  "/patients/diagnostic/:patientId",
+  authMiddleware,
+  (request, response) => {
+    getDiagnosticController.handle(request, response);
+  },
+);
+router.put("/patients/diagnostic", authMiddleware, (request, response) => {
+  setDiagnosticController.handle(request, response);
+});
 
-router.put('/patients/progress', authMiddleware, (request, response) => {
-    setProgressController.handle(request, response)
-})
-router.delete('/patients/progress', authMiddleware, (request, response) => {
-    deleteProgressController.handle(request, response)
-})
+router.put("/patients/progress", authMiddleware, (request, response) => {
+  setProgressController.handle(request, response);
+});
+router.delete("/patients/progress", authMiddleware, (request, response) => {
+  deleteProgressController.handle(request, response);
+});
 
-router.get('/patients/progress/:patientId', authMiddleware, (request, response) => {
-    listProgressController.handle(request, response)
-})
-router.get('/patients/progress/:patientId/:id', authMiddleware, (request, response) => {
-    getProgressController.handle(request, response)
-})
+router.get(
+  "/patients/progress/:patientId",
+  authMiddleware,
+  (request, response) => {
+    listProgressController.handle(request, response);
+  },
+);
+router.get(
+  "/patients/progress/:patientId/:id",
+  authMiddleware,
+  (request, response) => {
+    getProgressController.handle(request, response);
+  },
+);
 
+router.get("/services", authMiddleware, (request, response) => {
+  listServiceController.handle(request, response);
+});
+router.get("/services/:id", authMiddleware, (request, response) => {
+  getServiceController.handle(request, response);
+});
+router.post("/services", authMiddleware, (request, response) => {
+  createServiceController.handle(request, response);
+});
+router.patch("/services", authMiddleware, (request, response) => {
+  updateServiceController.handle(request, response);
+});
+router.delete("/services", authMiddleware, (request, response) => {
+  deleteServiceController.handle(request, response);
+});
 
-router.get('/services', authMiddleware, (request, response) => {
-    listServiceController.handle(request, response)
-})
-router.get('/services/:id', authMiddleware, (request, response) => {
-    getServiceController.handle(request, response)
-})
-router.post('/services', authMiddleware, (request, response) => {
-    createServiceController.handle(request, response)
-})
-router.patch('/services', authMiddleware, (request, response) => {
-    updateServiceController.handle(request, response)
-})
-router.delete('/services', authMiddleware, (request, response) => {
-    deleteServiceController.handle(request, response)
-})
+router.get("/schedules", authMiddleware, (request, response) => {
+  listSchedulingController.handle(request, response);
+});
+router.get("/schedules/qtd", authMiddleware, (request, response) => {
+  qtdSchedulesController.handle(request, response);
+});
+router.get("/schedules/:id", authMiddleware, (request, response) => {
+  getSchedulingController.handle(request, response);
+});
+router.post("/schedules", authMiddleware, (request, response) => {
+  createSchedulingController.handle(request, response);
+});
+router.patch("/schedules", authMiddleware, (request, response) => {
+  updateSchedulingController.handle(request, response);
+});
+router.delete("/schedules", authMiddleware, (request, response) => {
+  deleteSchedulingController.handle(request, response);
+});
 
-router.get('/schedules', authMiddleware, (request, response) => {
-    listSchedulingController.handle(request, response)
-})
-router.get('/schedules/qtd', authMiddleware, (request, response) => {
-    qtdSchedulesController.handle(request, response)
-})
-router.get('/schedules/:id', authMiddleware, (request, response) => {
-    getSchedulingController.handle(request, response)
-})
-router.post('/schedules', authMiddleware, (request, response) => {
-    createSchedulingController.handle(request, response)
-})
-router.patch('/schedules', authMiddleware, (request, response) => {
-    updateSchedulingController.handle(request, response)
-})
-router.delete('/schedules', authMiddleware, (request, response) => {
-    deleteSchedulingController.handle(request, response)
-})
-
-export { router }
+export { router };

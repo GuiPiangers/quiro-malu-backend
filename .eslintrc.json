@@ -5,8 +5,8 @@
             "error",
             {
                 "endOfLine": "auto",
-                "no-useless-constructor": "off",
-            },
+                "no-useless-constructor": "off"
+            }
         ]
     }
 }
