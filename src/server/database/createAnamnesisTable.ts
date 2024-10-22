@@ -1,6 +1,6 @@
-import { query } from "../mySqlConnection"
-export async function createAnamnesisTable(){
-    const sql = `CREATE TABLE IF NOT EXISTS anamnesis(
+import { query } from "../mySqlConnection";
+export async function createAnamnesisTable() {
+  const sql = `CREATE TABLE IF NOT EXISTS anamnesis(
         patientId VARCHAR(50),
         userId VARCHAR(50),
         mainProblem TEXT,
@@ -15,8 +15,8 @@ export async function createAnamnesisTable(){
         surgeries TEXT,
         FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY (patientId) REFERENCES patients(id) ON DELETE CASCADE ON UPDATE CASCADE
-        )`
-    const errorMessage = `Não foi possível criar a tabela`
-    const result = await query(errorMessage, sql)
-    return result
+        )`;
+  const errorMessage = `Não foi possível criar a tabela`;
+  const result = await query(errorMessage, sql);
+  return result;
 }
