@@ -3,18 +3,18 @@ import { ETableNames } from "../ETableNames";
 
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable(ETableNames.ANAMNESIS, (table) => {
-    table.string("id", 100).primary().index();
+    table.increments("id").primary().index();
     table.string("patientId", 100).index().notNullable();
     table.string("userId", 100).index().notNullable();
-    table.text("mainProblem").notNullable();
+    table.text("mainProblem");
     table.text("currentIllness");
     table.text("history");
     table.text("familiarHistory");
     table.text("activities");
     table.string("smoke", 8).defaultTo("Não");
-    table.boolean("useMedicine").notNullable().defaultTo(false);
+    table.boolean("useMedicine").defaultTo(false);
     table.text("medicines");
-    table.boolean("underwentSurgery").notNullable().defaultTo(false);
+    table.boolean("underwentSurgery").defaultTo(false);
     table.text("surgeries");
     table
       .foreign("patientId")

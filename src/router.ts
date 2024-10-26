@@ -30,30 +30,7 @@ import { updateSchedulingController } from "./core/scheduling/controllers/update
 import { deleteSchedulingController } from "./core/scheduling/controllers/deleteSchedulingController";
 import { qtdSchedulesController } from "./core/scheduling/controllers/getQtdSchedulesByDayController";
 
-import { createUserTable } from "./server/database/createUserTable";
-import { createPatientTable } from "./server/database/createPatientTable";
-import { createLocationTable } from "./server/database/createLocationTable";
-import { createServicesTable } from "./server/database/createServicesTable";
-import { createSchedulingTable } from "./server/database/createSchedulingTable";
-import { createAnamnesisTable } from "./server/database/createAnamnesisTable";
-import { createDiagnosticTable } from "./server/database/createDiagnosticTable";
-import { createProgressTable } from "./server/database/createProgressTable";
-import { createRefreshTokenTable } from "./server/database/createRefreshTokenTable";
-
 const router = Router();
-
-router.get("/", (request, response) => {
-  createUserTable();
-  createPatientTable();
-  createLocationTable();
-  createServicesTable();
-  createSchedulingTable();
-  createAnamnesisTable();
-  createDiagnosticTable();
-  createProgressTable();
-  createRefreshTokenTable();
-  response.send("ola");
-});
 
 router.post("/register", (request, response) => {
   createUserController.handle(request, response);

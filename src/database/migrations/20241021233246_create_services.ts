@@ -6,8 +6,9 @@ export async function up(knex: Knex): Promise<void> {
     table.string("id", 100).primary().index();
     table.string("userId", 100).index().notNullable();
     table.string("name", 50).index().notNullable();
-    table.float("value", 2);
+    table.float("value");
     table.float("duration");
+    table.timestamps(true, true);
     table
       .foreign("userId")
       .references("id")

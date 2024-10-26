@@ -1,5 +1,5 @@
 import { SchedulingDTO } from "../../core/scheduling/models/Scheduling";
-import { query } from "../../server/mySqlConnection";
+import { query } from "../../database/mySqlConnection";
 import { ISchedulingRepository } from "../scheduling/ISchedulingRepository";
 
 export class MySqlSchedulingRepository implements ISchedulingRepository {
@@ -38,7 +38,7 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
     config?: { limit: number; offSet: number };
   }): Promise<(SchedulingDTO & { patient: string; phone: string })[]> {
     const sql =
-      "SELECT s.id, s.patientId, p.name as patient, p.phone, s.date, s.duration, s.service, s.status, s.updateAt, s.createAt FROM schedules as s LEFT JOIN patients as p ON s.patientId = p.id AND s.userId = p.userId WHERE s.userId = ? AND date_format(s.date, '%Y-%m-%d') = ? ORDER BY s.updateAt DESC ";
+      "SELECT s.id, s.patientId, p.name as patient, p.phone, s.date, s.duration, s.service, s.status, s.updated_at, s.created_at FROM schedules as s LEFT JOIN patients as p ON s.patientId = p.id AND s.userId = p.userId WHERE s.userId = ? AND date_format(s.date, '%Y-%m-%d') = ? ORDER BY s.updated_at DESC ";
     const errorMessage = `Não foi possível realizar a busca`;
     return query(errorMessage, sql, [userId, date]);
   }

@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import { Knex } from "knex";
 import path from "path";
 import * as dotenv from "dotenv";
@@ -24,7 +25,6 @@ export const development: Knex.Config = {
     directory: path.resolve(__dirname, "..", "seeds"),
   },
 };
-
 export const production: Knex.Config = {
   client: "mysql2",
   useNullAsDefault: true,

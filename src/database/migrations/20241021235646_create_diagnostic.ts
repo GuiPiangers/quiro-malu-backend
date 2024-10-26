@@ -3,11 +3,12 @@ import { ETableNames } from "../ETableNames";
 
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable(ETableNames.DIAGNOSTICS, (table) => {
-    table.string("id", 100).primary().index();
+    table.increments("id").primary().index();
     table.string("patientId", 100).index().notNullable();
     table.string("userId", 100).index().notNullable();
     table.text("diagnostic");
     table.text("treatmentPlan");
+    table.timestamps(true, true);
     table
       .foreign("userId")
       .references("id")

@@ -2,69 +2,77 @@ import { DateTime } from "../../shared/Date";
 import { Entity } from "../../shared/Entity";
 
 export interface SchedulingDTO {
-    id?: string
-    patientId: string
-    date: string
-    duration: number
-    service?: string | null
-    status?: string | null
-    createAt?: string
-    updateAt?: string
+  id?: string;
+  patientId: string;
+  date: string;
+  duration: number;
+  service?: string | null;
+  status?: string | null;
+  createAt?: string;
+  updateAt?: string;
 }
 
 export class Scheduling extends Entity {
-    readonly patientId: string
-    readonly date: DateTime
-    readonly duration: number
-    readonly status: string | null
-    readonly service?: string | null
-    readonly createAt?: string
-    readonly updateAt?: string
+  readonly patientId: string;
+  readonly date: DateTime;
+  readonly duration: number;
+  readonly status: string | null;
+  readonly service?: string | null;
+  readonly createAt?: string;
+  readonly updateAt?: string;
 
-    constructor({ id, date, duration, status, patientId, createAt, service, updateAt }: SchedulingDTO) {
-        super(id || `${Date.now()}`)
-        this.patientId = patientId
-        this.date = new DateTime(date, { onlyFutureDate: true })
-        this.service = service || null
-        this.duration = duration
-        this.status = status || null
-        this.createAt = createAt
-        this.updateAt = updateAt
-    }
+  constructor({
+    id,
+    date,
+    duration,
+    status,
+    patientId,
+    createAt,
+    service,
+    updateAt,
+  }: SchedulingDTO) {
+    super(id || `${Date.now()}`);
+    this.patientId = patientId;
+    this.date = new DateTime(date, { onlyFutureDate: true });
+    this.service = service || null;
+    this.duration = duration;
+    this.status = status || null;
+    this.createAt = createAt;
+    this.updateAt = updateAt;
+  }
 
-    getDTO(): SchedulingDTO {
-        return {
-            id: this.id,
-            patientId: this.patientId,
-            date: this.date.value,
-            duration: this.duration,
-            status: this.status,
-            createAt: this.createAt,
-            updateAt: this.updateAt,
-            service: this.service,
-        }
-    }
+  getDTO(): SchedulingDTO {
+    return {
+      id: this.id,
+      patientId: this.patientId,
+      date: this.date.value,
+      duration: this.duration,
+      status: this.status,
+      createAt: this.createAt,
+      updateAt: this.updateAt,
+      service: this.service,
+    };
+  }
 
-    isAvailableDate(data: SchedulingDTO[]): boolean {
-        return data.some(schedulingValue => {
-            const date = new Date(schedulingValue.date)
-            date.setSeconds(this.duration)
+  isAvailableDate(data: SchedulingDTO[]): boolean {
+    return data.some((schedulingValue) => {
+      const date = new Date(schedulingValue.date);
+      date.setSeconds(this.duration);
 
-            const schedulingDate = new Date(this.date.value)
-            schedulingDate.setSeconds(this.duration)
+      const schedulingDate = new Date(this.date.value);
+      schedulingDate.setSeconds(this.duration);
 
-            const schedulingStart = this.date.value
-            const schedulingEnd = new DateTime(schedulingDate.toISOString()).value
+      const schedulingStart = this.date.value;
+      const schedulingEnd = new DateTime(schedulingDate.toISOString()).value;
 
-            const start = new DateTime(schedulingValue.date).value
-            const end = new DateTime(date.toISOString()).value
+      const start = new DateTime(schedulingValue.date).value;
+      const end = new DateTime(date.toISOString()).value;
 
-            const unavailableStartDate = start <= schedulingStart && schedulingStart < end
-            const unavailableEndDate = start < schedulingEnd && schedulingEnd < end
+      const unavailableStartDate =
+        start <= schedulingStart && schedulingStart < end;
+      const unavailableEndDate = start < schedulingEnd && schedulingEnd < end;
 
-            return unavailableEndDate || unavailableStartDate
-        })
-
-
-    }
+      return unavailableEndDate || unavailableStartDate;
+    });
+  }
 }

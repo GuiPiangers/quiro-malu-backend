@@ -4,7 +4,6 @@ import { ETableNames } from "../ETableNames";
 export async function up(knex: Knex): Promise<void> {
   return knex.schema
     .createTable(ETableNames.LOCATIONS, (table) => {
-      table.string("id", 100).primary().index();
       table.string("patientId", 100).index().notNullable();
       table.string("userId", 100).index().notNullable();
       table.string("cep", 100);

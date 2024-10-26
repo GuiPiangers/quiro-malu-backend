@@ -6,7 +6,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string("id", 100).primary().index();
     table.string("userId", 100).index().notNullable();
     table.string("patientId", 100).index().notNullable();
-    table.date("date");
+    table.dateTime("date");
     table.float("duration");
     table.string("service", 50).index().notNullable();
     table.string("status", 15).notNullable();
