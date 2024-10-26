@@ -33,7 +33,7 @@ export class Scheduling extends Entity {
   }: SchedulingDTO) {
     super(id || `${Date.now()}`);
     this.patientId = patientId;
-    this.date = new DateTime(date, { onlyFutureDate: true });
+    this.date = new DateTime(date);
     this.service = service || null;
     this.duration = duration;
     this.status = status || null;
