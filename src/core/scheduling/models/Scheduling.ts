@@ -1,13 +1,15 @@
 import { DateTime } from "../../shared/Date";
 import { Entity } from "../../shared/Entity";
 
+export type SchedulingStatus = "Agendado" | "Atendido";
+
 export interface SchedulingDTO {
   id?: string;
   patientId: string;
   date: string;
   duration: number;
   service?: string | null;
-  status?: string | null;
+  status?: SchedulingStatus | null;
   createAt?: string;
   updateAt?: string;
 }
@@ -16,7 +18,7 @@ export class Scheduling extends Entity {
   readonly patientId: string;
   readonly date: DateTime;
   readonly duration: number;
-  readonly status: string | null;
+  readonly status: SchedulingStatus | null;
   readonly service?: string | null;
   readonly createAt?: string;
   readonly updateAt?: string;

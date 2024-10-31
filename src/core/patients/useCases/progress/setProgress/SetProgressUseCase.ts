@@ -3,22 +3,23 @@ import { IProgressRepository } from "../../../../../repositories/progress/IProgr
 import { ApiError } from "../../../../../utils/ApiError";
 
 export class SetProgressUseCase {
-    constructor(private ProgressRepository: IProgressRepository) { }
-    async execute({ userId, ...data }: ProgressDTO & { userId: string }) {
-        const progress = new Progress(data)
-        const progressDTO = progress.getDTO()
-        const [progressAlreadyExist] = await this.ProgressRepository.get({
-            id: progressDTO.id!, patientId: progressDTO.patientId, userId
-        })
-        if (!data.patientId) throw new ApiError('Deve ser informado o patientId')
+  constructor(private ProgressRepository: IProgressRepository) {}
+  async execute({ userId, ...data }: ProgressDTO & { userId: string }) {
+    const progress = new Progress(data);
+    const progressDTO = progress.getDTO();
+    const [progressAlreadyExist] = await this.ProgressRepository.get({
+      id: progressDTO.id!,
+      patientId: progressDTO.patientId,
+      userId,
+    });
+    if (!data.patientId) throw new ApiError("Deve ser informado o patientId");
 
-        if (progressAlreadyExist) {
-            await this.ProgressRepository.update({ ...progressDTO, userId });
-        }
-        else {
-            await this.ProgressRepository.save({ ...progressDTO, userId });
-        }
-
-        return progressDTO
+    if (progressAlreadyExist) {
+      await this.ProgressRepository.update({ ...progressDTO, userId });
+    } else {
+      await this.ProgressRepository.save({ ...progressDTO, userId });
     }
+
+    return progressDTO;
+  }
 }
