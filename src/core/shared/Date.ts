@@ -32,13 +32,8 @@ export class DateTime {
         );
     }
 
-    const dateValue = date
-      .toLocaleDateString()
-      .split("/")
-      .reverse()
-      .join("-")
-      .substring(0, 10);
-    const timeValue = date.toLocaleTimeString().substring(0, 5);
+    const dateValue = date.toISOString().substring(0, 10);
+    const timeValue = date.toISOString().substring(11, 16);
 
     this.value = `${dateValue}T${timeValue}`;
   }
@@ -53,6 +48,6 @@ export class DateTime {
   }
 
   get time() {
-    return this.value.substring(11, 5);
+    return this.value.substring(11, 16);
   }
 }
