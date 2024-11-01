@@ -1,24 +1,28 @@
 import { DateTime } from "../../shared/Date";
 import { Entity } from "../../shared/Entity";
 
-export type SchedulingStatus = "Agendado" | "Atendido";
+export type SchedulingStatus = "Agendado" | "Atendido" | "Atrasado";
 
 export interface SchedulingDTO {
   id?: string;
   patientId: string;
+  patient?: string;
+  phone?: string;
   date: string;
   duration: number;
   service?: string | null;
-  status?: SchedulingStatus | null;
+  status?: "Agendado" | "Atendido" | "Atrasado" | null;
   createAt?: string;
   updateAt?: string;
 }
 
 export class Scheduling extends Entity {
   readonly patientId: string;
+  readonly patient?: string;
+  readonly phone?: string;
   readonly date: DateTime;
   readonly duration: number;
-  readonly status: SchedulingStatus | null;
+  readonly status: SchedulingStatus | "Atrasado" | null;
   readonly service?: string | null;
   readonly createAt?: string;
   readonly updateAt?: string;
@@ -32,15 +36,23 @@ export class Scheduling extends Entity {
     createAt,
     service,
     updateAt,
+    patient,
+    phone,
   }: SchedulingDTO) {
     super(id || `${Date.now()}`);
     this.patientId = patientId;
     this.date = new DateTime(date);
     this.service = service || null;
     this.duration = duration;
-    this.status = status || null;
+    if (status === "Agendado" && this.date.value < new DateTime(Date()).value) {
+      this.status = "Atrasado";
+    } else {
+      this.status = status || "Agendado";
+    }
     this.createAt = createAt;
     this.updateAt = updateAt;
+    this.patient = patient;
+    this.phone = phone;
   }
 
   getDTO(): SchedulingDTO {
@@ -53,6 +65,8 @@ export class Scheduling extends Entity {
       createAt: this.createAt,
       updateAt: this.updateAt,
       service: this.service,
+      patient: this.patient,
+      phone: this.phone,
     };
   }
 
