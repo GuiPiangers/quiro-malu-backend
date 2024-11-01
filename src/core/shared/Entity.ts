@@ -7,6 +7,7 @@ export abstract class Entity {
     this._id = new Id(id);
   }
 
-  get id() { return this._id.value }
-
+  get id() {
+    return this._id.value;
+  }
 }

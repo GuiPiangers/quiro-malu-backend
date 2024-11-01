@@ -1,5 +1,4 @@
-import { v4 as uuidV4, validate } from "uuid";
-import { ApiError } from "../../utils/ApiError";
+import { v4 as uuidV4 } from "uuid";
 
 export class Id {
   constructor(readonly value: string = uuidV4()) {}
