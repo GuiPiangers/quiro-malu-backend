@@ -1,5 +1,7 @@
 import { DateTime } from "../../shared/Date";
 import { Entity } from "../../shared/Entity";
+import ClientStatusStrategy from "./status/ClientSatusStrayegy";
+import { StatusStrategy } from "./status/StatusStrategy";
 
 export type SchedulingStatus = "Agendado" | "Atendido" | "Atrasado";
 
@@ -22,37 +24,46 @@ export class Scheduling extends Entity {
   readonly phone?: string;
   readonly date: DateTime;
   readonly duration: number;
-  readonly status: SchedulingStatus | "Atrasado" | null;
   readonly service?: string | null;
   readonly createAt?: string;
   readonly updateAt?: string;
+  private _status?: SchedulingStatus | "Atrasado" | null;
+  private satusStategy?: StatusStrategy;
 
-  constructor({
-    id,
-    date,
-    duration,
-    status,
-    patientId,
-    createAt,
-    service,
-    updateAt,
-    patient,
-    phone,
-  }: SchedulingDTO) {
+  constructor(
+    {
+      id,
+      date,
+      duration,
+      status,
+      patientId,
+      createAt,
+      service,
+      updateAt,
+      patient,
+      phone,
+    }: SchedulingDTO,
+    satusStategy?: StatusStrategy,
+  ) {
     super(id || `${Date.now()}`);
+    this.satusStategy = satusStategy || new ClientStatusStrategy();
     this.patientId = patientId;
     this.date = new DateTime(date);
     this.service = service || null;
     this.duration = duration;
-    if (status === "Agendado" && this.date.value < new DateTime(Date()).value) {
-      this.status = "Atrasado";
-    } else {
-      this.status = status || "Agendado";
-    }
+    this._status = status;
+
     this.createAt = createAt;
     this.updateAt = updateAt;
     this.patient = patient;
     this.phone = phone;
+  }
+
+  get status() {
+    return this.satusStategy?.calculateStatus({
+      scheduling: this,
+      status: this._status,
+    });
   }
 
   getDTO(): SchedulingDTO {
