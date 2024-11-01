@@ -11,7 +11,7 @@ export default {
   // bail: 0,
 
   // The directory where Jest should store its cached dependency information
-  // cacheDirectory: "/tmp/jest_rs",
+  cacheDirectory: "/tmp/jest_rs",
 
   // Automatically clear mock calls and instances between every test
   clearMocks: true,

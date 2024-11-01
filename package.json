@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --maxWorkers=50%",
+    "test:watch": "jest --watch --maxWorkers=25%",
     "dev": "tsnd --transpile-only --respawn --ignore-watch node_modules ./src/server.ts",
     "knex:migrate": "knex --knexfile ./src/server/knex/knexfile.ts migrate:latest",
     "knex:rollback": "knex --knexfile ./src/server/knex/knexfile.ts migrate:rollback",

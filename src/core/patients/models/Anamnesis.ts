@@ -1,5 +1,3 @@
-import { Entity } from "../../shared/Entity";
-
 export interface AnamnesisDTO {
   patientId: string;
   mainProblem: string;
