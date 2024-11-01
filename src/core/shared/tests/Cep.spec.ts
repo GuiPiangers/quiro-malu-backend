@@ -2,14 +2,14 @@ import { ApiError } from "../../../utils/ApiError";
 import { Cep } from "../Cep";
 
 describe("Cep", () => {
-  it("Should create an instance of Cep when the value is in the correct format", () => {
+  it("should create an instance of Cep when the value is in the correct format", () => {
     const validCep = "12345-678";
     const cep = new Cep(validCep);
 
     expect(cep.value).toBe(validCep);
   });
 
-  it("Should throw an ApiError when the Cep is diferent of expected format", () => {
+  it("should throw an ApiError when the Cep is diferent then expected format", () => {
     const invalidCep = "12345678";
 
     expect(() => new Cep(invalidCep)).toThrow(ApiError);
