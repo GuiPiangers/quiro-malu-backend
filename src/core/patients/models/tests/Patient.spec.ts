@@ -29,6 +29,17 @@ describe("Patient", () => {
       neighborhood: null,
     });
   });
+  it("should create a id if it's not specified", () => {
+    const patientData: PatientDTO = {
+      id: "1",
+      name: "John Doe",
+      phone: "(12) 34567 8901",
+    };
+
+    const patient = new Patient(patientData);
+
+    expect(patient).toHaveProperty("id");
+  });
 
   it("should create a Patient instance without optional fields", () => {
     const patientData: PatientDTO = {
