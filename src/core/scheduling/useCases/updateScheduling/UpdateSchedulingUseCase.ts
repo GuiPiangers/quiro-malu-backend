@@ -28,7 +28,7 @@ export class UpdateSchedulingUseCase {
 
     if (
       updateSchedulingDate !== data.date &&
-      scheduling.isAvailableDate(schedules)
+      scheduling.notAvailableDate(schedules)
     )
       throw new ApiError("Horário indisponível", 400, "date");
 

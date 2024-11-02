@@ -48,7 +48,7 @@ export class Scheduling extends Entity {
     super(id || `${Date.now()}`);
     this.satusStategy = satusStategy || new ClientStatusStrategy();
     this.patientId = patientId;
-    this.date = new DateTime(date);
+    this.date = new DateTime(date, {});
     this.service = service || null;
     this.duration = duration;
     this._status = status;
@@ -81,19 +81,20 @@ export class Scheduling extends Entity {
     };
   }
 
-  isAvailableDate(data: SchedulingDTO[]): boolean {
+  notAvailableDate(data: SchedulingDTO[]): boolean {
     return data.some((schedulingValue) => {
-      const date = new Date(schedulingValue.date);
-      date.setSeconds(this.duration);
+      const endDate = new Date(schedulingValue.date);
+      endDate.setSeconds(this.duration);
 
       const schedulingDate = new Date(this.date.value);
       schedulingDate.setSeconds(this.duration);
 
       const schedulingStart = this.date.value;
-      const schedulingEnd = new DateTime(schedulingDate.toISOString()).value;
+      const schedulingEnd = new DateTime(schedulingDate.toISOString(), {})
+        .value;
 
       const start = new DateTime(schedulingValue.date).value;
-      const end = new DateTime(date.toISOString()).value;
+      const end = new DateTime(endDate.toISOString()).value;
 
       const unavailableStartDate =
         start <= schedulingStart && schedulingStart < end;

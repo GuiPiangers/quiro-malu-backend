@@ -1,4 +1,5 @@
 import { ApiError } from "../../../../utils/ApiError";
+import { DateTime } from "../../../shared/Date";
 import { Progress, ProgressDTO } from "../Progress";
 
 describe("Progress", () => {
@@ -8,7 +9,7 @@ describe("Progress", () => {
       patientId: "patient-1",
       service: "Consultation",
       actualProblem: "Headache",
-      date: "2023-12-01", // valid date
+      date: "2023-12-01T00:00", // valid date
       procedures: "Consultation and tests",
     };
 
@@ -44,7 +45,7 @@ describe("Progress", () => {
       patientId: "patient-4",
       service: "Check-up",
       actualProblem: "Routine check",
-      date: "2023-11-01",
+      date: new DateTime("2023-11-01T00:00").value,
       procedures: "Blood test",
     };
 
