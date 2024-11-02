@@ -5,6 +5,7 @@ import connection, {
   query,
 } from "../../database/mySqlConnection";
 import { IPatientRepository } from "../../repositories/patient/IPatientRepository";
+import { getValidObjectValues } from "../../utils/getValidObjectValues";
 
 export class MySqlPatientRepository implements IPatientRepository {
   save(data: PatientDTO, userId: string): Promise<void> {
@@ -21,7 +22,7 @@ export class MySqlPatientRepository implements IPatientRepository {
     return query(errorMessage, sql, [data, patientId, userId]);
   }
 
-  getAll(
+  async getAll(
     userId: string,
     config: {
       limit: number;
@@ -36,12 +37,19 @@ export class MySqlPatientRepository implements IPatientRepository {
       ) || null;
     const sql = `SELECT * FROM patients WHERE userId = ? AND name like ? ORDER BY ${orderBy}  LIMIT ? OFFSET ?`;
     const errorMessage = `Não foi possível realizar a busca`;
-    return query(errorMessage, sql, [
+    // return query(errorMessage, sql, [
+    //   userId,
+    //   `%${config.search?.name}%`,
+    //   config.limit,
+    //   config.offSet,
+    // ]);
+    const results = await query<PatientDTO[]>(errorMessage, sql, [
       userId,
       `%${config.search?.name}%`,
       config.limit,
       config.offSet,
     ]);
+    return results.map((result) => getValidObjectValues<PatientDTO>(result));
   }
 
   countAll(
@@ -54,19 +62,29 @@ export class MySqlPatientRepository implements IPatientRepository {
     return query(errorMessage, sql, [userId, `%${search?.name}%`]);
   }
 
-  getByCpf(cpf: string, userId: string): Promise<PatientDTO[]> {
+  async getByCpf(cpf: string, userId: string): Promise<PatientDTO[]> {
     const sql = "SELECT * FROM patients WHERE cpf = ? AND userId = ?";
     const errorMessage = `Não foi possível realizar a busca`;
 
-    return query(errorMessage, sql, [cpf, userId]);
+    const [result] = await query<PatientDTO[]>(errorMessage, sql, [
+      cpf,
+      userId,
+    ]);
+
+    return [getValidObjectValues<PatientDTO>(result)];
   }
 
-  getById(patientId: string, userId: string): Promise<PatientDTO[]> {
+  async getById(patientId: string, userId: string): Promise<PatientDTO[]> {
     const sql =
       "SELECT *, created_at AS createAt FROM patients WHERE id = ? AND userId = ?";
     const errorMessage = `Não foi possível realizar a busca`;
 
-    return query(errorMessage, sql, [patientId, userId]);
+    const [result] = await query<PatientDTO[]>(errorMessage, sql, [
+      patientId,
+      userId,
+    ]);
+
+    return [getValidObjectValues<PatientDTO>(result)];
   }
 
   delete(patientId: string, userId: string): Promise<void> {

@@ -18,7 +18,6 @@ describe("Get valid values of objects", () => {
     };
 
     const validObject = getValidObjectValues(invalidObject);
-    console.log(validObject);
 
     expect(validObject).toEqual({
       name: "Guilherme",

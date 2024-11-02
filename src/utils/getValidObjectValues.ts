@@ -1,5 +1,5 @@
-export function getValidObjectValues(object: { [key: string]: any }) {
-  const result = {} as { [key: string]: any };
+export function getValidObjectValues<T>(object: T) {
+  const result = {} as T;
 
   for (const key in object) {
     const value = object[key];
