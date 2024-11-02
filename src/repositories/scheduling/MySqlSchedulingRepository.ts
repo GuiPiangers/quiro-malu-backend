@@ -1,5 +1,6 @@
 import { SchedulingDTO } from "../../core/scheduling/models/Scheduling";
 import { query } from "../../database/mySqlConnection";
+import { getValidObjectValues } from "../../utils/getValidObjectValues";
 import { ISchedulingRepository } from "../scheduling/ISchedulingRepository";
 
 export class MySqlSchedulingRepository implements ISchedulingRepository {
@@ -12,7 +13,10 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
     const sql = "INSERT INTO schedules SET ?";
     const errorMessage = "Falha ao adicionar o serviço";
 
-    return query(errorMessage, sql, { ...data, userId });
+    return query(errorMessage, sql, {
+      ...getValidObjectValues(data),
+      userId,
+    });
   }
 
   update({
@@ -25,7 +29,7 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
     const sql = "UPDATE schedules SET ? WHERE id = ? AND userId = ?";
     const errorMessage = "Falha ao atualizar o serviço";
 
-    return query(errorMessage, sql, [data, id, userId]);
+    return query(errorMessage, sql, [getValidObjectValues(data), id, userId]);
   }
 
   list({

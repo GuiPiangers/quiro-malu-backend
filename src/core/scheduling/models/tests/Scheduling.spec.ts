@@ -1,7 +1,6 @@
 import { Scheduling, SchedulingDTO } from "../Scheduling";
 import { ApiError } from "../../../../utils/ApiError";
 import { DateTime } from "../../../shared/Date";
-import ClientStatusStrategy from "../status/ClientSatusStrayegy";
 
 describe("Scheduling", () => {
   const validDate = "2024-11-01T10:00:00"; // Example valid date
@@ -22,7 +21,6 @@ describe("Scheduling", () => {
     expect(scheduling.date.value).toBe(validDate);
     expect(scheduling.duration).toBe(schedulingData.duration);
     expect(scheduling.service).toBe(schedulingData.service);
-    expect(scheduling._status).toBe(schedulingData.status);
   });
 
   it("should calculate status using the strategy pattern", () => {

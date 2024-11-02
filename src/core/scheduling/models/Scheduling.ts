@@ -1,6 +1,6 @@
 import { DateTime } from "../../shared/Date";
 import { Entity } from "../../shared/Entity";
-import ClientStatusStrategy from "./status/ClientSatusStrayegy";
+import ClientStatusStrategy from "./status/ClientStatusStrategy";
 import { StatusStrategy } from "./status/StatusStrategy";
 
 export type SchedulingStatus = "Agendado" | "Atendido" | "Atrasado";
