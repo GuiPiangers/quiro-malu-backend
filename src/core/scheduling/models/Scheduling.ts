@@ -100,7 +100,10 @@ export class Scheduling extends Entity {
         start <= schedulingStart && schedulingStart < end;
       const unavailableEndDate = start < schedulingEnd && schedulingEnd < end;
 
-      return unavailableEndDate || unavailableStartDate;
+      return (
+        schedulingValue.id !== this.id &&
+        (unavailableEndDate || unavailableStartDate)
+      );
     });
   }
 }

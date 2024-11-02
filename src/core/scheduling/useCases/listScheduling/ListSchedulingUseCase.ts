@@ -1,6 +1,7 @@
 import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
 import { DateTime } from "../../../shared/Date";
 import { Scheduling } from "../../models/Scheduling";
+import ClientStatusStrategy from "../../models/status/ClientStatusStrategy";
 
 export class ListSchedulingUseCase {
   constructor(private SchedulingRepository: ISchedulingRepository) {}
@@ -15,7 +16,8 @@ export class ListSchedulingUseCase {
     page?: number;
   }) {
     const limit = 20;
-    const offSet = page ? limit * (page - 1) : 0;
+    // const offSet = page ? limit * (page - 1) : 0;
+    const clientStatusStrategy = new ClientStatusStrategy();
     const date = schedulingDate || new DateTime(new Date().toString()).value;
 
     const schedulingData = this.SchedulingRepository.list({
@@ -33,7 +35,11 @@ export class ListSchedulingUseCase {
     ]);
     return {
       schedules: schedules.map((scheduling) => {
-        return new Scheduling(scheduling).getDTO();
+        const result = new Scheduling(
+          scheduling,
+          clientStatusStrategy,
+        ).getDTO();
+        return result;
       }),
       total: total[0].total,
       limit,
