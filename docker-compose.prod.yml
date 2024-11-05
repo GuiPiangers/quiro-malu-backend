@@ -4,7 +4,7 @@ services:
     container_name: appBuild
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.prod
     env_file:
       - .env.prod
     ports: 
