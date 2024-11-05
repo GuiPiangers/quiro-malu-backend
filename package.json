@@ -10,7 +10,10 @@
     "knex:migrate": "knex --knexfile ./src/server/knex/knexfile.ts migrate:latest",
     "knex:rollback": "knex --knexfile ./src/server/knex/knexfile.ts migrate:rollback",
     "knex:rollback-all": "knex --knexfile ./src/server/knex/knexfile.ts migrate:rollback --all",
-    "knex:seed": "knex --knexfile ./src/server/knex/knexfile.ts seed:run"
+    "knex:seed": "knex --knexfile ./src/server/knex/knexfile.ts seed:run",
+    "build": "tsc",
+    "start": "node ./build/src/server.js"
+
   },
   "keywords": [],
   "author": "",

@@ -4,7 +4,6 @@ import { StatusStrategy, StatusStrategyData } from "./StatusStrategy";
 export default class ClientStatusStrategy implements StatusStrategy {
   calculateStatus({ scheduling, status }: StatusStrategyData) {
     const date = new DateTime(new Date().toString());
-    console.log(status);
     if (scheduling.date.value < date.value && status === "Agendado")
       return "Atrasado";
     return status || "Agendado";

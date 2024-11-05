@@ -12,7 +12,6 @@ export class CreateSchedulingUseCase {
     const scheduling = new Scheduling(data, dataBaseStatusStrategy);
 
     const schedulingDTO = scheduling.getDTO();
-    console.log("chegou aqui");
     const schedules = await this.SchedulingRepository.list({
       userId,
       date: new DateTime(data.date).date,

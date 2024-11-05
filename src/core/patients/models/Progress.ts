@@ -31,7 +31,7 @@ export class Progress extends Entity {
     this.patientId = patientId;
     this.service = service;
     this.actualProblem = actualProblem;
-    if (date) this.date = new DateTime(date, { onlyPassDate: true });
+    if (date) this.date = new DateTime(date);
     this.procedures = procedures;
   }
 
