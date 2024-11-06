@@ -11,6 +11,8 @@ services:
       - "8000:8000"
     depends_on: 
       - "mysql-db"
+    networks:
+      - minha_rede
 
   mysql-db:
     image: mysql:8.0
@@ -22,6 +24,11 @@ services:
       - db:/var/lib/mysql
     ports:
       - "3306:3306"
+    networks:
+      - minha_rede
 
 volumes:
   db:
+networks:
+  minha_rede:
+    driver: bridge
