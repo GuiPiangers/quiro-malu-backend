@@ -48,7 +48,7 @@ export class Scheduling extends Entity {
     super(id || `${Date.now()}`);
     this.satusStategy = satusStategy || new ClientStatusStrategy();
     this.patientId = patientId;
-    this.date = new DateTime(date, {});
+    this.date = new DateTime(date);
     this.service = service || null;
     this.duration = duration;
     this._status = status;
@@ -66,15 +66,15 @@ export class Scheduling extends Entity {
     });
   }
 
-  getDTO(): SchedulingDTO {
+  getDTO() {
     return {
       id: this.id,
       patientId: this.patientId,
       date: this.date.value,
       duration: this.duration,
       status: this.status,
-      createAt: this.createAt,
-      updateAt: this.updateAt,
+      // createAt: this.createAt,
+      // updateAt: this.updateAt,
       service: this.service,
       patient: this.patient,
       phone: this.phone,

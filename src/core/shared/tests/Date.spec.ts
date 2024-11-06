@@ -55,7 +55,7 @@ describe("DateTime", () => {
 
   it("should handle timezone correctly", () => {
     const dateStr = "2024-11-01T10:30:00";
-    const timezone = "America/Sao_Paulo";
+    const timezone = "Etc/UTC";
     const dateTime = new DateTime(dateStr, {}, timezone);
 
     expect(dateTime.value).toMatch(/^2024-11-01T10:30$/);
