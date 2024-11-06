@@ -26,8 +26,13 @@ export class User extends Entity {
     this.password = new Password(props.password);
   }
 
-  get email() { return this._email.value }
-  get phone() { return this._phone.value }
+  get email() {
+    return this._email.value;
+  }
+
+  get phone() {
+    return this._phone.value;
+  }
 
   async getUserDTO(): Promise<UserDTO> {
     return {
@@ -36,6 +41,6 @@ export class User extends Entity {
       password: await this.password.getHash(),
       name: this.name.value,
       phone: this.phone,
-    }
+    };
   }
 }
