@@ -37,7 +37,7 @@ describe("Create patients", () => {
       name: "Guilherme Eduardo",
       phone: "(51) 99999 9999",
       cpf: "036.638.400-00",
-      dateOfBirth: "03/06/2002",
+      dateOfBirth: "2002-06-03T00:00",
       gender: "feminino",
       location: {
         address: "Rua Maranhão",

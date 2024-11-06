@@ -1,15 +1,15 @@
 import { Scheduling, SchedulingDTO } from "../Scheduling";
 
 describe("Scheduling", () => {
-  const validDate = "2024-11-01T10:00"; // Example valid date
+  const validDate = "2024-11-01T10:00";
 
   it("should create an instance of Scheduling with valid data", () => {
     const schedulingData: SchedulingDTO = {
       patientId: "patient-1",
       date: validDate,
-      duration: 30,
+      duration: 60 * 30,
       service: "Consultation",
-      status: "Agendado",
+      status: "Atendido",
     };
 
     const scheduling = new Scheduling(schedulingData);
@@ -44,14 +44,14 @@ describe("Scheduling", () => {
 
   it("should return the correct DTO", () => {
     const schedulingData: SchedulingDTO = {
+      id: "1",
       patientId: "patient-3",
       date: validDate,
-      duration: 30,
-      status: "Agendado",
+      duration: 60 * 30, // 30 min
+      status: "Atendido",
     };
 
     const scheduling = new Scheduling(schedulingData);
-
     const dto = scheduling.getDTO();
 
     expect(dto).toEqual({
@@ -59,7 +59,7 @@ describe("Scheduling", () => {
       patientId: scheduling.patientId,
       date: validDate,
       duration: scheduling.duration,
-      status: "Agendado", // Assuming status has been calculated to 'Agendado'
+      status: "Atendido",
       createAt: undefined,
       updateAt: undefined,
       service: scheduling.service,

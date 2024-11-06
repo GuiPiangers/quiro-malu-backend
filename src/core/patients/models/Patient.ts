@@ -55,7 +55,7 @@ export class Patient extends Entity {
       id: this.id,
       name: this.name.value,
       cpf: this.cpf,
-      location: location,
+      location,
       phone: this.phone,
       dateOfBirth: this.dateOfBirth?.date,
       gender: this.gender,

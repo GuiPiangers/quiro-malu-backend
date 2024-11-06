@@ -1,4 +1,3 @@
-import { format } from "date-fns";
 import { TZDate } from "@date-fns/tz";
 import { ApiError } from "../../utils/ApiError";
 
@@ -23,7 +22,7 @@ export class DateTime {
     }
 
     const utcDate = new TZDate(dateStr, "Etc/UTC");
-    const now = new Date();
+    const now = new TZDate(new Date(), "Etc/UTC");
 
     if (onlyPassDate && !onlyFutureDate) {
       if (utcDate > now) {
@@ -44,16 +43,12 @@ export class DateTime {
       }
     }
 
-    const zonedDate = new TZDate(utcDate, this.timezone);
-    const dateValue = format(zonedDate, "yyyy-MM-dd");
-    const timeValue = format(zonedDate, "HH:mm");
-
-    this.value = `${dateValue}T${timeValue}`;
+    this.value = dateStr.substring(0, 16);
   }
 
   private isValidDate(dateString: string): boolean {
-    const date = new Date(dateString);
-    return !isNaN(date.getTime());
+    const regex = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})/gm;
+    return regex.test(dateString);
   }
 
   get date(): string {
