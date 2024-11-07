@@ -1,6 +1,7 @@
 import { query } from "../../database/mySqlConnection";
 import { ProgressDTO } from "../../core/patients/models/Progress";
 import { IProgressRepository } from "./IProgressRepository";
+import { getValidObjectValues } from "../../utils/getValidObjectValues";
 
 export class MySqlProgressRepository implements IProgressRepository {
   save({
@@ -12,7 +13,7 @@ export class MySqlProgressRepository implements IProgressRepository {
     const errorMessage = "Falha ao adicionar o usuário";
 
     return query(errorMessage, sql, {
-      ...data,
+      ...getValidObjectValues(data),
       userId,
       patientId,
     });
@@ -28,10 +29,15 @@ export class MySqlProgressRepository implements IProgressRepository {
       "UPDATE progress SET ? WHERE id = ? AND patientId = ? AND userId = ?";
     const errorMessage = "Falha ao adicionar o usuário";
 
-    return query(errorMessage, sql, [data, id, patientId, userId]);
+    return query(errorMessage, sql, [
+      getValidObjectValues(data),
+      id,
+      patientId,
+      userId,
+    ]);
   }
 
-  get({
+  async get({
     id,
     patientId,
     userId,
@@ -44,10 +50,16 @@ export class MySqlProgressRepository implements IProgressRepository {
       "SELECT * FROM progress WHERE id = ? AND patientId = ? AND userId = ?";
     const errorMessage = `Não foi possível realizar a busca`;
 
-    return query(errorMessage, sql, [id, patientId, userId]);
+    const result = await query<ProgressDTO[]>(errorMessage, sql, [
+      id,
+      patientId,
+      userId,
+    ]);
+
+    return result.map((progress) => getValidObjectValues(progress));
   }
 
-  list({
+  async list({
     patientId,
     userId,
     config,
@@ -59,13 +71,14 @@ export class MySqlProgressRepository implements IProgressRepository {
     const sql =
       "SELECT * FROM progress WHERE patientId = ? AND userId = ? ORDER BY date DESC LIMIT ? OFFSET ?";
     const errorMessage = `Não foi possível realizar a busca`;
-
-    return query(errorMessage, sql, [
+    const result = await query<ProgressDTO[]>(errorMessage, sql, [
       patientId,
       userId,
       config?.limit,
       config?.offSet,
     ]);
+
+    return result.map((progress) => getValidObjectValues(progress));
   }
 
   count({
