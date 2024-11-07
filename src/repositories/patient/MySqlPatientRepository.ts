@@ -1,9 +1,5 @@
 import { PatientDTO } from "../../core/patients/models/Patient";
-import connection, {
-  escapeSansQuotes,
-  order,
-  query,
-} from "../../database/mySqlConnection";
+import { order, query } from "../../database/mySqlConnection";
 import { IPatientRepository } from "../../repositories/patient/IPatientRepository";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
 
@@ -12,14 +8,21 @@ export class MySqlPatientRepository implements IPatientRepository {
     const sql = "INSERT INTO patients SET ?";
     const errorMessage = "Falha ao adicionar o usuário";
 
-    return query(errorMessage, sql, { ...data, userId });
+    return query(errorMessage, sql, {
+      ...getValidObjectValues<PatientDTO>(data),
+      userId,
+    });
   }
 
   update(data: PatientDTO, patientId: string, userId: string): Promise<void> {
     const sql = "UPDATE patients SET ? WHERE id = ? and userId = ?";
     const errorMessage = "Falha ao adicionar o usuário";
 
-    return query(errorMessage, sql, [data, patientId, userId]);
+    return query(errorMessage, sql, [
+      getValidObjectValues<PatientDTO>(data),
+      patientId,
+      userId,
+    ]);
   }
 
   async getAll(
@@ -37,12 +40,6 @@ export class MySqlPatientRepository implements IPatientRepository {
       ) || null;
     const sql = `SELECT * FROM patients WHERE userId = ? AND name like ? ORDER BY ${orderBy}  LIMIT ? OFFSET ?`;
     const errorMessage = `Não foi possível realizar a busca`;
-    // return query(errorMessage, sql, [
-    //   userId,
-    //   `%${config.search?.name}%`,
-    //   config.limit,
-    //   config.offSet,
-    // ]);
     const results = await query<PatientDTO[]>(errorMessage, sql, [
       userId,
       `%${config.search?.name}%`,
