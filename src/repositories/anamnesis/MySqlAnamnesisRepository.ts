@@ -1,7 +1,8 @@
 /* eslint-disable eqeqeq */
 import { query } from "../../database/mySqlConnection";
 import { IAnamnesisRepository } from "./IAnamnesisRepository";
-import { Anamnesis, AnamnesisDTO } from "../../core/patients/models/Anamnesis";
+import { AnamnesisDTO } from "../../core/patients/models/Anamnesis";
+import { getValidObjectValues } from "../../utils/getValidObjectValues";
 
 export class MySqlAnamnesisRepository implements IAnamnesisRepository {
   save({ patientId, ...data }: AnamnesisDTO, userId: string): Promise<void> {
@@ -9,7 +10,7 @@ export class MySqlAnamnesisRepository implements IAnamnesisRepository {
     const errorMessage = "Falha ao adicionar o usuário";
 
     return query(errorMessage, sql, {
-      ...data,
+      ...getValidObjectValues(data),
       userId,
       patientId,
     });
@@ -19,7 +20,11 @@ export class MySqlAnamnesisRepository implements IAnamnesisRepository {
     const sql = "UPDATE anamnesis SET ? WHERE patientId = ? and userId = ?";
     const errorMessage = "Falha ao adicionar o usuário";
 
-    return query(errorMessage, sql, [data, patientId, userId]);
+    return query(errorMessage, sql, [
+      getValidObjectValues(data),
+      patientId,
+      userId,
+    ]);
   }
 
   async get(patientId: string, userId: string): Promise<AnamnesisDTO[]> {
@@ -31,10 +36,12 @@ export class MySqlAnamnesisRepository implements IAnamnesisRepository {
         useMedicine: number;
       })[]
     >(errorMessage, sql, [patientId, userId]);
-    return result.map((anamnesis) => ({
-      ...anamnesis,
-      underwentSurgery: anamnesis.underwentSurgery == 1,
-      useMedicine: anamnesis.useMedicine == 1,
-    }));
+    return result.map((anamnesis) =>
+      getValidObjectValues({
+        ...anamnesis,
+        underwentSurgery: anamnesis.underwentSurgery == 1,
+        useMedicine: anamnesis.useMedicine == 1,
+      }),
+    );
   }
 }
