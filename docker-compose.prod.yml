@@ -11,6 +11,8 @@ services:
       - "8000:8000"
     depends_on: 
       - "mysql-db"
+    networks:
+      - minha_rede
 
   mysql-db:
     image: mysql:8.0
@@ -22,6 +24,8 @@ services:
       - db:/var/lib/mysql
     ports:
       - "3306:3306"
+    networks:
+      - minha_rede
 
   nginx:
     image: nginx:latest
@@ -34,6 +38,10 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf    # Configuração do Nginx
       - ./certbot/conf:/etc/letsencrypt             # Diretório dos certificados SSL
       - ./certbot/www:/var/www/certbot              # Pasta temporária para o Certbot
+    depends_on: 
+      - "app"
+    networks:
+      - minha_rede
 
     # Serviço Certbot para gerenciamento de certificados SSL
   certbot:
@@ -43,5 +51,11 @@ services:
       - ./certbot/conf:/etc/letsencrypt             # Diretório dos certificados SSL
       - ./certbot/www:/var/www/certbot              # Pasta temporária para o Certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do sleep 12h & wait $${!}; certbot renew; done;'"
+    networks:
+      - minha_rede
+
 volumes:
   db:
+networks:
+  minha_rede:
+    driver: bridge
