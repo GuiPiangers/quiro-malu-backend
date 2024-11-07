@@ -1,5 +1,6 @@
 import { ServiceDTO } from "../../core/service/models/Service";
 import { query } from "../../database/mySqlConnection";
+import { getValidObjectValues } from "../../utils/getValidObjectValues";
 import { IServiceRepository } from "../service/IServiceRepository";
 
 export class MySqlServiceRepository implements IServiceRepository {
@@ -7,7 +8,7 @@ export class MySqlServiceRepository implements IServiceRepository {
     const sql = "INSERT INTO services SET ?";
     const errorMessage = "Falha ao adicionar o serviço";
 
-    return query(errorMessage, sql, { ...data, userId });
+    return query(errorMessage, sql, { ...getValidObjectValues(data), userId });
   }
 
   update({
@@ -18,10 +19,10 @@ export class MySqlServiceRepository implements IServiceRepository {
     const sql = "UPDATE services SET ? WHERE id = ? and userId = ?";
     const errorMessage = "Falha ao atualizar o serviço";
 
-    return query(errorMessage, sql, [data, id, userId]);
+    return query(errorMessage, sql, [getValidObjectValues(data), id, userId]);
   }
 
-  list({
+  async list({
     userId,
     config,
   }: {
@@ -31,7 +32,13 @@ export class MySqlServiceRepository implements IServiceRepository {
     const sql =
       "SELECT *  FROM services WHERE userId = ? ORDER BY updated_at DESC LIMIT ? OFFSET ?";
     const errorMessage = `Não foi possível realizar a busca`;
-    return query(errorMessage, sql, [userId, config?.limit, config?.offSet]);
+    const result = await query<ServiceDTO[]>(errorMessage, sql, [
+      userId,
+      config?.limit,
+      config?.offSet,
+    ]);
+
+    return result.map((service) => getValidObjectValues(service));
   }
 
   count({ userId }: { userId: string }): Promise<[{ total: number }]> {
@@ -40,14 +47,21 @@ export class MySqlServiceRepository implements IServiceRepository {
     return query(errorMessage, sql, [userId]);
   }
 
-  get({ id, userId }: { id: string; userId: string }): Promise<ServiceDTO[]> {
+  async get({
+    id,
+    userId,
+  }: {
+    id: string;
+    userId: string;
+  }): Promise<ServiceDTO[]> {
     const sql = "SELECT * FROM services WHERE id = ? AND userId = ?";
     const errorMessage = `Não foi possível realizar a busca`;
+    const result = await query<ServiceDTO[]>(errorMessage, sql, [id, userId]);
 
-    return query(errorMessage, sql, [id, userId]);
+    return result.map((service) => getValidObjectValues(service));
   }
 
-  getByName({
+  async getByName({
     name,
     userId,
   }: {
@@ -56,8 +70,9 @@ export class MySqlServiceRepository implements IServiceRepository {
   }): Promise<ServiceDTO[]> {
     const sql = "SELECT * FROM services WHERE name = ? AND userId = ?";
     const errorMessage = `Não foi possível realizar a busca`;
+    const result = await query<ServiceDTO[]>(errorMessage, sql, [name, userId]);
 
-    return query(errorMessage, sql, [name, userId]);
+    return result.map((service) => getValidObjectValues(service));
   }
 
   delete({ id, userId }: { id: string; userId: string }): Promise<void> {
