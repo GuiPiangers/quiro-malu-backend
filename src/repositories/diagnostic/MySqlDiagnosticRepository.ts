@@ -1,6 +1,7 @@
 import { query } from "../../database/mySqlConnection";
 import { DiagnosticDTO } from "../../core/patients/models/Diagnostic";
 import { IDiagnosticRepository } from "./IDiagnosticRepository";
+import { getValidObjectValues } from "../../utils/getValidObjectValues";
 
 export class MySqlDiagnosticRepository implements IDiagnosticRepository {
   save({ patientId, ...data }: DiagnosticDTO, userId: string): Promise<void> {
@@ -8,7 +9,7 @@ export class MySqlDiagnosticRepository implements IDiagnosticRepository {
     const errorMessage = "Falha ao adicionar o usuário";
 
     return query(errorMessage, sql, {
-      ...data,
+      ...getValidObjectValues(data),
       userId,
       patientId,
     });
@@ -18,13 +19,22 @@ export class MySqlDiagnosticRepository implements IDiagnosticRepository {
     const sql = "UPDATE diagnostics SET ? WHERE patientId = ? and userId = ?";
     const errorMessage = "Falha ao adicionar o usuário";
 
-    return query(errorMessage, sql, [data, patientId, userId]);
+    return query(errorMessage, sql, [
+      getValidObjectValues(data),
+      patientId,
+      userId,
+    ]);
   }
 
-  get(patientId: string, userId: string): Promise<DiagnosticDTO[]> {
+  async get(patientId: string, userId: string): Promise<DiagnosticDTO[]> {
     const sql = "SELECT * FROM diagnostics WHERE patientId = ? and userId = ?";
     const errorMessage = `Não foi possível realizar a busca`;
-
-    return query(errorMessage, sql, [patientId, userId]);
+    const result = await query<DiagnosticDTO[]>(errorMessage, sql, [
+      patientId,
+      userId,
+    ]);
+    return result.map((diagnostic) =>
+      getValidObjectValues<DiagnosticDTO>(diagnostic),
+    );
   }
 }
