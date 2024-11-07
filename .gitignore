@@ -2,3 +2,5 @@
 .env.prod
 /node_modules
 /build
+certbot/conf/
+certbot/www/
