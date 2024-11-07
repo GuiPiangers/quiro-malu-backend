@@ -12,8 +12,8 @@ export interface SchedulingDTO {
   phone?: string;
   date: string;
   duration: number;
-  service?: string | null;
-  status?: "Agendado" | "Atendido" | "Atrasado" | null;
+  service?: string  ;
+  status?: "Agendado" | "Atendido" | "Atrasado"  ;
   createAt?: string;
   updateAt?: string;
 }
@@ -24,10 +24,10 @@ export class Scheduling extends Entity {
   readonly phone?: string;
   readonly date: DateTime;
   readonly duration: number;
-  readonly service?: string | null;
+  readonly service?: string  ;
   readonly createAt?: string;
   readonly updateAt?: string;
-  private _status?: SchedulingStatus | "Atrasado" | null;
+  private _status?: SchedulingStatus | "Atrasado"  ;
   private satusStategy?: StatusStrategy;
 
   constructor(
@@ -49,7 +49,7 @@ export class Scheduling extends Entity {
     this.satusStategy = satusStategy || new ClientStatusStrategy();
     this.patientId = patientId;
     this.date = new DateTime(date);
-    this.service = service || null;
+    this.service = service  ;
     this.duration = duration;
     this._status = status;
 

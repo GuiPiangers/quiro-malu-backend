@@ -9,19 +9,19 @@ export interface PatientDTO {
   id?: string;
   name: string;
   phone: string;
-  dateOfBirth?: string | null;
-  gender?: "masculino" | "feminino" | null;
-  cpf?: string | null;
-  location?: LocationDTO | null;
+  dateOfBirth?: string;
+  gender?: "masculino" | "feminino";
+  cpf?: string;
+  location?: LocationDTO;
 }
 
 export class Patient extends Entity {
   readonly name: Name;
-  readonly dateOfBirth: DateTime | null;
-  readonly gender: "masculino" | "feminino" | null;
+  readonly dateOfBirth?: DateTime;
+  readonly gender?: "masculino" | "feminino";
   private _phone: Phone;
-  private _cpf: Cpf | null;
-  private _location: Location | null;
+  private _cpf?: Cpf;
+  private _location?: Location;
 
   constructor(props: PatientDTO) {
     const { id, phone, name, cpf, location, dateOfBirth, gender } = props;
@@ -29,12 +29,12 @@ export class Patient extends Entity {
     super(id || `${Date.now()}`);
     this.name = new Name(name, { compoundName: true });
     this._phone = new Phone(phone);
-    this._location = location ? new Location(location) : null;
-    this._cpf = cpf ? new Cpf(cpf) : null;
+    this._location = location ? new Location(location) : undefined;
+    this._cpf = cpf ? new Cpf(cpf) : undefined;
     this.dateOfBirth = dateOfBirth
       ? new DateTime(dateOfBirth, { onlyPassDate: true })
-      : null;
-    this.gender = gender || null;
+      : undefined;
+    this.gender = gender;
   }
 
   get phone() {
@@ -50,7 +50,7 @@ export class Patient extends Entity {
   }
 
   getPatientDTO(): PatientDTO {
-    const location = this.location?.getLocationDTO() || null;
+    const location = this.location?.getLocationDTO();
     return {
       id: this.id,
       name: this.name.value,

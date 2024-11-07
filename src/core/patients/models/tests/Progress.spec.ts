@@ -30,7 +30,6 @@ describe("Progress", () => {
       service: "Consultation",
       actualProblem: "Fever",
       date: "invalid-date",
-      procedures: null,
     };
 
     expect(() => new Progress(invalidProgressData)).toThrow(ApiError);

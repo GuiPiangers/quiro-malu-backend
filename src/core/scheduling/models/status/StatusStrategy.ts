@@ -2,7 +2,7 @@ import { Scheduling, SchedulingStatus } from "../Scheduling";
 
 export type StatusStrategyData = {
   scheduling: Scheduling;
-  status?: SchedulingStatus | null;
+  status?: SchedulingStatus  ;
 };
 
 export interface StatusStrategy {
