@@ -37,7 +37,7 @@ export class MySqlPatientRepository implements IPatientRepository {
     const orderBy =
       config.orderBy?.map(({ field, orientation }) =>
         order({ field, orientation }),
-      ) || null;
+      )  ;
     const sql = `SELECT * FROM patients WHERE userId = ? AND name like ? ORDER BY ${orderBy}  LIMIT ? OFFSET ?`;
     const errorMessage = `Não foi possível realizar a busca`;
     const results = await query<PatientDTO[]>(errorMessage, sql, [

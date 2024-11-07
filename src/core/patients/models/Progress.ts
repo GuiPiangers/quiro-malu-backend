@@ -4,20 +4,20 @@ import { Entity } from "../../shared/Entity";
 export interface ProgressDTO {
   id?: string;
   patientId: string;
-  service: string | null;
-  actualProblem: string | null;
-  procedures: string | null;
-  date: string | null;
+  service?: string;
+  actualProblem?: string;
+  procedures?: string;
+  date?: string;
   createAt?: string;
   updateAt?: string;
 }
 
 export class Progress extends Entity {
-  readonly date: DateTime | null;
+  readonly date?: DateTime;
   readonly patientId: string;
-  readonly service: string | null;
-  readonly actualProblem: string | null;
-  readonly procedures: string | null;
+  readonly service?: string;
+  readonly actualProblem?: string;
+  readonly procedures?: string;
 
   constructor({
     id,
@@ -39,10 +39,10 @@ export class Progress extends Entity {
     return {
       id: this.id,
       patientId: this.patientId,
-      service: this.service || null,
-      actualProblem: this.actualProblem || null,
-      date: this.date?.value || null,
-      procedures: this.procedures || null,
+      service: this.service,
+      actualProblem: this.actualProblem,
+      date: this.date?.value,
+      procedures: this.procedures,
     };
   }
 }

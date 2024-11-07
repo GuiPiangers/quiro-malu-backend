@@ -5,7 +5,7 @@ describe("Get valid values of objects", () => {
     const invalidObject = {
       name: "Guilherme",
       phone: undefined,
-      age: null,
+      age: undefined,
       number: 0,
       array: [],
       object: {

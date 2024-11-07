@@ -13,17 +13,17 @@ export interface AnamnesisDTO {
 }
 
 export class Anamnesis {
-  readonly patientId: string | null;
-  readonly mainProblem: string | null;
-  readonly currentIllness: string | null;
-  readonly history: string | null;
-  readonly familiarHistory: string | null;
-  readonly activities: string | null;
-  readonly smoke: "yes" | "no" | "passive" | null;
-  readonly useMedicine: boolean | null;
-  readonly medicines: string | null;
-  readonly underwentSurgery: boolean | null;
-  readonly surgeries: string | null;
+  readonly patientId: string  ;
+  readonly mainProblem: string  ;
+  readonly currentIllness: string  ;
+  readonly history: string  ;
+  readonly familiarHistory: string  ;
+  readonly activities: string  ;
+  readonly smoke: "yes" | "no" | "passive"  ;
+  readonly useMedicine: boolean  ;
+  readonly medicines: string  ;
+  readonly underwentSurgery: boolean  ;
+  readonly surgeries: string  ;
 
   constructor({
     patientId,
@@ -38,16 +38,16 @@ export class Anamnesis {
     underwentSurgery,
     useMedicine,
   }: AnamnesisDTO) {
-    this.patientId = patientId || null;
-    this.mainProblem = mainProblem || null;
-    this.currentIllness = currentIllness || null;
-    this.history = history || null;
-    this.familiarHistory = familiarHistory || null;
-    this.activities = activities || null;
-    this.smoke = smoke || null;
-    this.useMedicine = useMedicine || null;
-    this.medicines = medicines || null;
-    this.underwentSurgery = underwentSurgery || null;
-    this.surgeries = surgeries || null;
+    this.patientId = patientId  ;
+    this.mainProblem = mainProblem  ;
+    this.currentIllness = currentIllness  ;
+    this.history = history  ;
+    this.familiarHistory = familiarHistory  ;
+    this.activities = activities  ;
+    this.smoke = smoke  ;
+    this.useMedicine = useMedicine  ;
+    this.medicines = medicines  ;
+    this.underwentSurgery = underwentSurgery  ;
+    this.surgeries = surgeries  ;
   }
 }

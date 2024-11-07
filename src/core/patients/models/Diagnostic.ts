@@ -1,17 +1,17 @@
 export interface DiagnosticDTO {
   patientId: string;
-  diagnostic: string | null;
-  treatmentPlan: string | null;
+  diagnostic: string  ;
+  treatmentPlan: string  ;
 }
 
 export class Diagnostic {
-  readonly patientId: string | null;
-  readonly diagnostic: string | null;
-  readonly treatmentPlan: string | null;
+  readonly patientId: string  ;
+  readonly diagnostic: string  ;
+  readonly treatmentPlan: string  ;
 
   constructor({ patientId, diagnostic, treatmentPlan }: DiagnosticDTO) {
-    this.patientId = patientId || null;
-    this.diagnostic = diagnostic || null;
-    this.treatmentPlan = treatmentPlan || null;
+    this.patientId = patientId  ;
+    this.diagnostic = diagnostic  ;
+    this.treatmentPlan = treatmentPlan  ;
   }
 }

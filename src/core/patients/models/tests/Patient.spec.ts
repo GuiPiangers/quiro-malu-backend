@@ -24,9 +24,9 @@ describe("Patient", () => {
     expect(patient.location?.getLocationDTO()).toEqual({
       city: "City",
       state: "State",
-      address: null,
-      cep: null,
-      neighborhood: null,
+      address: undefined,
+      cep: undefined,
+      neighborhood: undefined,
     });
   });
   it("should create a id if it's not specified", () => {
@@ -53,10 +53,10 @@ describe("Patient", () => {
     expect(patient.id).toBe(patientData.id);
     expect(patient.name.value).toBe("Jane Doe");
     expect(patient.phone).toBe("(34) 56789 0123");
-    expect(patient.dateOfBirth).toBeNull();
-    expect(patient.gender).toBeNull();
+    expect(patient.dateOfBirth).toBeUndefined();
+    expect(patient.gender).toBeUndefined();
     expect(patient.cpf).toBeUndefined();
-    expect(patient.location).toBeNull();
+    expect(patient.location).toBeUndefined();
   });
 
   it("should throw an error if phone number format is invalid", () => {
@@ -131,9 +131,9 @@ describe("Patient", () => {
       location: {
         city: "Another City",
         state: "Another State",
-        address: null,
-        cep: null,
-        neighborhood: null,
+        address: undefined,
+        cep: undefined,
+        neighborhood: undefined,
       },
     });
   });
