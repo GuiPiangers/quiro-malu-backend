@@ -1,4 +1,7 @@
-import { SchedulingDTO } from "../../core/scheduling/models/Scheduling";
+import {
+  Scheduling,
+  SchedulingDTO,
+} from "../../core/scheduling/models/Scheduling";
 import { query } from "../../database/mySqlConnection";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
 import { ISchedulingRepository } from "../scheduling/ISchedulingRepository";
@@ -32,7 +35,7 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
     return query(errorMessage, sql, [getValidObjectValues(data), id, userId]);
   }
 
-  list({
+  async list({
     userId,
     date,
     config,
@@ -42,9 +45,12 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
     config?: { limit: number; offSet: number };
   }): Promise<(SchedulingDTO & { patient: string; phone: string })[]> {
     const sql =
-      "SELECT s.id, s.patientId, p.name as patient, p.phone, s.date, s.duration, s.service, s.status, s.updated_at, s.created_at FROM schedules as s LEFT JOIN patients as p ON s.patientId = p.id AND s.userId = p.userId WHERE s.userId = ? AND date_format(s.date, '%Y-%m-%d') = ? ORDER BY s.updated_at DESC ";
+      "SELECT s.id, s.patientId, p.name as patient, p.phone, s.date, s.duration, s.service, s.status, s.updated_at as updateAt, s.created_at as createAt FROM schedules as s LEFT JOIN patients as p ON s.patientId = p.id AND s.userId = p.userId WHERE s.userId = ? AND date_format(s.date, '%Y-%m-%d') = ? ORDER BY s.updated_at DESC ";
     const errorMessage = `Não foi possível realizar a busca`;
-    return query(errorMessage, sql, [userId, date]);
+    const result = await query<
+      (SchedulingDTO & { patient: string; phone: string })[]
+    >(errorMessage, sql, [userId, date]);
+    return result.map((scheduling) => getValidObjectValues(scheduling));
   }
 
   count({
@@ -75,7 +81,7 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
     return query(errorMessage, sql, [month, year, userId]);
   }
 
-  get({
+  async get({
     id,
     userId,
   }: {
@@ -84,8 +90,11 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
   }): Promise<SchedulingDTO[]> {
     const sql = "SELECT * FROM schedules WHERE id = ? AND userId = ?";
     const errorMessage = `Não foi possível realizar a busca`;
-
-    return query(errorMessage, sql, [id, userId]);
+    const result = await query<SchedulingDTO[]>(errorMessage, sql, [
+      id,
+      userId,
+    ]);
+    return result.map((scheduling) => getValidObjectValues(scheduling));
   }
 
   delete({ id, userId }: { id: string; userId: string }): Promise<void> {
