@@ -48,7 +48,7 @@ services:
     volumes:
       - ./certbot/conf:/etc/letsencrypt             # Diretório dos certificados SSL
       - ./certbot/www:/var/www/certbot              # Pasta temporária para o Certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do sleep 12h & wait $${!}; certbot renew; done;'"
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email {email} -d {domain} --agree-tos
     networks:
       - minha_rede
 
