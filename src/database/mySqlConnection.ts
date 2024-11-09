@@ -45,6 +45,7 @@ export const query = <T>(
 ): Promise<T> => {
   return new Promise((resolve, reject) => {
     connection.query(sql, data, (err, result) => {
+      console.log(err);
       if (err) reject(errorMessage);
       resolve(JSON.parse(JSON.stringify(result)));
     });
