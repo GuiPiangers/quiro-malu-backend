@@ -89,7 +89,8 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
     id: string;
     userId: string;
   }): Promise<SchedulingDTO[]> {
-    const sql = "SELECT * FROM schedules WHERE id = ? AND userId = ?";
+    const sql =
+      "SELECT id, userId, patientId, duration, service, status, DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date FROM schedules WHERE id = ? AND userId = ?";
     const errorMessage = `Não foi possível realizar a busca`;
     const result = await query<SchedulingDTO[]>(errorMessage, sql, [
       id,
