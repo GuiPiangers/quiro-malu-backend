@@ -43,12 +43,20 @@ export class DateTime {
       }
     }
 
-    this.value = dateStr.substring(0, 16);
+    this.value = `${dateStr.substring(0, 16)}`;
   }
 
   private isValidDate(dateString: string): boolean {
-    const regex = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})/gm;
-    return regex.test(dateString);
+    const regexDate = /^(\d{4}-\d{2}-\d{2})/;
+    const regexTime = /T(\d{2}:\d{2})/;
+    const onlyDateValue =
+      regexDate.test(dateString) && !regexTime.test(dateString);
+    const regexPattern = new RegExp(regexDate.source + regexTime.source);
+
+    if (onlyDateValue) {
+      return true;
+    }
+    return regexPattern.test(dateString);
   }
 
   get date(): string {
