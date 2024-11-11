@@ -47,7 +47,7 @@ export class MySqlProgressRepository implements IProgressRepository {
     userId: string;
   }): Promise<ProgressDTO[]> {
     const sql =
-      "SELECT * FROM progress WHERE id = ? AND patientId = ? AND userId = ?";
+      "SELECT id, patientId, userId, service, actualProblem, procedures,  DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date FROM progress WHERE id = ? AND patientId = ? AND userId = ?";
     const errorMessage = `Não foi possível realizar a busca`;
 
     const result = await query<ProgressDTO[]>(errorMessage, sql, [
@@ -55,6 +55,7 @@ export class MySqlProgressRepository implements IProgressRepository {
       patientId,
       userId,
     ]);
+    console.log(result);
 
     return result.map((progress) => getValidObjectValues(progress));
   }
@@ -69,7 +70,7 @@ export class MySqlProgressRepository implements IProgressRepository {
     config?: { limit: number; offSet: number };
   }): Promise<ProgressDTO[]> {
     const sql =
-      "SELECT * FROM progress WHERE patientId = ? AND userId = ? ORDER BY date DESC LIMIT ? OFFSET ?";
+      "SELECT id, patientId, userId, service, actualProblem, procedures,  DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date FROM progress WHERE patientId = ? AND userId = ? ORDER BY date DESC LIMIT ? OFFSET ?";
     const errorMessage = `Não foi possível realizar a busca`;
     const result = await query<ProgressDTO[]>(errorMessage, sql, [
       patientId,

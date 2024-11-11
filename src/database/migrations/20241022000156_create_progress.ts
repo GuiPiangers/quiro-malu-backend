@@ -9,7 +9,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string("service", 100).index().notNullable();
     table.text("actualProblem");
     table.text("procedures");
-    table.date("date");
+    table.datetime("date");
     table.timestamps(true, true);
     table
       .foreign("userId")
