@@ -48,7 +48,7 @@ services:
     volumes:
       - ./certbot/conf:/etc/letsencrypt             # Diretório dos certificados SSL
       - ./certbot/www:/var/www/certbot              # Pasta temporária para o Certbot
-    command: certonly --webroot -w /var/www/certbot --force-renewal --email eduardomartinspiangers@gmail.com -d quiromalu.duckdns.org --agree-tos
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email eduardomartinspiangers@gmail.com -d quiromalu-server.duckdns.org --agree-tos
     networks:
       - minha_rede
 
