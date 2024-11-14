@@ -39,13 +39,24 @@ export const query = async <T>(
   sql: string,
   data?: any,
 ): Promise<T> => {
+  let connection;
   try {
-    const [result] = await pool.query(sql, data);
-    console.log(result);
+    connection = await pool.getConnection();
+    const [result] = await connection.query(sql, data);
     return JSON.parse(JSON.stringify(result));
   } catch (error) {
-    console.log(error);
+    console.error(error);
+
+    if (error && (error as any).fatal) {
+      console.log("Tentando reconectar...");
+      connection = await pool.getConnection();
+      const [result] = await connection.query(sql, data);
+      return JSON.parse(JSON.stringify(result));
+    }
+
     throw new ApiError(errorMessage, 500);
+  } finally {
+    if (connection) connection.release();
   }
 };
 
