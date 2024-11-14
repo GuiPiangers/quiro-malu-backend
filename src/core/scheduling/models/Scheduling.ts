@@ -13,6 +13,7 @@ export interface SchedulingDTO {
   date: string;
   duration: number;
   service?: string;
+  progressId?: string;
   status?: "Agendado" | "Atendido" | "Atrasado";
   createAt?: string;
   updateAt?: string;
@@ -29,6 +30,7 @@ export class Scheduling extends Entity {
   readonly updateAt?: string;
   private _status?: SchedulingStatus | "Atrasado";
   private satusStategy?: StatusStrategy;
+  public pogressId?: string;
 
   constructor(
     {
@@ -42,6 +44,7 @@ export class Scheduling extends Entity {
       updateAt,
       patient,
       phone,
+      progressId,
     }: SchedulingDTO,
     satusStategy?: StatusStrategy,
   ) {
@@ -52,6 +55,7 @@ export class Scheduling extends Entity {
     this.service = service;
     this.duration = duration;
     this._status = status;
+    this.pogressId = progressId;
 
     this.createAt = createAt;
     this.updateAt = updateAt;
@@ -85,7 +89,6 @@ export class Scheduling extends Entity {
     return data.some((schedulingValue) => {
       const endDate = new Date(`${schedulingValue.date}:00.000Z`);
       endDate.setSeconds(this.duration);
-      console.log(endDate);
 
       const schedulingDate = new Date(`${this.date.value}:00.000Z`);
       schedulingDate.setSeconds(this.duration);
@@ -96,8 +99,6 @@ export class Scheduling extends Entity {
 
       const start = new DateTime(schedulingValue.date).value;
       const end = new DateTime(endDate.toISOString()).value;
-
-      console.log(schedulingValue.date);
 
       const unavailableStartDate =
         start <= schedulingStart && schedulingStart < end;

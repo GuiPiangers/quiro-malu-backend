@@ -1,21 +1,34 @@
 import { PatientDTO } from "../../../models/Patient";
 import { IPatientRepository } from "../../../../../repositories/patient/IPatientRepository";
-import { InMemoryPatientRepository } from "../../../../../repositories/patient/inMemory/InMemoryPatientRepository";
 import { CreatePatientUseCase } from "../CreatePatientUseCase";
 import { ILocationRepository } from "../../../../../repositories/location/ILocationRepository";
-import { InMemoryLocation } from "../../../../../repositories/location/InMemoryLocation";
+import { ApiError } from "../../../../../utils/ApiError";
+
+const mockPatientRepository: jest.Mocked<IPatientRepository> = {
+  getById: jest.fn(),
+  countAll: jest.fn(),
+  delete: jest.fn(),
+  getAll: jest.fn(),
+  getByCpf: jest.fn(),
+  save: jest.fn(),
+  update: jest.fn(),
+};
+
+const mockLocationRepository: jest.Mocked<ILocationRepository> = {
+  getLocation: jest.fn(),
+  save: jest.fn(),
+  update: jest.fn(),
+} as jest.Mocked<ILocationRepository>;
 
 describe("Create patients", () => {
-  let patientRepository: IPatientRepository;
   let createPatientUseCase: CreatePatientUseCase;
-  let locationRepository: ILocationRepository;
+  const userId = "userId";
 
   beforeAll(() => {
-    patientRepository = new InMemoryPatientRepository();
-    locationRepository = new InMemoryLocation();
+    jest.clearAllMocks();
     createPatientUseCase = new CreatePatientUseCase(
-      patientRepository,
-      locationRepository,
+      mockPatientRepository,
+      mockLocationRepository,
     );
   });
 
@@ -23,33 +36,120 @@ describe("Create patients", () => {
     const patientData: PatientDTO = {
       name: "Guilherme Eduardo",
       phone: "(51) 99999 9999",
-      cpf: "036.638.470-80",
+      cpf: "111.111.111-11",
     };
-    await createPatientUseCase.execute(patientData, "id");
+
+    mockPatientRepository.getByCpf.mockResolvedValue([
+      { name: "Patient Name", phone: "(51) 9 9999-999", cpf: "111.111.111-11" },
+    ]);
+
     await expect(
-      createPatientUseCase.execute(patientData, "id"),
-    ).rejects.toEqual(
-      new Error("Já existe um usuário cadastrado com esse CPF"),
-    );
+      createPatientUseCase.execute(patientData, userId),
+    ).rejects.toThrow(ApiError);
+
+    try {
+      await createPatientUseCase.execute(patientData, userId);
+    } catch (err: any) {
+      expect(err).toBeInstanceOf(ApiError);
+      expect(err.message).toBe("Já existe um usuário cadastrado com esse CPF");
+      expect(err.statusCode).toBe(400);
+      expect(err.type).toBe("cpf");
+    }
   });
-  it("Should be able to cadastre patient", async () => {
+
+  it("Should be able to cadastre patient when cpf is not registred", async () => {
+    const cpf = "036.638.400-00";
     const patientData: PatientDTO = {
       name: "Guilherme Eduardo",
       phone: "(51) 99999 9999",
-      cpf: "036.638.400-00",
-      dateOfBirth: "2002-06-03T00:00",
-      gender: "feminino",
+      cpf,
+      location: { address: "Rua Teste" },
+    };
+
+    mockPatientRepository.getByCpf.mockResolvedValueOnce([]);
+    mockPatientRepository.save.mockResolvedValueOnce();
+
+    const patient = await createPatientUseCase.execute(patientData, userId);
+
+    expect(patient).toHaveProperty("id");
+    expect(mockPatientRepository.getByCpf).toHaveBeenCalledWith(cpf, userId);
+    expect(mockPatientRepository.save).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: patientData.name,
+        phone: patientData.phone,
+        cpf,
+      }),
+      userId,
+    );
+    expect(mockLocationRepository.save).toHaveBeenCalledWith(
+      expect.objectContaining({ address: "Rua Teste" }),
+      expect.any(String),
+      userId,
+    );
+  });
+  it("Should be able to cadastre patient without pass a cpf", async () => {
+    const patientData: PatientDTO = {
+      name: "Guilherme Eduardo",
+      phone: "(51) 99999 9999",
+    };
+
+    mockPatientRepository.getByCpf.mockResolvedValueOnce([]);
+    mockPatientRepository.save.mockResolvedValueOnce();
+
+    const patient = await createPatientUseCase.execute(patientData, userId);
+
+    expect(patient).toHaveProperty("id");
+    expect(mockPatientRepository.getByCpf).not.toBeCalled();
+    expect(mockPatientRepository.save).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: patientData.name,
+        phone: patientData.phone,
+      }),
+      userId,
+    );
+  });
+
+  it("Should save location when the location exists", async () => {
+    const patientData: PatientDTO = {
+      name: "John Doe",
+      phone: "(51) 99999 9999",
       location: {
-        address: "Rua Maranhão",
-        city: "novo hamburgo",
-        cep: "11111-111",
+        address: "Rua Teste",
+        city: "Cidade",
+        neighborhood: "Bairro",
         state: "Rio Grande do Sul",
-        neighborhood: "São Jacó",
       },
     };
 
-    const patient = await createPatientUseCase.execute(patientData, "id");
-    expect(patient).toHaveProperty("id");
+    mockPatientRepository.getByCpf.mockResolvedValueOnce([]);
+    mockPatientRepository.save.mockResolvedValueOnce();
+
+    await createPatientUseCase.execute(patientData, userId);
+
+    expect(mockLocationRepository.save).toHaveBeenCalledWith(
+      expect.objectContaining({
+        address: "Rua Teste",
+        city: "Cidade",
+        neighborhood: "Bairro",
+        state: "Rio Grande do Sul",
+      }),
+      expect.any(String),
+      userId,
+    );
+  });
+
+  it("Should create a patient without save location if location doesn't exist", async () => {
+    const patientData: PatientDTO = {
+      name: "Jane Doe",
+      phone: "(51) 99999 9999",
+    };
+
+    mockPatientRepository.getByCpf.mockResolvedValueOnce([]);
+    mockPatientRepository.save.mockResolvedValueOnce();
+
+    await createPatientUseCase.execute(patientData, userId);
+
+    expect(mockLocationRepository.save).not.toHaveBeenCalled();
   });
 });
 
