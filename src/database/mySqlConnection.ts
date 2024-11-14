@@ -16,16 +16,6 @@ const pool = mysql.createPool({
   keepAliveInitialDelay: 0,
 });
 
-// pool.connect((err) => {
-//   if (err)
-//     throw new ApiError(
-//       "falha ao realizar a conexão com o banco de dados" + err,
-//       500,
-//     );
-
-//   console.log("Conexão realizada com sucesso");
-// });
-
 export function escapeSansQuotes(criterion: string) {
   const value = pool.escape(criterion).match(/^'(.+)'$/);
   if (value) return value[1];
@@ -57,13 +47,6 @@ export const query = async <T>(
     console.log(error);
     throw new ApiError(errorMessage, 500);
   }
-  // return new Promise((resolve, reject) => {
-  //   pool.query(sql, data, (err, result) => {
-  //     console.log(err);
-  //     if (err) reject(errorMessage);
-  //     resolve(JSON.parse(JSON.stringify(result)));
-  //   });
-  // });
 };
 
 export default pool;
