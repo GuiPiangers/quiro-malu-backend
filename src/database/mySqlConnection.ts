@@ -13,16 +13,6 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-// pool.connect((err) => {
-//   if (err)
-//     throw new ApiError(
-//       "falha ao realizar a conexão com o banco de dados" + err,
-//       500,
-//     );
-
-//   console.log("Conexão realizada com sucesso");
-// });
-
 export function escapeSansQuotes(criterion: string) {
   const value = pool.escape(criterion).match(/^'(.+)'$/);
   if (value) return value[1];
@@ -46,21 +36,25 @@ export const query = async <T>(
   sql: string,
   data?: any,
 ): Promise<T> => {
+  let connection;
   try {
-    const [result] = await pool.query(sql, data);
-    console.log(result);
+    connection = await pool.getConnection();
+    const [result] = await connection.query(sql, data);
     return JSON.parse(JSON.stringify(result));
   } catch (error) {
-    console.log(error);
+    console.error(error);
+
+    if (error && (error as any).fatal) {
+      console.log("Tentando reconectar...");
+      connection = await pool.getConnection();
+      const [result] = await connection.query(sql, data);
+      return JSON.parse(JSON.stringify(result));
+    }
+
     throw new ApiError(errorMessage, 500);
+  } finally {
+    if (connection) connection.release();
   }
-  // return new Promise((resolve, reject) => {
-  //   pool.query(sql, data, (err, result) => {
-  //     console.log(err);
-  //     if (err) reject(errorMessage);
-  //     resolve(JSON.parse(JSON.stringify(result)));
-  //   });
-  // });
 };
 
 export default pool;
