@@ -13,19 +13,7 @@ export class CreatePatientUseCase {
     const patient = new Patient(data);
     const { location, ...patientDTO } = patient.getPatientDTO();
 
-    if (patient.cpf) {
-      const [verifyCpf] = await this.patientRepository.getByCpf(
-        patient.cpf,
-        userId,
-      );
-      console.log(verifyCpf?.cpf === patient.cpf);
-      if (verifyCpf?.cpf === patient.cpf)
-        throw new ApiError(
-          "Já existe um usuário cadastrado com esse CPF",
-          400,
-          "cpf",
-        );
-    }
+    await this.validateCpfNotExist({ cpf: patientDTO.cpf, userId });
 
     await this.patientRepository.save(patientDTO, userId);
 
@@ -34,5 +22,24 @@ export class CreatePatientUseCase {
     }
 
     return patientDTO;
+  }
+
+  private async validateCpfNotExist({
+    cpf,
+    userId,
+  }: {
+    cpf?: string;
+    userId: string;
+  }) {
+    if (cpf) {
+      const [verifyCpf] = await this.patientRepository.getByCpf(cpf, userId);
+      console.log(verifyCpf?.cpf === cpf);
+      if (verifyCpf?.cpf === cpf)
+        throw new ApiError(
+          "Já existe um usuário cadastrado com esse CPF",
+          400,
+          "cpf",
+        );
+    }
   }
 }
