@@ -18,7 +18,8 @@ export class CreatePatientUseCase {
         patient.cpf,
         userId,
       );
-      if (verifyCpf)
+      console.log(verifyCpf?.cpf === patient.cpf);
+      if (verifyCpf?.cpf === patient.cpf)
         throw new ApiError(
           "Já existe um usuário cadastrado com esse CPF",
           400,
