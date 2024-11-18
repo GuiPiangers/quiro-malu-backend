@@ -77,11 +77,15 @@ export class KnexPatientRepository implements IPatientRepository {
   }
 
   async getByCpf(cpf: string, userId: string): Promise<PatientDTO[]> {
-    const result = await Knex(ETableNames.PATIENTS)
-      .select("*")
-      .where({ cpf, userId });
+    try {
+      const result = await Knex(ETableNames.PATIENTS)
+        .select("*")
+        .where({ cpf, userId });
 
-    return result;
+      return result;
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
   }
 
   async getById(patientId: string, userId: string): Promise<PatientDTO[]> {
