@@ -63,10 +63,6 @@ export class KnexPatientRepository implements IPatientRepository {
     userId: string,
     search?: { name?: string },
   ): Promise<[{ total: number }]> {
-    // const sql =
-    //   "SELECT COUNT(id) AS total FROM patients WHERE userId = ? AND name like ?";
-    // const errorMessage = `Não foi possível realizar a busca`;
-    // return query(errorMessage, sql, [userId, `%${search?.name}%`]);
     try {
       const [result] = await Knex(ETableNames.PATIENTS)
         .count("id as total")
@@ -76,20 +72,16 @@ export class KnexPatientRepository implements IPatientRepository {
       console.log(result);
       return [result] as [{ total: number }];
     } catch (error: any) {
-      throw new ApiError(error.menssage, 500);
+      throw new ApiError(error.message, 500);
     }
   }
 
   async getByCpf(cpf: string, userId: string): Promise<PatientDTO[]> {
-    const sql = "SELECT * FROM patients WHERE cpf = ? AND userId = ?";
-    const errorMessage = `Não foi possível realizar a busca`;
+    const result = await Knex(ETableNames.PATIENTS)
+      .select("*")
+      .where({ cpf, userId });
 
-    const [result] = await query<PatientDTO[]>(errorMessage, sql, [
-      cpf,
-      userId,
-    ]);
-
-    return [getValidObjectValues<PatientDTO>(result)];
+    return result;
   }
 
   async getById(patientId: string, userId: string): Promise<PatientDTO[]> {
