@@ -57,7 +57,7 @@ describe("Create patients", () => {
     }
   });
 
-  it("Should be able to cadastre patient when cpf is not registred", async () => {
+  it("Should be able to cadastre patient when cpf is not registered", async () => {
     const cpf = "036.638.400-00";
     const patientData: PatientDTO = {
       name: "Guilherme Eduardo",

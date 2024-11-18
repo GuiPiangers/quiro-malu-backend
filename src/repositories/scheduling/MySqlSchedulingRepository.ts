@@ -50,7 +50,6 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
     const result = await query<
       (SchedulingDTO & { patient: string; phone: string })[]
     >(errorMessage, sql, [userId, date]);
-    console.log(result);
     return result.map((scheduling) => getValidObjectValues(scheduling));
   }
 

@@ -2,6 +2,8 @@ import { query } from "../../database/mySqlConnection";
 import { ILocationRepository } from "./ILocationRepository";
 import { LocationDTO } from "../../core/shared/Location";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
+import { Knex } from "../../database";
+import { ETableNames } from "../../database/ETableNames";
 
 export class MySqlLocationRepository implements ILocationRepository {
   save(data: LocationDTO, patientId: string, userId: string): Promise<void> {
@@ -16,15 +18,20 @@ export class MySqlLocationRepository implements ILocationRepository {
     });
   }
 
-  update(data: LocationDTO, patientId: string, userId: string): Promise<void> {
-    const sql = "UPDATE locations SET ? WHERE patientId = ? and userId = ?";
-    const errorMessage = "Falha ao adicionar o usuário";
-
-    return query(errorMessage, sql, [
-      getValidObjectValues(data),
-      patientId,
-      userId,
-    ]);
+  async update(
+    data: LocationDTO,
+    patientId: string,
+    userId: string,
+  ): Promise<void> {
+    try {
+      const result = await Knex(ETableNames.LOCATIONS).update(data).where({
+        patientId,
+        userId,
+      });
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async getLocation(patientId: string, userId: string): Promise<LocationDTO[]> {
