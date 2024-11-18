@@ -1,9 +1,11 @@
 import { PatientDTO } from "../../core/patients/models/Patient";
+import { Knex } from "../../database";
+import { ETableNames } from "../../database/ETableNames";
 import { order, query } from "../../database/mySqlConnection";
 import { IPatientRepository } from "../../repositories/patient/IPatientRepository";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
 
-export class MySqlPatientRepository implements IPatientRepository {
+export class KnexPatientRepository implements IPatientRepository {
   save(data: PatientDTO, userId: string): Promise<void> {
     const sql = "INSERT INTO patients SET ?";
     const errorMessage = "Falha ao adicionar o usuário";
@@ -14,15 +16,19 @@ export class MySqlPatientRepository implements IPatientRepository {
     });
   }
 
-  update(data: PatientDTO, patientId: string, userId: string): Promise<void> {
-    const sql = "UPDATE patients SET ? WHERE id = ? and userId = ?";
-    const errorMessage = "Falha ao adicionar o usuário";
-
-    return query(errorMessage, sql, [
-      getValidObjectValues<PatientDTO>(data),
-      patientId,
-      userId,
-    ]);
+  async update(
+    data: PatientDTO,
+    patientId: string,
+    userId: string,
+  ): Promise<void> {
+    try {
+      const result = await Knex(ETableNames.PATIENTS)
+        .update(getValidObjectValues(data))
+        .where({ id: patientId, userId });
+      console.log(result);
+    } catch (error) {
+      console.log("mensagem de erro", error);
+    }
   }
 
   async getAll(
