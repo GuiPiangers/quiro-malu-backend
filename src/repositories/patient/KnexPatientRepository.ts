@@ -94,10 +94,12 @@ export class KnexPatientRepository implements IPatientRepository {
     return [getValidObjectValues<PatientDTO>(result)];
   }
 
-  delete(patientId: string, userId: string): Promise<void> {
-    const sql = "DELETE FROM patients WHERE id = ? AND userId = ?";
-    const errorMessage = `Não foi possível deletar o paciente`;
-
-    return query(errorMessage, sql, [patientId, userId]);
+  async delete(patientId: string, userId: string): Promise<void> {
+    try {
+      await Knex(ETableNames.PATIENTS).where({ id: patientId, userId }).del();
+    } catch (error: any) {
+      console.log(error);
+      throw new ApiError(error.message, 500);
+    }
   }
 }

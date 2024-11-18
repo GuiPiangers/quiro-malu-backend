@@ -1,9 +1,9 @@
 import { MySqlPatientRepository } from "../../../../repositories/patient/MySqlPatientRepository";
 import { GetPatientUseCase } from "../../useCases/getPatient/GetPatientUseCase";
 import { GetPatientController } from "./GetPatientController";
-import { MySqlLocationRepository } from "../../../../repositories/location/MySqlLocationRepository";
+import { KnexLocationRepository } from "../../../../repositories/location/KnexLocationRepository";
 
-const locationRepository = new MySqlLocationRepository()
+const locationRepository = new KnexLocationRepository()
 const patientRepository = new MySqlPatientRepository()
 const getPatientUseCase = new GetPatientUseCase(patientRepository, locationRepository)
 const getPatientController = new GetPatientController(getPatientUseCase)
