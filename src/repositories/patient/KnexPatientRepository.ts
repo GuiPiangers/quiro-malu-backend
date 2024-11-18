@@ -23,7 +23,7 @@ export class KnexPatientRepository implements IPatientRepository {
   ): Promise<void> {
     try {
       const result = await Knex(ETableNames.PATIENTS)
-        .update(getValidObjectValues(data))
+        .update(data)
         .where({ id: patientId, userId });
       console.log(result);
     } catch (error) {
