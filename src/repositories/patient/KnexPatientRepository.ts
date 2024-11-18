@@ -3,17 +3,21 @@ import { Knex } from "../../database";
 import { ETableNames } from "../../database/ETableNames";
 import { order, query } from "../../database/mySqlConnection";
 import { IPatientRepository } from "../../repositories/patient/IPatientRepository";
+import { ApiError } from "../../utils/ApiError";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
 
 export class KnexPatientRepository implements IPatientRepository {
-  save(data: PatientDTO, userId: string): Promise<void> {
-    const sql = "INSERT INTO patients SET ?";
-    const errorMessage = "Falha ao adicionar o usuário";
-
-    return query(errorMessage, sql, {
-      ...getValidObjectValues<PatientDTO>(data),
-      userId,
-    });
+  async save(data: PatientDTO, userId: string): Promise<void> {
+    try {
+      const result = await Knex(ETableNames.PATIENTS).insert({
+        ...data,
+        userId,
+      });
+      console.log("novo resultado", result);
+    } catch (error: any) {
+      console.log("mensagem de erro", error);
+      throw new ApiError(error.message, 500);
+    }
   }
 
   async update(
@@ -26,8 +30,9 @@ export class KnexPatientRepository implements IPatientRepository {
         .update(data)
         .where({ id: patientId, userId });
       console.log(result);
-    } catch (error) {
+    } catch (error: any) {
       console.log("mensagem de erro", error);
+      throw new ApiError(error.message, 500);
     }
   }
 
