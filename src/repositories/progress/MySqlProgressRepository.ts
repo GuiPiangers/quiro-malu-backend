@@ -55,7 +55,6 @@ export class MySqlProgressRepository implements IProgressRepository {
       patientId,
       userId,
     ]);
-    console.log(result);
 
     return result.map((progress) => getValidObjectValues(progress));
   }

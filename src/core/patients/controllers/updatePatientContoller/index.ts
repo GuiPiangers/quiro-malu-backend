@@ -2,10 +2,16 @@ import { MySqlPatientRepository } from "../../../../repositories/patient/MySqlPa
 import { UpdatePatientUseCase } from "../../useCases/updatePatient/UpdatePatientUseCase";
 import { UpdatePatientController } from "./UpdatePatientController";
 import { MySqlLocationRepository } from "../../../../repositories/location/MySqlLocationRepository";
+import { KnexPatientRepository } from "../../../../repositories/patient/KnexPatientRepository";
 
-const locationRepository = new MySqlLocationRepository()
-const patientRepository = new MySqlPatientRepository()
-const updatePatientUseCase = new UpdatePatientUseCase(patientRepository, locationRepository)
-const updatePatientController = new UpdatePatientController(updatePatientUseCase)
+const locationRepository = new MySqlLocationRepository();
+const patientRepository = new KnexPatientRepository();
+const updatePatientUseCase = new UpdatePatientUseCase(
+  patientRepository,
+  locationRepository,
+);
+const updatePatientController = new UpdatePatientController(
+  updatePatientUseCase,
+);
 
-export { updatePatientController }
+export { updatePatientController };
