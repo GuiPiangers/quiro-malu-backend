@@ -28,6 +28,7 @@ export class RealizeSchedulingUseCase {
     if (!progress?.schedulingId) {
       throw new ApiError(
         "A evolução deve ser salva para poder realizar a consulta",
+        401,
       );
     }
     return await this.schedulingRepository.update({
