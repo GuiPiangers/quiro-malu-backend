@@ -29,7 +29,7 @@ import { createSchedulingController } from "./core/scheduling/controllers/create
 import { updateSchedulingController } from "./core/scheduling/controllers/updateSchedulingController";
 import { deleteSchedulingController } from "./core/scheduling/controllers/deleteSchedulingController";
 import { qtdSchedulesController } from "./core/scheduling/controllers/getQtdSchedulesByDayController";
-import { updateSchedulingStatusController } from "./core/scheduling/controllers/updateSchedulingStatusController";
+import { realizeSchedulingController } from "./core/scheduling/controllers/realizeSchedulingController";
 
 const router = Router();
 
@@ -141,7 +141,7 @@ router.patch("/schedules", authMiddleware, (request, response) => {
   updateSchedulingController.handle(request, response);
 });
 router.patch("/schedules/status", authMiddleware, (request, response) => {
-  updateSchedulingStatusController.handle(request, response);
+  realizeSchedulingController.handle(request, response);
 });
 router.delete("/schedules", authMiddleware, (request, response) => {
   deleteSchedulingController.handle(request, response);

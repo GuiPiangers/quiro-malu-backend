@@ -3,6 +3,7 @@ import { Entity } from "../../shared/Entity";
 
 export interface ProgressDTO {
   id?: string;
+  schedulingId?: string;
   patientId: string;
   service?: string;
   actualProblem?: string;
@@ -18,6 +19,7 @@ export class Progress extends Entity {
   readonly service?: string;
   readonly actualProblem?: string;
   readonly procedures?: string;
+  readonly schedulingId?: string;
 
   constructor({
     id,
@@ -26,6 +28,7 @@ export class Progress extends Entity {
     date,
     procedures,
     patientId,
+    schedulingId,
   }: ProgressDTO) {
     super(id || `${Date.now()}`);
     this.patientId = patientId;
@@ -33,6 +36,7 @@ export class Progress extends Entity {
     this.actualProblem = actualProblem;
     if (date) this.date = new DateTime(date);
     this.procedures = procedures;
+    this.schedulingId = schedulingId;
   }
 
   getDTO(): ProgressDTO {
@@ -43,6 +47,7 @@ export class Progress extends Entity {
       actualProblem: this.actualProblem,
       date: this.date?.value,
       procedures: this.procedures,
+      schedulingId: this.schedulingId,
     };
   }
 }
