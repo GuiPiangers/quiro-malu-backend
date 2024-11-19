@@ -1,5 +1,6 @@
 import { IProgressRepository } from "../../../../repositories/progress/IProgressRepository";
 import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
+import { ApiError } from "../../../../utils/ApiError";
 
 export class RealizeSchedulingUseCase {
   constructor(
@@ -10,24 +11,29 @@ export class RealizeSchedulingUseCase {
   async execute({
     userId,
     patientId,
-    progressId,
     schedulingId,
   }: {
     userId: string;
     patientId: string;
     schedulingId: string;
-    progressId: string;
   }) {
-    const [[progress], [scheduling]] = await Promise.all([
-      this.progressRepository.get({
-        id: progressId,
+    const [[progress]] = await Promise.all([
+      this.progressRepository.getByScheduling({
+        schedulingId,
         userId,
         patientId,
       }),
-      this.schedulingRepository.get({
-        id: schedulingId,
-        userId,
-      }),
     ]);
+
+    if (!progress?.schedulingId) {
+      throw new ApiError(
+        "A evolução deve ser salva para poder realizar a consulta",
+      );
+    }
+    return await this.schedulingRepository.update({
+      id: schedulingId,
+      userId,
+      status: "Atendido",
+    });
   }
 }

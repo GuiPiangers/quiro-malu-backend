@@ -2,6 +2,14 @@ import { ProgressDTO } from "../../core/patients/models/Progress";
 import { IProgressRepository } from "./IProgressRepository";
 
 export class InMemoryLocation implements IProgressRepository {
+  getByScheduling(data: {
+    schedulingId: string;
+    patientId: string;
+    userId: string;
+  }): Promise<ProgressDTO[]> {
+    throw new Error("Method not implemented.");
+  }
+
   private dbProgress: (ProgressDTO & { patientId: string; userId: string })[] =
     [];
 

@@ -2,8 +2,24 @@ import { query } from "../../database/mySqlConnection";
 import { ProgressDTO } from "../../core/patients/models/Progress";
 import { IProgressRepository } from "./IProgressRepository";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
+import { Knex } from "../../database";
+import { ETableNames } from "../../database/ETableNames";
 
 export class MySqlProgressRepository implements IProgressRepository {
+  async getByScheduling({
+    patientId,
+    schedulingId,
+    userId,
+  }: {
+    schedulingId: string;
+    patientId: string;
+    userId: string;
+  }): Promise<ProgressDTO[]> {
+    return await Knex(ETableNames.PROGRESS)
+      .select("*")
+      .where({ schedulingId, patientId, userId });
+  }
+
   save({
     patientId,
     userId,
