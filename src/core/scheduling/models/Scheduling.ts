@@ -1,3 +1,4 @@
+import { ApiError } from "../../../utils/ApiError";
 import { DateTime } from "../../shared/Date";
 import { Entity } from "../../shared/Entity";
 import ClientStatusStrategy from "./status/ClientStatusStrategy";
@@ -10,8 +11,8 @@ export interface SchedulingDTO {
   patientId: string;
   patient?: string;
   phone?: string;
-  date: string;
-  duration: number;
+  date?: string;
+  duration?: number;
   service?: string;
   status?: "Agendado" | "Atendido" | "Atrasado";
   createAt?: string;
@@ -22,8 +23,8 @@ export class Scheduling extends Entity {
   readonly patientId: string;
   readonly patient?: string;
   readonly phone?: string;
-  readonly date: DateTime;
-  readonly duration: number;
+  readonly date?: DateTime;
+  readonly duration?: number;
   readonly service?: string;
   readonly createAt?: string;
   readonly updateAt?: string;
@@ -48,7 +49,7 @@ export class Scheduling extends Entity {
     super(id || `${Date.now()}`);
     this.statusStrategy = statusStrategy || new ClientStatusStrategy();
     this.patientId = patientId;
-    this.date = new DateTime(date);
+    this.date = date ? new DateTime(date) : undefined;
     this.service = service;
     this.duration = duration;
     this._status = status;
@@ -70,7 +71,7 @@ export class Scheduling extends Entity {
     return {
       id: this.id,
       patientId: this.patientId,
-      date: this.date.value,
+      date: this.date?.value,
       duration: this.duration,
       status: this.status,
       // createAt: this.createAt,
@@ -82,18 +83,21 @@ export class Scheduling extends Entity {
   }
 
   notAvailableDate(data: SchedulingDTO[]): boolean {
+    if (!this.date?.value) throw new ApiError("A data deve ser definida");
+    if (!this.duration) throw new ApiError("A duração deve ser definida");
+
     return data.some((schedulingValue) => {
       const endDate = new Date(`${schedulingValue.date}:00.000Z`);
-      endDate.setSeconds(this.duration);
+      endDate.setSeconds(this.duration!);
 
-      const schedulingDate = new Date(`${this.date.value}:00.000Z`);
-      schedulingDate.setSeconds(this.duration);
+      const schedulingDate = new Date(`${this.date!.value}:00.000Z`);
+      schedulingDate.setSeconds(this.duration!);
 
-      const schedulingStart = this.date.value;
+      const schedulingStart = this.date!.value;
       const schedulingEnd = new DateTime(schedulingDate.toISOString(), {})
         .value;
 
-      const start = new DateTime(schedulingValue.date).value;
+      const start = new DateTime(schedulingValue.date!).value;
       const end = new DateTime(endDate.toISOString()).value;
 
       const unavailableStartDate =

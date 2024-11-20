@@ -1,9 +1,7 @@
-import { MySqlProgressRepository } from "../../../../../repositories/progress/MySqlProgressRepository";
-import { SetProgressUseCase } from "../../../useCases/progress/setProgress/SetProgressUseCase";
+import { setProgressUseCaseFactory } from "../../../../shared/factories/setProgressUseCaseFactory";
 import { SetProgressController } from "./SetProgressController";
 
-const ProgressRepository = new MySqlProgressRepository()
-const setProgressUseCase = new SetProgressUseCase(ProgressRepository)
-const setProgressController = new SetProgressController(setProgressUseCase)
+const setProgressUseCase = setProgressUseCaseFactory();
+const setProgressController = new SetProgressController(setProgressUseCase);
 
-export { setProgressController }
+export { setProgressController };
