@@ -42,8 +42,6 @@ describe("Realize scheduling use case", () => {
       realizeSchedulingData,
     );
 
-    console.log(result);
-
     expect(mockedProgressRepository.getByScheduling).toHaveBeenCalledWith({
       schedulingId: realizeSchedulingData.schedulingId,
       patientId: realizeSchedulingData.patientId,

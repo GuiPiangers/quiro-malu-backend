@@ -140,7 +140,7 @@ router.post("/schedules", authMiddleware, (request, response) => {
 router.patch("/schedules", authMiddleware, (request, response) => {
   updateSchedulingController.handle(request, response);
 });
-router.patch("/schedules/status", authMiddleware, (request, response) => {
+router.post("/realizeScheduling", authMiddleware, (request, response) => {
   realizeSchedulingController.handle(request, response);
 });
 router.delete("/schedules", authMiddleware, (request, response) => {

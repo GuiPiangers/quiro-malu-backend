@@ -23,15 +23,10 @@ export class KnexLocationRepository implements ILocationRepository {
     patientId: string,
     userId: string,
   ): Promise<void> {
-    try {
-      const result = await Knex(ETableNames.LOCATIONS).update(data).where({
-        patientId,
-        userId,
-      });
-      console.log(result);
-    } catch (error) {
-      console.log(error);
-    }
+    const result = await Knex(ETableNames.LOCATIONS).update(data).where({
+      patientId,
+      userId,
+    });
   }
 
   async getLocation(patientId: string, userId: string): Promise<LocationDTO[]> {
