@@ -51,7 +51,6 @@ export class Patient extends Entity {
 
   getPatientDTO(): PatientDTO {
     const location = this.location?.getLocationDTO();
-    console.log(this.dateOfBirth?.date);
     return {
       id: this.id,
       name: this.name.value,

@@ -13,9 +13,7 @@ export class KnexPatientRepository implements IPatientRepository {
         ...data,
         userId,
       });
-      console.log("novo resultado", result);
     } catch (error: any) {
-      console.log("mensagem de erro", error);
       throw new ApiError(error.message, 500);
     }
   }
@@ -29,9 +27,8 @@ export class KnexPatientRepository implements IPatientRepository {
       const result = await Knex(ETableNames.PATIENTS)
         .update(data)
         .where({ id: patientId, userId });
-      console.log(result);
     } catch (error: any) {
-      console.log("mensagem de erro", error);
+      console.log(error.message);
       throw new ApiError(error.message, 500);
     }
   }
@@ -69,7 +66,6 @@ export class KnexPatientRepository implements IPatientRepository {
         .where({ userId })
         .andWhere("name", "like", `%${search?.name}%`);
 
-      console.log(result);
       return [result] as [{ total: number }];
     } catch (error: any) {
       throw new ApiError(error.message, 500);
@@ -105,7 +101,6 @@ export class KnexPatientRepository implements IPatientRepository {
     try {
       await Knex(ETableNames.PATIENTS).where({ id: patientId, userId }).del();
     } catch (error: any) {
-      console.log(error);
       throw new ApiError(error.message, 500);
     }
   }
