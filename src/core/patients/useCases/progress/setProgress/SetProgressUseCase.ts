@@ -20,8 +20,6 @@ export class SetProgressUseCase {
       await this.ProgressRepository.save({ ...progressDTO, userId });
     }
 
-    console.log(progressDTO);
-
     return progressDTO;
   }
 }

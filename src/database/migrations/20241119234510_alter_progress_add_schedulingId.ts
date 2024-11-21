@@ -9,7 +9,7 @@ export async function up(knex: Knex): Promise<void> {
       .references("id")
       .inTable(ETableNames.SCHEDULES)
       .onUpdate("SET NULL")
-      .onDelete("");
+      .onDelete("SET NULL");
   });
 }
 

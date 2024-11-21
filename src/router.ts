@@ -30,6 +30,7 @@ import { updateSchedulingController } from "./core/scheduling/controllers/update
 import { deleteSchedulingController } from "./core/scheduling/controllers/deleteSchedulingController";
 import { qtdSchedulesController } from "./core/scheduling/controllers/getQtdSchedulesByDayController";
 import { realizeSchedulingController } from "./core/scheduling/controllers/realizeSchedulingController";
+import { getProgressBySchedulingController } from "./core/patients/controllers/progress/getProgressBySchedulingController";
 
 const router = Router();
 
@@ -106,6 +107,13 @@ router.get(
   authMiddleware,
   (request, response) => {
     getProgressController.handle(request, response);
+  },
+);
+router.get(
+  "/patients/progress/scheduling/:patientId/:schedulingId",
+  authMiddleware,
+  (request, response) => {
+    getProgressBySchedulingController.handle(request, response);
   },
 );
 
