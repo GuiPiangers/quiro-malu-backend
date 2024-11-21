@@ -2,6 +2,8 @@ import { Patient, PatientDTO } from "../../models/Patient";
 import { ILocationRepository } from "../../../../repositories/location/ILocationRepository";
 import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
 import { ApiError } from "../../../../utils/ApiError";
+import { get } from "http";
+import { getValidObjectValues } from "../../../../utils/getValidObjectValues";
 
 export class UpdatePatientUseCase {
   constructor(
@@ -19,13 +21,18 @@ export class UpdatePatientUseCase {
       patientId: patient.id,
     });
 
+    console.log(patient);
+
     const updatePatient = this.patientRepository.update(
       patientDTO,
       patient.id,
       userId,
     );
 
-    if (location) {
+    if (
+      location &&
+      Object.values(location).some((value) => value !== undefined)
+    ) {
       const [validateLocation] = await this.locationRepository.getLocation(
         patient.id,
         userId,
@@ -67,7 +74,8 @@ export class UpdatePatientUseCase {
         cpf,
         userId,
       );
-      if (verifyPatient.id && verifyPatient.id !== patientId) {
+
+      if (verifyPatient?.id && verifyPatient?.id !== patientId) {
         throw new ApiError("Já existe um usuário cadastrado com esse CPF", 400);
       }
     }

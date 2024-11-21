@@ -16,7 +16,7 @@ describe("Scheduling", () => {
 
     expect(scheduling.id).toBeDefined();
     expect(scheduling.patientId).toBe(schedulingData.patientId);
-    expect(scheduling.date.value).toBe(validDate);
+    expect(scheduling.date?.value).toBe(validDate);
     expect(scheduling.duration).toBe(schedulingData.duration);
     expect(scheduling.service).toBe(schedulingData.service);
   });

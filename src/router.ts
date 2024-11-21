@@ -29,7 +29,10 @@ import { createSchedulingController } from "./core/scheduling/controllers/create
 import { updateSchedulingController } from "./core/scheduling/controllers/updateSchedulingController";
 import { deleteSchedulingController } from "./core/scheduling/controllers/deleteSchedulingController";
 import { qtdSchedulesController } from "./core/scheduling/controllers/getQtdSchedulesByDayController";
-import { updateSchedulingStatusController } from "./core/scheduling/controllers/updateSchedulingStatusController";
+import { realizeSchedulingController } from "./core/scheduling/controllers/realizeSchedulingController";
+import multer from "multer";
+import { CsvStream } from "./core/shared/streams/CsvStream";
+import { getProgressBySchedulingController } from "./core/patients/controllers/progress/getProgressBySchedulingController";
 
 const router = Router();
 
@@ -108,6 +111,13 @@ router.get(
     getProgressController.handle(request, response);
   },
 );
+router.get(
+  "/patients/progress/scheduling/:patientId/:schedulingId",
+  authMiddleware,
+  (request, response) => {
+    getProgressBySchedulingController.handle(request, response);
+  },
+);
 
 router.get("/services", authMiddleware, (request, response) => {
   listServiceController.handle(request, response);
@@ -140,11 +150,24 @@ router.post("/schedules", authMiddleware, (request, response) => {
 router.patch("/schedules", authMiddleware, (request, response) => {
   updateSchedulingController.handle(request, response);
 });
-router.patch("/schedules/status", authMiddleware, (request, response) => {
-  updateSchedulingStatusController.handle(request, response);
+router.post("/realizeScheduling", authMiddleware, (request, response) => {
+  realizeSchedulingController.handle(request, response);
 });
 router.delete("/schedules", authMiddleware, (request, response) => {
   deleteSchedulingController.handle(request, response);
+});
+
+router.post("/uploadPatients", multer().single("file"), (request, response) => {
+  const { file } = request;
+
+  if (file?.buffer) {
+    console.log(file?.buffer);
+    const test = new CsvStream(file.buffer);
+    test.transform((chunk) => {
+      console.log(chunk);
+      return chunk;
+    });
+  }
 });
 
 export { router };

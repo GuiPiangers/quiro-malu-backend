@@ -11,6 +11,7 @@ describe("Progress", () => {
       actualProblem: "Headache",
       date: "2023-12-01T00:00", // valid date
       procedures: "Consultation and tests",
+      schedulingId: "schedulingId",
     };
 
     const progress = new Progress(progressData);
@@ -21,6 +22,7 @@ describe("Progress", () => {
     expect(progress.actualProblem).toBe(progressData.actualProblem);
     expect(progress.date?.date).toBe("2023-12-01"); // Verify DateTime date
     expect(progress.procedures).toBe(progressData.procedures);
+    expect(progress.schedulingId).toBe(progressData.schedulingId);
   });
 
   it("should throw an error if date is invalid", () => {
@@ -46,6 +48,7 @@ describe("Progress", () => {
       actualProblem: "Routine check",
       date: new DateTime("2023-11-01T00:00").value,
       procedures: "Blood test",
+      schedulingId: "schedulingId",
     };
 
     const progress = new Progress(progressData);
@@ -57,8 +60,9 @@ describe("Progress", () => {
       patientId: "patient-4",
       service: "Check-up",
       actualProblem: "Routine check",
-      date: "2023-11-01T00:00", // Expected DateTime format
+      date: "2023-11-01T00:00",
       procedures: "Blood test",
+      schedulingId: "schedulingId",
     });
   });
 });

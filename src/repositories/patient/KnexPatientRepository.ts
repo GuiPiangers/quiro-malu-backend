@@ -3,17 +3,19 @@ import { Knex } from "../../database";
 import { ETableNames } from "../../database/ETableNames";
 import { order, query } from "../../database/mySqlConnection";
 import { IPatientRepository } from "../../repositories/patient/IPatientRepository";
+import { ApiError } from "../../utils/ApiError";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
 
 export class KnexPatientRepository implements IPatientRepository {
-  save(data: PatientDTO, userId: string): Promise<void> {
-    const sql = "INSERT INTO patients SET ?";
-    const errorMessage = "Falha ao adicionar o usuário";
-
-    return query(errorMessage, sql, {
-      ...getValidObjectValues<PatientDTO>(data),
-      userId,
-    });
+  async save(data: PatientDTO, userId: string): Promise<void> {
+    try {
+      const result = await Knex(ETableNames.PATIENTS).insert({
+        ...data,
+        userId,
+      });
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
   }
 
   async update(
@@ -25,9 +27,9 @@ export class KnexPatientRepository implements IPatientRepository {
       const result = await Knex(ETableNames.PATIENTS)
         .update(data)
         .where({ id: patientId, userId });
-      console.log(result);
-    } catch (error) {
-      console.log("mensagem de erro", error);
+    } catch (error: any) {
+      console.log(error.message);
+      throw new ApiError(error.message, 500);
     }
   }
 
@@ -54,26 +56,32 @@ export class KnexPatientRepository implements IPatientRepository {
     return results.map((result) => getValidObjectValues<PatientDTO>(result));
   }
 
-  countAll(
+  async countAll(
     userId: string,
     search?: { name?: string },
   ): Promise<[{ total: number }]> {
-    const sql =
-      "SELECT COUNT(id) AS total FROM patients WHERE userId = ? AND name like ?";
-    const errorMessage = `Não foi possível realizar a busca`;
-    return query(errorMessage, sql, [userId, `%${search?.name}%`]);
+    try {
+      const [result] = await Knex(ETableNames.PATIENTS)
+        .count("id as total")
+        .where({ userId })
+        .andWhere("name", "like", `%${search?.name}%`);
+
+      return [result] as [{ total: number }];
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
   }
 
   async getByCpf(cpf: string, userId: string): Promise<PatientDTO[]> {
-    const sql = "SELECT * FROM patients WHERE cpf = ? AND userId = ?";
-    const errorMessage = `Não foi possível realizar a busca`;
+    try {
+      const result = await Knex(ETableNames.PATIENTS)
+        .select("*")
+        .where({ cpf, userId });
 
-    const [result] = await query<PatientDTO[]>(errorMessage, sql, [
-      cpf,
-      userId,
-    ]);
-
-    return [getValidObjectValues<PatientDTO>(result)];
+      return result;
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
   }
 
   async getById(patientId: string, userId: string): Promise<PatientDTO[]> {
@@ -89,10 +97,11 @@ export class KnexPatientRepository implements IPatientRepository {
     return [getValidObjectValues<PatientDTO>(result)];
   }
 
-  delete(patientId: string, userId: string): Promise<void> {
-    const sql = "DELETE FROM patients WHERE id = ? AND userId = ?";
-    const errorMessage = `Não foi possível deletar o paciente`;
-
-    return query(errorMessage, sql, [patientId, userId]);
+  async delete(patientId: string, userId: string): Promise<void> {
+    try {
+      await Knex(ETableNames.PATIENTS).where({ id: patientId, userId }).del();
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
   }
 }
