@@ -15,9 +15,21 @@ export class MySqlProgressRepository implements IProgressRepository {
     patientId: string;
     userId: string;
   }): Promise<ProgressDTO[]> {
-    return await Knex(ETableNames.PROGRESS)
-      .select("*")
+    const result = await Knex(ETableNames.PROGRESS)
+      .column(
+        "id",
+        "patientId",
+        "userId",
+        "service",
+        "actualProblem",
+        "procedures",
+        "schedulingId",
+        Knex.raw('DATE_FORMAT(date, "%Y-%m-%dT%H:%i") as date'),
+      )
+      .select()
       .where({ schedulingId, patientId, userId });
+
+    return result;
   }
 
   save({
@@ -63,7 +75,7 @@ export class MySqlProgressRepository implements IProgressRepository {
     userId: string;
   }): Promise<ProgressDTO[]> {
     const sql =
-      "SELECT id, patientId, userId, service, actualProblem, procedures,  DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date FROM progress WHERE id = ? AND patientId = ? AND userId = ?";
+      "SELECT id, patientId, userId, schedulingId, service, actualProblem, procedures,  DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date FROM progress WHERE id = ? AND patientId = ? AND userId = ?";
     const errorMessage = `Não foi possível realizar a busca`;
 
     const result = await query<ProgressDTO[]>(errorMessage, sql, [

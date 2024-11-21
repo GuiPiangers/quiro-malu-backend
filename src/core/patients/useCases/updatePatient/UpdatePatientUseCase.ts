@@ -72,7 +72,8 @@ export class UpdatePatientUseCase {
         cpf,
         userId,
       );
-      if (verifyPatient.id && verifyPatient.id !== patientId) {
+
+      if (verifyPatient?.id && verifyPatient?.id !== patientId) {
         throw new ApiError("Já existe um usuário cadastrado com esse CPF", 400);
       }
     }
