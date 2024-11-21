@@ -1,25 +1,22 @@
 import { Request, Response } from "express";
-import { SchedulingDTO, SchedulingStatus } from "../../models/Scheduling";
 import { responseError } from "../../../../utils/ResponseError";
-import { UpdateSchedulingStatusUseCase } from "../../useCases/updateSchedulingStatus/UpdateSchedulingStatus";
+import { RealizeSchedulingUseCase } from "../../useCases/realizeScheduling/realizeSchedulingUseCase";
 
 export class UpdateSchedulingController {
-  constructor(
-    private updateSchedulingStatusUseCase: UpdateSchedulingStatusUseCase,
-  ) {}
+  constructor(private realizeSchedulingUseCase: RealizeSchedulingUseCase) {}
 
   async handle(request: Request, response: Response) {
     try {
       const data = request.body as {
         id: string;
         patientId: string;
-        status: SchedulingStatus;
       };
       const userId = request.user.id;
 
-      const scheduling = await this.updateSchedulingStatusUseCase.execute({
-        ...data,
+      const scheduling = await this.realizeSchedulingUseCase.execute({
         userId: userId!,
+        patientId: data.patientId,
+        schedulingId: data.id,
       });
       response.status(201).json(scheduling);
     } catch (err: any) {

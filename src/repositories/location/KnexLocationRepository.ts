@@ -5,7 +5,7 @@ import { getValidObjectValues } from "../../utils/getValidObjectValues";
 import { Knex } from "../../database";
 import { ETableNames } from "../../database/ETableNames";
 
-export class MySqlLocationRepository implements ILocationRepository {
+export class KnexLocationRepository implements ILocationRepository {
   save(data: LocationDTO, patientId: string, userId: string): Promise<void> {
     const sql = "INSERT INTO locations SET ?";
     const errorMessage = "Falha ao adicionar o usuário";
@@ -23,15 +23,10 @@ export class MySqlLocationRepository implements ILocationRepository {
     patientId: string,
     userId: string,
   ): Promise<void> {
-    try {
-      const result = await Knex(ETableNames.LOCATIONS).update(data).where({
-        patientId,
-        userId,
-      });
-      console.log(result);
-    } catch (error) {
-      console.log(error);
-    }
+    const result = await Knex(ETableNames.LOCATIONS).update(data).where({
+      patientId,
+      userId,
+    });
   }
 
   async getLocation(patientId: string, userId: string): Promise<LocationDTO[]> {

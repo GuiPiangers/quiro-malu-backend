@@ -3,17 +3,16 @@ import { DeletePatientUseCase } from "../../useCases/deletePatient/DeletePatient
 import { responseError } from "../../../../utils/ResponseError";
 
 export class DeletePatientsController {
-    constructor(private deletePatientsUseCase: DeletePatientUseCase) { }
-    async handle(request: Request, response: Response): Promise<void> {
-        try {
-            const userId = request.user.id
-            const { id: patientId } = request.body
-            await this.deletePatientsUseCase.execute(patientId, userId!)
+  constructor(private deletePatientsUseCase: DeletePatientUseCase) {}
+  async handle(request: Request, response: Response): Promise<void> {
+    try {
+      const userId = request.user.id;
+      const { id: patientId } = request.body;
+      await this.deletePatientsUseCase.execute(patientId, userId!);
 
-            response.json({ message: 'Paciente deletado com sucesso!' })
-        } catch (err: any) {
-            responseError(response, err)
-        }
+      response.json({ message: "Paciente deletado com sucesso!" });
+    } catch (err: any) {
+      responseError(response, err);
     }
-
+  }
 }

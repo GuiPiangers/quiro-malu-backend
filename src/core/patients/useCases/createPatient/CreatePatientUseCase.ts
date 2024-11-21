@@ -33,7 +33,6 @@ export class CreatePatientUseCase {
   }) {
     if (cpf) {
       const [verifyCpf] = await this.patientRepository.getByCpf(cpf, userId);
-      console.log(verifyCpf?.cpf === cpf);
       if (verifyCpf?.cpf === cpf)
         throw new ApiError(
           "Já existe um usuário cadastrado com esse CPF",

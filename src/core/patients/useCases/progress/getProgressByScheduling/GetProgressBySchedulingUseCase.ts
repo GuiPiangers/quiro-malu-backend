@@ -1,23 +1,26 @@
 import { IProgressRepository } from "../../../../../repositories/progress/IProgressRepository";
 import { Progress } from "../../../models/Progress";
 
-export class GetProgressUseCase {
+export class GetProgressBySchedulingUseCase {
   constructor(private ProgressRepository: IProgressRepository) {}
 
   async execute({
-    id,
+    schedulingId,
     patientId,
     userId,
   }: {
-    id: string;
+    schedulingId: string;
     patientId: string;
     userId: string;
   }) {
-    const [progressData] = await this.ProgressRepository.get({
-      id,
+    const [progressData] = await this.ProgressRepository.getByScheduling({
+      schedulingId,
       patientId,
       userId,
     });
+    if (!progressData) {
+      return null;
+    }
     const progress = new Progress(progressData);
     return progress.getDTO();
   }
