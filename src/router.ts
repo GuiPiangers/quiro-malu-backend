@@ -30,6 +30,8 @@ import { updateSchedulingController } from "./core/scheduling/controllers/update
 import { deleteSchedulingController } from "./core/scheduling/controllers/deleteSchedulingController";
 import { qtdSchedulesController } from "./core/scheduling/controllers/getQtdSchedulesByDayController";
 import { realizeSchedulingController } from "./core/scheduling/controllers/realizeSchedulingController";
+import multer from "multer";
+import { CsvStream } from "./core/shared/streams/CsvStream";
 import { getProgressBySchedulingController } from "./core/patients/controllers/progress/getProgressBySchedulingController";
 
 const router = Router();
@@ -153,6 +155,19 @@ router.post("/realizeScheduling", authMiddleware, (request, response) => {
 });
 router.delete("/schedules", authMiddleware, (request, response) => {
   deleteSchedulingController.handle(request, response);
+});
+
+router.post("/uploadPatients", multer().single("file"), (request, response) => {
+  const { file } = request;
+
+  if (file?.buffer) {
+    console.log(file?.buffer);
+    const test = new CsvStream(file.buffer);
+    test.transform((chunk) => {
+      console.log(chunk);
+      return chunk;
+    });
+  }
 });
 
 export { router };
