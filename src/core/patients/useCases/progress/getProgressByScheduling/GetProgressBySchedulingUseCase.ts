@@ -18,7 +18,9 @@ export class GetProgressBySchedulingUseCase {
       patientId,
       userId,
     });
-
+    if (!progressData) {
+      return null;
+    }
     const progress = new Progress(progressData);
     return progress.getDTO();
   }
