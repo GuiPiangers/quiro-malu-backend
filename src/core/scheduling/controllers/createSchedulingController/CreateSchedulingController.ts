@@ -7,12 +7,12 @@ export class CreateSchedulingController {
   constructor(private createSchedulingUseCase: CreateSchedulingUseCase) {}
   async handle(request: Request, response: Response) {
     try {
-      const data = request.body as SchedulingDTO;
-      const userId = request.user.id;
+      const data = request.body as SchedulingDTO & { date: string };
+      const userId = request.user.id as string;
 
       const scheduling = await this.createSchedulingUseCase.execute({
         ...data,
-        userId: userId!,
+        userId,
       });
       response.status(201).json(scheduling);
     } catch (err: any) {
