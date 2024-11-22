@@ -162,11 +162,21 @@ router.post("/uploadPatients", multer().single("file"), (request, response) => {
 
   if (file?.buffer) {
     console.log(file?.buffer);
-    const test = new CsvStream(file.buffer);
-    test.transform((chunk) => {
-      console.log(chunk);
-      return chunk;
-    });
+    const test = new CsvStream<{ name: string; age: number; email: string }>(
+      file.buffer,
+    );
+
+    test
+      .transform((chunk) => {
+        return chunk.email;
+      })
+      .transform((chunk) => {
+        return chunk + " transformado";
+      })
+      .transform((chunk) => chunk)
+      .write((chunk) => {
+        console.log(chunk);
+      });
   }
 });
 
