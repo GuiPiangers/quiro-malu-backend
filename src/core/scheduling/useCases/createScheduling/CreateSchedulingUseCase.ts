@@ -7,7 +7,10 @@ import DatabaseStatusStrategy from "../../models/status/DatabaseStatusStrategy";
 export class CreateSchedulingUseCase {
   constructor(private SchedulingRepository: ISchedulingRepository) {}
 
-  async execute({ userId, ...data }: SchedulingDTO & { userId: string }) {
+  async execute({
+    userId,
+    ...data
+  }: SchedulingDTO & { userId: string; date: string }) {
     const dataBaseStatusStrategy = new DatabaseStatusStrategy();
     const scheduling = new Scheduling(data, dataBaseStatusStrategy);
 
