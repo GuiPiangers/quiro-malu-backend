@@ -3,31 +3,43 @@ import { parse } from "fast-csv";
 
 type callBackStream = <T>(error: Error | null, result: T) => void;
 
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_resolve, reject) =>
+      setTimeout(() => reject(new Error("Transform operation timed out")), ms),
+    ),
+  ]);
+}
+
 abstract class IStream<chunk> {
-  constructor(public stream: Stream) {}
+  constructor(public stream: Stream) {
+    this.setupEventListeners();
+  }
 
-  abstract transform<k = chunk>(
-    fn: (value: chunk, cb: callBackStream) => k,
-  ): IStream<k>;
+  transform<k = chunk>(fn: (value: chunk) => k) {
+    return new TransformCsv<k>(
+      this.stream.pipe(
+        new Transform({
+          objectMode: true,
+          highWaterMark: 16,
 
-  protected createTransform<k = chunk>(
-    fn: (value: chunk, cb: callBackStream) => k,
-  ) {
-    return this.stream.pipe(
-      new Transform({
-        objectMode: true,
-
-        transform(chunk, enc, cb) {
-          const result = fn(chunk, cb);
-          if (result instanceof Promise) {
-            result.then((res) => {
-              cb(null, res);
-            });
-          } else {
-            cb(null, result);
-          }
-        },
-      }),
+          transform(chunk, enc, cb) {
+            try {
+              const result = fn(chunk);
+              if (result instanceof Promise) {
+                withTimeout(result, 5000)
+                  .then((res) => cb(null, res))
+                  .catch((err) => cb(err));
+              } else {
+                cb(null, result);
+              }
+            } catch (error: any) {
+              cb(error);
+            }
+          },
+        }),
+      ),
     );
   }
 
@@ -43,6 +55,20 @@ abstract class IStream<chunk> {
     );
   }
 
+  private setupEventListeners() {
+    this.stream.on("error", (err) => {
+      console.error("Stream encountered an error:", err.message);
+    });
+
+    this.stream.on("end", () => {
+      console.log("Stream processing has ended.");
+    });
+
+    this.stream.on("close", () => {
+      console.log("Stream has been closed.");
+    });
+  }
+
   pipe(stream: Writable) {
     return this.stream.pipe(stream);
   }
@@ -51,12 +77,6 @@ abstract class IStream<chunk> {
 class TransformCsv<chunk> extends IStream<chunk> {
   constructor(stream: Stream) {
     super(stream);
-  }
-
-  transform<k = chunk>(
-    fn: (value: chunk, cb: callBackStream) => k,
-  ): IStream<k> {
-    return new TransformCsv<k>(this.createTransform(fn));
   }
 }
 
@@ -71,10 +91,5 @@ export class CsvStream<chunk> extends IStream<chunk> {
         objectMode: true,
       }).pipe(parse({ headers: true })),
     );
-  }
-
-  transform<k = chunk>(fn: (value: chunk, cb: callBackStream) => k) {
-    const newStream = this.createTransform(fn);
-    return new TransformCsv<k>(newStream);
   }
 }

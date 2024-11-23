@@ -34,11 +34,11 @@ describe("Password", () => {
   it("should generate a hash for a valid password", async () => {
     const password = new Password("Abcd1!");
     const fakeHash = "hashedpassword123";
-    (Crypto.createHash as jest.Mock).mockResolvedValue(fakeHash);
+    (Crypto.createRandomHash as jest.Mock).mockResolvedValue(fakeHash);
 
     const hash = await password.getHash();
 
-    expect(Crypto.createHash).toHaveBeenCalledWith("Abcd1!");
+    expect(Crypto.createRandomHash).toHaveBeenCalledWith("Abcd1!");
     expect(hash).toBe(fakeHash);
   });
 });

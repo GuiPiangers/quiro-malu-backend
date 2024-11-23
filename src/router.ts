@@ -1,4 +1,4 @@
-import { Router } from "express";
+import e, { Router } from "express";
 import { createUserController } from "./core/authentication/controllers/createUserController";
 import { loginUserController } from "./core/authentication/controllers/loginUserController";
 import { refreshTokenController } from "./core/authentication/controllers/refreshTokenController";
@@ -34,11 +34,9 @@ import multer from "multer";
 import { CsvStream } from "./core/shared/streams/CsvStream";
 import { getProgressBySchedulingController } from "./core/patients/controllers/progress/getProgressBySchedulingController";
 import { Patient, PatientDTO } from "./core/patients/models/Patient";
-import { pipeline, promises, Readable, Writable } from "stream";
-import { Crypto } from "./core/shared/helpers/Crypto";
-import { promisify } from "util";
 
 const router = Router();
+const multerConfig = multer();
 
 router.post("/register", (request, response) => {
   createUserController.handle(request, response);
@@ -161,33 +159,42 @@ router.delete("/schedules", authMiddleware, (request, response) => {
   deleteSchedulingController.handle(request, response);
 });
 
-router.post("/uploadPatients", multer().single("file"), (request, response) => {
-  const { file } = request;
+router.post(
+  "/uploadPatients",
+  authMiddleware,
+  multerConfig.single("file"),
+  (request, response) => {
+    const { file } = request;
+    if (file?.buffer) {
+      const test = new CsvStream<PatientDTO>(file.buffer);
 
-  if (file?.buffer) {
-    const test = new CsvStream<PatientDTO>(file.buffer);
+      test
+        .transform((chunk) => {
+          const entries = Object.entries(chunk);
+          const result = entries
+            .filter(([_, value]) => value && value !== "")
+            .reduce((acc, [key, value]) => {
+              return { ...acc, [key]: value };
+            }, {}) as unknown as PatientDTO;
 
-    const result = test
-      .transform((chunk, cb) => {
-        const entries = Object.entries(chunk);
-        const result = entries
-          .filter(([key, value]) => value && value !== "")
-          .reduce((acc, [key, value]) => {
-            return { ...acc, [key]: value };
-          }, {}) as unknown as PatientDTO;
-
-        return Crypto.createHash(JSON.stringify(result)).then((res) => {
-          return res;
-        });
-      })
-      .transform((chunk) => {
-        console.log(chunk);
-      });
-
-    // .pipe(response);
-  }
-
-  response.send({ message: "Upload feito com sucesso!" });
-});
+          return result;
+        })
+        .transform((chunk) => {
+          const patient = new Patient(chunk);
+          return JSON.stringify(patient.getPatientDTO());
+        })
+        .stream.on("error", () => {
+          response
+            .end(
+              JSON.stringify({ message: "Ocorreu um ao fazer upload do csv" }),
+            )
+            .status(500);
+        })
+        .pipe(response);
+    } else {
+      response.send({ message: "Nenhum arquivo foi enviado" }).status(400);
+    }
+  },
+);
 
 export { router };
