@@ -34,6 +34,8 @@ import multer from "multer";
 import { CsvStream } from "./core/shared/streams/CsvStream";
 import { getProgressBySchedulingController } from "./core/patients/controllers/progress/getProgressBySchedulingController";
 import { Patient, PatientDTO } from "./core/patients/models/Patient";
+import { UploadPatientsUseCase } from "./core/patients/useCases/uploadPatients/UploadPatientsUseCase";
+import { KnexPatientRepository } from "./repositories/patient/KnexPatientRepository";
 
 const router = Router();
 const multerConfig = multer();
@@ -165,32 +167,13 @@ router.post(
   multerConfig.single("file"),
   (request, response) => {
     const { file } = request;
-    if (file?.buffer) {
-      const test = new CsvStream<PatientDTO>(file.buffer);
+    const userId = request.user.id;
+    if (file?.buffer && userId) {
+      const patientRepository = new KnexPatientRepository();
+      const uploadPatient = new UploadPatientsUseCase(patientRepository);
 
-      test
-        .transform((chunk) => {
-          const entries = Object.entries(chunk);
-          const result = entries
-            .filter(([_, value]) => value && value !== "")
-            .reduce((acc, [key, value]) => {
-              return { ...acc, [key]: value };
-            }, {}) as unknown as PatientDTO;
-
-          return result;
-        })
-        .transform((chunk) => {
-          const patient = new Patient(chunk);
-          return JSON.stringify(patient.getPatientDTO());
-        })
-        .stream.on("error", () => {
-          response
-            .end(
-              JSON.stringify({ message: "Ocorreu um ao fazer upload do csv" }),
-            )
-            .status(500);
-        })
-        .pipe(response);
+      uploadPatient.execute({ buffer: file.buffer, userId, response });
+      // response.send({ message: "Salvo com sucesso" }).status(200);
     } else {
       response.send({ message: "Nenhum arquivo foi enviado" }).status(400);
     }

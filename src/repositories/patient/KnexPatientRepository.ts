@@ -18,6 +18,15 @@ export class KnexPatientRepository implements IPatientRepository {
     }
   }
 
+  async saveMany(data: (PatientDTO & { userId: string })[]): Promise<void> {
+    try {
+      const result = await Knex(ETableNames.PATIENTS).insert(data);
+      console.log(result);
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
+  }
+
   async update(
     data: PatientDTO,
     patientId: string,

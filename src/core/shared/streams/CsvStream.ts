@@ -43,13 +43,19 @@ abstract class IStream<chunk> {
     );
   }
 
-  write(fn: (value: chunk, cb: callBackStream) => void) {
+  write<k = chunk>(fn: (value: chunk) => k | Promise<k>) {
     return this.stream.pipe(
       new Writable({
         objectMode: true,
         write(chunk, end, cb) {
-          fn(chunk, cb);
-          return cb();
+          const result = fn(chunk);
+          if (result instanceof Promise) {
+            withTimeout(result, 5000)
+              .then(() => cb(null))
+              .catch((err) => cb(err));
+          } else {
+            cb(null);
+          }
         },
       }),
     );
@@ -66,6 +72,10 @@ abstract class IStream<chunk> {
 
     this.stream.on("close", () => {
       console.log("Stream has been closed.");
+    });
+
+    this.stream.on("data", () => {
+      //
     });
   }
 
