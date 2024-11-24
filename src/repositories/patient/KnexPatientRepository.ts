@@ -93,6 +93,18 @@ export class KnexPatientRepository implements IPatientRepository {
     }
   }
 
+  async getByHash(hashData: string, userId: string): Promise<PatientDTO> {
+    try {
+      const result = await Knex(ETableNames.PATIENTS)
+        .first("*")
+        .where({ hashData, userId });
+
+      return result;
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
+  }
+
   async getById(patientId: string, userId: string): Promise<PatientDTO[]> {
     const sql =
       "SELECT *, created_at AS createAt FROM patients WHERE id = ? AND userId = ?";

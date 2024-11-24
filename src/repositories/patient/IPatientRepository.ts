@@ -18,6 +18,7 @@ export interface IPatientRepository {
     search?: { name?: string },
   ): Promise<[{ total: number }]>;
   getByCpf(cpf: string, userId: string): Promise<PatientDTO[]>;
+  getByHash(hash: string, userId: string): Promise<PatientDTO>;
   getById(patientId: string, userId: string): Promise<PatientDTO[]>;
   delete(patientId: string, userId: string): Promise<void>;
 }
