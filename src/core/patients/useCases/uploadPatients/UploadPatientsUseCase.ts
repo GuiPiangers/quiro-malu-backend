@@ -2,6 +2,8 @@ import { Response } from "express";
 import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
 import { CsvStream } from "../../../shared/streams/CsvStream";
 import { Patient, PatientDTO } from "../../models/Patient";
+import { threadId } from "worker_threads";
+import { ApiError } from "../../../../utils/ApiError";
 
 export class UploadPatientsUseCase {
   constructor(private patientRepository: IPatientRepository) {}
@@ -35,29 +37,47 @@ export class UploadPatientsUseCase {
           .reduce((acc, [key, value]) => {
             return { ...acc, [key]: value };
           }, {}) as unknown as PatientDTO;
-
         return result;
       })
-      .transform((chunk) => {
+      .transform(async (chunk) => {
         try {
           const patient = new Patient(chunk);
+          const patientExistis = await this.patientRepository.getByHash(
+            patient.hashData,
+            userId,
+          );
+
+          if (patientExistis?.hashData) {
+            throw new ApiError(
+              "Já existe um paciente cadastrado com esses dados",
+            );
+          }
+
           const { location, ...patientDto } = patient.getPatientDTO();
           return { ...patientDto, userId };
         } catch (error: any) {
-          return { error: error.message };
+          return {
+            error: error.message,
+            patient: {
+              ...chunk,
+            },
+          };
         }
       })
       .transform(async (chunk) => {
         if (this.isPatientData(chunk)) {
           patientsUploadList.push(chunk);
+
           if (patientsUploadList.length >= updateBatch) {
             await this.patientRepository.saveMany(patientsUploadList);
+
             savedPatients += updateBatch;
             patientsUploadList = [];
           }
         } else {
           errosOnSave += 1;
         }
+
         return JSON.stringify(chunk);
       })
       .stream.on("end", async () => {
@@ -70,12 +90,6 @@ export class UploadPatientsUseCase {
           `Upload finalizado com sucesso. ${savedPatients} pacientes salvos e ${errosOnSave} erros ao salvar pacientes`,
         );
       })
-      .pipe(response)
-      .on("error", (err) => {
-        console.error(err);
-        response
-          .status(500)
-          .end(JSON.stringify({ error: "Erro ao processar o arquivo" }));
-      });
+      .pipe(response);
   }
 }

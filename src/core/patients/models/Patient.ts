@@ -4,6 +4,7 @@ import { Name } from "../../shared/Name";
 import { Phone } from "../../shared/Phone";
 import { Location, LocationDTO } from "../../shared/Location";
 import { DateTime } from "../../shared/Date";
+import { Crypto } from "../../shared/helpers/Crypto";
 
 export interface PatientDTO {
   id?: string;
@@ -13,6 +14,7 @@ export interface PatientDTO {
   gender?: "masculino" | "feminino";
   cpf?: string;
   location?: LocationDTO;
+  hashData?: string;
 }
 
 export class Patient extends Entity {
@@ -22,9 +24,11 @@ export class Patient extends Entity {
   private _phone: Phone;
   private _cpf?: Cpf;
   private _location?: Location;
+  readonly hashData: string;
 
   constructor(props: PatientDTO) {
-    const { id, phone, name, cpf, location, dateOfBirth, gender } = props;
+    const { id, phone, name, cpf, location, dateOfBirth, gender, hashData } =
+      props;
 
     super(id);
     this.name = new Name(name, { compoundName: true });
@@ -35,6 +39,9 @@ export class Patient extends Entity {
       ? new DateTime(dateOfBirth, { onlyPassDate: true })
       : undefined;
     this.gender = gender;
+    this.hashData =
+      hashData ??
+      Crypto.createFixedHash(`${this.name}-${this.phone}-${this.dateOfBirth}`);
   }
 
   get phone() {
@@ -59,6 +66,7 @@ export class Patient extends Entity {
       phone: this.phone,
       dateOfBirth: this.dateOfBirth?.date,
       gender: this.gender,
+      hashData: this.hashData,
     };
   }
 }

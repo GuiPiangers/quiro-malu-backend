@@ -17,7 +17,7 @@ abstract class IStream<chunk> {
     this.setupEventListeners();
   }
 
-  transform<k = chunk>(fn: (value: chunk) => k) {
+  transform<k = chunk>(fn: (value: chunk) => k | Promise<k>) {
     return new TransformCsv<k>(
       this.stream.pipe(
         new Transform({
