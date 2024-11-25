@@ -1,8 +1,6 @@
 import { Readable, Stream, Transform, Writable } from "stream";
 import { parse } from "fast-csv";
 
-type callBackStream = <T>(error: Error | null, result: T) => void;
-
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return Promise.race([
     promise,
@@ -12,8 +10,20 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   ]);
 }
 
+type DefaultEvents = {
+  onError?: (err: any) => void;
+  onData?: (chunk: any) => void;
+  onEnd?: () => void;
+  onPause?: () => void;
+  onReadable?: () => void;
+  onClose?: () => void;
+};
+
 abstract class IStream<chunk> {
-  constructor(public stream: Stream) {
+  constructor(
+    public stream: Stream,
+    private defaultEvents: DefaultEvents = {},
+  ) {
     this.setupEventListeners();
   }
 
@@ -40,6 +50,7 @@ abstract class IStream<chunk> {
           },
         }),
       ),
+      this.defaultEvents,
     );
   }
 
@@ -62,21 +73,16 @@ abstract class IStream<chunk> {
   }
 
   private setupEventListeners() {
-    this.stream.on("error", (err) => {
-      console.error("Stream encountered an error:", err.message);
-    });
-
-    this.stream.on("end", () => {
-      console.log("Stream processing has ended.");
-    });
-
-    this.stream.on("close", () => {
-      console.log("Stream has been closed.");
-    });
-
-    this.stream.on("data", () => {
-      //
-    });
+    if (this.defaultEvents) {
+      const { onClose, onData, onEnd, onError, onPause, onReadable } =
+        this.defaultEvents;
+      onError && this.stream.on("error", onError);
+      onData && this.stream.on("data", onData);
+      onEnd && this.stream.on("end", onEnd);
+      onPause && this.stream.on("pause", onPause);
+      onReadable && this.stream.on("readable", onReadable);
+      onClose && this.stream.on("close", onClose);
+    }
   }
 
   pipe(stream: Writable) {
@@ -85,13 +91,13 @@ abstract class IStream<chunk> {
 }
 
 class TransformCsv<chunk> extends IStream<chunk> {
-  constructor(stream: Stream) {
-    super(stream);
+  constructor(stream: Stream, defaultEvents: DefaultEvents = {}) {
+    super(stream, defaultEvents);
   }
 }
 
 export class CsvStream<chunk> extends IStream<chunk> {
-  constructor(buffer: Buffer) {
+  constructor(buffer: Buffer, defaultEvents: DefaultEvents = {}) {
     super(
       new Readable({
         read() {
@@ -100,6 +106,7 @@ export class CsvStream<chunk> extends IStream<chunk> {
         },
         objectMode: true,
       }).pipe(parse({ headers: true })),
+      defaultEvents,
     );
   }
 }

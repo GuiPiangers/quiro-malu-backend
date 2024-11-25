@@ -41,7 +41,13 @@ export class Patient extends Entity {
     this.gender = gender;
     this.hashData =
       hashData ??
-      Crypto.createFixedHash(`${this.name}-${this.phone}-${this.dateOfBirth}`);
+      Crypto.createFixedHash(
+        JSON.stringify({
+          name: this.name.value.replace(" ", "").toLocaleLowerCase(),
+          phone: this.phone.replace(" ", ""),
+          dateOfBirth: this.dateOfBirth?.value,
+        }),
+      );
   }
 
   get phone() {
