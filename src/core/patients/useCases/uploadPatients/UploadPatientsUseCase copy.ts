@@ -7,24 +7,54 @@ import { ApiError } from "../../../../utils/ApiError";
 export class UploadPatientsUseCase {
   constructor(private patientRepository: IPatientRepository) {}
 
-  private isPatientData(
-    patientData: PatientDTO | { error: string },
-  ): patientData is PatientDTO & { userId: string } {
-    return (patientData as PatientDTO).name !== undefined;
-  }
+  private savedPatients = 0;
+  private errosOnSave = 0;
+  private updateBatch = 3;
 
-  private patientsUploadList: (PatientDTO & { userId: string })[] = [];
+  private patientsBatch: (PatientDTO & { userId: string })[] = [];
 
-  private addPatientUpload(patientDTO: PatientDTO & { userId: string }) {
+  private async addPatientToBatch(patientDTO: PatientDTO & { userId: string }) {
     if (
-      this.patientsUploadList.some(
+      this.patientsBatch.some(
         (patient) => patient.hashData === patientDTO.hashData,
       )
     ) {
       throw new ApiError("Já existe um paciente cadastrado com esses dados");
     }
 
-    this.patientsUploadList.push(patientDTO);
+    this.patientsBatch.push(patientDTO);
+
+    if (this.patientsBatch.length >= this.updateBatch) {
+      return await this.savePatientsBatch();
+    }
+  }
+
+  private async savePatientsBatch() {
+    try {
+      await this.patientRepository.saveMany(this.patientsBatch);
+      this.savedPatients += this.patientsBatch.length;
+
+      return [...this.patientsBatch];
+    } catch (error: any) {
+      this.errosOnSave += this.patientsBatch.length;
+
+      return this.patientsBatch.map((patient) => ({
+        error: error.message,
+        patient,
+      }));
+    } finally {
+      this.patientsBatch = [];
+    }
+  }
+
+  private removeEmpytyFields(object: PatientDTO) {
+    const entries = Object.entries(object);
+    const result = entries
+      .filter(([_, value]) => value && value !== "")
+      .reduce((acc, [key, value]) => {
+        return { ...acc, [key]: value };
+      }, {}) as unknown as PatientDTO;
+    return result;
   }
 
   execute({
@@ -36,97 +66,87 @@ export class UploadPatientsUseCase {
     userId: string;
     response: Response;
   }) {
-    const test = new CsvStream<PatientDTO>(buffer, {
+    response.setHeader("Content-Type", "application/json");
+
+    response.write(`{"data":[`);
+
+    const csvStream = new CsvStream<PatientDTO>(buffer, {
       onError(err) {
         response.end(JSON.stringify(err.message));
       },
+      onData: () => {
+        //
+      },
     });
+
     console.time();
-    let savedPatients = 0;
-    let errosOnSave = 0;
-    const updateBatch = 1;
-    test
-      .transform((chunk) => {
-        const entries = Object.entries(chunk);
-        const result = entries
-          .filter(([_, value]) => value && value !== "")
-          .reduce((acc, [key, value]) => {
-            return { ...acc, [key]: value };
-          }, {}) as unknown as PatientDTO;
-        return result;
-      })
+
+    csvStream
       .transform(async (chunk) => {
         try {
-          const patient = new Patient(chunk);
-          const patientExistis = await this.patientRepository.getByHash(
+          const patient = new Patient(this.removeEmpytyFields(chunk));
+          const patientExists = await this.patientRepository.getByHash(
             patient.hashData,
             userId,
           );
-          if (patientExistis?.hashData) {
+
+          if (patientExists?.hashData) {
             throw new ApiError(
               "Já existe um paciente cadastrado com esses dados",
             );
           }
 
           const { location, ...patientDto } = patient.getPatientDTO();
-          return { ...patientDto, userId };
+          const results = await this.addPatientToBatch({
+            ...patientDto,
+            userId,
+          });
+          if (results) {
+            results.forEach((result) => {
+              response.write(`${JSON.stringify(result)},`);
+            });
+          }
+
+          return JSON.stringify({ ...patientDto, userId });
         } catch (error: any) {
-          return {
+          this.errosOnSave += 1;
+
+          const result = JSON.stringify({
             error: error.message,
             patient: {
               ...chunk,
             },
-          };
-        }
-      })
-      .transform(async (chunk) => {
-        try {
-          if (this.isPatientData(chunk)) {
-            this.addPatientUpload(chunk);
-            if (this.patientsUploadList.length >= updateBatch) {
-              await this.patientRepository.saveMany(this.patientsUploadList);
-              savedPatients += this.patientsUploadList.length;
-              this.patientsUploadList = [];
-            }
-          } else {
-            errosOnSave += 1;
-          }
-          return JSON.stringify(chunk);
-        } catch (error: any) {
-          errosOnSave += this.patientsUploadList.length;
-          console.log("chegou aqui");
-          return JSON.stringify(
-            this.patientsUploadList.map((patient) => ({
-              error: error.message,
-              patient,
-            })),
-          );
+          });
+
+          response.write(`${result},`);
+          return result;
         }
       })
       .stream.on("end", async () => {
         try {
-          if (
-            this.patientsUploadList.length > 0 &&
-            this.patientsUploadList.length < updateBatch
-          ) {
-            await this.patientRepository.saveMany(this.patientsUploadList);
-            savedPatients += this.patientsUploadList.length;
+          if (this.patientsBatch.length > 0) {
+            await this.savePatientsBatch();
           }
         } catch (error: any) {
           console.log(error.message);
-          errosOnSave += this.patientsUploadList.length;
+
+          this.patientsBatch.forEach((patient) => {
+            response.write(
+              `${JSON.stringify({ error: error.message, patient })},`,
+            );
+          });
+
+          this.errosOnSave += this.patientsBatch.length;
         }
         console.timeEnd();
         console.log(
-          `Upload finalizado com sucesso. ${savedPatients} pacientes salvos e ${errosOnSave} erros ao salvar pacientes`,
+          `${this.savedPatients} pacientes salvos e ${this.errosOnSave} erros ao salvar pacientes`,
         );
-      })
-      .pipe(response)
-      .on("finish", () => {
-        console.log(
-          `${savedPatients} pacientes salvos e ${errosOnSave} erros ao salvar pacientes`,
+        response.write("{}],");
+        response.write(
+          `"summary": {"success": ${this.savedPatients}, "errors": ${this.errosOnSave}}}`,
         );
-        console.timeEnd();
+        response.end();
       });
   }
 }
