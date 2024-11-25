@@ -31,10 +31,7 @@ import { deleteSchedulingController } from "./core/scheduling/controllers/delete
 import { qtdSchedulesController } from "./core/scheduling/controllers/getQtdSchedulesByDayController";
 import { realizeSchedulingController } from "./core/scheduling/controllers/realizeSchedulingController";
 import multer from "multer";
-import { CsvStream } from "./core/shared/streams/CsvStream";
 import { getProgressBySchedulingController } from "./core/patients/controllers/progress/getProgressBySchedulingController";
-import { Patient, PatientDTO } from "./core/patients/models/Patient";
-import { UploadPatientsUseCase } from "./core/patients/useCases/uploadPatients/UploadPatientsUseCase";
 import { UploadPatientsUseCase as UploadPatientsUseCase2 } from "./core/patients/useCases/uploadPatients/UploadPatientsUseCase copy";
 import { KnexPatientRepository } from "./repositories/patient/KnexPatientRepository";
 
