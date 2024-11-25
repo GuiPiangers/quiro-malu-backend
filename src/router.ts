@@ -35,6 +35,7 @@ import { CsvStream } from "./core/shared/streams/CsvStream";
 import { getProgressBySchedulingController } from "./core/patients/controllers/progress/getProgressBySchedulingController";
 import { Patient, PatientDTO } from "./core/patients/models/Patient";
 import { UploadPatientsUseCase } from "./core/patients/useCases/uploadPatients/UploadPatientsUseCase";
+import { UploadPatientsUseCase as UploadPatientsUseCase2 } from "./core/patients/useCases/uploadPatients/UploadPatientsUseCase copy";
 import { KnexPatientRepository } from "./repositories/patient/KnexPatientRepository";
 
 const router = Router();
@@ -170,7 +171,7 @@ router.post(
     const userId = request.user.id;
     if (file?.buffer && userId) {
       const patientRepository = new KnexPatientRepository();
-      const uploadPatient = new UploadPatientsUseCase(patientRepository);
+      const uploadPatient = new UploadPatientsUseCase2(patientRepository);
 
       uploadPatient.execute({ buffer: file.buffer, userId, response });
       // response.send({ message: "Salvo com sucesso" }).status(200);

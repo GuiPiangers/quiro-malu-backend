@@ -1,9 +1,8 @@
 import { Response } from "express";
 import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
+import { ApiError } from "../../../../utils/ApiError";
 import { CsvStream } from "../../../shared/streams/CsvStream";
 import { Patient, PatientDTO } from "../../models/Patient";
-import { threadId } from "worker_threads";
-import { ApiError } from "../../../../utils/ApiError";
 
 export class UploadPatientsUseCase {
   constructor(private patientRepository: IPatientRepository) {}
@@ -23,12 +22,34 @@ export class UploadPatientsUseCase {
     userId: string;
     response: Response;
   }) {
-    let patientsUploadList: (PatientDTO & { userId: string })[] = [];
-    const test = new CsvStream<PatientDTO>(buffer);
+    const test = new CsvStream<PatientDTO>(buffer, {
+      onError(err) {
+        response.end(JSON.stringify(err.message));
+      },
+    });
+
     console.time();
+
+    const concurrencyLimit = 10; // Define o limite de concorrência
+    let activeTasks = 0;
     let savedPatients = 0;
     let errosOnSave = 0;
-    const updateBatch = 10;
+
+    const taskQueue: (() => Promise<void>)[] = [];
+
+    const processQueue = async () => {
+      while (taskQueue.length > 0 && activeTasks < concurrencyLimit) {
+        const task = taskQueue.shift();
+        if (task) {
+          activeTasks++;
+          await task().finally(() => {
+            activeTasks--;
+            processQueue();
+          });
+        }
+      }
+    };
+
     test
       .transform((chunk) => {
         const entries = Object.entries(chunk);
@@ -46,15 +67,14 @@ export class UploadPatientsUseCase {
             patient.hashData,
             userId,
           );
-
           if (patientExistis?.hashData) {
-            throw new ApiError(
-              "Já existe um paciente cadastrado com esses dados",
-            );
+            // throw new ApiError(
+            //   "Já existe um paciente cadastrado com esses dados",
+            // );
           }
 
           const { location, ...patientDto } = patient.getPatientDTO();
-          return { ...patientDto, userId };
+          return patientDto;
         } catch (error: any) {
           return {
             error: error.message,
@@ -64,32 +84,34 @@ export class UploadPatientsUseCase {
           };
         }
       })
-      .transform(async (chunk) => {
+      .transform((chunk) => {
+        // Adiciona tarefas à fila com limite de concorrência
         if (this.isPatientData(chunk)) {
-          patientsUploadList.push(chunk);
-
-          if (patientsUploadList.length >= updateBatch) {
-            await this.patientRepository.saveMany(patientsUploadList);
-
-            savedPatients += updateBatch;
-            patientsUploadList = [];
-          }
+          return new Promise<void>((resolve) => {
+            const task = async () => {
+              try {
+                await this.patientRepository.save(chunk, userId);
+                savedPatients += 1;
+              } catch (error: any) {
+                errosOnSave += 1;
+              } finally {
+                resolve();
+              }
+            };
+            taskQueue.push(task);
+            processQueue();
+          });
         } else {
           errosOnSave += 1;
+          return undefined;
         }
-
-        return JSON.stringify(chunk);
       })
-      .stream.on("end", async () => {
-        if (patientsUploadList.length > 0) {
-          await this.patientRepository.saveMany(patientsUploadList);
-          savedPatients += patientsUploadList.length;
-        }
-        console.timeEnd();
+      .pipe(response)
+      .on("finish", () => {
         console.log(
-          `Upload finalizado com sucesso. ${savedPatients} pacientes salvos e ${errosOnSave} erros ao salvar pacientes`,
+          `${savedPatients} pacientes salvos e ${errosOnSave} erros ao salvar pacientes`,
         );
-      })
-      .pipe(response);
+        console.timeEnd();
+      });
   }
 }
