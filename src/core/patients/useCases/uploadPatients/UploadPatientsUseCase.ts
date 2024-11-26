@@ -27,7 +27,7 @@ export class UploadPatientsUseCase {
   private updateBatch = 10;
   private errorList: { error: string; patient: PatientDTO }[] = [];
   private patientsBatch: {
-    patientData: PatientDTO & { userId: string };
+    patientData: PatientDTO & { id: string; userId: string };
     locationData?: LocationDTO;
     anaminesisData?: Partial<AnamnesisDTO>;
     dignosticData?: DiagnosticDTO;
@@ -148,7 +148,9 @@ export class UploadPatientsUseCase {
     }
   }
 
-  private async addPatientToBatch(patientDTO: PatientDTO & { userId: string }) {
+  private async addPatientToBatch(
+    patientDTO: PatientDTO & { userId: string; id: string },
+  ) {
     if (
       this.patientsBatch.some((patient) => {
         const { patientData } = patient;
@@ -171,6 +173,16 @@ export class UploadPatientsUseCase {
       await this.patientRepository.saveMany(
         this.patientsBatch.map((data) => data.patientData),
       );
+
+      await Promise.all([
+        this.locationRepository.saveMany(
+          this.patientsBatch.map((data) => ({
+            ...data.locationData,
+            patientId: data.patientData.id,
+            userId: data.patientData.userId,
+          })),
+        ),
+      ]);
       this.successCounter += this.patientsBatch.length;
     } catch (error: any) {
       this.patientsBatch.forEach((patient) => {

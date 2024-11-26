@@ -65,7 +65,7 @@ export class Patient extends Entity {
     return this._location;
   }
 
-  getPatientDTO(): PatientDTO {
+  getPatientDTO() {
     const location = this.location?.getLocationDTO();
     return {
       id: this.id,
