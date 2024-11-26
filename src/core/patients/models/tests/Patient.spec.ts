@@ -31,7 +31,6 @@ describe("Patient", () => {
   });
   it("should create a id if it's not specified", () => {
     const patientData: PatientDTO = {
-      id: "1",
       name: "John Doe",
       phone: "(12) 34567 8901",
     };
@@ -39,6 +38,35 @@ describe("Patient", () => {
     const patient = new Patient(patientData);
 
     expect(patient).toHaveProperty("id");
+  });
+  it("should create different hashData when name, phone or dateOfBirth is different", () => {
+    const patientData: PatientDTO = {
+      name: "John Doe",
+      phone: "(12) 34567 8901",
+      dateOfBirth: "1999-10-10",
+    };
+    const patientData2: PatientDTO = {
+      ...patientData,
+      name: "John Doe2",
+    };
+    const patientData3: PatientDTO = {
+      ...patientData,
+      phone: "(12) 34567 8902",
+    };
+    const patientData4: PatientDTO = {
+      ...patientData,
+      dateOfBirth: "1999-10-11",
+    };
+
+    const patient = new Patient(patientData);
+    const patient2 = new Patient(patientData2);
+    const patient3 = new Patient(patientData3);
+    const patient4 = new Patient(patientData4);
+
+    expect(patient).toHaveProperty("hashData");
+    expect(patient.hashData).not.toBe(patient2.hashData);
+    expect(patient.hashData).not.toBe(patient3.hashData);
+    expect(patient.hashData).not.toBe(patient4.hashData);
   });
 
   it("should create a Patient instance without optional fields", () => {
