@@ -32,8 +32,7 @@ import { qtdSchedulesController } from "./core/scheduling/controllers/getQtdSche
 import { realizeSchedulingController } from "./core/scheduling/controllers/realizeSchedulingController";
 import multer from "multer";
 import { getProgressBySchedulingController } from "./core/patients/controllers/progress/getProgressBySchedulingController";
-import { UploadPatientsUseCase as UploadPatientsUseCase2 } from "./core/patients/useCases/uploadPatients/UploadPatientsUseCase copy";
-import { KnexPatientRepository } from "./repositories/patient/KnexPatientRepository";
+import { uploadPatientsController } from "./core/patients/controllers/uploadPatientsController";
 
 const router = Router();
 const multerConfig = multer();
@@ -164,17 +163,7 @@ router.post(
   authMiddleware,
   multerConfig.single("file"),
   (request, response) => {
-    const { file } = request;
-    const userId = request.user.id;
-    if (file?.buffer && userId) {
-      const patientRepository = new KnexPatientRepository();
-      const uploadPatient = new UploadPatientsUseCase2(patientRepository);
-
-      uploadPatient.execute({ buffer: file.buffer, userId, response });
-      // response.send({ message: "Salvo com sucesso" }).status(200);
-    } else {
-      response.send({ message: "Nenhum arquivo foi enviado" }).status(400);
-    }
+    uploadPatientsController.handle(request, response);
   },
 );
 
