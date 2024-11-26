@@ -5,6 +5,7 @@ import { Phone } from "../../shared/Phone";
 import { Location, LocationDTO } from "../../shared/Location";
 import { DateTime } from "../../shared/Date";
 import { Crypto } from "../../shared/helpers/Crypto";
+import { ApiError } from "../../../utils/ApiError";
 
 export interface PatientDTO {
   id?: string;
@@ -29,8 +30,10 @@ export class Patient extends Entity {
   constructor(props: PatientDTO) {
     const { id, phone, name, cpf, location, dateOfBirth, gender, hashData } =
       props;
-
     super(id);
+    if (gender !== "masculino" && gender !== "feminino")
+      throw new ApiError('O gênero deve ser "masculino" ou "feminino"', 400);
+
     this.name = new Name(name, { compoundName: true });
     this._phone = new Phone(phone);
     this._location = location ? new Location(location) : undefined;
