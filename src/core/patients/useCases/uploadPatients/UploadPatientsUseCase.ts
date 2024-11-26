@@ -1,117 +1,160 @@
-import { Response } from "express";
 import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
-import { ApiError } from "../../../../utils/ApiError";
 import { CsvStream } from "../../../shared/streams/CsvStream";
 import { Patient, PatientDTO } from "../../models/Patient";
 
 export class UploadPatientsUseCase {
   constructor(private patientRepository: IPatientRepository) {}
 
-  private isPatientData(
-    patientData: PatientDTO | { error: string },
-  ): patientData is PatientDTO & { userId: string } {
-    return (patientData as PatientDTO).name !== undefined;
+  private successCounter = 0;
+  private erroCounter = 0;
+  private duplicateCounter = 0;
+  private updateBatch = 10;
+  private errorList: { error: string; patient: PatientDTO }[] = [];
+  private patientsBatch: (PatientDTO & { userId: string })[] = [];
+
+  async execute({ buffer, userId }: { buffer: Buffer; userId: string }) {
+    return await new Promise<{
+      fatalError?: string;
+      errors: { error: string; patient: PatientDTO }[];
+      erroCounter: number;
+      successCounter: number;
+      duplicateCounter: number;
+    }>((resolve) => {
+      try {
+        const csvStream = new CsvStream<PatientDTO>(buffer, {
+          onData() {
+            //
+          },
+        });
+
+        csvStream
+          .transform(async (chunk) => {
+            try {
+              const patient = new Patient(this.removeEmptyFields(chunk));
+              if (await this.validatePatientExist(patient, userId)) return;
+              await this.validateCpfNotExist({ cpf: patient.cpf, userId });
+
+              const { location, ...patientDto } = patient.getPatientDTO();
+              await this.addPatientToBatch({
+                ...patientDto,
+                userId,
+              });
+
+              return JSON.stringify({ ...patientDto, userId });
+            } catch (error: any) {
+              this.addError({
+                error: error.message,
+                patient: chunk,
+              });
+            }
+          })
+          .stream.on("end", async () => {
+            try {
+              if (this.patientsBatch.length > 0) {
+                await this.savePatientsBatch();
+              }
+            } catch (error: any) {
+              this.patientsBatch.forEach((patient) => {
+                this.addError({ error: error.message, patient });
+              });
+            }
+            console.log(
+              `${this.successCounter} pacientes salvos e ${this.erroCounter} erros ao salvar pacientes`,
+            );
+            resolve({
+              errors: this.errorList,
+              erroCounter: this.erroCounter,
+              successCounter: this.successCounter,
+              duplicateCounter: this.duplicateCounter,
+            });
+          });
+      } catch (error) {
+        resolve({
+          fatalError: "Falha ao salvar os pacientes",
+          errors: this.errorList,
+          erroCounter: this.erroCounter,
+          successCounter: this.successCounter,
+          duplicateCounter: this.duplicateCounter,
+        });
+      }
+    });
   }
 
-  execute({
-    buffer,
+  private addError(error: { error: string; patient: PatientDTO }) {
+    const maxErrors = 1000;
+    this.erroCounter++;
+    if (this.errorList.length < maxErrors) {
+      this.errorList.push(error);
+    }
+  }
+
+  private async addPatientToBatch(patientDTO: PatientDTO & { userId: string }) {
+    if (
+      this.patientsBatch.some(
+        (patient) => patient.hashData === patientDTO.hashData,
+      )
+    ) {
+      this.duplicateCounter++;
+      return;
+    }
+
+    this.patientsBatch.push(patientDTO);
+
+    if (this.patientsBatch.length >= this.updateBatch) {
+      await this.savePatientsBatch();
+    }
+  }
+
+  private async savePatientsBatch() {
+    try {
+      await this.patientRepository.saveMany(this.patientsBatch);
+      this.successCounter += this.patientsBatch.length;
+    } catch (error: any) {
+      this.patientsBatch.forEach((patient) =>
+        this.addError({
+          error: error.message,
+          patient,
+        }),
+      );
+    } finally {
+      this.patientsBatch = [];
+    }
+  }
+
+  private async validatePatientExist(patient: Patient, userId: string) {
+    const patientExists = await this.patientRepository.getByHash(
+      patient.hashData,
+      userId,
+    );
+
+    if (patientExists?.hashData) {
+      this.duplicateCounter++;
+      return true;
+    }
+    return false;
+  }
+
+  private async validateCpfNotExist({
+    cpf,
     userId,
-    response,
   }: {
-    buffer: Buffer;
+    cpf?: string;
     userId: string;
-    response: Response;
   }) {
-    const test = new CsvStream<PatientDTO>(buffer, {
-      onError(err) {
-        response.end(JSON.stringify(err.message));
-      },
-    });
+    if (cpf) {
+      const [verifyCpf] = await this.patientRepository.getByCpf(cpf, userId);
+      if (verifyCpf?.cpf === cpf)
+        throw new Error("Já existe um usuário cadastrado com esse CPF");
+    }
+  }
 
-    console.time();
-
-    const concurrencyLimit = 10; // Define o limite de concorrência
-    let activeTasks = 0;
-    let savedPatients = 0;
-    let errosOnSave = 0;
-
-    const taskQueue: (() => Promise<void>)[] = [];
-
-    const processQueue = async () => {
-      while (taskQueue.length > 0 && activeTasks < concurrencyLimit) {
-        const task = taskQueue.shift();
-        if (task) {
-          activeTasks++;
-          await task().finally(() => {
-            activeTasks--;
-            processQueue();
-          });
-        }
-      }
-    };
-
-    test
-      .transform((chunk) => {
-        const entries = Object.entries(chunk);
-        const result = entries
-          .filter(([_, value]) => value && value !== "")
-          .reduce((acc, [key, value]) => {
-            return { ...acc, [key]: value };
-          }, {}) as unknown as PatientDTO;
-        return result;
-      })
-      .transform(async (chunk) => {
-        try {
-          const patient = new Patient(chunk);
-          const patientExistis = await this.patientRepository.getByHash(
-            patient.hashData,
-            userId,
-          );
-          if (patientExistis?.hashData) {
-            // throw new ApiError(
-            //   "Já existe um paciente cadastrado com esses dados",
-            // );
-          }
-
-          const { location, ...patientDto } = patient.getPatientDTO();
-          return patientDto;
-        } catch (error: any) {
-          return {
-            error: error.message,
-            patient: {
-              ...chunk,
-            },
-          };
-        }
-      })
-      .transform((chunk) => {
-        // Adiciona tarefas à fila com limite de concorrência
-        if (this.isPatientData(chunk)) {
-          return new Promise<void>((resolve) => {
-            const task = async () => {
-              try {
-                await this.patientRepository.save(chunk, userId);
-                savedPatients += 1;
-              } catch (error: any) {
-                errosOnSave += 1;
-              } finally {
-                resolve();
-              }
-            };
-            taskQueue.push(task);
-            processQueue();
-          });
-        } else {
-          errosOnSave += 1;
-          return undefined;
-        }
-      })
-      .pipe(response)
-      .on("finish", () => {
-        console.log(
-          `${savedPatients} pacientes salvos e ${errosOnSave} erros ao salvar pacientes`,
-        );
-        console.timeEnd();
-      });
+  private removeEmptyFields(object: PatientDTO) {
+    const entries = Object.entries(object);
+    const result = entries
+      .filter(([_, value]) => value && value !== "")
+      .reduce((acc, [key, value]) => {
+        return { ...acc, [key]: value };
+      }, {}) as unknown as PatientDTO;
+    return result;
   }
 }
