@@ -1,5 +1,8 @@
 import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
+import { LocationDTO } from "../../../shared/Location";
 import { CsvStream } from "../../../shared/streams/CsvStream";
+import { AnamnesisDTO } from "../../models/Anamnesis";
+import { DiagnosticDTO } from "../../models/Diagnostic";
 import { Patient, PatientDTO } from "../../models/Patient";
 
 export class UploadPatientsUseCase {
@@ -78,6 +81,46 @@ export class UploadPatientsUseCase {
         });
       }
     });
+  }
+
+  private getData(
+    object: PatientDTO &
+      LocationDTO &
+      Partial<AnamnesisDTO> &
+      Partial<DiagnosticDTO>,
+  ) {
+    const { name, phone, gender, dateOfBirth, cpf }: PatientDTO = object;
+    const { address, cep, city, neighborhood, state }: LocationDTO = object;
+    const {
+      activities,
+      currentIllness,
+      familiarHistory,
+      history,
+      mainProblem,
+      medicines,
+      smoke,
+      surgeries,
+      underwentSurgery,
+      useMedicine,
+    }: Partial<AnamnesisDTO> = object;
+    const { diagnostic, treatmentPlan }: Partial<DiagnosticDTO> = object;
+    return {
+      patientData: { name, phone, gender, dateOfBirth, cpf },
+      locationData: { address, cep, city, neighborhood, state },
+      anamnesis: {
+        activities,
+        currentIllness,
+        familiarHistory,
+        history,
+        mainProblem,
+        medicines,
+        smoke,
+        surgeries,
+        underwentSurgery,
+        useMedicine,
+      },
+      diagnostic: { diagnostic, treatmentPlan },
+    };
   }
 
   private addError(error: { error: string; patient: PatientDTO }) {
