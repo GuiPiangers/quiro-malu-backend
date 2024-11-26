@@ -21,8 +21,6 @@ export class UpdatePatientUseCase {
       patientId: patient.id,
     });
 
-    console.log(patient);
-
     const updatePatient = this.patientRepository.update(
       patientDTO,
       patient.id,

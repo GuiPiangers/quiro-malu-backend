@@ -21,7 +21,6 @@ export class KnexPatientRepository implements IPatientRepository {
   async saveMany(data: (PatientDTO & { userId: string })[]): Promise<void> {
     try {
       const result = await Knex(ETableNames.PATIENTS).insert(data);
-      console.log(result);
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }
@@ -37,7 +36,6 @@ export class KnexPatientRepository implements IPatientRepository {
         .update(data)
         .where({ id: patientId, userId });
     } catch (error: any) {
-      console.log(error.message);
       throw new ApiError(error.message, 500);
     }
   }
