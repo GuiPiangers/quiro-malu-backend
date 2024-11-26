@@ -12,6 +12,8 @@ const mockPatientRepository: jest.Mocked<IPatientRepository> = {
   getByCpf: jest.fn(),
   save: jest.fn(),
   update: jest.fn(),
+  getByHash: jest.fn(),
+  saveMany: jest.fn(),
 };
 
 const mockLocationRepository: jest.Mocked<ILocationRepository> = {

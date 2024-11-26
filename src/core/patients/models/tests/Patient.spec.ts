@@ -128,6 +128,7 @@ describe("Patient", () => {
       dateOfBirth: "1990-10-10",
       gender: "feminino",
       cpf: "987.654.321-00",
+      hashData: patient.hashData,
       location: {
         city: "Another City",
         state: "Another State",
