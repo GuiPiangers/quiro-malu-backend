@@ -31,7 +31,7 @@ export class Patient extends Entity {
     const { id, phone, name, cpf, location, dateOfBirth, gender, hashData } =
       props;
     super(id);
-    if (gender !== "masculino" && gender !== "feminino")
+    if (gender && gender !== "masculino" && gender !== "feminino")
       throw new ApiError('O gênero deve ser "masculino" ou "feminino"', 400);
 
     this.name = new Name(name, { compoundName: true });
