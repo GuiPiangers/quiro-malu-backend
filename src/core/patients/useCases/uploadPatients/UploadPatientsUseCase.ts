@@ -1,19 +1,37 @@
+import { IAnamnesisRepository } from "../../../../repositories/anamnesis/IAnamnesisRepository";
+import { IDiagnosticRepository } from "../../../../repositories/diagnostic/IDiagnosticRepository";
+import { ILocationRepository } from "../../../../repositories/location/ILocationRepository";
 import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
-import { LocationDTO } from "../../../shared/Location";
 import { CsvStream } from "../../../shared/streams/CsvStream";
+import { LocationDTO } from "../../../shared/Location";
 import { AnamnesisDTO } from "../../models/Anamnesis";
 import { DiagnosticDTO } from "../../models/Diagnostic";
 import { Patient, PatientDTO } from "../../models/Patient";
 
+type CsvPatientObject = PatientDTO &
+  LocationDTO &
+  Partial<AnamnesisDTO> &
+  Partial<DiagnosticDTO>;
+
 export class UploadPatientsUseCase {
-  constructor(private patientRepository: IPatientRepository) {}
+  constructor(
+    private patientRepository: IPatientRepository,
+    private locationRepository: ILocationRepository,
+    private anamnesisRepository: IAnamnesisRepository,
+    private dignosticRepository: IDiagnosticRepository,
+  ) {}
 
   private successCounter = 0;
   private erroCounter = 0;
   private duplicateCounter = 0;
   private updateBatch = 10;
   private errorList: { error: string; patient: PatientDTO }[] = [];
-  private patientsBatch: (PatientDTO & { userId: string })[] = [];
+  private patientsBatch: {
+    patientData: PatientDTO & { userId: string };
+    locationData?: LocationDTO;
+    anaminesisData?: Partial<AnamnesisDTO>;
+    dignosticData?: DiagnosticDTO;
+  }[] = [];
 
   async execute({ buffer, userId }: { buffer: Buffer; userId: string }) {
     return await new Promise<{
@@ -24,7 +42,7 @@ export class UploadPatientsUseCase {
       duplicateCounter: number;
     }>((resolve) => {
       try {
-        const csvStream = new CsvStream<PatientDTO>(buffer, {
+        const csvStream = new CsvStream<CsvPatientObject>(buffer, {
           onData() {
             //
           },
@@ -33,7 +51,10 @@ export class UploadPatientsUseCase {
         csvStream
           .transform(async (chunk) => {
             try {
-              const patient = new Patient(this.removeEmptyFields(chunk));
+              const { patientData, locationData } = this.getData(
+                this.removeEmptyFields(chunk),
+              );
+              const patient = new Patient(patientData);
               if (await this.validatePatientExist(patient, userId)) return;
               await this.validateCpfNotExist({ cpf: patient.cpf, userId });
 
@@ -58,7 +79,8 @@ export class UploadPatientsUseCase {
               }
             } catch (error: any) {
               this.patientsBatch.forEach((patient) => {
-                this.addError({ error: error.message, patient });
+                const { patientData } = patient;
+                this.addError({ error: error.message, patient: patientData });
               });
             }
             console.log(
@@ -83,12 +105,7 @@ export class UploadPatientsUseCase {
     });
   }
 
-  private getData(
-    object: PatientDTO &
-      LocationDTO &
-      Partial<AnamnesisDTO> &
-      Partial<DiagnosticDTO>,
-  ) {
+  private getData(object: CsvPatientObject) {
     const { name, phone, gender, dateOfBirth, cpf }: PatientDTO = object;
     const { address, cep, city, neighborhood, state }: LocationDTO = object;
     const {
@@ -133,15 +150,16 @@ export class UploadPatientsUseCase {
 
   private async addPatientToBatch(patientDTO: PatientDTO & { userId: string }) {
     if (
-      this.patientsBatch.some(
-        (patient) => patient.hashData === patientDTO.hashData,
-      )
+      this.patientsBatch.some((patient) => {
+        const { patientData } = patient;
+        return patientData.hashData === patientDTO.hashData;
+      })
     ) {
       this.duplicateCounter++;
       return;
     }
 
-    this.patientsBatch.push(patientDTO);
+    this.patientsBatch.push({ patientData: patientDTO });
 
     if (this.patientsBatch.length >= this.updateBatch) {
       await this.savePatientsBatch();
@@ -150,15 +168,18 @@ export class UploadPatientsUseCase {
 
   private async savePatientsBatch() {
     try {
-      await this.patientRepository.saveMany(this.patientsBatch);
+      await this.patientRepository.saveMany(
+        this.patientsBatch.map((data) => data.patientData),
+      );
       this.successCounter += this.patientsBatch.length;
     } catch (error: any) {
-      this.patientsBatch.forEach((patient) =>
-        this.addError({
+      this.patientsBatch.forEach((patient) => {
+        const { patientData } = patient;
+        return this.addError({
           error: error.message,
-          patient,
-        }),
-      );
+          patient: patientData,
+        });
+      });
     } finally {
       this.patientsBatch = [];
     }
