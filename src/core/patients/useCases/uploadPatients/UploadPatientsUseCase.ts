@@ -7,6 +7,7 @@ import { LocationDTO } from "../../../shared/Location";
 import { AnamnesisDTO } from "../../models/Anamnesis";
 import { DiagnosticDTO } from "../../models/Diagnostic";
 import { Patient, PatientDTO } from "../../models/Patient";
+import { getValidObjectValues } from "../../../../utils/getValidObjectValues";
 
 type CsvPatientObject = PatientDTO &
   LocationDTO &
@@ -18,7 +19,7 @@ export class UploadPatientsUseCase {
     private patientRepository: IPatientRepository,
     private locationRepository: ILocationRepository,
     private anamnesisRepository: IAnamnesisRepository,
-    private dignosticRepository: IDiagnosticRepository,
+    private diagnosticRepository: IDiagnosticRepository,
   ) {}
 
   private successCounter = 0;
@@ -29,8 +30,8 @@ export class UploadPatientsUseCase {
   private patientsBatch: {
     patientData: PatientDTO & { id: string; userId: string };
     locationData?: LocationDTO;
-    anaminesisData?: Partial<AnamnesisDTO>;
-    dignosticData?: DiagnosticDTO;
+    anamnesisData?: Partial<AnamnesisDTO>;
+    diagnosticData?: DiagnosticDTO;
   }[] = [];
 
   async execute({ buffer, userId }: { buffer: Buffer; userId: string }) {
@@ -59,10 +60,13 @@ export class UploadPatientsUseCase {
               await this.validateCpfNotExist({ cpf: patient.cpf, userId });
 
               const { location, ...patientDto } = patient.getPatientDTO();
-              await this.addPatientToBatch({
-                ...patientDto,
-                userId,
-              });
+              await this.addPatientToBatch(
+                {
+                  ...patientDto,
+                  userId,
+                },
+                locationData,
+              );
 
               return JSON.stringify({ ...patientDto, userId });
             } catch (error: any) {
@@ -150,6 +154,7 @@ export class UploadPatientsUseCase {
 
   private async addPatientToBatch(
     patientDTO: PatientDTO & { userId: string; id: string },
+    locationData?: LocationDTO,
   ) {
     if (
       this.patientsBatch.some((patient) => {
@@ -161,7 +166,7 @@ export class UploadPatientsUseCase {
       return;
     }
 
-    this.patientsBatch.push({ patientData: patientDTO });
+    this.patientsBatch.push({ patientData: patientDTO, locationData });
 
     if (this.patientsBatch.length >= this.updateBatch) {
       await this.savePatientsBatch();
@@ -169,20 +174,37 @@ export class UploadPatientsUseCase {
   }
 
   private async savePatientsBatch() {
+    const getValidObjects = <T extends object>(data: T | undefined) =>
+      data && Object.keys(getValidObjectValues<T>(data)).length > 0;
+
     try {
-      await this.patientRepository.saveMany(
-        this.patientsBatch.map((data) => data.patientData),
-      );
+      const patientsData = this.patientsBatch.map((data) => data.patientData);
+
+      const locationsData = this.patientsBatch
+        .filter((data) => getValidObjects(data.locationData))
+        .map((data) => ({
+          ...data.locationData,
+          patientId: data.patientData.id,
+          userId: data.patientData.userId,
+        }));
+
+      console.log(locationsData);
+
+      const anamnesisData = this.patientsBatch
+        .filter((data) => getValidObjects(data.anamnesisData))
+        .map((data) => ({
+          ...data.locationData,
+          patientId: data.patientData.id,
+          userId: data.patientData.userId,
+        }));
+
+      await this.patientRepository.saveMany(patientsData);
 
       await Promise.all([
-        this.locationRepository.saveMany(
-          this.patientsBatch.map((data) => ({
-            ...data.locationData,
-            patientId: data.patientData.id,
-            userId: data.patientData.userId,
-          })),
-        ),
+        locationsData.length > 0 &&
+          this.locationRepository.saveMany(locationsData),
       ]);
+
       this.successCounter += this.patientsBatch.length;
     } catch (error: any) {
       this.patientsBatch.forEach((patient) => {
