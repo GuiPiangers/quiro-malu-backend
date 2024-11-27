@@ -41,11 +41,14 @@ export class UploadPatientsUseCase {
       erroCounter: number;
       successCounter: number;
       duplicateCounter: number;
-    }>((resolve) => {
+    }>((resolve, reject) => {
       try {
         const csvStream = new CsvStream<CsvPatientObject>(buffer, {
           onData() {
             //
+          },
+          onError(error: any) {
+            reject(error);
           },
         });
 
@@ -76,8 +79,9 @@ export class UploadPatientsUseCase {
               });
             }
           })
-          .stream.on("end", async () => {
+          .stream.on("end", async (error: any) => {
             try {
+              console.log(error);
               if (this.patientsBatch.length > 0) {
                 await this.savePatientsBatch();
               }
