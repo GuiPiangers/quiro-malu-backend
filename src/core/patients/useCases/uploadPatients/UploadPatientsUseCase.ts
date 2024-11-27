@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { IAnamnesisRepository } from "../../../../repositories/anamnesis/IAnamnesisRepository";
 import { IDiagnosticRepository } from "../../../../repositories/diagnostic/IDiagnosticRepository";
 import { ILocationRepository } from "../../../../repositories/location/ILocationRepository";
@@ -66,14 +67,14 @@ export class UploadPatientsUseCase {
                 location: locationData,
               });
 
-              const anamnesisDTO = anamnesisData
+              const { patientId, ...anamnesisDTO } = anamnesisData
                 ? new Anamnesis({
                     ...anamnesisData,
                     patientId: patient.id,
                   })
                 : {};
 
-              const diagnosticDTO = diagnosticData
+              const { patientId: _, ...diagnosticDTO } = diagnosticData
                 ? new Diagnostic({
                     ...diagnosticData,
                     patientId: patient.id,
@@ -154,9 +155,21 @@ export class UploadPatientsUseCase {
     }: Partial<AnamnesisDTO> = object;
     const { diagnostic, treatmentPlan }: Partial<DiagnosticDTO> = object;
     return {
-      patientData: { name, phone, gender, dateOfBirth, cpf },
-      locationData: { address, cep, city, neighborhood, state },
-      anamnesisData: {
+      patientData: getValidObjectValues({
+        name,
+        phone,
+        gender,
+        dateOfBirth,
+        cpf,
+      }),
+      locationData: getValidObjectValues({
+        address,
+        cep,
+        city,
+        neighborhood,
+        state,
+      }),
+      anamnesisData: getValidObjectValues({
         activities,
         currentIllness,
         familiarHistory,
@@ -167,8 +180,8 @@ export class UploadPatientsUseCase {
         surgeries,
         underwentSurgery,
         useMedicine,
-      },
-      diagnosticData: { diagnostic, treatmentPlan },
+      }),
+      diagnosticData: getValidObjectValues({ diagnostic, treatmentPlan }),
     };
   }
 
@@ -228,8 +241,6 @@ export class UploadPatientsUseCase {
           userId: data.patientData.userId,
         }));
 
-      console.log(locationsData);
-
       const anamnesisData = this.patientsBatch
         .filter((data) => getValidObjects(data.anamnesisData))
         .map((data) => ({
@@ -245,6 +256,8 @@ export class UploadPatientsUseCase {
           userId: data.patientData.userId,
           patientId: data.patientData.id,
         }));
+
+      console.log(anamnesisData, diagnosticData);
 
       await this.patientRepository.saveMany(patientsData);
 
