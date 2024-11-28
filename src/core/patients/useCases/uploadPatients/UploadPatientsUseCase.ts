@@ -37,6 +37,38 @@ export class UploadPatientsUseCase {
   }[] = [];
 
   async execute({ buffer, userId }: { buffer: Buffer; userId: string }) {
+    const normalizeObject = {
+      name: ["nome"],
+      phone: ["telefone", "celular"],
+      dateOfBirth: ["datadenascimento"],
+      gender: ["sexo", "genero"],
+      cpf: ["cpf"],
+      address: ["edereco"],
+      city: ["cidade"],
+      state: ["estado"],
+      cep: ["cep"],
+      neighborhood: ["bairro"],
+      diagnostic: ["diagnostico"],
+      treatmentPlan: ["planodetratamento"],
+      currentIllness: ["doencaatual"],
+      activities: ["atividades", "atividadesfisicas"],
+      history: ["historico"],
+      familiarHistory: ["historicofamiliar"],
+      mainProblem: ["problemaprincipal", "principalproblema"],
+      medicines: ["medicamentos", "medicamentosusados"],
+      smoke: ["fumante"],
+      useMedicine: ["usamedicamentos"],
+      surgeries: ["cirurgias", "cirurgiasrealizadas"],
+      underwentSurgery: ["realizoucirugias", "tevecirurgias"],
+    };
+
+    const validTableHeaders = Object.values(normalizeObject).reduce(
+      (acc, header) => {
+        return [...acc, ...header];
+      },
+      [],
+    );
+
     return await new Promise<{
       fatalError?: string;
       errors: { error: string; patient: PatientDTO }[];
@@ -57,6 +89,21 @@ export class UploadPatientsUseCase {
         csvStream
           .transform(async (chunk) => {
             try {
+              const chunkHeaders = Object.keys(chunk);
+              chunkHeaders.forEach((chunkHeader) => {
+                if (
+                  !validTableHeaders.some(
+                    (validHeader) =>
+                      validHeader === Normalize.normilizeString(chunkHeader),
+                  )
+                ) {
+                  console.log("executou");
+                  csvStream.stream.emit(
+                    "error",
+                    new Error(`O campo ${chunkHeader} não é válido`),
+                  );
+                }
+              });
               const {
                 patientData,
                 locationData,
@@ -64,30 +111,7 @@ export class UploadPatientsUseCase {
                 diagnosticData,
               } = this.getData(
                 Normalize.convertObject<CsvPatientObject>(
-                  {
-                    name: ["nome"],
-                    phone: ["telefone", "celular"],
-                    dateOfBirth: ["datadenascimento"],
-                    gender: ["sexo", "genero"],
-                    cpf: ["cpf"],
-                    address: ["edereco"],
-                    city: ["cidade"],
-                    state: ["estado"],
-                    cep: ["cep"],
-                    neighborhood: ["bairro"],
-                    diagnostic: ["diagnostico"],
-                    treatmentPlan: ["planodetratamento"],
-                    currentIllness: ["doencaatual"],
-                    activities: ["atividades", "atividadesfisicas"],
-                    history: ["historico"],
-                    familiarHistory: ["historicofamiliar"],
-                    mainProblem: ["problemaprincipal", "principalproblema"],
-                    medicines: ["medicamentos", "medicamentosusados"],
-                    smoke: ["fumante"],
-                    useMedicine: ["usamedicamentos"],
-                    surgeries: ["cirurgias", "cirurgiasrealizadas"],
-                    underwentSurgery: ["realizoucirugias", "tevecirurgias"],
-                  },
+                  normalizeObject,
                   this.removeEmptyFields(chunk),
                 ),
               );
