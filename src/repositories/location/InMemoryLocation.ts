@@ -2,6 +2,12 @@ import { LocationDTO } from "../../core/shared/Location";
 import { ILocationRepository } from "./ILocationRepository";
 
 export class InMemoryLocation implements ILocationRepository {
+  saveMany(
+    locations: (LocationDTO & { patientId: string; userId: string })[],
+  ): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
   private dbLocation: (LocationDTO & { patientId: string; userId: string })[] =
     [];
 

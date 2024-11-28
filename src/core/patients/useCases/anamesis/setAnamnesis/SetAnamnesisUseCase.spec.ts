@@ -12,6 +12,7 @@ describe("SetAnamnesisUseCase", () => {
       get: jest.fn(),
       update: jest.fn(),
       save: jest.fn(),
+      saveMany: jest.fn(),
     } as jest.Mocked<IAnamnesisRepository>;
 
     setAnamnesisUseCase = new SetAnamnesisUseCase(mockAnamnesisRepository);
