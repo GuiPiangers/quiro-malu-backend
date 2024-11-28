@@ -1,4 +1,4 @@
-import { normalize } from "../Normalize";
+import { Normalize } from "../Normalize";
 
 describe("normalize function", () => {
   // Funções auxiliares para facilitar os testes
@@ -7,12 +7,12 @@ describe("normalize function", () => {
   const alphabeticOnly = (value: string) => value.replace(/[^a-zA-Z]/g, "");
 
   it("should normalize data and match the expected keys", () => {
-    const result = normalize(
+    const result = Normalize.convertObject(
       {
         phone: ["celular", "telefone"],
-        dateOfBirth: "datadenascimento",
-        cpf: "cpf",
-        name: "nome",
+        dateOfBirth: ["datadenascimento"],
+        cpf: ["cpf"],
+        name: ["nome"],
       },
       {
         CELULAR: "(51) 98035 1927",
@@ -31,10 +31,10 @@ describe("normalize function", () => {
   });
 
   it("should handle missing expected keys gracefully", () => {
-    const result = normalize(
+    const result = Normalize.convertObject(
       {
         phone: ["celular", "telefone"],
-        dateOfBirth: "datadenascimento",
+        dateOfBirth: ["datadenascimento"],
       },
       {
         Nome: "Jane Doe", // Não mapeado em expect
@@ -45,7 +45,7 @@ describe("normalize function", () => {
   });
 
   it("should handle arrays of potential keys in expect", () => {
-    const result = normalize(
+    const result = Normalize.convertObject(
       {
         phone: ["celular", "telefone", "contato"],
       },
@@ -60,24 +60,27 @@ describe("normalize function", () => {
   });
 
   it("should handle normalization of accented and special characters", () => {
-    const result = normalize(
+    const result = Normalize.convertObject(
       {
-        email: "email",
+        email: ["email"],
+        adress: ["endereco"],
       },
       {
         "É-mail": "test@example.com", // Entrada com acento
+        endereço: "Rua Central", // Entrada com cedilha
       },
     );
 
     expect(result).toEqual({
       email: "test@example.com",
+      adress: "Rua Central",
     });
   });
 
   it("should handle unexpected keys in data gracefully", () => {
-    const result = normalize(
+    const result = Normalize.convertObject(
       {
-        cpf: "cpf",
+        cpf: ["cpf"],
       },
       {
         RANDOM: "value",

@@ -9,7 +9,7 @@ import { Anamnesis, AnamnesisDTO } from "../../models/Anamnesis";
 import { Diagnostic, DiagnosticDTO } from "../../models/Diagnostic";
 import { Patient, PatientDTO } from "../../models/Patient";
 import { getValidObjectValues } from "../../../../utils/getValidObjectValues";
-import { normalize } from "../../../shared/Normalize";
+import { Normalize } from "../../../shared/Normalize";
 
 type CsvPatientObject = PatientDTO &
   LocationDTO &
@@ -63,28 +63,28 @@ export class UploadPatientsUseCase {
                 anamnesisData,
                 diagnosticData,
               } = this.getData(
-                normalize<CsvPatientObject>(
+                Normalize.convertObject<CsvPatientObject>(
                   {
-                    name: "nome",
+                    name: ["nome"],
                     phone: ["telefone", "celular"],
-                    dateOfBirth: "datadenascimento",
+                    dateOfBirth: ["datadenascimento"],
                     gender: ["sexo", "genero"],
-                    cpf: "cpf",
-                    address: "edereco",
-                    city: "cidade",
-                    state: "estado",
-                    cep: "cep",
-                    neighborhood: "bairro",
-                    diagnostic: "diagnostico",
-                    treatmentPlan: "planodetratamento",
-                    currentIllness: "doencaatual",
+                    cpf: ["cpf"],
+                    address: ["edereco"],
+                    city: ["cidade"],
+                    state: ["estado"],
+                    cep: ["cep"],
+                    neighborhood: ["bairro"],
+                    diagnostic: ["diagnostico"],
+                    treatmentPlan: ["planodetratamento"],
+                    currentIllness: ["doencaatual"],
                     activities: ["atividades", "atividadesfisicas"],
-                    history: "historico",
-                    familiarHistory: "historicofamiliar",
+                    history: ["historico"],
+                    familiarHistory: ["historicofamiliar"],
                     mainProblem: ["problemaprincipal", "principalproblema"],
                     medicines: ["medicamentos", "medicamentosusados"],
-                    smoke: "fumante",
-                    useMedicine: "usamedicamentos",
+                    smoke: ["fumante"],
+                    useMedicine: ["usamedicamentos"],
                     surgeries: ["cirurgias", "cirurgiasrealizadas"],
                     underwentSurgery: ["realizoucirugias", "tevecirurgias"],
                   },
