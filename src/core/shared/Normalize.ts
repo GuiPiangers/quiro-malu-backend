@@ -1,29 +1,29 @@
-import { PatientDTO } from "../patients/models/Patient";
-
 export function normalize<T extends object>(
   expect: { [key in keyof T]: string | string[] },
   data: { [key: string]: any },
 ) {
-  const normilizedData: { [key: string]: any } = {};
+  const normalizedData: { [key: string]: any } = {};
   for (const key in data) {
-    const normilizedKey = alphabeticOnly(removeAccent(key)).toLocaleLowerCase();
-    normilizedData[normilizedKey] = data[key];
+    const normalizedKey = alphabeticOnly(
+      removeCedilla(removeAccent(key)),
+    ).toLocaleLowerCase();
+    normalizedData[normalizedKey] = data[key];
   }
 
   const expectEntries = Object.entries(expect);
-  const normilizedExpect = expectEntries.reduce(
+  const normalizedExpect = expectEntries.reduce(
     (acc, [key, value]) => {
       if (typeof value === "string")
-        return { ...acc, [key]: normilizedData[value] };
+        return { ...acc, [key]: normalizedData[value] };
 
       if (Array.isArray(value)) {
-        const normilizedDataKeys = Object.keys(normilizedData);
+        const normalizedDataKeys = Object.keys(normalizedData);
 
         const dataKey = value.find((valueKey) => {
-          return normilizedDataKeys.some((nKey) => nKey === valueKey);
+          return normalizedDataKeys.some((nKey) => nKey === valueKey);
         });
 
-        if (dataKey) return { ...acc, [key]: normilizedData[dataKey] };
+        if (dataKey) return { ...acc, [key]: normalizedData[dataKey] };
       }
 
       return acc;
@@ -31,7 +31,7 @@ export function normalize<T extends object>(
     {} as { [key: string]: any },
   );
 
-  return normilizedExpect as T;
+  return normalizedExpect as T;
 }
 
 function removeAccent(value: string) {
@@ -40,19 +40,6 @@ function removeAccent(value: string) {
 function alphabeticOnly(value: string) {
   return value.replace(/[^a-zA-Z]/g, "");
 }
-
-const objectNormilized = normalize<PatientDTO>(
-  {
-    phone: ["celular", "telefone"],
-    dateOfBirth: "datadenascimento",
-    cpf: "cpf",
-    name: "nome",
-  },
-  {
-    CELULAR: "(51) 98035 1927",
-    "Data de nascimento": "2000-10-21",
-    cpf: "(51) 98035 1927",
-  },
-);
-
-console.log(objectNormilized);
+function removeCedilla(value: string) {
+  return value.replace(/[ç]/g, "c");
+}
