@@ -8,6 +8,7 @@ import { Crypto } from "../../shared/helpers/Crypto";
 import { ApiError } from "../../../utils/ApiError";
 import { Gender, GenderType } from "../../shared/Gender";
 import { Education, EducationType } from "../../shared/Education";
+import { MaritalStatus, MaritalStatusType } from "../../shared/MaritalStatus";
 
 export interface PatientDTO {
   id?: string;
@@ -33,7 +34,7 @@ export class Patient extends Entity {
   readonly hashData: string;
   readonly education?: EducationType;
   readonly profission?: string;
-  readonly maritalStatus?: string;
+  readonly maritalStatus?: MaritalStatusType;
 
   constructor(props: PatientDTO) {
     const {
@@ -56,7 +57,7 @@ export class Patient extends Entity {
     this.name = new Name(name, { compoundName: true });
     this.gender = new Gender(gender).value;
     this.education = new Education(education).value;
-    this.maritalStatus = maritalStatus;
+    this.maritalStatus = new MaritalStatus(maritalStatus).value;
     this.profission = profission;
     this._phone = new Phone(phone);
     this._location = location ? new Location(location) : undefined;
