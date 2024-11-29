@@ -7,6 +7,7 @@ import { DateTime } from "../../shared/Date";
 import { Crypto } from "../../shared/helpers/Crypto";
 import { ApiError } from "../../../utils/ApiError";
 import { Gender, GenderType } from "../../shared/Gender";
+import { Education, EducationType } from "../../shared/Education";
 
 export interface PatientDTO {
   id?: string;
@@ -30,7 +31,7 @@ export class Patient extends Entity {
   private _cpf?: Cpf;
   private _location?: Location;
   readonly hashData: string;
-  readonly education?: string;
+  readonly education?: EducationType;
   readonly profission?: string;
   readonly maritalStatus?: string;
 
@@ -44,7 +45,7 @@ export class Patient extends Entity {
       dateOfBirth,
       gender,
       hashData,
-      education: eduaction,
+      education,
       maritalStatus,
       profission,
     } = props;
@@ -54,7 +55,7 @@ export class Patient extends Entity {
 
     this.name = new Name(name, { compoundName: true });
     this.gender = new Gender(gender).value;
-    this.education = eduaction;
+    this.education = new Education(education).value;
     this.maritalStatus = maritalStatus;
     this.profission = profission;
     this._phone = new Phone(phone);
