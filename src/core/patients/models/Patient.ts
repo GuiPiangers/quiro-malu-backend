@@ -6,6 +6,7 @@ import { Location, LocationDTO } from "../../shared/Location";
 import { DateTime } from "../../shared/Date";
 import { Crypto } from "../../shared/helpers/Crypto";
 import { ApiError } from "../../../utils/ApiError";
+import { Gender } from "../../shared/Gender";
 
 export interface PatientDTO {
   id?: string;
@@ -52,7 +53,7 @@ export class Patient extends Entity {
       throw new ApiError('O gênero deve ser "masculino" ou "feminino"', 400);
 
     this.name = new Name(name, { compoundName: true });
-    this.gender = gender;
+    this.gender = new Gender(gender).value;
     this.education = eduaction;
     this.maritalStatus = maritalStatus;
     this.profission = profission;
