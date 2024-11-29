@@ -6,14 +6,14 @@ import { Location, LocationDTO } from "../../shared/Location";
 import { DateTime } from "../../shared/Date";
 import { Crypto } from "../../shared/helpers/Crypto";
 import { ApiError } from "../../../utils/ApiError";
-import { Gender } from "../../shared/Gender";
+import { Gender, GenderType } from "../../shared/Gender";
 
 export interface PatientDTO {
   id?: string;
   name: string;
   phone: string;
   dateOfBirth?: string;
-  gender?: "masculino" | "feminino";
+  gender?: GenderType;
   cpf?: string;
   location?: LocationDTO;
   hashData?: string;
@@ -25,7 +25,7 @@ export interface PatientDTO {
 export class Patient extends Entity {
   readonly name: Name;
   readonly dateOfBirth?: DateTime;
-  readonly gender?: "masculino" | "feminino";
+  readonly gender?: GenderType;
   private _phone: Phone;
   private _cpf?: Cpf;
   private _location?: Location;

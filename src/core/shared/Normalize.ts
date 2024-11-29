@@ -31,18 +31,20 @@ export abstract class Normalize {
   }
 
   static normilizeString(value: string) {
-    return alphabeticOnly(
-      removeCedilla(removeAccent(value)),
+    return Normalize.alphabeticOnly(
+      removeCedilla(Normalize.removeAccent(value)),
     ).toLocaleLowerCase();
+  }
+
+  static removeAccent(value: string) {
+    return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
+  static alphabeticOnly(value: string) {
+    return value.replace(/[^a-zA-Z]/g, "");
   }
 }
 
-function removeAccent(value: string) {
-  return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
-function alphabeticOnly(value: string) {
-  return value.replace(/[^a-zA-Z]/g, "");
-}
 function removeCedilla(value: string) {
   return value.replace(/[ç]/g, "c");
 }
