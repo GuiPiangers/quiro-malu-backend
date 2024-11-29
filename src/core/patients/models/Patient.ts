@@ -16,6 +16,9 @@ export interface PatientDTO {
   cpf?: string;
   location?: LocationDTO;
   hashData?: string;
+  education?: string;
+  profission?: string;
+  maritalStatus?: string;
 }
 
 export class Patient extends Entity {
@@ -26,22 +29,39 @@ export class Patient extends Entity {
   private _cpf?: Cpf;
   private _location?: Location;
   readonly hashData: string;
+  readonly education?: string;
+  readonly profission?: string;
+  readonly maritalStatus?: string;
 
   constructor(props: PatientDTO) {
-    const { id, phone, name, cpf, location, dateOfBirth, gender, hashData } =
-      props;
+    const {
+      id,
+      phone,
+      name,
+      cpf,
+      location,
+      dateOfBirth,
+      gender,
+      hashData,
+      education: eduaction,
+      maritalStatus,
+      profission,
+    } = props;
     super(id);
     if (gender && gender !== "masculino" && gender !== "feminino")
       throw new ApiError('O gênero deve ser "masculino" ou "feminino"', 400);
 
     this.name = new Name(name, { compoundName: true });
+    this.gender = gender;
+    this.education = eduaction;
+    this.maritalStatus = maritalStatus;
+    this.profission = profission;
     this._phone = new Phone(phone);
     this._location = location ? new Location(location) : undefined;
     this._cpf = cpf ? new Cpf(cpf) : undefined;
     this.dateOfBirth = dateOfBirth
       ? new DateTime(dateOfBirth, { onlyPassDate: true })
       : undefined;
-    this.gender = gender;
     this.hashData =
       hashData ??
       Crypto.createFixedHash(
@@ -76,6 +96,9 @@ export class Patient extends Entity {
       dateOfBirth: this.dateOfBirth?.date,
       gender: this.gender,
       hashData: this.hashData,
+      education: this.education,
+      maritalStatus: this.maritalStatus,
+      profission: this.profission,
     };
   }
 }
