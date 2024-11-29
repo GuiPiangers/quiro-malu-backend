@@ -182,7 +182,7 @@ describe("Patient", () => {
       gender: "feminino",
       cpf: "987.654.321-00",
       hashData: patient.hashData,
-      education: "Fundamental completo",
+      education: "fundamental completo",
       maritalStatus: "casado",
       profission: "advogado",
       location: {
