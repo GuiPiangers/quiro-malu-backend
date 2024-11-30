@@ -105,7 +105,7 @@ describe("Patient", () => {
     expect(patient.cpf).toBeUndefined();
     expect(patient.location).toBeUndefined();
     expect(patient.education).toBeUndefined();
-    expect(patient.profission).toBeUndefined();
+    expect(patient.profession).toBeUndefined();
     expect(patient.maritalStatus).toBeUndefined();
   });
 
