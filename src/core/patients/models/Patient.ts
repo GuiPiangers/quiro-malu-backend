@@ -20,7 +20,7 @@ export interface PatientDTO {
   location?: LocationDTO;
   hashData?: string;
   education?: string;
-  profission?: string;
+  profession?: string;
   maritalStatus?: string;
 }
 
@@ -33,7 +33,7 @@ export class Patient extends Entity {
   private _location?: Location;
   readonly hashData: string;
   readonly education?: EducationType;
-  readonly profission?: string;
+  readonly profession?: string;
   readonly maritalStatus?: MaritalStatusType;
 
   constructor(props: PatientDTO) {
@@ -48,7 +48,7 @@ export class Patient extends Entity {
       hashData,
       education,
       maritalStatus,
-      profission,
+      profession,
     } = props;
     super(id);
     if (gender && gender !== "masculino" && gender !== "feminino")
@@ -58,7 +58,7 @@ export class Patient extends Entity {
     this.gender = new Gender(gender).value;
     this.education = new Education(education).value;
     this.maritalStatus = new MaritalStatus(maritalStatus).value;
-    this.profission = profission;
+    this.profession = profession;
     this._phone = new Phone(phone);
     this._location = location ? new Location(location) : undefined;
     this._cpf = cpf ? new Cpf(cpf) : undefined;
@@ -101,7 +101,7 @@ export class Patient extends Entity {
       hashData: this.hashData,
       education: this.education,
       maritalStatus: this.maritalStatus,
-      profission: this.profission,
+      profession: this.profession,
     };
   }
 }
