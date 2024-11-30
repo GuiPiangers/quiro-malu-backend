@@ -97,25 +97,25 @@ describe("normalize Class", () => {
   describe("normalizeString method", () => {
     it("should remove accents correctly", () => {
       const input = "áéíóúãõç";
-      const output = Normalize.normilizeString(input);
+      const output = Normalize.normalizeString(input);
       expect(output).toBe("aeiouaoc");
     });
 
     it("should remove non-alphabetic characters", () => {
       const input = "abc123-!@#def";
-      const output = Normalize.normilizeString(input);
+      const output = Normalize.normalizeString(input);
       expect(output).toBe("abcdef");
     });
 
     it('should replace cedilla for "c"', () => {
       const input = "çççç";
-      const output = Normalize.normilizeString(input);
+      const output = Normalize.normalizeString(input);
       expect(output).toBe("cccc");
     });
 
     it("should lowercase value", () => {
       const input = "INPUT";
-      const output = Normalize.normilizeString(input);
+      const output = Normalize.normalizeString(input);
       expect(output).toBe("input");
     });
   });

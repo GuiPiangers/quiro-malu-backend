@@ -94,10 +94,9 @@ export class UploadPatientsUseCase {
                 if (
                   !validTableHeaders.some(
                     (validHeader) =>
-                      validHeader === Normalize.normilizeString(chunkHeader),
+                      validHeader === Normalize.normalizeString(chunkHeader),
                   )
                 ) {
-                  console.log("executou");
                   csvStream.stream.emit(
                     "error",
                     new Error(`O campo ${chunkHeader} não é válido`),
@@ -157,9 +156,8 @@ export class UploadPatientsUseCase {
               });
             }
           })
-          .stream.on("end", async (error: any) => {
+          .stream.on("end", async () => {
             try {
-              console.log(error);
               if (this.patientsBatch.length > 0) {
                 await this.savePatientsBatch();
               }
