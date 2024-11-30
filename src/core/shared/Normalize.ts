@@ -5,7 +5,7 @@ export abstract class Normalize {
   ) {
     const normalizedData: { [key: string]: any } = {};
     for (const key in data) {
-      const normalizedKey = Normalize.normilizeString(key);
+      const normalizedKey = Normalize.normalizeString(key);
       normalizedData[normalizedKey] = data[key];
     }
 
@@ -30,7 +30,7 @@ export abstract class Normalize {
     return normalizedExpect as T;
   }
 
-  static normilizeString(value: string) {
+  static normalizeString(value: string) {
     return Normalize.alphabeticOnly(
       removeCedilla(Normalize.removeAccent(value)),
     ).toLocaleLowerCase();

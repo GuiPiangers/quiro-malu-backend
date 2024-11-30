@@ -8,7 +8,6 @@ export class UploadPatientsController {
     try {
       const { file } = request;
       const userId = request.user.id;
-
       if (file?.buffer && userId) {
         const result = await this.uploadPatientUseCase.execute({
           buffer: file.buffer,
