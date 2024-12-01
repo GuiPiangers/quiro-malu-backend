@@ -1,4 +1,4 @@
-import { PatientDTO } from "../../core/patients/models/Patient";
+import { Patient, PatientDTO } from "../../core/patients/models/Patient";
 import { Knex } from "../../database";
 import { ETableNames } from "../../database/ETableNames";
 import { order, query } from "../../database/mySqlConnection";
@@ -60,7 +60,10 @@ export class KnexPatientRepository implements IPatientRepository {
       config.limit,
       config.offSet,
     ]);
-    return results.map((result) => getValidObjectValues<PatientDTO>(result));
+
+    return results.map((result) =>
+      new Patient(getValidObjectValues<PatientDTO>(result)).getPatientDTO(),
+    );
   }
 
   async countAll(
@@ -113,7 +116,14 @@ export class KnexPatientRepository implements IPatientRepository {
       userId,
     ]);
 
-    return [getValidObjectValues<PatientDTO>(result)];
+    console.log(
+      "chegou aqui",
+      new Patient(getValidObjectValues<PatientDTO>(result)).getPatientDTO(),
+    );
+
+    return [
+      new Patient(getValidObjectValues<PatientDTO>(result)).getPatientDTO(),
+    ];
   }
 
   async delete(patientId: string, userId: string): Promise<void> {
