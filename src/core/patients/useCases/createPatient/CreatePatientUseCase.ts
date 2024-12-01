@@ -17,7 +17,6 @@ export class CreatePatientUseCase {
       this.validateCpfNotExist({ cpf: patientDTO.cpf, userId }),
       this.validatePatientExist(patient, userId),
     ]);
-
     await this.patientRepository.save(patientDTO, userId);
 
     if (location) {
