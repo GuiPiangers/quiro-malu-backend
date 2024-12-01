@@ -10,6 +10,7 @@ import { Diagnostic, DiagnosticDTO } from "../../models/Diagnostic";
 import { Patient, PatientDTO } from "../../models/Patient";
 import { getValidObjectValues } from "../../../../utils/getValidObjectValues";
 import { Normalize } from "../../../shared/Normalize";
+import { ApiError } from "../../../../utils/ApiError";
 
 type CsvPatientObject = PatientDTO &
   LocationDTO &
@@ -99,7 +100,7 @@ export class UploadPatientsUseCase {
                 ) {
                   csvStream.stream.emit(
                     "error",
-                    new Error(`O campo ${chunkHeader} não é válido`),
+                    new ApiError(`O campo "${chunkHeader}" não é válido`, 400),
                   );
                 }
               });

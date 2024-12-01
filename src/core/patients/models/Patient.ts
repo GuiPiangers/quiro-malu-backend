@@ -51,9 +51,7 @@ export class Patient extends Entity {
       profession,
     } = props;
     super(id);
-    if (gender && gender !== "masculino" && gender !== "feminino")
-      throw new ApiError('O gênero deve ser "masculino" ou "feminino"', 400);
-
+    console.log(gender);
     this.name = new Name(name, { compoundName: true });
     this.gender = new Gender(gender).value;
     this.education = new Education(education).value;
