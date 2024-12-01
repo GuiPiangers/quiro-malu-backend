@@ -9,13 +9,15 @@ export class ListPatientsUseCase {
     page,
     search,
     orderBy,
+    limit: _limit,
   }: {
     userId: string;
     page: number;
     search?: { name?: string };
     orderBy?: { field: string; orientation: "ASC" | "DESC" }[];
+    limit?: number | "all";
   }) {
-    const limit = 20;
+    const limit = _limit === "all" ? Number.MAX_SAFE_INTEGER : _limit ?? 20;
     const offSet = page ? limit * (page - 1) : 0;
     const orderField = search?.name
       ? `(name like "${search?.name}%")`
