@@ -4,6 +4,14 @@ import { IPatientRepository } from "../../repositories/patient/IPatientRepositor
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
 
 export class MySqlPatientRepository implements IPatientRepository {
+  saveMany(patient: (PatientDTO & { userId: string })[]): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
+  getByHash(hash: string, userId: string): Promise<PatientDTO | undefined> {
+    throw new Error("Method not implemented.");
+  }
+
   save(data: PatientDTO, userId: string): Promise<void> {
     const sql = "INSERT INTO patients SET ?";
     const errorMessage = "Falha ao adicionar o usuário";
