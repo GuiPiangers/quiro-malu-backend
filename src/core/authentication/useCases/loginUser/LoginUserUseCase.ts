@@ -17,7 +17,7 @@ export class LoginUserUseCase {
         const [user] = await this.userRepository.getByEmail(email)
         if (!user || !user.id) throw new ApiError("Email ou senha inválidos", 400)
 
-        const passwordMatch = await Crypto.compareHash(password, user.password)
+        const passwordMatch = await Crypto.compareRandomHash(password, user.password)
         if (!passwordMatch) throw new ApiError('Email ou senha inválidos', 400)
 
         const token = await this.generateTokenProvider.execute(user.id)

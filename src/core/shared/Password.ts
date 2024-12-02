@@ -26,7 +26,7 @@ export class Password {
   }
 
   async getHash() {
-    const hash = await Crypto.createHash(this.value);
+    const hash = await Crypto.createRandomHash(this.value);
     return hash;
   }
 }

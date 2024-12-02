@@ -1,4 +1,4 @@
-import { PatientDTO } from "../../../models/Patient";
+import { Patient, PatientDTO } from "../../../models/Patient";
 import { IPatientRepository } from "../../../../../repositories/patient/IPatientRepository";
 import { CreatePatientUseCase } from "../CreatePatientUseCase";
 import { ILocationRepository } from "../../../../../repositories/location/ILocationRepository";
@@ -12,12 +12,15 @@ const mockPatientRepository: jest.Mocked<IPatientRepository> = {
   getByCpf: jest.fn(),
   save: jest.fn(),
   update: jest.fn(),
+  getByHash: jest.fn(),
+  saveMany: jest.fn(),
 };
 
 const mockLocationRepository: jest.Mocked<ILocationRepository> = {
   getLocation: jest.fn(),
   save: jest.fn(),
   update: jest.fn(),
+  saveMany: jest.fn(),
 } as jest.Mocked<ILocationRepository>;
 
 describe("Create patients", () => {
@@ -32,7 +35,7 @@ describe("Create patients", () => {
     );
   });
 
-  it("Should not be able to cadastre a patient with an existing CPF", async () => {
+  it("Should not be able to create a patient with an existing CPF", async () => {
     const patientData: PatientDTO = {
       name: "Guilherme Eduardo",
       phone: "(51) 99999 9999",
@@ -57,7 +60,31 @@ describe("Create patients", () => {
     }
   });
 
-  it("Should be able to cadastre patient when cpf is not registered", async () => {
+  it("Should not be able to create a patient that already exists", async () => {
+    const patientData: PatientDTO = new Patient({
+      name: "Guilherme Eduardo",
+      phone: "(51) 99999 9999",
+      dateOfBirth: "2000-10-10",
+    }).getPatientDTO();
+
+    mockPatientRepository.getByHash.mockResolvedValue(patientData);
+
+    await expect(
+      createPatientUseCase.execute(patientData, userId),
+    ).rejects.toThrow(ApiError);
+
+    try {
+      await createPatientUseCase.execute(patientData, userId);
+    } catch (err: any) {
+      expect(err).toBeInstanceOf(ApiError);
+      expect(err.message).toBe(
+        "Já existe um paciente cadastrado com esses dados",
+      );
+      expect(err.statusCode).toBe(400);
+    }
+  });
+
+  it("Should be able to create patient when cpf is not registered", async () => {
     const cpf = "036.638.400-00";
     const patientData: PatientDTO = {
       name: "Guilherme Eduardo",
@@ -67,6 +94,7 @@ describe("Create patients", () => {
     };
 
     mockPatientRepository.getByCpf.mockResolvedValueOnce([]);
+    mockPatientRepository.getByHash.mockResolvedValue(undefined);
     mockPatientRepository.save.mockResolvedValueOnce();
 
     const patient = await createPatientUseCase.execute(patientData, userId);
@@ -87,7 +115,7 @@ describe("Create patients", () => {
       userId,
     );
   });
-  it("Should be able to cadastre patient without pass a cpf", async () => {
+  it("Should be able to create patient without pass a cpf", async () => {
     const patientData: PatientDTO = {
       name: "Guilherme Eduardo",
       phone: "(51) 99999 9999",

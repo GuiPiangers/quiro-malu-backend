@@ -6,6 +6,14 @@ interface inMemoryInterface extends PatientDTO {
 }
 
 export class InMemoryPatientRepository implements IPatientRepository {
+  saveMany(patient: (PatientDTO & { userId: string })[]): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
+  getByHash(hash: string, userId: string): Promise<PatientDTO> {
+    throw new Error("Method not implemented.");
+  }
+
   private dbPatients: inMemoryInterface[] = [];
 
   async countAll(

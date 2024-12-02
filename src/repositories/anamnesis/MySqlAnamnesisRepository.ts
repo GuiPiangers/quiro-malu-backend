@@ -3,6 +3,8 @@ import { query } from "../../database/mySqlConnection";
 import { IAnamnesisRepository } from "./IAnamnesisRepository";
 import { AnamnesisDTO } from "../../core/patients/models/Anamnesis";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
+import { Knex } from "../../database";
+import { ETableNames } from "../../database/ETableNames";
 
 export class MySqlAnamnesisRepository implements IAnamnesisRepository {
   save({ patientId, ...data }: AnamnesisDTO, userId: string): Promise<void> {
@@ -14,6 +16,10 @@ export class MySqlAnamnesisRepository implements IAnamnesisRepository {
       userId,
       patientId,
     });
+  }
+
+  async saveMany(data: (AnamnesisDTO & { userId: string })[]): Promise<void> {
+    await Knex(ETableNames.ANAMNESIS).insert(data);
   }
 
   update({ patientId, ...data }: AnamnesisDTO, userId: string): Promise<void> {

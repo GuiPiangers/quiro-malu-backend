@@ -4,37 +4,74 @@ import { Name } from "../../shared/Name";
 import { Phone } from "../../shared/Phone";
 import { Location, LocationDTO } from "../../shared/Location";
 import { DateTime } from "../../shared/Date";
+import { Crypto } from "../../shared/helpers/Crypto";
+import { ApiError } from "../../../utils/ApiError";
+import { Gender, GenderType } from "../../shared/Gender";
+import { Education, EducationType } from "../../shared/Education";
+import { MaritalStatus, MaritalStatusType } from "../../shared/MaritalStatus";
 
 export interface PatientDTO {
   id?: string;
   name: string;
   phone: string;
   dateOfBirth?: string;
-  gender?: "masculino" | "feminino";
+  gender?: GenderType;
   cpf?: string;
   location?: LocationDTO;
+  hashData?: string;
+  education?: string;
+  profession?: string;
+  maritalStatus?: string;
 }
 
 export class Patient extends Entity {
   readonly name: Name;
   readonly dateOfBirth?: DateTime;
-  readonly gender?: "masculino" | "feminino";
+  readonly gender?: GenderType;
   private _phone: Phone;
   private _cpf?: Cpf;
   private _location?: Location;
+  readonly hashData: string;
+  readonly education?: EducationType;
+  readonly profession?: string;
+  readonly maritalStatus?: MaritalStatusType;
 
   constructor(props: PatientDTO) {
-    const { id, phone, name, cpf, location, dateOfBirth, gender } = props;
-
-    super(id || `${Date.now()}`);
+    const {
+      id,
+      phone,
+      name,
+      cpf,
+      location,
+      dateOfBirth,
+      gender,
+      hashData,
+      education,
+      maritalStatus,
+      profession,
+    } = props;
+    super(id);
+    console.log(gender);
     this.name = new Name(name, { compoundName: true });
+    this.gender = new Gender(gender).value;
+    this.education = new Education(education).value;
+    this.maritalStatus = new MaritalStatus(maritalStatus).value;
+    this.profession = profession;
     this._phone = new Phone(phone);
     this._location = location ? new Location(location) : undefined;
     this._cpf = cpf ? new Cpf(cpf) : undefined;
     this.dateOfBirth = dateOfBirth
       ? new DateTime(dateOfBirth, { onlyPassDate: true })
       : undefined;
-    this.gender = gender;
+    this.hashData =
+      hashData ??
+      Crypto.createFixedHash(
+        JSON.stringify({
+          name: this.name.value.replace(" ", "").toLocaleLowerCase(),
+          phone: this.phone.replace(" ", ""),
+          dateOfBirth: this.dateOfBirth?.value,
+        }),
+      );
   }
 
   get phone() {
@@ -49,7 +86,7 @@ export class Patient extends Entity {
     return this._location;
   }
 
-  getPatientDTO(): PatientDTO {
+  getPatientDTO() {
     const location = this.location?.getLocationDTO();
     return {
       id: this.id,
@@ -59,6 +96,10 @@ export class Patient extends Entity {
       phone: this.phone,
       dateOfBirth: this.dateOfBirth?.date,
       gender: this.gender,
+      hashData: this.hashData,
+      education: this.education,
+      maritalStatus: this.maritalStatus,
+      profession: this.profession,
     };
   }
 }
