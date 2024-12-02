@@ -18,6 +18,12 @@ export class KnexLocationRepository implements ILocationRepository {
     });
   }
 
+  async saveMany(
+    data: (LocationDTO & { patientId: string; userId: string })[],
+  ): Promise<void> {
+    await Knex(ETableNames.LOCATIONS).insert(data);
+  }
+
   async update(
     data: LocationDTO,
     patientId: string,

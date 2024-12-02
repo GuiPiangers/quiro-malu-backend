@@ -9,17 +9,22 @@ export class ListPatientsUseCase {
     page,
     search,
     orderBy,
+    limit: _limit,
   }: {
     userId: string;
     page: number;
     search?: { name?: string };
     orderBy?: { field: string; orientation: "ASC" | "DESC" }[];
+    limit?: number | "all";
   }) {
-    const limit = 20;
+    const limit = _limit === "all" ? 9007199254740991 : _limit ?? 20;
     const offSet = page ? limit * (page - 1) : 0;
     const orderField = search?.name
       ? `(name like "${search?.name}%")`
       : "updated_at";
+
+    console.log(_limit);
+
     const getPatients = this.patientsRepository.getAll(userId, {
       limit,
       offSet,

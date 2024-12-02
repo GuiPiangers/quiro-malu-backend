@@ -2,8 +2,6 @@ import { Patient, PatientDTO } from "../../models/Patient";
 import { ILocationRepository } from "../../../../repositories/location/ILocationRepository";
 import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
 import { ApiError } from "../../../../utils/ApiError";
-import { get } from "http";
-import { getValidObjectValues } from "../../../../utils/getValidObjectValues";
 
 export class UpdatePatientUseCase {
   constructor(
@@ -20,8 +18,6 @@ export class UpdatePatientUseCase {
       userId,
       patientId: patient.id,
     });
-
-    console.log(patient);
 
     const updatePatient = this.patientRepository.update(
       patientDTO,

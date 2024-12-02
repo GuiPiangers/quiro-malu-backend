@@ -31,7 +31,6 @@ describe("Patient", () => {
   });
   it("should create a id if it's not specified", () => {
     const patientData: PatientDTO = {
-      id: "1",
       name: "John Doe",
       phone: "(12) 34567 8901",
     };
@@ -39,6 +38,54 @@ describe("Patient", () => {
     const patient = new Patient(patientData);
 
     expect(patient).toHaveProperty("id");
+  });
+  it("should create different hashData when name, phone or dateOfBirth is different", () => {
+    const patientData: PatientDTO = {
+      name: "John Doe",
+      phone: "(12) 34567 8901",
+      dateOfBirth: "1999-10-10",
+    };
+    const patientData2: PatientDTO = {
+      ...patientData,
+      name: "John Doe2",
+    };
+    const patientData3: PatientDTO = {
+      ...patientData,
+      phone: "(12) 34567 8902",
+    };
+    const patientData4: PatientDTO = {
+      ...patientData,
+      dateOfBirth: "1999-10-11",
+    };
+
+    const patient = new Patient(patientData);
+    const patient2 = new Patient(patientData2);
+    const patient3 = new Patient(patientData3);
+    const patient4 = new Patient(patientData4);
+
+    expect(patient).toHaveProperty("hashData");
+    expect(patient.hashData).not.toBe(patient2.hashData);
+    expect(patient.hashData).not.toBe(patient3.hashData);
+    expect(patient.hashData).not.toBe(patient4.hashData);
+  });
+
+  it("should create same hashData when name, phone or dateOfBirth is equal", () => {
+    const patientData: PatientDTO = {
+      name: "John Doe",
+      phone: "(12) 34567 8901",
+      dateOfBirth: "1999-10-10",
+    };
+    const patientData2: PatientDTO = {
+      name: "John Doe",
+      phone: "(12) 34567 8901",
+      dateOfBirth: "1999-10-10",
+    };
+
+    const patient = new Patient(patientData);
+    const patient2 = new Patient(patientData2);
+
+    expect(patient).toHaveProperty("hashData");
+    expect(patient.hashData).toBe(patient2.hashData);
   });
 
   it("should create a Patient instance without optional fields", () => {
@@ -57,6 +104,9 @@ describe("Patient", () => {
     expect(patient.gender).toBeUndefined();
     expect(patient.cpf).toBeUndefined();
     expect(patient.location).toBeUndefined();
+    expect(patient.education).toBeUndefined();
+    expect(patient.profession).toBeUndefined();
+    expect(patient.maritalStatus).toBeUndefined();
   });
 
   it("should throw an error if phone number format is invalid", () => {
@@ -115,6 +165,9 @@ describe("Patient", () => {
       gender: "feminino",
       cpf: "987.654.321-00",
       location: { city: "Another City", state: "Another State" },
+      education: "Fundamental completo",
+      maritalStatus: "casado",
+      profission: "advogado",
     };
 
     const patient = new Patient(patientData);
@@ -128,6 +181,10 @@ describe("Patient", () => {
       dateOfBirth: "1990-10-10",
       gender: "feminino",
       cpf: "987.654.321-00",
+      hashData: patient.hashData,
+      education: "fundamental completo",
+      maritalStatus: "casado",
+      profission: "advogado",
       location: {
         city: "Another City",
         state: "Another State",

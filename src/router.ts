@@ -1,4 +1,4 @@
-import { Router } from "express";
+import e, { Router } from "express";
 import { createUserController } from "./core/authentication/controllers/createUserController";
 import { loginUserController } from "./core/authentication/controllers/loginUserController";
 import { refreshTokenController } from "./core/authentication/controllers/refreshTokenController";
@@ -31,10 +31,11 @@ import { deleteSchedulingController } from "./core/scheduling/controllers/delete
 import { qtdSchedulesController } from "./core/scheduling/controllers/getQtdSchedulesByDayController";
 import { realizeSchedulingController } from "./core/scheduling/controllers/realizeSchedulingController";
 import multer from "multer";
-import { CsvStream } from "./core/shared/streams/CsvStream";
 import { getProgressBySchedulingController } from "./core/patients/controllers/progress/getProgressBySchedulingController";
+import { uploadPatientsController } from "./core/patients/controllers/uploadPatientsController";
 
 const router = Router();
+const multerConfig = multer();
 
 router.post("/register", (request, response) => {
   createUserController.handle(request, response);
@@ -157,17 +158,13 @@ router.delete("/schedules", authMiddleware, (request, response) => {
   deleteSchedulingController.handle(request, response);
 });
 
-router.post("/uploadPatients", multer().single("file"), (request, response) => {
-  const { file } = request;
-
-  if (file?.buffer) {
-    console.log(file?.buffer);
-    const test = new CsvStream(file.buffer);
-    test.transform((chunk) => {
-      console.log(chunk);
-      return chunk;
-    });
-  }
-});
+router.post(
+  "/uploadPatients",
+  authMiddleware,
+  multerConfig.single("file"),
+  (request, response) => {
+    uploadPatientsController.handle(request, response);
+  },
+);
 
 export { router };

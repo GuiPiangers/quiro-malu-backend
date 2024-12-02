@@ -53,6 +53,10 @@ export class DateTime {
       regexDate.test(dateString) && !regexTime.test(dateString);
     const regexPattern = new RegExp(regexDate.source + regexTime.source);
 
+    const date = new Date(dateString);
+    const isValidDate = date instanceof Date && !isNaN(+date);
+    if (!isValidDate) return false;
+
     if (onlyDateValue) {
       return true;
     }

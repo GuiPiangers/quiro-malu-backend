@@ -7,12 +7,15 @@ export class ListPatientsController {
   async handle(request: Request, response: Response): Promise<void> {
     try {
       const userId = request.user.id;
-      const { page, search, orderBy } = request.query;
+      const { page, search, orderBy, limit: _limit } = request.query;
+      const limit = _limit ? (_limit === "all" ? _limit : +_limit) : undefined;
+
       const patients = await this.listPatientsUseCase.execute({
         userId: userId!,
         page: +page! as number,
         search: search ? JSON.parse(search as string) : { name: "" },
         orderBy: orderBy && JSON.parse(orderBy as string),
+        limit,
       });
       response.json(patients);
     } catch (err: any) {
