@@ -120,19 +120,20 @@ export class UploadPatientsUseCase {
                 location: locationData,
               });
 
-              const { patientId, ...anamnesisDTO } = anamnesisData
+              const { patientId = undefined, ...anamnesisDTO } = anamnesisData
                 ? new Anamnesis({
                     ...anamnesisData,
                     patientId: patient.id,
                   })
                 : {};
 
-              const { patientId: _, ...diagnosticDTO } = diagnosticData
-                ? new Diagnostic({
-                    ...diagnosticData,
-                    patientId: patient.id,
-                  })
-                : {};
+              const { patientId: _ = undefined, ...diagnosticDTO } =
+                diagnosticData
+                  ? new Diagnostic({
+                      ...diagnosticData,
+                      patientId: patient.id,
+                    })
+                  : {};
 
               if (await this.validatePatientExist(patient, userId)) return;
               await this.validateCpfNotExist({ cpf: patient.cpf, userId });

@@ -167,7 +167,7 @@ describe("Patient", () => {
       location: { city: "Another City", state: "Another State" },
       education: "Fundamental completo",
       maritalStatus: "casado",
-      profission: "advogado",
+      profession: "advogado",
     };
 
     const patient = new Patient(patientData);
