@@ -207,6 +207,22 @@ export class UploadPatientsUseCase {
       useMedicine,
     }: Partial<AnamnesisDTO> = object;
     const { diagnostic, treatmentPlan }: Partial<DiagnosticDTO> = object;
+    const convertSmoke = (
+      smoke?: string,
+    ): "yes" | "no" | "passive" | undefined => {
+      if (!smoke) return undefined;
+      const validYes = ["sim", "s", "yes"];
+      const validNo = ["não", "n", "no"];
+      const validPassive = ["passive", "passivo"];
+
+      const yes = validYes.includes(smoke.toLowerCase()) ? "yes" : undefined;
+      const no = validNo.includes(smoke.toLowerCase()) ? "no" : undefined;
+      const passive = validPassive.includes(smoke.toLowerCase())
+        ? "passive"
+        : undefined;
+
+      return yes ?? no ?? passive;
+    };
     return {
       patientData: getValidObjectValues({
         name,
@@ -229,10 +245,14 @@ export class UploadPatientsUseCase {
         history,
         mainProblem,
         medicines,
-        smoke,
+        smoke: convertSmoke(smoke),
         surgeries,
-        underwentSurgery,
-        useMedicine,
+        underwentSurgery: underwentSurgery
+          ? this.convertBooleanValue(underwentSurgery as unknown as string)
+          : undefined,
+        useMedicine: useMedicine
+          ? this.convertBooleanValue(useMedicine as unknown as string)
+          : undefined,
       }),
       diagnosticData: getValidObjectValues({ diagnostic, treatmentPlan }),
     };
@@ -371,6 +391,16 @@ export class UploadPatientsUseCase {
       .reduce((acc, [key, value]) => {
         return { ...acc, [key]: value };
       }, {}) as unknown as PatientDTO;
+    return result;
+  }
+
+  private convertBooleanValue(
+    value: string,
+    validValues: string[] = [],
+  ): boolean {
+    const values = [...validValues, "true"];
+    const result = values.includes(value);
+
     return result;
   }
 }
