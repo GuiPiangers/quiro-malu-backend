@@ -70,4 +70,8 @@ export class DateTime {
   get time(): string {
     return this.value.substring(11, 16);
   }
+
+  static toIsoDate(date: string) {
+    return date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$2-$1");
+  }
 }
