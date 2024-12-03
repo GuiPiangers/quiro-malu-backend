@@ -11,6 +11,7 @@ import { Patient, PatientDTO } from "../../models/Patient";
 import { getValidObjectValues } from "../../../../utils/getValidObjectValues";
 import { Normalize } from "../../../shared/Normalize";
 import { ApiError } from "../../../../utils/ApiError";
+import { DateTime } from "../../../shared/Date";
 
 type CsvPatientObject = PatientDTO &
   LocationDTO &
@@ -230,18 +231,20 @@ export class UploadPatientsUseCase {
 
     const convertPhone = (ponhe: string) => {
       const result = ponhe
-        .replace(/\D/, "")
+        .replace(/\D/g, "")
         .replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2 $3");
 
       return result;
     };
+
+    console.log(convertPhone(phone), phone);
 
     return {
       patientData: getValidObjectValues({
         name,
         phone: convertPhone(phone),
         gender,
-        dateOfBirth,
+        dateOfBirth: dateOfBirth ? DateTime.toIsoDate(dateOfBirth) : undefined,
         cpf,
       }),
       locationData: getValidObjectValues({
