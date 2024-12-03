@@ -230,14 +230,17 @@ export class UploadPatientsUseCase {
     };
 
     const convertPhone = (ponhe: string) => {
-      const result = ponhe
-        .replace(/\D/g, "")
-        .replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2 $3");
+      const onlyNumbers = ponhe.replace(/\D/g, "");
+
+      const allNumbers =
+        onlyNumbers.length === 11
+          ? onlyNumbers
+          : onlyNumbers.replace(/^(\d{2})(\d+)/, "$19$2");
+
+      const result = allNumbers.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2 $3");
 
       return result;
     };
-
-    console.log(convertPhone(phone), phone);
 
     return {
       patientData: getValidObjectValues({
