@@ -44,7 +44,7 @@ export class UploadPatientsUseCase {
       dateOfBirth: ["datadenascimento"],
       gender: ["sexo", "genero"],
       cpf: ["cpf"],
-      address: ["edereco"],
+      address: ["endereco"],
       city: ["cidade"],
       state: ["estado"],
       cep: ["cep"],
@@ -56,11 +56,14 @@ export class UploadPatientsUseCase {
       history: ["historico"],
       familiarHistory: ["historicofamiliar"],
       mainProblem: ["problemaprincipal", "principalproblema"],
-      medicines: ["medicamentos", "medicamentosusados"],
       smoke: ["fumante"],
       useMedicine: ["usamedicamentos"],
-      surgeries: ["cirurgias", "cirurgiasrealizadas"],
+      medicines: ["medicamentos", "medicamentosusados"],
       underwentSurgery: ["realizoucirugias", "tevecirurgias"],
+      surgeries: ["cirurgias", "cirurgiasrealizadas"],
+      maritalStatus: ["estadocivil"],
+      education: ["escolaridade", "formacao", "educacao"],
+      profession: ["profissao"],
     };
 
     const validTableHeaders = Object.values(normalizeObject).reduce(
@@ -207,6 +210,7 @@ export class UploadPatientsUseCase {
       useMedicine,
     }: Partial<AnamnesisDTO> = object;
     const { diagnostic, treatmentPlan }: Partial<DiagnosticDTO> = object;
+
     const convertSmoke = (
       smoke?: string,
     ): "yes" | "no" | "passive" | undefined => {
@@ -223,10 +227,19 @@ export class UploadPatientsUseCase {
 
       return yes ?? no ?? passive;
     };
+
+    const convertPhone = (ponhe: string) => {
+      const result = ponhe
+        .replace(/\D/, "")
+        .replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2 $3");
+
+      return result;
+    };
+
     return {
       patientData: getValidObjectValues({
         name,
-        phone,
+        phone: convertPhone(phone),
         gender,
         dateOfBirth,
         cpf,
@@ -330,8 +343,6 @@ export class UploadPatientsUseCase {
           patientId: data.patientData.id,
         }));
 
-      console.log(anamnesisData, diagnosticData);
-
       await this.patientRepository.saveMany(patientsData);
 
       await Promise.all([
@@ -398,7 +409,7 @@ export class UploadPatientsUseCase {
     value: string,
     validValues: string[] = [],
   ): boolean {
-    const values = [...validValues, "true"];
+    const values = [...validValues, "true", "sim"];
     const result = values.includes(value);
 
     return result;
