@@ -28,7 +28,6 @@ export class MaritalStatus {
         (possibility) => possibility !== maritalStatus,
       )
     ) {
-      console.log(maritalStatus);
       throw new ApiError(
         "O estádo cívil definido é inválido",
         400,

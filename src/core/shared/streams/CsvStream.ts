@@ -106,7 +106,7 @@ export class CsvStream<chunk> extends IStream<chunk> {
           this.push(null);
         },
         objectMode: true,
-      }).pipe(parse({ headers: true })),
+      }).pipe(parse({ headers: true, delimiter: ";" })),
       defaultEvents,
     );
   }

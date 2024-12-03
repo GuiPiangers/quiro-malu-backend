@@ -23,8 +23,6 @@ export class ListPatientsUseCase {
       ? `(name like "${search?.name}%")`
       : "updated_at";
 
-    console.log(_limit);
-
     const getPatients = this.patientsRepository.getAll(userId, {
       limit,
       offSet,

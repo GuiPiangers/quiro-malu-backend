@@ -32,7 +32,6 @@ export class Education {
       education &&
       educationPossibility.every((possibility) => possibility !== education)
     ) {
-      console.log(education);
       throw new ApiError(
         "A escolaridade definida é inválida",
         400,

@@ -51,7 +51,6 @@ export class Patient extends Entity {
       profession,
     } = props;
     super(id);
-    console.log(gender);
     this.name = new Name(name, { compoundName: true });
     this.gender = new Gender(gender).value;
     this.education = new Education(education).value;
