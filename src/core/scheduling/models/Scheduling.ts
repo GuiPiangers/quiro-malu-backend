@@ -4,7 +4,11 @@ import { Entity } from "../../shared/Entity";
 import ClientStatusStrategy from "./status/ClientStatusStrategy";
 import { StatusStrategy } from "./status/StatusStrategy";
 
-export type SchedulingStatus = "Agendado" | "Atendido" | "Atrasado";
+export type SchedulingStatus =
+  | "Agendado"
+  | "Atendido"
+  | "Atrasado"
+  | "Cancelado";
 
 export interface SchedulingDTO {
   id?: string;
@@ -14,7 +18,7 @@ export interface SchedulingDTO {
   date?: string;
   duration?: number;
   service?: string;
-  status?: "Agendado" | "Atendido" | "Atrasado";
+  status?: SchedulingStatus;
   createAt?: string;
   updateAt?: string;
 }
@@ -28,7 +32,7 @@ export class Scheduling extends Entity {
   readonly service?: string;
   readonly createAt?: string;
   readonly updateAt?: string;
-  private _status?: SchedulingStatus | "Atrasado";
+  private _status?: SchedulingStatus;
   private statusStrategy?: StatusStrategy;
 
   constructor(
@@ -74,8 +78,6 @@ export class Scheduling extends Entity {
       date: this.date?.value,
       duration: this.duration,
       status: this.status,
-      // createAt: this.createAt,
-      // updateAt: this.updateAt,
       service: this.service,
       patient: this.patient,
       phone: this.phone,
