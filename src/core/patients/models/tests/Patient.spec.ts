@@ -184,7 +184,7 @@ describe("Patient", () => {
       hashData: patient.hashData,
       education: "fundamental completo",
       maritalStatus: "casado",
-      profission: "advogado",
+      profession: "advogado",
       location: {
         city: "Another City",
         state: "Another State",
