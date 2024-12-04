@@ -12,6 +12,8 @@ import { getValidObjectValues } from "../../../../utils/getValidObjectValues";
 import { Normalize } from "../../../shared/Normalize";
 import { ApiError } from "../../../../utils/ApiError";
 import { DateTime } from "../../../shared/Date";
+import { Phone } from "../../../shared/Phone";
+import { Smoke } from "../../../shared/Smoke";
 
 type CsvPatientObject = PatientDTO &
   LocationDTO &
@@ -212,40 +214,10 @@ export class UploadPatientsUseCase {
     }: Partial<AnamnesisDTO> = object;
     const { diagnostic, treatmentPlan }: Partial<DiagnosticDTO> = object;
 
-    const convertSmoke = (
-      smoke?: string,
-    ): "yes" | "no" | "passive" | undefined => {
-      if (!smoke) return undefined;
-      const validYes = ["sim", "s", "yes"];
-      const validNo = ["não", "n", "no"];
-      const validPassive = ["passive", "passivo"];
-
-      const yes = validYes.includes(smoke.toLowerCase()) ? "yes" : undefined;
-      const no = validNo.includes(smoke.toLowerCase()) ? "no" : undefined;
-      const passive = validPassive.includes(smoke.toLowerCase())
-        ? "passive"
-        : undefined;
-
-      return yes ?? no ?? passive;
-    };
-
-    const convertPhone = (ponhe: string) => {
-      const onlyNumbers = ponhe.replace(/\D/g, "");
-
-      const allNumbers =
-        onlyNumbers.length === 11
-          ? onlyNumbers
-          : onlyNumbers.replace(/^(\d{2})(\d+)/, "$19$2");
-
-      const result = allNumbers.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2 $3");
-
-      return result;
-    };
-
     return {
       patientData: getValidObjectValues({
         name,
-        phone: convertPhone(phone),
+        phone: Phone.convertPhone(phone),
         gender,
         dateOfBirth: dateOfBirth ? DateTime.toIsoDate(dateOfBirth) : undefined,
         cpf,
@@ -264,7 +236,7 @@ export class UploadPatientsUseCase {
         history,
         mainProblem,
         medicines,
-        smoke: convertSmoke(smoke),
+        smoke: Smoke.convertSmoke(smoke),
         surgeries,
         underwentSurgery: underwentSurgery
           ? this.convertBooleanValue(underwentSurgery as unknown as string)
