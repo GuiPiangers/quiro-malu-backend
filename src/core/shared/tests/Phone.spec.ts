@@ -30,4 +30,26 @@ describe("Phone", () => {
       "Número de telefone fora do padrão esperado",
     );
   });
+
+  describe("convertPhone", () => {
+    it("should convert correct a 10 numbers phone to 11 numbers adding a 9", () => {
+      const convertedPhone = Phone.convertPhone("5100001111");
+
+      expect(convertedPhone).toBe("(51) 90000 1111");
+    });
+
+    it("should remove any not number character and format to expected pattern", () => {
+      const convertedPhone = Phone.convertPhone("_51_ 90000-1111");
+
+      expect(convertedPhone).toBe("(51) 90000 1111");
+    });
+
+    it("should remove any not format a number that the numbers of numeric characters are different of 10 or 11", () => {
+      const convertedPhone = Phone.convertPhone("519000011111");
+      const convertedPhone2 = Phone.convertPhone("510001111");
+
+      expect(convertedPhone).toBe("519000011111");
+      expect(convertedPhone2).toBe("510001111");
+    });
+  });
 });
