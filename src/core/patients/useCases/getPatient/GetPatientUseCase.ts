@@ -15,8 +15,10 @@ export class GetPatientUseCase {
       getLocation,
     ]);
 
+    // console.log(location);
+
     if (location) {
-      return { location, ...patient };
+      return { ...patient, location };
     }
     return patient;
   }
