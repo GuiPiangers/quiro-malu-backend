@@ -116,11 +116,6 @@ export class KnexPatientRepository implements IPatientRepository {
       userId,
     ]);
 
-    console.log(
-      "chegou aqui",
-      new Patient(getValidObjectValues<PatientDTO>(result)).getPatientDTO(),
-    );
-
     return [
       new Patient(getValidObjectValues<PatientDTO>(result)).getPatientDTO(),
     ];
