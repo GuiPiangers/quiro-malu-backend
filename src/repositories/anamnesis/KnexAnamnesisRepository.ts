@@ -1,12 +1,11 @@
 /* eslint-disable eqeqeq */
-import { query } from "../../database/mySqlConnection";
 import { IAnamnesisRepository } from "./IAnamnesisRepository";
 import { AnamnesisDTO } from "../../core/patients/models/Anamnesis";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
 import { Knex } from "../../database";
 import { ETableNames } from "../../database/ETableNames";
 
-export class MySqlAnamnesisRepository implements IAnamnesisRepository {
+export class KnexAnamnesisRepository implements IAnamnesisRepository {
   async save(
     { patientId, ...data }: AnamnesisDTO,
     userId: string,
@@ -26,14 +25,11 @@ export class MySqlAnamnesisRepository implements IAnamnesisRepository {
     { patientId, ...data }: AnamnesisDTO,
     userId: string,
   ): Promise<void> {
-    await Knex(ETableNames.ANAMNESIS)
-      .update(data)
-      .update(data)
-      .where({ patientId, userId });
+    await Knex(ETableNames.ANAMNESIS).update(data).where({ patientId, userId });
   }
 
   async get(patientId: string, userId: string): Promise<AnamnesisDTO[]> {
-    const result = await Knex(ETableNames.PATIENTS)
+    const result = await Knex(ETableNames.ANAMNESIS)
       .select("*")
       .where({ patientId, userId });
     return result.map((anamnesis) =>
