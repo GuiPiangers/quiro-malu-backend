@@ -7,12 +7,12 @@ import { Knex } from "../../database";
 import { ETableNames } from "../../database/ETableNames";
 
 export class MySqlAnamnesisRepository implements IAnamnesisRepository {
-  save({ patientId, ...data }: AnamnesisDTO, userId: string): Promise<void> {
-    const sql = "INSERT INTO anamnesis SET ?";
-    const errorMessage = "Falha ao adicionar o usuário";
-
-    return query(errorMessage, sql, {
-      ...getValidObjectValues(data),
+  async save(
+    { patientId, ...data }: AnamnesisDTO,
+    userId: string,
+  ): Promise<void> {
+    return await Knex(ETableNames.ANAMNESIS).insert({
+      ...data,
       userId,
       patientId,
     });
@@ -22,26 +22,20 @@ export class MySqlAnamnesisRepository implements IAnamnesisRepository {
     await Knex(ETableNames.ANAMNESIS).insert(data);
   }
 
-  update({ patientId, ...data }: AnamnesisDTO, userId: string): Promise<void> {
-    const sql = "UPDATE anamnesis SET ? WHERE patientId = ? and userId = ?";
-    const errorMessage = "Falha ao adicionar o usuário";
-
-    return query(errorMessage, sql, [
-      getValidObjectValues(data),
-      patientId,
-      userId,
-    ]);
+  async update(
+    { patientId, ...data }: AnamnesisDTO,
+    userId: string,
+  ): Promise<void> {
+    await Knex(ETableNames.ANAMNESIS)
+      .update(data)
+      .update(data)
+      .where({ patientId, userId });
   }
 
   async get(patientId: string, userId: string): Promise<AnamnesisDTO[]> {
-    const sql = "SELECT * FROM anamnesis WHERE patientId = ? and userId = ?";
-    const errorMessage = `Não foi possível realizar a busca`;
-    const result = await query<
-      (Omit<AnamnesisDTO, "underwentSurgery" | "useMedicine"> & {
-        underwentSurgery: number;
-        useMedicine: number;
-      })[]
-    >(errorMessage, sql, [patientId, userId]);
+    const result = await Knex(ETableNames.PATIENTS)
+      .select("*")
+      .where({ patientId, userId });
     return result.map((anamnesis) =>
       getValidObjectValues({
         ...anamnesis,
