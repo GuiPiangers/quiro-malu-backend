@@ -3,7 +3,7 @@ import { IProgressRepository } from "./IProgressRepository";
 import { Knex } from "../../database";
 import { ETableNames } from "../../database/ETableNames";
 
-export class MySqlProgressRepository implements IProgressRepository {
+export class KnexProgressRepository implements IProgressRepository {
   async getByScheduling({
     patientId,
     schedulingId,
