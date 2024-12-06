@@ -3,7 +3,7 @@ import { IUserRepository } from "./IUserRepository";
 import { Knex } from "../../database";
 import { ETableNames } from "../../database/ETableNames";
 
-export class MySqlUserRepository implements IUserRepository {
+export class KnexUserRepository implements IUserRepository {
   async getById(id: string): Promise<UserDTO[]> {
     return await Knex(ETableNames.USERS).select("*").where({ id });
   }

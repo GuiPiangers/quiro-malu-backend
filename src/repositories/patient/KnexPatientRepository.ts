@@ -1,7 +1,7 @@
 import { Patient, PatientDTO } from "../../core/patients/models/Patient";
 import { Knex } from "../../database";
 import { ETableNames } from "../../database/ETableNames";
-import { order, query } from "../../database/mySqlConnection";
+import { order } from "../../database/mySqlConnection";
 import { IPatientRepository } from "../../repositories/patient/IPatientRepository";
 import { ApiError } from "../../utils/ApiError";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
@@ -52,18 +52,17 @@ export class KnexPatientRepository implements IPatientRepository {
     const orderBy = config.orderBy?.map(({ field, orientation }) =>
       order({ field, orientation }),
     );
-    const sql = `SELECT * FROM patients WHERE userId = ? AND name like ? ORDER BY ${orderBy}  LIMIT ? OFFSET ?`;
-    const errorMessage = `Não foi possível realizar a busca`;
-    const results = await query<PatientDTO[]>(errorMessage, sql, [
-      userId,
-      `%${config.search?.name}%`,
-      config.limit,
-      config.offSet,
-    ]);
+    const result = Knex(ETableNames.PATIENTS)
+      .select("*")
+      .where({ userId })
+      .andWhere("name", "like", `%${config?.search?.name ?? ""}%`)
+      .orderByRaw(orderBy?.join(", ") ?? "");
 
-    return results.map((result) =>
-      new Patient(getValidObjectValues<PatientDTO>(result)).getPatientDTO(),
-    );
+    if (config.limit && config.offSet) {
+      return await result.limit(config.limit).offset(config.offSet);
+    }
+
+    return await result;
   }
 
   async countAll(
@@ -109,12 +108,9 @@ export class KnexPatientRepository implements IPatientRepository {
   async getById(patientId: string, userId: string): Promise<PatientDTO[]> {
     const sql =
       "SELECT *, created_at AS createAt FROM patients WHERE id = ? AND userId = ?";
-    const errorMessage = `Não foi possível realizar a busca`;
-
-    const [result] = await query<PatientDTO[]>(errorMessage, sql, [
-      patientId,
-      userId,
-    ]);
+    const result: PatientDTO = await Knex(ETableNames.PATIENTS)
+      .first("*", "created_at AS createAt")
+      .where({ id: patientId, userId });
 
     return [
       new Patient(getValidObjectValues<PatientDTO>(result)).getPatientDTO(),
