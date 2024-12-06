@@ -1,33 +1,24 @@
-import { query } from "../../database/mySqlConnection";
 import { RefreshTokenDTO } from "../../core/authentication/models/RefreshToken";
 import { IRefreshTokenProvider } from "./IRefreshTokenProvider";
+import { Knex } from "../../database";
+import { ETableNames } from "../../database/ETableNames";
 
 class RefreshTokenProvider implements IRefreshTokenProvider {
   private async deleteWithUserId(userId: string) {
-    const sql = "DELETE FROM refresh_token WHERE userId = ?";
-    const errorMessage = "Não foi possível deletar os Refresh Tokens";
-    await query(errorMessage, sql, userId);
+    await Knex(ETableNames.REFRESH_TOKEN).where({ userId }).del();
   }
 
-  async delete(userId: string) {
-    const sql = "DELETE FROM refresh_token WHERE id = ?";
-    const errorMessage = "Não foi possível deletar os Refresh Tokens";
-    await query(errorMessage, sql, userId);
+  async delete(id: string) {
+    await Knex(ETableNames.REFRESH_TOKEN).where({ id }).del();
   }
 
   async generate(RefreshToken: RefreshTokenDTO): Promise<void> {
     await this.deleteWithUserId(RefreshToken.userId);
-    const sql = "INSERT INTO refresh_token SET ?";
-    const errorMessage = "Não foi possível gerar o Refresh Token";
-    await query(errorMessage, sql, RefreshToken);
+    return await Knex(ETableNames.REFRESH_TOKEN).insert(RefreshToken);
   }
 
   async getRefreshToken(id: string): Promise<RefreshTokenDTO[]> {
-    const sql = "SELECT * FROM refresh_token WHERE id = ?";
-    const errorMessage = "Não foi possível encontrar o Refresh Token";
-    const refreshToken = await query<RefreshTokenDTO[]>(errorMessage, sql, id);
-
-    return refreshToken;
+    return await Knex(ETableNames.REFRESH_TOKEN).select("*").where({ id });
   }
 }
 
