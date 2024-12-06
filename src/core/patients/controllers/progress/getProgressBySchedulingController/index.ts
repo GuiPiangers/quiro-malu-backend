@@ -1,8 +1,8 @@
-import { MySqlProgressRepository } from "../../../../../repositories/progress/MySqlProgressRepository";
+import { KnexProgressRepository } from "../../../../../repositories/progress/KnexProgressRepository";
 import { GetProgressBySchedulingUseCase } from "../../../useCases/progress/getProgressByScheduling/GetProgressBySchedulingUseCase";
 import { GetProgressBySchedulingController } from "./GetProgressBySchedulingController";
 
-const ProgressRepository = new MySqlProgressRepository();
+const ProgressRepository = new KnexProgressRepository();
 const getProgressUseCase = new GetProgressBySchedulingUseCase(
   ProgressRepository,
 );
