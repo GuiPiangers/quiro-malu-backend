@@ -38,7 +38,6 @@ export class UpdateSchedulingUseCase {
       userId,
       date: new DateTime(scheduling.date.value).date,
     });
-
     const updateScheduling = schedules.find(
       (schedulingValue) => schedulingValue.id === scheduling.id,
     )?.date;

@@ -33,6 +33,7 @@ export class ListSchedulingUseCase {
       schedulingData,
       totalScheduling,
     ]);
+
     return {
       schedules: schedules.map((scheduling) => {
         const result = new Scheduling(
