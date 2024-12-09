@@ -112,9 +112,7 @@ export class KnexPatientRepository implements IPatientRepository {
       .first("*", "created_at AS createAt")
       .where({ id: patientId, userId });
 
-    return [
-      new Patient(getValidObjectValues<PatientDTO>(result)).getPatientDTO(),
-    ];
+    return [result];
   }
 
   async delete(patientId: string, userId: string): Promise<void> {

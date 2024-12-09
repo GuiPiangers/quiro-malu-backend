@@ -27,14 +27,14 @@ export class KnexServiceRepository implements IServiceRepository {
     config,
   }: {
     userId: string;
-    config?: { limit: number; offSet: number };
+    config?: { limit?: number; offSet?: number };
   }): Promise<ServiceDTO[]> {
     const result = Knex(ETableNames.SERVICES)
       .select("*")
       .where({ userId })
       .orderBy("updated_at", "desc");
 
-    if (config) {
+    if (config?.limit && config.offSet) {
       return await result.limit(config.limit).offset(config.offSet);
     }
     return await result;

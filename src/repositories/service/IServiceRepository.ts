@@ -9,7 +9,7 @@ export interface IServiceRepository {
   }: ServiceDTO & { userId: string; id: string }): Promise<void>;
   list(data: {
     userId: string;
-    config?: { limit: number; offSet: number };
+    config?: { limit?: number; offSet?: number };
   }): Promise<ServiceDTO[]>;
   count({ userId }: { userId: string }): Promise<[{ total: number }]>;
   get(data: { id: string; userId: string }): Promise<ServiceDTO[]>;
