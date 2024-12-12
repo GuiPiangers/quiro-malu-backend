@@ -9,14 +9,13 @@ export class ListSchedulingUseCase {
   async execute({
     userId,
     date: schedulingDate,
-    page,
   }: {
     userId: string;
     date: string;
     page?: number;
   }) {
     const limit = 20;
-    // const offSet = page ? limit * (page - 1) : 0;
+    console.log("renderizou");
     const clientStatusStrategy = new ClientStatusStrategy();
     const date = schedulingDate || new DateTime(new Date().toString()).value;
 
