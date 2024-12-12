@@ -15,8 +15,6 @@ export class UpdateSchedulingController {
         userId: userId!,
       });
 
-      console.log(scheduling);
-
       response.status(201).json(scheduling);
     } catch (err: any) {
       return responseError(response, err);

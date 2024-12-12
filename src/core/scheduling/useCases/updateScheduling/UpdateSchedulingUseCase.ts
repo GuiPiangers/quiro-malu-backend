@@ -34,20 +34,13 @@ export class UpdateSchedulingUseCase {
     userId: string;
   }) {
     if (!scheduling.date?.value) return;
+
     const schedules = await this.SchedulingRepository.list({
       userId,
       date: new DateTime(scheduling.date.value).date,
     });
-    const updateScheduling = schedules.find(
-      (schedulingValue) => schedulingValue.id === scheduling.id,
-    )?.date;
-    const updateSchedulingDate =
-      updateScheduling && new DateTime(updateScheduling).value;
 
-    if (
-      updateSchedulingDate !== scheduling.date?.value &&
-      scheduling.notAvailableDate(schedules)
-    )
+    if (scheduling.notAvailableDate(schedules))
       throw new ApiError("Horário indisponível", 400, "date");
   }
 }
