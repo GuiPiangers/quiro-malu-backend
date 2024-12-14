@@ -58,7 +58,7 @@ export class KnexPatientRepository implements IPatientRepository {
       .andWhere("name", "like", `%${config?.search?.name ?? ""}%`)
       .orderByRaw(orderBy?.join(", ") ?? "");
 
-    if (config.limit && config.offSet) {
+    if (config.limit !== undefined && config.offSet !== undefined) {
       return await result.limit(config.limit).offset(config.offSet);
     }
 
