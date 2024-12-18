@@ -1,17 +1,17 @@
-import { Finance, FinanceDOT } from "../../core/finances/models/Finance";
+import { Finance, FinanceDTO } from "../../core/finances/models/Finance";
 
-type createFinanceProps = FinanceDOT & { userId: string };
-type deleteFinanceProps = { userId: string };
-type getFinanceProps = { userId: string; id: string };
-type listFinanceProps = {
+export type createFinanceProps = FinanceDTO & { userId: string };
+export type deleteFinanceProps = { userId: string };
+export type getFinanceProps = { userId: string; id: string };
+export type listFinanceProps = {
   userId: string;
   congif?: { limit: number; offset: number };
 };
 
 export interface IFinanceRepository {
-  create(data: createFinanceProps): void;
-  update(data: createFinanceProps): void;
-  delete(data: deleteFinanceProps): void;
-  get(data: getFinanceProps): Finance;
-  lsit(data: listFinanceProps): Finance[];
+  create(data: createFinanceProps): Promise<void>;
+  update(data: createFinanceProps): Promise<void>;
+  delete(data: deleteFinanceProps): Promise<void>;
+  get(data: getFinanceProps): Promise<Finance>;
+  lsit(data: listFinanceProps): Promise<Finance[]>;
 }

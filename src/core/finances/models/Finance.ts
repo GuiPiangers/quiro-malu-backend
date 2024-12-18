@@ -1,7 +1,7 @@
 import { DateTime } from "../../shared/Date";
 import { Entity } from "../../shared/Entity";
 
-export interface FinanceDOT {
+export interface FinanceDTO {
   id?: string;
   date: string;
   description: string;
@@ -27,7 +27,7 @@ export class Finance extends Entity {
     value,
     patientId,
     id,
-  }: FinanceDOT) {
+  }: FinanceDTO) {
     super(id);
 
     this.date = new DateTime(date).date;
@@ -36,5 +36,16 @@ export class Finance extends Entity {
     this.paymentMethod = paymentMethod;
     this.value = value;
     this.patientId = patientId;
+  }
+
+  getDTO(): FinanceDTO {
+    return {
+      date: this.date,
+      description: this.description,
+      type: this.type,
+      paymentMethod: this.paymentMethod,
+      value: this.value,
+      patientId: this.patientId,
+    };
   }
 }
