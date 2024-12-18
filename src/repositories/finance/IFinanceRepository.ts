@@ -1,7 +1,7 @@
 import { Finance, FinanceDTO } from "../../core/finances/models/Finance";
 
 export type createFinanceProps = FinanceDTO & { userId: string };
-export type updateFinanceProps = FinanceDTO & { userId: string };
+export type updateFinanceProps = FinanceDTO & { userId: string; id: string };
 export type deleteFinanceProps = { userId: string };
 export type getFinanceProps = { userId: string; id: string };
 export type listFinanceProps = {

@@ -9,7 +9,7 @@ export class UpdateFinanceController {
 
   async handle(request: Request, response: Response) {
     try {
-      const data = request.body as FinanceDTO;
+      const data = request.body as FinanceDTO & { id: string };
       const userId = request.user.id;
 
       if (!userId) throw new ApiError("Usuário não autorizado", 401);
