@@ -5,6 +5,7 @@ import { responseError } from "../../../../utils/ResponseError";
 
 export class CreatePatientController {
   constructor(private createPatientUseCase: CreatePatientUseCase) {}
+
   async handle(request: Request, response: Response) {
     try {
       const data = request.body as PatientDTO;
