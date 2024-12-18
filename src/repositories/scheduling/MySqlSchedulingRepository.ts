@@ -2,43 +2,35 @@ import {
   Scheduling,
   SchedulingDTO,
 } from "../../core/scheduling/models/Scheduling";
+import { Knex } from "../../database";
+import { ETableNames } from "../../database/ETableNames";
 import { query } from "../../database/mySqlConnection";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
 import { ISchedulingRepository } from "../scheduling/ISchedulingRepository";
 
 export class MySqlSchedulingRepository implements ISchedulingRepository {
-  save({
+  async save({
     userId,
     createAt,
     updateAt,
     ...data
   }: SchedulingDTO & { userId: string }): Promise<void> {
-    const sql = "INSERT INTO schedules SET ?";
-    const errorMessage = "Falha ao adicionar o serviço";
-
-    return query(errorMessage, sql, {
-      ...getValidObjectValues(data),
-      userId,
-    });
+    await Knex(ETableNames.SCHEDULES).insert(data);
   }
 
-  update({
+  async update({
     id,
     userId,
     createAt,
     updateAt,
     ...data
   }: SchedulingDTO & { id: string; userId: string }): Promise<void> {
-    const sql = "UPDATE schedules SET ? WHERE id = ? AND userId = ?";
-    const errorMessage = "Falha ao atualizar o serviço";
-
-    return query(errorMessage, sql, [getValidObjectValues(data), id, userId]);
+    await Knex(ETableNames.SCHEDULES).update(data).where({ id, userId });
   }
 
   async list({
     userId,
     date,
-    config,
   }: {
     userId: string;
     date: string;
@@ -98,10 +90,8 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
     return result.map((scheduling) => getValidObjectValues(scheduling));
   }
 
-  delete({ id, userId }: { id: string; userId: string }): Promise<void> {
+  async delete({ id, userId }: { id: string; userId: string }): Promise<void> {
     const sql = "DELETE FROM schedules WHERE id = ? AND userId = ?";
-    const errorMessage = `Não foi possível deletar o serviço`;
-
-    return query(errorMessage, sql, [id, userId]);
+    await Knex(ETableNames.SCHEDULES).where({ id, userId }).del();
   }
 }
