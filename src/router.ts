@@ -33,6 +33,7 @@ import { realizeSchedulingController } from "./core/scheduling/controllers/reali
 import multer from "multer";
 import { getProgressBySchedulingController } from "./core/patients/controllers/progress/getProgressBySchedulingController";
 import { uploadPatientsController } from "./core/patients/controllers/uploadPatientsController";
+import { createFiannceController } from "./core/finances/controllers/createFinanceController";
 
 const router = Router();
 const multerConfig = multer();
@@ -166,5 +167,9 @@ router.post(
     uploadPatientsController.handle(request, response);
   },
 );
+
+router.delete("/finance", authMiddleware, (request, response) => {
+  createFiannceController.handle(request, response);
+});
 
 export { router };

@@ -4,7 +4,7 @@ import {
 } from "../../../../repositories/finance/IFinanceRepository";
 import { Finance } from "../../models/Finance";
 
-export class createFinanceUseCase {
+export class CreateFinanceUseCase {
   constructor(private financeRepository: IFinanceRepository) {}
 
   async execute({ userId, ...financeData }: createFinanceProps) {
