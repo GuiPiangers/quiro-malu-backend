@@ -13,5 +13,5 @@ export interface IFinanceRepository {
   update(data: createFinanceProps): Promise<void>;
   delete(data: deleteFinanceProps): Promise<void>;
   get(data: getFinanceProps): Promise<Finance>;
-  lsit(data: listFinanceProps): Promise<Finance[]>;
+  lsit(data: listFinanceProps): Promise<FinanceDTO[]>;
 }

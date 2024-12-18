@@ -34,6 +34,8 @@ import multer from "multer";
 import { getProgressBySchedulingController } from "./core/patients/controllers/progress/getProgressBySchedulingController";
 import { uploadPatientsController } from "./core/patients/controllers/uploadPatientsController";
 import { createFiannceController } from "./core/finances/controllers/createFinanceController";
+import { getFiannceController } from "./core/finances/controllers/getFinanceController";
+import { listFiannceController } from "./core/finances/controllers/listFinancesController";
 
 const router = Router();
 const multerConfig = multer();
@@ -168,8 +170,14 @@ router.post(
   },
 );
 
-router.delete("/finance", authMiddleware, (request, response) => {
+router.post("/finance", authMiddleware, (request, response) => {
   createFiannceController.handle(request, response);
+});
+router.get("/finance:id", authMiddleware, (request, response) => {
+  getFiannceController.handle(request, response);
+});
+router.get("/finance", authMiddleware, (request, response) => {
+  listFiannceController.handle(request, response);
 });
 
 export { router };
