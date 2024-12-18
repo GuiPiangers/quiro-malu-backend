@@ -4,6 +4,6 @@ import { KnexFinanceRepository } from "../../../../repositories/finance/knexFina
 
 const financeRepository = new KnexFinanceRepository();
 const getFinanceUseCase = new GetFinanceUseCase(financeRepository);
-const getFiannceController = new GetFinanceController(getFinanceUseCase);
+const getFinanceController = new GetFinanceController(getFinanceUseCase);
 
-export { getFiannceController };
+export { getFinanceController };
