@@ -15,7 +15,6 @@ export class ListSchedulingUseCase {
     page?: number;
   }) {
     const limit = 20;
-    console.log("renderizou");
     const clientStatusStrategy = new ClientStatusStrategy();
     const date = schedulingDate || new DateTime(new Date().toString()).value;
 
