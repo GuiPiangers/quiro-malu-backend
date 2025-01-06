@@ -37,6 +37,7 @@ import { createFinanceController } from "./core/finances/controllers/createFinan
 import { getFinanceController } from "./core/finances/controllers/getFinanceController";
 import { listFinanceController } from "./core/finances/controllers/listFinancesController";
 import { updateFinanceController } from "./core/finances/controllers/updateFinanceController";
+import { deleteFinanceController } from "./core/finances/controllers/deleteFinanceController";
 
 const router = Router();
 const multerConfig = multer();
@@ -182,6 +183,9 @@ router.get("/finance", authMiddleware, (request, response) => {
 });
 router.patch("/finance", authMiddleware, (request, response) => {
   updateFinanceController.handle(request, response);
+});
+router.delete("/finance", authMiddleware, (request, response) => {
+  deleteFinanceController.handle(request, response);
 });
 
 export { router };
