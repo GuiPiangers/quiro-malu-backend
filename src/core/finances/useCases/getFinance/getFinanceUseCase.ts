@@ -9,6 +9,6 @@ export class GetFinanceUseCase {
   async execute(data: getFinanceProps) {
     const finance = await this.financeRepository.get(data);
 
-    return finance.getDTO();
+    return finance;
   }
 }

@@ -174,7 +174,7 @@ router.post(
 router.post("/finance", authMiddleware, (request, response) => {
   createFinanceController.handle(request, response);
 });
-router.get("/finance:id", authMiddleware, (request, response) => {
+router.get("/finance/:id", authMiddleware, (request, response) => {
   getFinanceController.handle(request, response);
 });
 router.get("/finance", authMiddleware, (request, response) => {

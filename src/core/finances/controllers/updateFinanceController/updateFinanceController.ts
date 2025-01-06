@@ -19,7 +19,7 @@ export class UpdateFinanceController {
         userId,
       });
 
-      response.status(201).json(res);
+      response.status(200).json(res);
     } catch (err: any) {
       return responseError(response, err);
     }
