@@ -1,22 +1,21 @@
 import { Request, Response } from "express";
-import { UpdateFinanceUseCase } from "../../useCases/updateFinance/updateFinanceUseCase";
-import { FinanceDTO } from "../../models/Finance";
 import { responseError } from "../../../../utils/ResponseError";
 import { ApiError } from "../../../../utils/ApiError";
+import { DeleteFinanceUseCase } from "../../useCases/deleteFinance/getFinanceUseCase";
 
-export class UpdateFinanceController {
-  constructor(private updateFinanceUseCase: UpdateFinanceUseCase) {}
+export class DeleteFinanceController {
+  constructor(private deleteFinanceUseCase: DeleteFinanceUseCase) {}
 
   async handle(request: Request, response: Response) {
     try {
-      const data = request.body as FinanceDTO & { id: string };
+      const { id } = request.body;
       const userId = request.user.id;
 
       if (!userId) throw new ApiError("Usuário não autorizado", 401);
 
-      const res = await this.updateFinanceUseCase.execute({
-        ...data,
+      const res = await this.deleteFinanceUseCase.execute({
         userId,
+        id,
       });
 
       response.status(200).json(res);

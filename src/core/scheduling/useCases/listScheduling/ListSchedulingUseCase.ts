@@ -38,7 +38,11 @@ export class ListSchedulingUseCase {
           scheduling,
           clientStatusStrategy,
         ).getDTO();
-        return result;
+        return {
+          ...result,
+          patient: scheduling.patient,
+          phone: scheduling.phone,
+        };
       }),
       total: total[0].total,
       limit,

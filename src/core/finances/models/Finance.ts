@@ -12,8 +12,8 @@ export interface FinanceDTO {
 }
 
 export class Finance extends Entity {
-  readonly date: string;
   readonly description: string;
+  readonly date: string;
   readonly type: "income" | "expense";
   readonly paymentMethod: string;
   readonly value: number;
@@ -30,7 +30,7 @@ export class Finance extends Entity {
   }: FinanceDTO) {
     super(id);
 
-    this.date = new DateTime(date).date;
+    this.date = new DateTime(date).value;
     this.description = description;
     this.type = type;
     this.paymentMethod = paymentMethod;
@@ -40,6 +40,7 @@ export class Finance extends Entity {
 
   getDTO(): FinanceDTO {
     return {
+      id: this.id,
       date: this.date,
       description: this.description,
       type: this.type,
