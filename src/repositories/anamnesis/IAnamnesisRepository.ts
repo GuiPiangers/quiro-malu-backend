@@ -4,5 +4,5 @@ export interface IAnamnesisRepository {
   save(data: AnamnesisDTO, userId: string): Promise<void>;
   saveMany(data: (AnamnesisDTO & { userId: string })[]): Promise<void>;
   update(data: AnamnesisDTO, userId: string): Promise<void>;
-  get(patientId: string, userId: string): Promise<AnamnesisDTO[]>;
+  get(patientId: string, userId: string): Promise<AnamnesisDTO>;
 }

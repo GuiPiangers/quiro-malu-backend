@@ -10,14 +10,14 @@ export class GetAnamnesisController {
       const userId = request.user.id;
       const { patientId } = request.params;
 
-      console.log("patientId = ", patientId);
-
       const anamnesisData = await this.listAnamnesisUseCase.execute(
         patientId,
         userId!,
       );
 
-      response.json(anamnesisData);
+      console.log(anamnesisData);
+
+      response.send(anamnesisData);
     } catch (err: any) {
       responseError(response, err);
     }

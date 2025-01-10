@@ -4,11 +4,10 @@ export class GetAnamnesisUseCase {
   constructor(private AnamnesisRepository: IAnamnesisRepository) {}
 
   async execute(patientId: string, userId: string) {
-    const [anamnesisData] = await this.AnamnesisRepository.get(
-      patientId,
-      userId,
-    );
+    const anamnesisData = await this.AnamnesisRepository.get(patientId, userId);
 
-    return anamnesisData;
+    console.log("use case", anamnesisData);
+
+    return anamnesisData ?? {};
   }
 }
