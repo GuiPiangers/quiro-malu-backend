@@ -4,5 +4,5 @@ export interface IDiagnosticRepository {
   save(data: DiagnosticDTO, userId: string): Promise<void>;
   saveMany(data: (DiagnosticDTO & { userId: string })[]): Promise<void>;
   update(data: DiagnosticDTO, userId: string): Promise<void>;
-  get(patientId: string, userId: string): Promise<DiagnosticDTO[]>;
+  get(patientId: string, userId: string): Promise<DiagnosticDTO>;
 }

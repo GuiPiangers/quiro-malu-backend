@@ -4,11 +4,11 @@ export class GetDiagnosticUseCase {
   constructor(private diagnosticRepository: IDiagnosticRepository) {}
 
   async execute(patientId: string, userId: string) {
-    const [diagnosticData] = await this.diagnosticRepository.get(
+    const diagnosticData = await this.diagnosticRepository.get(
       patientId,
       userId,
     );
 
-    return diagnosticData;
+    return diagnosticData ?? {};
   }
 }

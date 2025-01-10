@@ -28,9 +28,9 @@ export class KnexDiagnosticRepository implements IDiagnosticRepository {
       .where({ patientId, userId });
   }
 
-  async get(patientId: string, userId: string): Promise<DiagnosticDTO[]> {
+  async get(patientId: string, userId: string): Promise<DiagnosticDTO> {
     const result = await Knex(ETableNames.DIAGNOSTICS)
-      .select("*")
+      .first("*")
       .where({ patientId, userId });
 
     return result;
