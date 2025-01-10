@@ -79,8 +79,6 @@ export class Scheduling extends Entity {
       duration: this.duration,
       status: this.status,
       service: this.service,
-      patient: this.patient,
-      phone: this.phone,
     };
   }
 

@@ -23,7 +23,7 @@ export class CreateSchedulingUseCase {
     if (scheduling.notAvailableDate(schedules))
       throw new ApiError("Horário indisponível", 400, "date");
 
-    await this.SchedulingRepository.save({ userId, ...schedulingDTO });
+    await this.SchedulingRepository.save({ ...schedulingDTO, userId });
 
     return schedulingDTO;
   }

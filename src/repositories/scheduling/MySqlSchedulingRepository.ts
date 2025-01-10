@@ -10,7 +10,6 @@ import { ISchedulingRepository } from "../scheduling/ISchedulingRepository";
 
 export class MySqlSchedulingRepository implements ISchedulingRepository {
   async save({
-    userId,
     createAt,
     updateAt,
     ...data
