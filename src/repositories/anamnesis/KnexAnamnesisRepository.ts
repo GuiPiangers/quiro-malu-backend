@@ -35,8 +35,8 @@ export class KnexAnamnesisRepository implements IAnamnesisRepository {
 
     return getValidObjectValues({
       ...result,
-      underwentSurgery: result.underwentSurgery == 1,
-      useMedicine: result.useMedicine == 1,
+      underwentSurgery: result?.underwentSurgery == 1,
+      useMedicine: result?.useMedicine == 1,
     });
   }
 }
