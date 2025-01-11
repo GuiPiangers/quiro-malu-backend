@@ -2,8 +2,10 @@ import { KnexDiagnosticRepository } from "../../../../repositories/diagnostic/Kn
 import { SetDiagnosticUseCase } from "../../useCases/diagnostic/setDiagnostic/SetDiagnosticUseCase";
 import { SetDiagnosticController } from "./SetDiagnosticController";
 
-const DiagnosticRepository = new KnexDiagnosticRepository()
-const setDiagnosticUseCase = new SetDiagnosticUseCase(DiagnosticRepository)
-const setDiagnosticController = new SetDiagnosticController(setDiagnosticUseCase)
+const DiagnosticRepository = new KnexDiagnosticRepository();
+const setDiagnosticUseCase = new SetDiagnosticUseCase(DiagnosticRepository);
+const setDiagnosticController = new SetDiagnosticController(
+  setDiagnosticUseCase,
+);
 
-export { setDiagnosticController }
+export { setDiagnosticController };

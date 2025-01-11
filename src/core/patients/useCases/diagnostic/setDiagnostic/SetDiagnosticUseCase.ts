@@ -6,7 +6,7 @@ export class SetDiagnosticUseCase {
   constructor(private DiagnosticRepository: IDiagnosticRepository) {}
   async execute(data: DiagnosticDTO, userId: string) {
     const { patientId, diagnostic, treatmentPlan } = new Diagnostic(data);
-    const [diagnosticAlreadyExist] = await this.DiagnosticRepository.get(
+    const diagnosticAlreadyExist = await this.DiagnosticRepository.get(
       data.patientId,
       userId,
     );
