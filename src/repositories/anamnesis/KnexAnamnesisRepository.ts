@@ -33,10 +33,13 @@ export class KnexAnamnesisRepository implements IAnamnesisRepository {
       .first("*")
       .where({ patientId, userId });
 
+    const underwentSurgery = result ? result.underwentSurgery == 1 : undefined;
+    const useMedicine = result ? result.useMedicine == 1 : undefined;
+
     return getValidObjectValues({
       ...result,
-      underwentSurgery: result?.underwentSurgery == 1,
-      useMedicine: result?.useMedicine == 1,
+      underwentSurgery,
+      useMedicine,
     });
   }
 }

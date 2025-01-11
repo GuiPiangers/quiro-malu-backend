@@ -6,8 +6,6 @@ export class GetAnamnesisUseCase {
   async execute(patientId: string, userId: string) {
     const anamnesisData = await this.AnamnesisRepository.get(patientId, userId);
 
-    console.log("use case", anamnesisData);
-
     return anamnesisData ?? {};
   }
 }
