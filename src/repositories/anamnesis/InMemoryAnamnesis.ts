@@ -27,12 +27,12 @@ export class InMemoryAnamnesis implements IAnamnesisRepository {
     };
   }
 
-  async get(patientId: string): Promise<AnamnesisDTO[]> {
+  async get(patientId: string): Promise<AnamnesisDTO> {
     const selectedUser = await this.dbLocation.find(
       (location) => location.patientId === patientId,
     );
 
-    if (selectedUser) return [selectedUser];
-    else return [];
+    if (selectedUser) return selectedUser;
+    else return { patientId: "" };
   }
 }

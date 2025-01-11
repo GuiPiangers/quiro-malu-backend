@@ -29,12 +29,12 @@ export class InMemoryDiagnostic implements IDiagnosticRepository {
     };
   }
 
-  async get(patientId: string): Promise<DiagnosticDTO[]> {
+  async get(patientId: string): Promise<DiagnosticDTO> {
     const selectedUser = await this.dbLocation.find(
       (location) => location.patientId === patientId,
     );
 
-    if (selectedUser) return [selectedUser];
-    else return [];
+    if (selectedUser) return selectedUser;
+    else return { patientId: "" };
   }
 }
