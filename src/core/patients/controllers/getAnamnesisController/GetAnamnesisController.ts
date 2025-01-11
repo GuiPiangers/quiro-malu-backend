@@ -15,8 +15,6 @@ export class GetAnamnesisController {
         userId!,
       );
 
-      console.log(anamnesisData);
-
       response.send(anamnesisData);
     } catch (err: any) {
       responseError(response, err);
