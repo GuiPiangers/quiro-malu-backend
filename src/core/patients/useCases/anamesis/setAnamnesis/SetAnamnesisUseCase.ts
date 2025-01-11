@@ -9,7 +9,6 @@ export class SetAnamnesisUseCase {
       await this.anamnesisRepository.get(data.patientId, userId)
     ).patientId;
 
-    console.log(anamnesisAlreadyExist);
     if (anamnesisAlreadyExist) {
       await this.anamnesisRepository.update(data, userId);
     } else {

@@ -13,12 +13,12 @@ export class UpdateSchedulingController {
       };
       const userId = request.user.id;
 
-      const scheduling = await this.realizeSchedulingUseCase.execute({
+      await this.realizeSchedulingUseCase.execute({
         userId: userId!,
         patientId: data.patientId,
         schedulingId: data.id,
       });
-      response.status(201).json(scheduling);
+      response.status(201).json({ message: "Consulta realizada com sucesso!" });
     } catch (err: any) {
       return responseError(response, err);
     }

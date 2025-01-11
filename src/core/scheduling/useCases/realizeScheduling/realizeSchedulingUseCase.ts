@@ -31,7 +31,7 @@ export class RealizeSchedulingUseCase {
         401,
       );
     }
-    return await this.schedulingRepository.update({
+    await this.schedulingRepository.update({
       id: schedulingId,
       userId,
       status: "Atendido",
