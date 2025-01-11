@@ -36,9 +36,10 @@ describe("SetAnamnesisUseCase", () => {
 
     const anamnesis = new Anamnesis(data);
 
-    mockAnamnesisRepository.get.mockResolvedValue([
-      { ...anamnesis, patientId: anamnesis.patientId! },
-    ]);
+    mockAnamnesisRepository.get.mockResolvedValue({
+      ...anamnesis,
+      patientId: anamnesis.patientId!,
+    });
 
     const result = await setAnamnesisUseCase.execute(data, userId);
 
@@ -68,8 +69,6 @@ describe("SetAnamnesisUseCase", () => {
     };
     const userId = "user456";
 
-    mockAnamnesisRepository.get.mockResolvedValue([]);
-
     const result = await setAnamnesisUseCase.execute(data, userId);
 
     expect(mockAnamnesisRepository.get).toHaveBeenCalledWith(
@@ -81,7 +80,6 @@ describe("SetAnamnesisUseCase", () => {
     expect(result).toBeInstanceOf(Anamnesis);
     expect(result).toEqual(expect.objectContaining(data));
   });
-
   test("should return an instance of Anamnesis with correct data", async () => {
     const data: AnamnesisDTO = {
       patientId: "patient123",
@@ -97,8 +95,6 @@ describe("SetAnamnesisUseCase", () => {
       surgeries: "surgeries",
     };
     const userId = "user456";
-
-    mockAnamnesisRepository.get.mockResolvedValue([]);
 
     const result = await setAnamnesisUseCase.execute(data, userId);
 

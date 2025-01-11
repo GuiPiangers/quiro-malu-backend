@@ -34,7 +34,7 @@ describe("Get anamnesis use case", () => {
       useMedicine: true,
     };
 
-    mockAnamnesisRepository.get.mockResolvedValue([anamnesisData]);
+    mockAnamnesisRepository.get.mockResolvedValue(anamnesisData);
 
     const result = await getAnamnesisUseCase.execute(patientId, userId);
     expect(result).toEqual(anamnesisData);
@@ -46,11 +46,11 @@ describe("Get anamnesis use case", () => {
     const patientId = "patient123";
     const userId = "user456";
 
-    mockAnamnesisRepository.get.mockResolvedValue([]);
+    mockAnamnesisRepository.get.mockResolvedValue(undefined);
 
     const result = await getAnamnesisUseCase.execute(patientId, userId);
 
-    expect(result).toBeUndefined();
+    expect(result).toEqual({});
     expect(mockAnamnesisRepository.get).toHaveBeenCalledTimes(1);
     expect(mockAnamnesisRepository.get).toHaveBeenCalledWith(patientId, userId);
   });

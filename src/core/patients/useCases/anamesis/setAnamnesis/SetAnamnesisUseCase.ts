@@ -5,7 +5,7 @@ export class SetAnamnesisUseCase {
   constructor(private anamnesisRepository: IAnamnesisRepository) {}
   async execute(data: AnamnesisDTO, userId: string) {
     const anamnesis = new Anamnesis(data);
-    const [anamnesisAlreadyExist] = await this.anamnesisRepository.get(
+    const anamnesisAlreadyExist = await this.anamnesisRepository.get(
       data.patientId,
       userId,
     );
