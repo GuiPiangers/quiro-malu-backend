@@ -16,7 +16,7 @@ export class SetFinanceUseCase {
       userId,
     });
 
-    if (financeAlreadyExist.id)
+    if (financeAlreadyExist)
       return await this.financeRepository.update({
         ...financeDTO,
         id: finance.id,
