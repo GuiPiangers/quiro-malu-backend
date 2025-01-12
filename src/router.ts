@@ -33,7 +33,7 @@ import { realizeSchedulingController } from "./core/scheduling/controllers/reali
 import multer from "multer";
 import { getProgressBySchedulingController } from "./core/patients/controllers/progress/getProgressBySchedulingController";
 import { uploadPatientsController } from "./core/patients/controllers/uploadPatientsController";
-import { createFinanceController } from "./core/finances/controllers/setFinanceController";
+import { setFinanceController } from "./core/finances/controllers/setFinanceController";
 import { getFinanceController } from "./core/finances/controllers/getFinanceController";
 import { listFinanceController } from "./core/finances/controllers/listFinancesController";
 import { updateFinanceController } from "./core/finances/controllers/updateFinanceController";
@@ -173,7 +173,7 @@ router.post(
 );
 
 router.post("/finance", authMiddleware, (request, response) => {
-  createFinanceController.handle(request, response);
+  setFinanceController.handle(request, response);
 });
 router.get("/finance/:id", authMiddleware, (request, response) => {
   getFinanceController.handle(request, response);
