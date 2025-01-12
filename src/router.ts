@@ -38,6 +38,7 @@ import { getFinanceController } from "./core/finances/controllers/getFinanceCont
 import { listFinanceController } from "./core/finances/controllers/listFinancesController";
 import { updateFinanceController } from "./core/finances/controllers/updateFinanceController";
 import { deleteFinanceController } from "./core/finances/controllers/deleteFinanceController";
+import { getFinanceBySchedulingController } from "./core/finances/controllers/getFinanceBySchedulingController";
 
 const router = Router();
 const multerConfig = multer();
@@ -181,6 +182,13 @@ router.get("/finance/:id", authMiddleware, (request, response) => {
 router.get("/finance", authMiddleware, (request, response) => {
   listFinanceController.handle(request, response);
 });
+router.get(
+  "/finance/scheduling/:schedulingId",
+  authMiddleware,
+  (request, response) => {
+    getFinanceBySchedulingController.handle(request, response);
+  },
+);
 router.patch("/finance", authMiddleware, (request, response) => {
   updateFinanceController.handle(request, response);
 });
