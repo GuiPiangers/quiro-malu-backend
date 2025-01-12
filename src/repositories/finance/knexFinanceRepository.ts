@@ -7,6 +7,7 @@ import {
   getFinanceProps,
   IFinanceRepository,
   listFinanceProps,
+  getBySchedulingFinanceProps,
 } from "./IFinanceRepository";
 
 export class KnexFinanceRepository implements IFinanceRepository {
@@ -33,6 +34,19 @@ export class KnexFinanceRepository implements IFinanceRepository {
         ),
       )
       .where({ id, userId });
+  }
+
+  async getByScheduling({
+    schedulingId,
+    userId,
+  }: getBySchedulingFinanceProps): Promise<FinanceDTO> {
+    return await Knex(ETableNames.FINANCES)
+      .first(
+        Knex.raw(
+          "value, description, DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date, id, patientId, type, paymentMethod",
+        ),
+      )
+      .where({ schedulingId, userId });
   }
 
   async list({ userId, config }: listFinanceProps): Promise<FinanceDTO[]> {
