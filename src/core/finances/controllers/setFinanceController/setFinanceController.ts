@@ -14,12 +14,12 @@ export class SetFinanceController {
 
       if (!userId) throw new ApiError("Usuário não autorizado", 401);
 
-      const res = await this.setFinanceUseCase.execute({
+      await this.setFinanceUseCase.execute({
         ...data,
         userId,
       });
 
-      response.status(201).json(res);
+      response.status(201).json({ message: "Finance criada com sucesso" });
     } catch (err: any) {
       return responseError(response, err);
     }
