@@ -9,6 +9,8 @@ export interface FinanceDTO {
   paymentMethod: string;
   value: number;
   patientId?: string;
+  schedulingId?: string;
+  service?: string;
 }
 
 export class Finance extends Entity {
@@ -18,6 +20,8 @@ export class Finance extends Entity {
   readonly paymentMethod: string;
   readonly value: number;
   readonly patientId?: string;
+  readonly schedulingId?: string;
+  readonly service?: string;
 
   constructor({
     date,
@@ -27,6 +31,8 @@ export class Finance extends Entity {
     value,
     patientId,
     id,
+    schedulingId,
+    service,
   }: FinanceDTO) {
     super(id);
 
@@ -36,6 +42,8 @@ export class Finance extends Entity {
     this.paymentMethod = paymentMethod;
     this.value = value;
     this.patientId = patientId;
+    this.schedulingId = schedulingId;
+    this.service = service;
   }
 
   getDTO(): FinanceDTO {
@@ -47,6 +55,8 @@ export class Finance extends Entity {
       paymentMethod: this.paymentMethod,
       value: this.value,
       patientId: this.patientId,
+      schedulingId: this.schedulingId,
+      service: this.service,
     };
   }
 }
