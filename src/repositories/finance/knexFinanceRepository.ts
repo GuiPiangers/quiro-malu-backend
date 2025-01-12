@@ -2,7 +2,7 @@ import { Finance, FinanceDTO } from "../../core/finances/models/Finance";
 import { Knex } from "../../database";
 import { ETableNames } from "../../database/ETableNames";
 import {
-  createFinanceProps,
+  setFinanceProps,
   deleteFinanceProps,
   getFinanceProps,
   IFinanceRepository,
@@ -10,14 +10,14 @@ import {
 } from "./IFinanceRepository";
 
 export class KnexFinanceRepository implements IFinanceRepository {
-  async create({ userId, ...data }: createFinanceProps): Promise<void> {
+  async create({ userId, ...data }: setFinanceProps): Promise<void> {
     return await Knex(ETableNames.FINANCES).insert({
       ...data,
       userId,
     });
   }
 
-  async update({ userId, id, ...data }: createFinanceProps): Promise<void> {
+  async update({ userId, id, ...data }: setFinanceProps): Promise<void> {
     await Knex(ETableNames.FINANCES).update(data).where({ id, userId });
   }
 

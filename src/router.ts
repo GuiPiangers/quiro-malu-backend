@@ -33,7 +33,7 @@ import { realizeSchedulingController } from "./core/scheduling/controllers/reali
 import multer from "multer";
 import { getProgressBySchedulingController } from "./core/patients/controllers/progress/getProgressBySchedulingController";
 import { uploadPatientsController } from "./core/patients/controllers/uploadPatientsController";
-import { createFinanceController } from "./core/finances/controllers/createFinanceController";
+import { createFinanceController } from "./core/finances/controllers/setFinanceController";
 import { getFinanceController } from "./core/finances/controllers/getFinanceController";
 import { listFinanceController } from "./core/finances/controllers/listFinancesController";
 import { updateFinanceController } from "./core/finances/controllers/updateFinanceController";

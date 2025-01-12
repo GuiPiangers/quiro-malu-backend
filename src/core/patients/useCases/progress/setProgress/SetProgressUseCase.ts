@@ -7,11 +7,13 @@ export class SetProgressUseCase {
   async execute({ userId, ...data }: ProgressDTO & { userId: string }) {
     const progress = new Progress(data);
     const progressDTO = progress.getDTO();
+
     const [progressAlreadyExist] = await this.ProgressRepository.get({
       id: progressDTO.id!,
       patientId: progressDTO.patientId,
       userId,
     });
+
     if (!data.patientId) throw new ApiError("Deve ser informado o patientId");
 
     if (progressAlreadyExist) {
