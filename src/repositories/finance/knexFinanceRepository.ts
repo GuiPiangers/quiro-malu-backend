@@ -54,6 +54,7 @@ export class KnexFinanceRepository implements IFinanceRepository {
     yearAndMonth: date,
     config,
   }: listFinanceProps): Promise<FinanceDTO[]> {
+    console.log(date);
     const result = Knex(ETableNames.FINANCES)
       .select(
         Knex.raw(
@@ -61,7 +62,7 @@ export class KnexFinanceRepository implements IFinanceRepository {
         ),
       )
       .where({ userId })
-      .andWhere("date_format(date, '%Y-%m')", "=", `%${date}%`)
+      .andWhere(Knex.raw("date_format(date, '%Y-%m')"), "=", `${date}`)
       .orderByRaw("date");
 
     if (config?.limit !== undefined && config?.offSet !== undefined) {
