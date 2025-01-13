@@ -49,7 +49,11 @@ export class KnexFinanceRepository implements IFinanceRepository {
       .where({ schedulingId, userId });
   }
 
-  async list({ userId, config }: listFinanceProps): Promise<FinanceDTO[]> {
+  async list({
+    userId,
+    yearAndMonth: date,
+    config,
+  }: listFinanceProps): Promise<FinanceDTO[]> {
     const result = Knex(ETableNames.FINANCES)
       .select(
         Knex.raw(
@@ -57,6 +61,7 @@ export class KnexFinanceRepository implements IFinanceRepository {
         ),
       )
       .where({ userId })
+      .andWhere("date_format(date, '%Y-%m')", "=", `%${date}%`)
       .orderByRaw("date");
 
     if (config?.limit !== undefined && config?.offSet !== undefined) {

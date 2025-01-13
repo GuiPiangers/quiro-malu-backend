@@ -10,6 +10,7 @@ export type getBySchedulingFinanceProps = {
 };
 export type listFinanceProps = {
   userId: string;
+  yearAndMonth: string;
   config?: { limit: number; offSet: number };
 };
 

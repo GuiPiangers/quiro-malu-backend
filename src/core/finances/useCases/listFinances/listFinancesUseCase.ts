@@ -6,7 +6,11 @@ import {
 export class ListFinancesUseCase {
   constructor(private financeRepository: IFinanceRepository) {}
 
-  async execute({ userId, config }: listFinanceProps) {
-    return await this.financeRepository.list({ userId, config });
+  async execute({ userId, yearAndMonth, config }: listFinanceProps) {
+    return await this.financeRepository.list({
+      userId,
+      yearAndMonth,
+      config,
+    });
   }
 }
