@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
 import { ApiError } from "../../../../utils/ApiError";
-import { DeleteFinanceUseCase } from "../../useCases/deleteFinance/getFinanceUseCase";
+import { DeleteFinanceUseCase } from "../../useCases/deleteFinance/deleteFinanceUseCase";
 
 export class DeleteFinanceController {
   constructor(private deleteFinanceUseCase: DeleteFinanceUseCase) {}
@@ -18,7 +18,7 @@ export class DeleteFinanceController {
         id,
       });
 
-      response.status(200).json(res);
+      response.status(200).json({ message: "Finança deletada com sucesso!" });
     } catch (err: any) {
       return responseError(response, err);
     }

@@ -1,5 +1,5 @@
 import { KnexFinanceRepository } from "../../../../repositories/finance/knexFinanceRepository";
-import { DeleteFinanceUseCase } from "../../useCases/deleteFinance/getFinanceUseCase";
+import { DeleteFinanceUseCase } from "../../useCases/deleteFinance/deleteFinanceUseCase";
 import { DeleteFinanceController } from "./deleteFinanceController";
 
 const financeRepository = new KnexFinanceRepository();

@@ -54,7 +54,6 @@ export class KnexFinanceRepository implements IFinanceRepository {
     yearAndMonth: date,
     config,
   }: listFinanceProps): Promise<FinanceDTO[]> {
-    console.log(date);
     const result = Knex(ETableNames.FINANCES)
       .select(
         Knex.raw(
