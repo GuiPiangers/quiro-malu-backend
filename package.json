@@ -18,6 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.730.0",
     "@date-fns/tz": "^1.2.0",
     "@date-fns/utc": "^2.1.0",
     "@types/multer": "^1.4.12",
