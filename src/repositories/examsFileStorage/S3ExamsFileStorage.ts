@@ -1,6 +1,5 @@
 import { s3Client } from "../../database/AWS/S3";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { Upload } from "@aws-sdk/lib-storage";
 
 import {
   deleteExamProps,
@@ -13,10 +12,11 @@ const bucketName = process.env.BUCKET_NAME!;
 
 export class S3ExamsFileStorage implements IExamsFileStorageRepository {
   async save({ file, userId, fileName }: saveExamProps): Promise<void> {
+    console.log(file);
     const params = {
       Bucket: bucketName,
       Key: `${userId}/${fileName}`,
-      Body: file.stream,
+      Body: file.buffer,
       ContentType: file.mimetype,
     };
 
