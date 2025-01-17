@@ -199,7 +199,7 @@ router.delete("/finance", authMiddleware, (request, response) => {
 });
 
 router.post(
-  "/exams",
+  "/exams/:patientId",
   authMiddleware,
   multerConfig.single("file"),
   (request, response) => {
