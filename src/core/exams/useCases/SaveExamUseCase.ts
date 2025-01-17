@@ -1,14 +1,39 @@
+import { IExamsFileStorageRepository } from "../../../repositories/examsFileStorage/IExamsFileStorageRepository";
 import { IExamsRepository } from "../../../repositories/examsRepository/IExamsRepository";
 import { Exam, ExamDTO } from "../models/Exam";
 
 export class SaveExamUseCase {
-  constructor(private examRepository: IExamsRepository) {}
+  constructor(
+    private examRepository: IExamsRepository,
+    private examFileStorage: IExamsFileStorageRepository,
+  ) {}
 
-  async execute(data: ExamDTO & { userId: string }) {
-    const { userId, ...examData } = data;
-    const exam = new Exam(examData);
-    const examDTO = exam.getDTO();
+  async execute({
+    file,
+    patientId,
+    userId,
+  }: {
+    file: Express.Multer.File;
+    patientId: string;
+    userId: string;
+  }) {
+    const fileName = file.originalname;
+    const fileSize = file.size;
 
-    await this.examRepository.save({ ...examDTO, userId });
+    const exam = new Exam({ fileName, fileSize, patientId });
+
+    await this.examRepository.save({
+      fileName,
+      fileSize,
+      patientId,
+      userId,
+      id: exam.id,
+    });
+
+    await this.examFileStorage.save({
+      file,
+      fileName,
+      userId,
+    });
   }
 }
