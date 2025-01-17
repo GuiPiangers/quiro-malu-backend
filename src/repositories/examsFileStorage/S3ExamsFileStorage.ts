@@ -1,5 +1,6 @@
 import { s3Client } from "../../database/AWS/S3";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import {
   deleteExamProps,
@@ -29,8 +30,17 @@ export class S3ExamsFileStorage implements IExamsFileStorageRepository {
     await s3Client.send(command);
   }
 
-  async get(data: getExamProps): Promise<Buffer> {
-    throw new Error("Method not implemented.");
+  async get({ userId, patientId, id }: getExamProps): Promise<string> {
+    const getObjectParams = {
+      Bucket: bucketName,
+      Key: `${userId}/${patientId}/${id}`,
+    };
+
+    const command = new GetObjectCommand(getObjectParams);
+
+    const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+
+    return url;
   }
 
   async delete(data: deleteExamProps): Promise<void> {
