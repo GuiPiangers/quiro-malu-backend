@@ -12,7 +12,6 @@ const bucketName = process.env.BUCKET_NAME!;
 
 export class S3ExamsFileStorage implements IExamsFileStorageRepository {
   async save({ file, userId, fileName }: saveExamProps): Promise<void> {
-    console.log(file);
     const params = {
       Bucket: bucketName,
       Key: `${userId}/${fileName}`,
