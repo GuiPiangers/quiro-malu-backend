@@ -5,7 +5,6 @@ export type saveExamRepositoryRepositoryProps = {
   id: string;
   patientId: string;
   fileName: string;
-  fileType: string;
   fileSize?: number;
 };
 export type getExamRepositoryProps = {
