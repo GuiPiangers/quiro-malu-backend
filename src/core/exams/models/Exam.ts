@@ -22,7 +22,7 @@ export class Exam extends Entity {
     this.fileSize = fileSize;
   }
 
-  getDTO(): ExamDTO {
+  getDTO() {
     return {
       id: this.id,
       patientId: this.patientId,
