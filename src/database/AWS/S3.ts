@@ -11,8 +11,8 @@ export const s3Client = isDevelopment
         accessKeyId,
         secretAccessKey,
       },
-      region: process.env.BUCKET_REGION || "us-east-1",
+      region: process.env.BUCKET_REGION || "sa-east-1",
     })
   : new S3Client({
-      region: process.env.BUCKET_REGION || "us-east-1",
+      region: process.env.BUCKET_REGION || "sa-east-1",
     });
