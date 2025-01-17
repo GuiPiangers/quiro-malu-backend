@@ -25,7 +25,7 @@ export type deleteExamRepositoryProps = {
   id: string;
 };
 
-export interface IExamsFileRepository {
+export interface IExamsRepository {
   save(data: saveExamRepositoryRepositoryProps): Promise<void>;
   get(data: getExamRepositoryProps): Promise<ExamDTO>;
   list(data: listExamRepositoryProps): Promise<ExamDTO[]>;

@@ -4,12 +4,12 @@ import { ETableNames } from "../../database/ETableNames";
 import {
   deleteExamRepositoryProps,
   getExamRepositoryProps,
-  IExamsFileRepository,
+  IExamsRepository,
   listExamRepositoryProps,
   saveExamRepositoryRepositoryProps,
-} from "./IExamsFileRepository";
+} from "./IExamsRepository";
 
-export class KnexExamsRepository implements IExamsFileRepository {
+export class KnexExamsRepository implements IExamsRepository {
   async save(data: saveExamRepositoryRepositoryProps) {
     await Knex(ETableNames.EXAMS).insert(data);
   }
