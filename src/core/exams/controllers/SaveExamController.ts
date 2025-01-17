@@ -9,10 +9,12 @@ export class SaveExamController {
   async handle(request: Request, response: Response) {
     try {
       const { id: userId } = request.user;
-      const { patientId, file } = request.body as {
-        file: Express.Multer.File;
+      const { patientId } = request.params as {
         patientId: string;
       };
+      const file = request.file;
+
+      if (!file) throw new ApiError("Nenhum arquivo enviado", 400);
 
       if (!userId) throw new ApiError("Acesso não autorizado", 401);
 
@@ -22,9 +24,9 @@ export class SaveExamController {
         file,
       });
 
-      response.json({ message: "Exame salvo com sucesso" });
+      response.status(200).json({ message: "Exame salvo com sucesso" });
     } catch (error: any) {
-      responseError(error, response);
+      responseError(response, error);
     }
   }
 }
