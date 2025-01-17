@@ -6,7 +6,6 @@ export async function up(knex: Knex): Promise<void> {
     table.string("id", 100).primary().index();
     table.string("userId", 100).index().notNullable();
     table.string("patientId", 100).index().notNullable();
-    table.string("fileType", 15).notNullable();
     table.string("fileName", 100).index().notNullable();
     table.string("fileSize", 25);
     table.timestamps(true, true);
