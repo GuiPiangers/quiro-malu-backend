@@ -6,6 +6,8 @@ export type saveExamProps = {
 };
 export type getExamProps = {
   userId: string;
+  patientId: string;
+  id: string;
 };
 
 export type deleteExamProps = {
@@ -14,6 +16,6 @@ export type deleteExamProps = {
 
 export interface IExamsFileStorageRepository {
   save(data: saveExamProps): Promise<void>;
-  get(data: getExamProps): Promise<Buffer>;
+  get(data: getExamProps): Promise<string>;
   delete(data: deleteExamProps): Promise<void>;
 }
