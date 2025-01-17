@@ -21,19 +21,21 @@ export class SaveExamUseCase {
     const fileSize = file.size;
 
     const exam = new Exam({ fileName, fileSize, patientId });
+    const id = exam.id;
 
     await this.examRepository.save({
       fileName,
       fileSize,
       patientId,
       userId,
-      id: exam.id,
+      id,
     });
 
     await this.examFileStorage.save({
       file,
-      fileName,
+      id,
       userId,
+      patientId,
     });
   }
 }

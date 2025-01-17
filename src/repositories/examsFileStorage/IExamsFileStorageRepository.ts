@@ -1,7 +1,8 @@
 export type saveExamProps = {
   userId: string;
   file: Express.Multer.File;
-  fileName: string;
+  patientId: string;
+  id: string;
 };
 export type getExamProps = {
   userId: string;

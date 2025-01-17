@@ -11,10 +11,15 @@ import {
 const bucketName = process.env.BUCKET_NAME!;
 
 export class S3ExamsFileStorage implements IExamsFileStorageRepository {
-  async save({ file, userId, fileName }: saveExamProps): Promise<void> {
+  async save({
+    file,
+    userId,
+    patientId,
+    id: fileName,
+  }: saveExamProps): Promise<void> {
     const params = {
       Bucket: bucketName,
-      Key: `${userId}/${fileName}`,
+      Key: `${userId}/${patientId}/${fileName}`,
       Body: file.buffer,
       ContentType: file.mimetype,
     };
