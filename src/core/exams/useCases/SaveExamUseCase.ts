@@ -1,7 +1,7 @@
 import { IExamsRepository } from "../../../repositories/examsRepository/IExamsRepository";
 import { Exam, ExamDTO } from "../models/Exam";
 
-export class saveExamUseCase {
+export class SaveExamUseCase {
   constructor(private examRepository: IExamsRepository) {}
 
   async execute(data: ExamDTO & { userId: string }) {
