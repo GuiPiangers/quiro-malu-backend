@@ -1,6 +1,6 @@
-import { S3ExamsFileStorage } from "../../../repositories/examsFileStorage/S3ExamsFileStorage";
-import { KnexExamsRepository } from "../../../repositories/examsRepository/KnexExamsRepository";
-import { SaveExamUseCase } from "../useCases/SaveExamUseCase";
+import { S3ExamsFileStorage } from "../../../../repositories/examsFileStorage/S3ExamsFileStorage";
+import { KnexExamsRepository } from "../../../../repositories/examsRepository/KnexExamsRepository";
+import { SaveExamUseCase } from "../../useCases/SaveExamUseCase";
 import { SaveExamController } from "./SaveExamController";
 
 const examStorage = new S3ExamsFileStorage();

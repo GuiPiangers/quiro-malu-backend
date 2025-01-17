@@ -40,7 +40,7 @@ import { updateFinanceController } from "./core/finances/controllers/updateFinan
 import { deleteFinanceController } from "./core/finances/controllers/deleteFinanceController";
 import { getFinanceBySchedulingController } from "./core/finances/controllers/getFinanceBySchedulingController";
 import { S3ExamsFileStorage } from "./repositories/examsFileStorage/S3ExamsFileStorage";
-import { saveExamController } from "./core/exams/controllers";
+import { saveExamController } from "./core/exams/controllers/saveExamController";
 
 const router = Router();
 const multerConfig = multer();

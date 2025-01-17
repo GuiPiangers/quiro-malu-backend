@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { SaveExamUseCase } from "../useCases/SaveExamUseCase";
-import { ApiError } from "../../../utils/ApiError";
-import { responseError } from "../../../utils/ResponseError";
+import { SaveExamUseCase } from "../../useCases/SaveExamUseCase";
+import { ApiError } from "../../../../utils/ApiError";
+import { responseError } from "../../../../utils/ResponseError";
 
 export class SaveExamController {
   constructor(private saveExamUseCase: SaveExamUseCase) {}
