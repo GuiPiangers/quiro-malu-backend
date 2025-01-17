@@ -9,4 +9,5 @@ export enum ETableNames {
   REFRESH_TOKEN = "refresh_token",
   SCHEDULES = "schedules",
   FINANCES = "finances",
+  EXAMS = "exams",
 }
