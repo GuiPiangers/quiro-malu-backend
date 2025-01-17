@@ -1,5 +1,5 @@
-import { IExamsRepository } from "../../../../repositories/examsRepository/IExamsRepository";
-import { Exam, ExamDTO } from "../Exam";
+import { IExamsRepository } from "../../../repositories/examsRepository/IExamsRepository";
+import { Exam, ExamDTO } from "../models/Exam";
 
 export class saveExamUseCase {
   constructor(private examRepository: IExamsRepository) {}
