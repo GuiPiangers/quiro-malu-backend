@@ -2,7 +2,7 @@ import { ExamDTO } from "../../core/exams/models/Exam";
 
 export type saveExamRepositoryRepositoryProps = {
   userId: string;
-  id?: string;
+  id: string;
   patientId: string;
   fileName: string;
   fileType: string;
@@ -21,6 +21,7 @@ export type listExamRepositoryProps = {
 
 export type deleteExamRepositoryProps = {
   userId: string;
+  patientId: string;
   id: string;
 };
 
