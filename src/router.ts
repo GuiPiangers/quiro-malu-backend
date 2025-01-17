@@ -40,6 +40,7 @@ import { updateFinanceController } from "./core/finances/controllers/updateFinan
 import { deleteFinanceController } from "./core/finances/controllers/deleteFinanceController";
 import { getFinanceBySchedulingController } from "./core/finances/controllers/getFinanceBySchedulingController";
 import { S3ExamsFileStorage } from "./repositories/examsFileStorage/S3ExamsFileStorage";
+import { saveExamController } from "./core/exams/controllers";
 
 const router = Router();
 const multerConfig = multer();
@@ -202,24 +203,7 @@ router.post(
   authMiddleware,
   multerConfig.single("file"),
   (request, response) => {
-    const examStorage = new S3ExamsFileStorage();
-
-    const { file, user } = request;
-
-    if (!file) {
-      response.status(400).send({ message: "Nenhum arquivo foi enviado" });
-      return;
-    }
-    if (!user.id) {
-      response.status(400).send({ message: "Usuário não autenticado" });
-      return;
-    }
-
-    examStorage
-      .save({ file, userId: user.id, fileName: "guilherme" })
-      .then(() => {
-        response.send({ message: "Arquivo salvo com sucesso" });
-      });
+    saveExamController.handle(request, response);
   },
 );
 
