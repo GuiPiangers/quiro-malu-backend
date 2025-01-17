@@ -26,7 +26,7 @@ export class S3ExamsFileStorage implements IExamsFileStorageRepository {
 
     const command = new PutObjectCommand(params);
 
-    s3Client.send(command);
+    await s3Client.send(command);
   }
 
   async get(data: getExamProps): Promise<Buffer> {
