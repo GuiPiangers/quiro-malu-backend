@@ -12,6 +12,8 @@ export type getExamProps = {
 
 export type deleteExamProps = {
   userId: string;
+  patientId: string;
+  id: string;
 };
 
 export interface IExamsFileStorageRepository {
