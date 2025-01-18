@@ -42,6 +42,7 @@ import { getFinanceBySchedulingController } from "./core/finances/controllers/ge
 import { S3ExamsFileStorage } from "./repositories/examsFileStorage/S3ExamsFileStorage";
 import { saveExamController } from "./core/exams/controllers/saveExamController";
 import { getExamController } from "./core/exams/controllers/getExamController";
+import { deleteExamController } from "./core/exams/controllers/deleteExamController";
 
 const router = Router();
 const multerConfig = multer();
@@ -210,6 +211,9 @@ router.post(
 
 router.get("/exams/:patientId/:id", authMiddleware, (request, response) => {
   getExamController.handle(request, response);
+});
+router.delete("/exams/:patientId/:id", authMiddleware, (request, response) => {
+  deleteExamController.handle(request, response);
 });
 
 export { router };
