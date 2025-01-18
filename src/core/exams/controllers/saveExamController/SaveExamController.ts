@@ -17,6 +17,7 @@ export class SaveExamController {
       if (!file) throw new ApiError("Nenhum arquivo enviado", 400);
 
       if (!userId) throw new ApiError("Acesso não autorizado", 401);
+      if (!patientId) throw new ApiError("Paciente não enviado", 400);
 
       await this.saveExamUseCase.execute({
         patientId,
