@@ -19,6 +19,11 @@ export type listExamRepositoryProps = {
   config: { limit: number; offset: number };
 };
 
+export type countExamRepositoryProps = {
+  userId: string;
+  patientId: string;
+};
+
 export type deleteExamRepositoryProps = {
   userId: string;
   patientId: string;
@@ -30,4 +35,5 @@ export interface IExamsRepository {
   get(data: getExamRepositoryProps): Promise<ExamDTO>;
   list(data: listExamRepositoryProps): Promise<ExamDTO[]>;
   delete(data: deleteExamRepositoryProps): Promise<void>;
+  count(data: countExamRepositoryProps): Promise<{ total: number }>;
 }
