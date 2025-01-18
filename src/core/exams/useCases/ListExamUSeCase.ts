@@ -20,7 +20,7 @@ export class ListExamUseCase {
     const limit = 5;
     const offset = (page - 1) * limit;
 
-    const examsData = await this.examRepository.list({
+    const examsDataQuery = this.examRepository.list({
       patientId,
       userId,
       config: {
@@ -29,7 +29,14 @@ export class ListExamUseCase {
       },
     });
 
-    const exams = examsData.map(async (exam) => {
+    const totalQuery = this.examRepository.count({
+      patientId,
+      userId,
+    });
+
+    const [examsData, total] = await Promise.all([examsDataQuery, totalQuery]);
+
+    const examsQuery = examsData.map(async (exam) => {
       const examFileUrl = await this.getExamUseCase.execute({
         patientId,
         userId,
@@ -38,8 +45,8 @@ export class ListExamUseCase {
       return { ...exam, url: examFileUrl };
     });
 
-    const resolvedExams = await Promise.all(exams);
+    const exams = await Promise.all(examsQuery);
 
-    return resolvedExams;
+    return { ...total, exams };
   }
 }
