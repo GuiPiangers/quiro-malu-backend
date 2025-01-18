@@ -1,7 +1,11 @@
 import { IExamsRepository } from "../../../repositories/examsRepository/IExamsRepository";
+import { GetExamUseCase } from "./GetExamUSeCase";
 
 export class ListExamUseCase {
-  constructor(private examRepository: IExamsRepository) {}
+  constructor(
+    private examRepository: IExamsRepository,
+    private getExamUseCase: GetExamUseCase,
+  ) {}
 
   async execute({
     patientId,
@@ -16,7 +20,7 @@ export class ListExamUseCase {
     const limit = 5;
     const offset = (page - 1) * limit;
 
-    const exams = await this.examRepository.list({
+    const examsData = await this.examRepository.list({
       patientId,
       userId,
       config: {
@@ -25,6 +29,17 @@ export class ListExamUseCase {
       },
     });
 
-    return exams;
+    const exams = examsData.map(async (exam) => {
+      const examFileUrl = await this.getExamUseCase.execute({
+        patientId,
+        userId,
+        id: exam.id!,
+      });
+      return { ...exam, url: examFileUrl };
+    });
+
+    const resolvedExams = await Promise.all(exams);
+
+    return resolvedExams;
   }
 }

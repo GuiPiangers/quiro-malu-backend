@@ -9,4 +9,4 @@ const examStorage = new S3ExamsFileStorage();
 const getExamUseCase = new GetExamUseCase(examStorage);
 const getExamController = new GetExamController(getExamUseCase);
 
-export { getExamController };
+export { getExamController, getExamUseCase };
