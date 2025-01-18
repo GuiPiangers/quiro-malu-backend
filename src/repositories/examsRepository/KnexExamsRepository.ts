@@ -27,10 +27,13 @@ export class KnexExamsRepository implements IExamsRepository {
   async list({
     patientId,
     userId,
+    config,
   }: listExamRepositoryProps): Promise<ExamDTO[]> {
     return await Knex(ETableNames.EXAMS)
       .select("*")
-      .where({ patientId, userId });
+      .where({ patientId, userId })
+      .limit(config.limit)
+      .offset(config.offset);
   }
 
   async delete({

@@ -16,6 +16,7 @@ export type getExamRepositoryProps = {
 export type listExamRepositoryProps = {
   userId: string;
   patientId: string;
+  config: { limit: number; offset: number };
 };
 
 export type deleteExamRepositoryProps = {
