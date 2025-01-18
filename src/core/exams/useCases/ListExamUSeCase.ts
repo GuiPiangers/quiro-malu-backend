@@ -3,15 +3,7 @@ import { IExamsRepository } from "../../../repositories/examsRepository/IExamsRe
 export class ListExamUseCase {
   constructor(private examRepository: IExamsRepository) {}
 
-  async execute({
-    id,
-    patientId,
-    userId,
-  }: {
-    id: string;
-    userId: string;
-    patientId: string;
-  }) {
+  async execute({ patientId, userId }: { userId: string; patientId: string }) {
     const exams = await this.examRepository.list({
       patientId,
       userId,
