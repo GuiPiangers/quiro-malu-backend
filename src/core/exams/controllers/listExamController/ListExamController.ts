@@ -15,6 +15,7 @@ export class ListExamController {
       };
 
       if (!userId) throw new ApiError("Acesso não autorizado", 401);
+      if (!patientId) throw new ApiError("Paciente não enviado", 400);
 
       const exams = await this.listExamUseCase.execute({
         patientId,
