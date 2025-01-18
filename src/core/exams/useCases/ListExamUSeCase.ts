@@ -14,7 +14,7 @@ export class ListExamUseCase {
   }) {
     if (page < 1) page = 1;
     const limit = 5;
-    const offset = page - 1;
+    const offset = (page - 1) * limit;
 
     const exams = await this.examRepository.list({
       patientId,
