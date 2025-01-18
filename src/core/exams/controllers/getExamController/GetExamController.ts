@@ -14,9 +14,6 @@ export class GetExamController {
         id: string;
       };
 
-      const file = request.file;
-
-      if (!file) throw new ApiError("Nenhum arquivo enviado", 400);
       if (!userId) throw new ApiError("Acesso não autorizado", 401);
       if (!id) throw new ApiError("Nenhum paciente enviado", 400);
 
