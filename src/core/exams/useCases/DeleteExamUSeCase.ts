@@ -1,7 +1,11 @@
 import { IExamsFileStorageRepository } from "../../../repositories/examsFileStorage/IExamsFileStorageRepository";
+import { IExamsRepository } from "../../../repositories/examsRepository/IExamsRepository";
 
 export class DeleteExamUseCase {
-  constructor(private examFileStorage: IExamsFileStorageRepository) {}
+  constructor(
+    private examRepository: IExamsRepository,
+    private examFileStorage: IExamsFileStorageRepository,
+  ) {}
 
   async execute({
     id,
@@ -12,10 +16,17 @@ export class DeleteExamUseCase {
     userId: string;
     patientId: string;
   }) {
-    await this.examFileStorage.delete({
+    const deleteExamStorageFile = this.examFileStorage.delete({
       id,
       patientId,
       userId,
     });
+    const deleteExamOnRepository = this.examRepository.delete({
+      id,
+      patientId,
+      userId,
+    });
+
+    await Promise.all([deleteExamStorageFile, deleteExamOnRepository]);
   }
 }
