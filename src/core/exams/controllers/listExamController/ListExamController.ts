@@ -9,13 +9,12 @@ export class ListExamController {
   async handle(request: Request, response: Response) {
     try {
       const { id: userId } = request.user;
-      const { patientId, id } = request.params as {
+      const { patientId } = request.params as {
         patientId: string;
         id: string;
       };
 
       if (!userId) throw new ApiError("Acesso não autorizado", 401);
-      if (!id) throw new ApiError("Nenhum paciente enviado", 400);
 
       const exams = await this.listExamUseCase.execute({
         patientId,

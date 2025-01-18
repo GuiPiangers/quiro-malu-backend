@@ -43,6 +43,7 @@ import { S3ExamsFileStorage } from "./repositories/examsFileStorage/S3ExamsFileS
 import { saveExamController } from "./core/exams/controllers/saveExamController";
 import { getExamController } from "./core/exams/controllers/getExamController";
 import { deleteExamController } from "./core/exams/controllers/deleteExamController";
+import { listExamController } from "./core/exams/controllers/listExamController";
 
 const router = Router();
 const multerConfig = multer();
@@ -214,6 +215,9 @@ router.get("/exams/:patientId/:id", authMiddleware, (request, response) => {
 });
 router.delete("/exams/:patientId/:id", authMiddleware, (request, response) => {
   deleteExamController.handle(request, response);
+});
+router.get("/exams/:patientId", authMiddleware, (request, response) => {
+  listExamController.handle(request, response);
 });
 
 export { router };
