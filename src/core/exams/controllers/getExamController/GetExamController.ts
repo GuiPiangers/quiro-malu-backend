@@ -23,8 +23,6 @@ export class GetExamController {
         id,
       });
 
-      console.log(url);
-
       response.status(200).json({ url });
     } catch (error: any) {
       responseError(response, error);
