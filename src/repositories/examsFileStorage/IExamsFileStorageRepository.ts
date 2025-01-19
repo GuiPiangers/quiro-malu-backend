@@ -8,6 +8,7 @@ export type getExamProps = {
   userId: string;
   patientId: string;
   id: string;
+  originalName: string;
 };
 
 export type deleteExamProps = {

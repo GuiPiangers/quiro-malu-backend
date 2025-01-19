@@ -1,10 +1,10 @@
+import { IExamsFileStorageRepository } from "../../../repositories/examsFileStorage/IExamsFileStorageRepository";
 import { IExamsRepository } from "../../../repositories/examsRepository/IExamsRepository";
-import { GetExamUseCase } from "./GetExamUSeCase";
 
 export class ListExamUseCase {
   constructor(
     private examRepository: IExamsRepository,
-    private getExamUseCase: GetExamUseCase,
+    private examFileStorage: IExamsFileStorageRepository,
   ) {}
 
   async execute({
@@ -37,10 +37,11 @@ export class ListExamUseCase {
     const [examsData, total] = await Promise.all([examsDataQuery, totalQuery]);
 
     const examsQuery = examsData.map(async (exam) => {
-      const examFileUrl = await this.getExamUseCase.execute({
+      const examFileUrl = await this.getFileUrl({
         patientId,
         userId,
         id: exam.id!,
+        originalName: exam.fileName,
       });
       return { ...exam, url: examFileUrl };
     });
@@ -48,5 +49,26 @@ export class ListExamUseCase {
     const exams = await Promise.all(examsQuery);
 
     return { ...total, exams };
+  }
+
+  private async getFileUrl({
+    id,
+    patientId,
+    userId,
+    originalName,
+  }: {
+    id: string;
+    userId: string;
+    patientId: string;
+    originalName: string;
+  }) {
+    const url = await this.examFileStorage.get({
+      id,
+      patientId,
+      userId,
+      originalName,
+    });
+
+    return url;
   }
 }

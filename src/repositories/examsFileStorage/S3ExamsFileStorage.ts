@@ -28,10 +28,16 @@ export class S3ExamsFileStorage implements IExamsFileStorageRepository {
     await s3Client.send(command);
   }
 
-  async get({ userId, patientId, id }: getExamProps): Promise<string> {
+  async get({
+    userId,
+    patientId,
+    id,
+    originalName,
+  }: getExamProps): Promise<string> {
     const getObjectParams = {
       Bucket: bucketName,
       Key: `${userId}/${patientId}/${id}`,
+      ResponseContentDisposition: `attachment; filename="${originalName}"`,
     };
 
     const command = new GetObjectCommand(getObjectParams);
