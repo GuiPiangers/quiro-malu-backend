@@ -2,9 +2,7 @@ services:
   app:
     restart: always
     container_name: appBuild
-    build:
-      context: .
-      dockerfile: Dockerfile.prod
+    image: guipiangers/quiro-backend:1.0
     env_file:
       - .env
     ports: 
