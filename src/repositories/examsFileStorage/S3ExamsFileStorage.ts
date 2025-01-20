@@ -37,7 +37,7 @@ export class S3ExamsFileStorage implements IExamsFileStorageRepository {
     const getObjectParams = {
       Bucket: bucketName,
       Key: `${userId}/${patientId}/${id}`,
-      ResponseContentDisposition: `attachment; filename="${originalName}"`,
+      ResponseContentDisposition: `inline; filename="${originalName}"`,
     };
 
     const command = new GetObjectCommand(getObjectParams);
