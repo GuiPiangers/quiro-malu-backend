@@ -43,9 +43,13 @@ jobs:
       - uses: actions/setup-node@v2
       - name: Login DockerHub
         run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+      - name: Remove old image
+        run: docker rm guipiangers/quiro-backend:1.0
       - name: Pull image from DockerHub
         run: docker pull guipiangers/quiro-backend:1.0
-      - name: Start container
+      - name: Stop containers
+        run: docker compose down
+      - name: Start containers
         run: docker compose -f docker-compose.prod.yml up -d app mysql-db nginx
 
     needs: build
