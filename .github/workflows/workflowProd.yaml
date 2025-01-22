@@ -7,7 +7,7 @@ on:
 
 
 jobs:
-  continuos-integration:
+  tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,7 +18,7 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-  continuos-delivery:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,5 +33,20 @@ jobs:
       - name: Push image docker
         run: docker push guipiangers/quiro-backend:1.0
 
-    needs: continuos-integration
+    needs: tests
+
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+      - name: Login DockerHub
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+      - name: Pull image from DockerHub
+        run: docker pull guipiangers/quiro-backend:1.0
+      - name: Start container
+        run: docker compose -f docker-compose.prod.yml up -d app mysql-db nginx
+
+    needs: build
       
