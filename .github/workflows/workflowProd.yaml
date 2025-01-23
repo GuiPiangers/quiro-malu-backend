@@ -40,10 +40,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v2
+
       - name: Create .env file
         run: |
-          echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
+          echo "NODE_ENV=${{ secrets.NODE_ENV }}" > .env
           echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
           echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
           echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
@@ -52,9 +52,6 @@ jobs:
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
           echo "BUCKET_NAME=${{ secrets.BUCKET_NAME }}" >> .env
           echo "BUCKET_REGION=${{ secrets.BUCKET_REGION }}" >> .env
-      
-      - name: Move .env to correct path
-        run: mv .env /home/ubuntu/quiro-malu-backend/actions-runner/_work/quiro-malu-backend/quiro-malu-backend/
 
       - name: Login DockerHub
         run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
