@@ -34,8 +34,8 @@ services:
       - "443:443" # Porta HTTPS para conexões seguras
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf    # Configuração do Nginx
-      - /etc/letsencrypt:/etc/letsencrypt:ro  # Diretório dos certificados SSL
-      - /home/ubuntu/quiro-malu-backend/certbot/www:/var/www/certbot  
+      - ./certbot/conf:/etc/letsencrypt             # Diretório dos certificados SSL
+      - ./certbot/www:/var/www/certbot  
     depends_on: 
       - "app"
     networks:
@@ -44,8 +44,8 @@ services:
     image: certbot/certbot
     container_name: certbot
     volumes:
-      - /etc/letsencrypt:/etc/letsencrypt             # Diretório dos certificados SSL
-      - /home/ubuntu/quiro-malu-backend/certbot/www:/var/www/certbot              # Pasta temporária para o Certbot
+      - ./certbot/conf:/etc/letsencrypt             # Diretório dos certificados SSL
+      - ./certbot/www:/var/www/certbot              # Pasta temporária para o Certbot
     command: certonly --webroot -w /var/www/certbot --force-renewal --email eduardomartinspiangers@gmail.com -d quiromalu-server.duckdns.org --agree-tos
     networks:
       - minha_rede
