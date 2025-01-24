@@ -37,7 +37,6 @@ jobs:
 
   deploy:
     runs-on: self-hosted
-    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v3
@@ -54,6 +53,8 @@ jobs:
           echo "BUCKET_NAME=${{ secrets.BUCKET_NAME }}" >> .env
           echo "BUCKET_REGION=${{ secrets.BUCKET_REGION }}" >> .env
 
+      - name: Login DockerHub
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
       - name: Pull image from DockerHub
         run: docker pull guipiangers/quiro-backend:1.0
       - name: Stop containers
