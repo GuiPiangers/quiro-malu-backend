@@ -48,11 +48,11 @@ jobs:
           chmod 600 ~/.ssh/quiro-github-access-key.pem
       - name: Test SSH connection
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/quiro-github-access-key.pem ec2-user@${{ secrets.QUIRO_PUBLIC_IP }} "echo 'SSH connection successful!'"
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/quiro-github-access-key.pem ubuntu@${{ secrets.QUIRO_PUBLIC_IP }} "echo 'SSH connection successful!'"
 
       - name: Deploy the applications
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/quiro-github-access-key.pem ec2-user@${{ secrets.QUIRO_PUBLIC_IP }} << EOF
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/quiro-github-access-key.pem ubuntu@${{ secrets.QUIRO_PUBLIC_IP }} << EOF
           cd /quiro-malu-backend
           docker pull guipiangers/quiro-backend:1.0
           docker compose down app
