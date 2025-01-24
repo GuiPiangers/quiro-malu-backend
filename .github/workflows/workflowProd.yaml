@@ -53,7 +53,7 @@ jobs:
       - name: Deploy the applications
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/quiromaluKey.pem ubuntu@${{ secrets.QUIRO_PUBLIC_IP }} << EOF
-          cd /quiro-malu-backend
+          cd ./quiro-malu-backend
           docker pull guipiangers/quiro-backend:1.0
           docker compose down app
           docker compose -f docker-compose.prod.yml up -d app
