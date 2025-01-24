@@ -48,7 +48,7 @@ jobs:
           chmod 600 ~/.ssh/quiro-github-access-key.pem
       - name: Test SSH connection
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/quiro-github-access-key.pem ec2-user@<${{ secrets.QUIRO_PUBLIC_IP }}> "echo 'SSH connection successful!'"
+          ssh -i ~/.ssh/quiro-github-access-key.pem ec2-user@<${{ secrets.QUIRO_PUBLIC_IP }}> "echo 'SSH connection successful!'"
 
       - name: Deploy the applications
         run: |
