@@ -36,31 +36,26 @@ jobs:
     needs: tests
 
   deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Create .env file
+      - name: Create SSH key
         run: |
-          echo "NODE_ENV=${{ secrets.NODE_ENV }}" > .env
-          echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
-          echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
-          echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
-          echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
-          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-          echo "BUCKET_NAME=${{ secrets.BUCKET_NAME }}" >> .env
-          echo "BUCKET_REGION=${{ secrets.BUCKET_REGION }}" >> .env
+          echo "${{ secrets.QUIRO_SSH_KEY }}" > ~/.ssh/quiro-github-access-key.pem
+          chmod 600 ~/.ssh/quiro-github-access-key.pem
+      - name: Test SSH connection
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/quiro-github-access-key.pem ec2-user@<${{ secrets.QUIRO_PUBLIC_IP }}> "echo 'SSH connection successful!'"
 
-      - name: Login DockerHub
-        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
-      - name: Pull image from DockerHub
-        run: docker pull guipiangers/quiro-backend:1.0
-      - name: Stop containers
-        run: docker compose down app
-      - name: Start containers
-        run: docker compose -f docker-compose.prod.yml up -d app
-
+      - name: Deploy the applications
+        run: |
+          ssh -i ~/.ssh/quiro-github-access-key.pem ec2-user@<${{ secrets.QUIRO_PUBLIC_IP }}> << EOF
+          cd /quiro-malu-backend
+          docker pull guipiangers/quiro-backend:1.0
+          docker compose down app
+          docker compose -f docker-compose.prod.yml up -d app
+          EOF
     needs: build
       
