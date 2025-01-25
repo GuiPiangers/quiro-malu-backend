@@ -44,7 +44,14 @@ import { deleteExamController } from "./core/exams/controllers/deleteExamControl
 import { listExamController } from "./core/exams/controllers/listExamController";
 
 const router = Router();
-const multerConfig = multer();
+const multerConfig = multer({
+  fileFilter: (req, file, cb) => {
+    file.originalname = Buffer.from(file.originalname, "latin1").toString(
+      "utf8",
+    );
+    cb(null, true);
+  },
+});
 
 router.post("/register", (request, response) => {
   createUserController.handle(request, response);
