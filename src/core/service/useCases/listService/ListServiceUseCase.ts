@@ -3,13 +3,21 @@ import { IServiceRepository } from "../../../../repositories/service/IServiceRep
 export class ListServiceUseCase {
   constructor(private ServiceRepository: IServiceRepository) {}
 
-  async execute({ userId, page }: { userId: string; page?: number }) {
+  async execute({
+    userId,
+    page,
+    search,
+  }: {
+    userId: string;
+    page?: number;
+    search?: string;
+  }) {
     const limit = 20;
     const offSet = page ? limit * (page - 1) : 0;
 
     const serviceData = this.ServiceRepository.list({
       userId,
-      config: page === undefined ? {} : { limit, offSet },
+      config: page === undefined ? { search } : { limit, offSet, search },
     });
     const totalService = this.ServiceRepository.count({ userId });
 
