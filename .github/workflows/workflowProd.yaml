@@ -57,6 +57,7 @@ jobs:
           docker pull guipiangers/quiro-backend:1.0
           docker compose down app
           docker compose -f docker-compose.prod.yml up -d app
+          docker exec appBuild npm run knex:migrate
           EOF
     needs: build
       
