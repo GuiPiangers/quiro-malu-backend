@@ -1,10 +1,9 @@
-import { Patient, PatientDTO } from "../../core/patients/models/Patient";
+import { PatientDTO } from "../../core/patients/models/Patient";
 import { Knex } from "../../database";
 import { ETableNames } from "../../database/ETableNames";
 import { order } from "../../database/mySqlConnection";
 import { IPatientRepository } from "../../repositories/patient/IPatientRepository";
 import { ApiError } from "../../utils/ApiError";
-import { getValidObjectValues } from "../../utils/getValidObjectValues";
 
 export class KnexPatientRepository implements IPatientRepository {
   async save(data: PatientDTO, userId: string): Promise<void> {
