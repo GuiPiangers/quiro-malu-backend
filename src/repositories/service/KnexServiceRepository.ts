@@ -1,7 +1,7 @@
 import { ServiceDTO } from "../../core/service/models/Service";
 import { Knex } from "../../database";
 import { ETableNames } from "../../database/ETableNames";
-import { IServiceRepository } from "./IServiceRepository";
+import { IServiceRepository, listServiceProps } from "./IServiceRepository";
 
 export class KnexServiceRepository implements IServiceRepository {
   async save({
@@ -22,19 +22,14 @@ export class KnexServiceRepository implements IServiceRepository {
     await Knex(ETableNames.SERVICES).update(data).where({ id, userId });
   }
 
-  async list({
-    userId,
-    config,
-  }: {
-    userId: string;
-    config?: { limit?: number; offSet?: number };
-  }): Promise<ServiceDTO[]> {
+  async list({ userId, config }: listServiceProps): Promise<ServiceDTO[]> {
     const result = Knex(ETableNames.SERVICES)
       .select("*")
       .where({ userId })
+      .andWhere("name", "like", `%${config?.search ?? ""}%`)
       .orderBy("updated_at", "desc");
 
-    if (config?.limit && config.offSet) {
+    if (config?.limit && config?.offSet) {
       return await result.limit(config.limit).offset(config.offSet);
     }
     return await result;
