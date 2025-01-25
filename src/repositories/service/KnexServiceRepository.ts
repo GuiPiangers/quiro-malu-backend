@@ -23,11 +23,14 @@ export class KnexServiceRepository implements IServiceRepository {
   }
 
   async list({ userId, config }: listServiceProps): Promise<ServiceDTO[]> {
+    const order = config?.search ? "name" : "created_at";
+    const orderDirection = config?.search ? "asc" : "desc";
+
     const result = Knex(ETableNames.SERVICES)
       .select("*")
       .where({ userId })
       .andWhere("name", "like", `%${config?.search ?? ""}%`)
-      .orderBy("updated_at", "desc");
+      .orderBy(order, orderDirection);
 
     if (config?.limit && config?.offSet) {
       return await result.limit(config.limit).offset(config.offSet);
