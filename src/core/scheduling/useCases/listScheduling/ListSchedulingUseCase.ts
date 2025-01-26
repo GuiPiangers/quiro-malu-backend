@@ -16,7 +16,7 @@ export class ListSchedulingUseCase {
   }) {
     const limit = 20;
     const clientStatusStrategy = new ClientStatusStrategy();
-    const date = schedulingDate || new DateTime(new Date().toString()).value;
+    const date = schedulingDate || DateTime.now().value;
 
     const schedulingData = this.SchedulingRepository.list({
       userId,
