@@ -1,5 +1,6 @@
 import { IExamsFileStorageRepository } from "../../../repositories/examsFileStorage/IExamsFileStorageRepository";
 import { IExamsRepository } from "../../../repositories/examsRepository/IExamsRepository";
+import { DateTime } from "../../shared/Date";
 
 export class DeleteExamUseCase {
   constructor(
@@ -16,17 +17,12 @@ export class DeleteExamUseCase {
     userId: string;
     patientId: string;
   }) {
-    const deleteExamStorageFile = this.examFileStorage.delete({
+    await this.examRepository.update({
       id,
       patientId,
       userId,
+      deleted: true,
+      deletedDate: DateTime.now().date,
     });
-    const deleteExamOnRepository = this.examRepository.delete({
-      id,
-      patientId,
-      userId,
-    });
-
-    await Promise.all([deleteExamStorageFile, deleteExamOnRepository]);
   }
 }
