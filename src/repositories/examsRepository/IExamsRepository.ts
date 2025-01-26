@@ -13,7 +13,7 @@ export type updateExamRepositoryRepositoryProps =
     patientId: string;
     id: string;
     deleted?: boolean;
-    deletedDate?: string;
+    deletedDate?: string | null;
   };
 export type getExamRepositoryProps = {
   userId: string;
