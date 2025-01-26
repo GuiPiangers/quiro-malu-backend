@@ -19,6 +19,7 @@ export class KnexExamsRepository implements IExamsRepository {
     const result = await Knex(ETableNames.EXAMS)
       .count("id as total")
       .where({ patientId, userId })
+      .andWhere("deleted", false)
       .first();
 
     return result as { total: number };
