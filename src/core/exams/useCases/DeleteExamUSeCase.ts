@@ -1,12 +1,8 @@
-import { IExamsFileStorageRepository } from "../../../repositories/examsFileStorage/IExamsFileStorageRepository";
 import { IExamsRepository } from "../../../repositories/examsRepository/IExamsRepository";
 import { DateTime } from "../../shared/Date";
 
 export class DeleteExamUseCase {
-  constructor(
-    private examRepository: IExamsRepository,
-    private examFileStorage: IExamsFileStorageRepository,
-  ) {}
+  constructor(private examRepository: IExamsRepository) {}
 
   async execute({
     id,
