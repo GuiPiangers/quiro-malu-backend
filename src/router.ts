@@ -42,6 +42,7 @@ import { getFinanceBySchedulingController } from "./core/finances/controllers/ge
 import { saveExamController } from "./core/exams/controllers/saveExamController";
 import { deleteExamController } from "./core/exams/controllers/deleteExamController";
 import { listExamController } from "./core/exams/controllers/listExamController";
+import { restoreExamController } from "./core/exams/controllers/restoreExamController";
 
 const router = Router();
 const multerConfig = multer({
@@ -217,6 +218,10 @@ router.post(
 
 router.delete("/exams/:patientId/:id", authMiddleware, (request, response) => {
   deleteExamController.handle(request, response);
+});
+
+router.post("/exams/:patientId/:id", authMiddleware, (request, response) => {
+  restoreExamController.handle(request, response);
 });
 router.get("/exams/:patientId", authMiddleware, (request, response) => {
   listExamController.handle(request, response);
