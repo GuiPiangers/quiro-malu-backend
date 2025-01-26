@@ -45,6 +45,7 @@ export class KnexExamsRepository implements IExamsRepository {
     return await Knex(ETableNames.EXAMS)
       .select("*")
       .where({ patientId, userId })
+      .andWhere("deleted", false)
       .limit(config.limit)
       .offset(config.offset);
   }
