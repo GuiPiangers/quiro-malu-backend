@@ -8,6 +8,7 @@ import {
   IExamsRepository,
   listExamRepositoryProps,
   saveExamRepositoryRepositoryProps,
+  updateExamRepositoryRepositoryProps,
 } from "./IExamsRepository";
 
 export class KnexExamsRepository implements IExamsRepository {
@@ -25,6 +26,15 @@ export class KnexExamsRepository implements IExamsRepository {
 
   async save(data: saveExamRepositoryRepositoryProps) {
     await Knex(ETableNames.EXAMS).insert(data);
+  }
+
+  async update({
+    id,
+    userId,
+    patientId,
+    ...data
+  }: updateExamRepositoryRepositoryProps) {
+    await Knex(ETableNames.EXAMS).update(data).where({ id, userId, patientId });
   }
 
   async get({

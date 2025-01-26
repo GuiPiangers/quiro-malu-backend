@@ -7,6 +7,14 @@ export type saveExamRepositoryRepositoryProps = {
   fileName: string;
   fileSize?: number;
 };
+export type updateExamRepositoryRepositoryProps =
+  Partial<saveExamRepositoryRepositoryProps> & {
+    userId: string;
+    patientId: string;
+    id: string;
+    deleted?: boolean;
+    deletedDate?: string;
+  };
 export type getExamRepositoryProps = {
   userId: string;
   patientId: string;
@@ -32,6 +40,7 @@ export type deleteExamRepositoryProps = {
 
 export interface IExamsRepository {
   save(data: saveExamRepositoryRepositoryProps): Promise<void>;
+  update(data: updateExamRepositoryRepositoryProps): Promise<void>;
   get(data: getExamRepositoryProps): Promise<ExamDTO>;
   list(data: listExamRepositoryProps): Promise<ExamDTO[]>;
   delete(data: deleteExamRepositoryProps): Promise<void>;
