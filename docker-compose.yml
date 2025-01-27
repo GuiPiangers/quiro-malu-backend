@@ -39,6 +39,13 @@ services:
     networks:
       - minha_rede
 
+  grafana:
+    image: grafana/grafana:10.2.2
+    ports:
+      - "3000:3000"
+    networks:
+      - minha_rede
+
 volumes:
   db:
 networks:
