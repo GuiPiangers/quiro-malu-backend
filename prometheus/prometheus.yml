@@ -2,3 +2,7 @@ scrape_configs:
   - job_name: 'quiro_app'
     static_configs:
       - targets: ['app:8000']
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
