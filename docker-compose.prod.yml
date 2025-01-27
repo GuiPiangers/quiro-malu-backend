@@ -1,7 +1,7 @@
 services:
   app:
     restart: always
-    container_name: appBuild
+    container_name: app
     image: guipiangers/quiro-backend:1.0
     env_file:
       - .env
