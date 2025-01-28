@@ -5,7 +5,7 @@ import { register } from "./index";
 
 const restResponseTimeHistogram = new client.Histogram({
   name: "rest_response_time_duration_seconds",
-  help: "REST API response time in seconds",
+  help: "Tempo de resposta da API REST em segundos",
   labelNames: ["method", "route", "status_code"],
 });
 register.registerMetric(restResponseTimeHistogram);
