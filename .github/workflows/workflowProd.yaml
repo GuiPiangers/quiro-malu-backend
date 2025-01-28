@@ -37,7 +37,8 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-
+    environment:
+      name: quiro-app
     steps:
       - uses: actions/checkout@v3
 
