@@ -13,6 +13,7 @@ const restResponseTimeHistogram = new client.Histogram({
   help: "REST API response time in seconds",
   labelNames: ["method", "route", "status_code"],
 });
+register.registerMetric(restResponseTimeHistogram);
 
 const app = express();
 
@@ -42,7 +43,7 @@ app.use(
           route: req.route.path,
           status_code: res.statusCode,
         },
-        time * 1000,
+        time / 1000,
       );
     }
   }),
