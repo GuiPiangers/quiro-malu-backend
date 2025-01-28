@@ -4,6 +4,7 @@ import { router } from "./router";
 import cors from "cors";
 import { responseTimeMiddleware } from "./metrics/restResponseTimeHistogram";
 import { register } from "./metrics";
+import { httpRequestCounterMiddleware } from "./metrics/requestCounter";
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use((req, res, next) => {
 });
 
 app.use(responseTimeMiddleware);
+app.use(httpRequestCounterMiddleware);
 
 app.get("/metrics", async (req, res) => {
   res.set("Content-Type", register.contentType);
