@@ -1,12 +1,5 @@
-import { IDiagnosticRepository } from "../../../../../repositories/diagnostic/IDiagnosticRepository";
+import { mockDiagnosticRepository } from "../../../../../repositories/_mocks/DiagnosticRepositoryMock";
 import { GetDiagnosticUseCase } from "./GetDiagnosticUseCase";
-
-const mockDiagnosticRepository: jest.Mocked<IDiagnosticRepository> = {
-  get: jest.fn(),
-  save: jest.fn(),
-  saveMany: jest.fn(),
-  update: jest.fn(),
-};
 
 describe("GetDiagnosticUseCase", () => {
   let getDiagnosticUseCase: GetDiagnosticUseCase;
