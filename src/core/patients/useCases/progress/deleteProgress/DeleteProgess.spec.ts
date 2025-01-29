@@ -10,7 +10,7 @@ describe("DeleteProgressUseCase", () => {
   });
 
   describe("execute", () => {
-    it("should call the repository delete method with the correct ProgressId and userId", async () => {
+    it("should call the repository delete method with the correct params", async () => {
       const id = "test-Progress-id";
       const userId = "test-user-id";
       const patientId = "test-patient-id";
