@@ -38,7 +38,7 @@ describe("SetAnamnesisUseCase", () => {
 
     mockAnamnesisRepository.get.mockResolvedValue({
       ...anamnesis,
-      patientId: anamnesis.patientId!,
+      patientId: anamnesis.patientId,
     });
 
     const result = await setAnamnesisUseCase.execute(data, userId);
@@ -68,6 +68,7 @@ describe("SetAnamnesisUseCase", () => {
       surgeries: "surgeries",
     };
     const userId = "user456";
+    mockAnamnesisRepository.get.mockResolvedValue({ patientId: "" });
 
     const result = await setAnamnesisUseCase.execute(data, userId);
 
@@ -95,6 +96,8 @@ describe("SetAnamnesisUseCase", () => {
       surgeries: "surgeries",
     };
     const userId = "user456";
+
+    mockAnamnesisRepository.get.mockResolvedValue({ patientId: "" });
 
     const result = await setAnamnesisUseCase.execute(data, userId);
 
