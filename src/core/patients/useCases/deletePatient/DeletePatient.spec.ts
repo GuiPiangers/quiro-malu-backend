@@ -1,18 +1,5 @@
-import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
+import { mockPatientRepository } from "../../../../repositories/_mocks/PatientRepositoryMock";
 import { DeletePatientUseCase } from "./DeletePatientUseCase";
-
-// Mock the patient repository with Jest
-const mockPatientRepository: jest.Mocked<IPatientRepository> = {
-  delete: jest.fn(),
-  countAll: jest.fn(),
-  getAll: jest.fn(),
-  getByCpf: jest.fn(),
-  getByHash: jest.fn(),
-  getById: jest.fn(),
-  save: jest.fn(),
-  saveMany: jest.fn(),
-  update: jest.fn(),
-};
 
 describe("DeletePatientUseCase", () => {
   let deletePatientUseCase: DeletePatientUseCase;

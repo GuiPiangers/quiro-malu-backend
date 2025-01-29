@@ -1,15 +1,13 @@
 import { PatientDTO } from "../../../models/Patient";
-import { IPatientRepository } from "../../../../../repositories/patient/IPatientRepository";
-import { InMemoryPatientRepository } from "../../../../../repositories/patient/inMemory/InMemoryPatientRepository";
 import { ListPatientsUseCase } from "../ListPatientsUseCase";
+import { mockPatientRepository } from "../../../../../repositories/_mocks/PatientRepositoryMock";
 
 describe("List patients", () => {
-  let patientRepository: IPatientRepository;
   let listPatientUseCase: ListPatientsUseCase;
 
-  beforeAll(() => {
-    patientRepository = new InMemoryPatientRepository();
-    listPatientUseCase = new ListPatientsUseCase(patientRepository);
+  beforeEach(() => {
+    jest.clearAllMocks();
+    listPatientUseCase = new ListPatientsUseCase(mockPatientRepository);
   });
 
   it("Should be able to list the patients of an User", async () => {
@@ -18,10 +16,14 @@ describe("List patients", () => {
       phone: "(51) 99999 9999",
     };
     const userId = "userid";
-    await patientRepository.save(patientData, userId);
+
+    mockPatientRepository.getAll.mockResolvedValue([{ ...patientData }]);
+    mockPatientRepository.countAll.mockResolvedValue([{ total: 0 }]);
+
     const patients = await listPatientUseCase.execute({ userId, page: 1 });
+
     expect(patients).toEqual({
-      patients: [{ ...patientData, userId }],
+      patients: [{ ...patientData }],
       limit: 20,
       total: 0,
     });
@@ -29,7 +31,12 @@ describe("List patients", () => {
 
   it("Should return a empty array if there is no patients", async () => {
     const userId = "userid2";
+
+    mockPatientRepository.getAll.mockResolvedValue([]);
+    mockPatientRepository.countAll.mockResolvedValue([{ total: 0 }]);
+
     const patients = await listPatientUseCase.execute({ userId, page: 1 });
+
     expect(patients).toEqual({ limit: 20, total: 0, patients: [] });
   });
 });

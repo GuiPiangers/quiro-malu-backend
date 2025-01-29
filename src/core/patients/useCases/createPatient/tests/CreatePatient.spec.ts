@@ -1,27 +1,9 @@
 import { Patient, PatientDTO } from "../../../models/Patient";
-import { IPatientRepository } from "../../../../../repositories/patient/IPatientRepository";
 import { CreatePatientUseCase } from "../CreatePatientUseCase";
 import { ILocationRepository } from "../../../../../repositories/location/ILocationRepository";
 import { ApiError } from "../../../../../utils/ApiError";
-
-const mockPatientRepository: jest.Mocked<IPatientRepository> = {
-  getById: jest.fn(),
-  countAll: jest.fn(),
-  delete: jest.fn(),
-  getAll: jest.fn(),
-  getByCpf: jest.fn(),
-  save: jest.fn(),
-  update: jest.fn(),
-  getByHash: jest.fn(),
-  saveMany: jest.fn(),
-};
-
-const mockLocationRepository: jest.Mocked<ILocationRepository> = {
-  getLocation: jest.fn(),
-  save: jest.fn(),
-  update: jest.fn(),
-  saveMany: jest.fn(),
-} as jest.Mocked<ILocationRepository>;
+import { mockPatientRepository } from "../../../../../repositories/_mocks/PatientRepositoryMock";
+import { mockLocationRepository } from "../../../../../repositories/_mocks/LocationRepositoryMock";
 
 describe("Create patients", () => {
   let createPatientUseCase: CreatePatientUseCase;
