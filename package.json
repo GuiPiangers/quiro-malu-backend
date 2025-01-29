@@ -6,7 +6,10 @@
   "scripts": {
     "test": "jest --maxWorkers=50%",
     "test:watch": "jest --watch --maxWorkers=25%",
+    "test:coverage": "jest --coverage",
+
     "dev": "tsnd --transpile-only --respawn --ignore-watch node_modules ./src/server.ts",
+
     "knex:migrate": "knex --knexfile ./src/database/knex/knexfile.ts migrate:latest",
     "knex:rollback": "knex --knexfile ./src/database/knex/knexfile.ts migrate:rollback",
     "knex:rollback-all": "knex --knexfile ./src/database/knex/knexfile.ts migrate:rollback --all",

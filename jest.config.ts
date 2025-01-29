@@ -16,14 +16,17 @@ export default {
   // Automatically clear mock calls and instances between every test
   clearMocks: true,
 
-  // Indicates whether the coverage information should be collected while executing the test
-  // collectCoverage: false,
-
-  // An array of glob patterns indicating a set of files for which coverage information should be collected
-  // collectCoverageFrom: undefined,
-
-  // The directory where Jest should output its coverage files
-  // coverageDirectory: undefined,
+  collectCoverage: true,
+  collectCoverageFrom: [
+    "src/**/*.ts", // Garante que todas as classes e funções na pasta src sejam analisadas
+    "!src/app.ts", // Ignora arquivos de inicialização ou ponto de entrada
+    "!src/router.ts", // Ignora arquivos de inicialização ou ponto de entrada
+    "!src/server.ts", // Ignora arquivos de inicialização ou ponto de entrada
+    "!src/**/index.ts", // Ignora arquivos de inicialização ou ponto de entrada
+    "!src/config/**", // Ignora arquivos de configuração
+  ],
+  coverageDirectory: "coverage",
+  coverageReporters: ["json", "text", "lcov", "clover"],
 
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [

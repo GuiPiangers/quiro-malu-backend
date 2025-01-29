@@ -4,3 +4,4 @@
 /build
 certbot/conf/
 certbot/www/
+coverage
