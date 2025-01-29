@@ -30,7 +30,7 @@ describe("GetDiagnosticUseCase", () => {
       );
     });
 
-    it("should return the diagnostic data from the repository", async () => {
+    it("should return the diagnostic data from the repository if it exists", async () => {
       const diagnosticData = {
         patientId: "patientId",
         diagnostic: "diagnostic",
@@ -41,6 +41,14 @@ describe("GetDiagnosticUseCase", () => {
       const result = await getDiagnosticUseCase.execute("patientId", "userId");
 
       expect(result).toBe(diagnosticData);
+    });
+
+    it("should return an empty object if the diagnostic data does not exist", async () => {
+      mockDiagnosticRepository.get.mockResolvedValue(undefined as any);
+
+      const result = await getDiagnosticUseCase.execute("patientId", "userId");
+
+      expect(result).toEqual({});
     });
 
     it("should propagate an error if the repository Get method throws", async () => {
