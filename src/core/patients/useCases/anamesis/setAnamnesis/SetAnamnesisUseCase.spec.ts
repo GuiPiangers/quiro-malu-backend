@@ -1,20 +1,12 @@
 import { SetAnamnesisUseCase } from "./SetAnamnesisUseCase";
 import { Anamnesis, AnamnesisDTO } from "../../../models/Anamnesis";
-import { IAnamnesisRepository } from "../../../../../repositories/anamnesis/IAnamnesisRepository";
+import { mockAnamnesisRepository } from "../../../../../repositories/_mocks/AnamnesisRepositoryMock";
 
 describe("SetAnamnesisUseCase", () => {
   let setAnamnesisUseCase: SetAnamnesisUseCase;
-  let mockAnamnesisRepository: jest.Mocked<IAnamnesisRepository>;
 
   beforeEach(() => {
-    // Mock do repositório
-    mockAnamnesisRepository = {
-      get: jest.fn(),
-      update: jest.fn(),
-      save: jest.fn(),
-      saveMany: jest.fn(),
-    } as jest.Mocked<IAnamnesisRepository>;
-
+    jest.clearAllMocks();
     setAnamnesisUseCase = new SetAnamnesisUseCase(mockAnamnesisRepository);
   });
 

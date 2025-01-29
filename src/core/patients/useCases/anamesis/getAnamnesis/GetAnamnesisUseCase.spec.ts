@@ -1,19 +1,13 @@
 import { GetAnamnesisUseCase } from "./GetAnamnesisUseCase";
-import { IAnamnesisRepository } from "../../../../../repositories/anamnesis/IAnamnesisRepository";
 import { AnamnesisDTO } from "../../../models/Anamnesis";
-
-const mockAnamnesisRepository = {
-  get: jest.fn(),
-};
+import { mockAnamnesisRepository } from "../../../../../repositories/_mocks/AnamnesisRepositoryMock";
 
 describe("Get anamnesis use case", () => {
   let getAnamnesisUseCase: GetAnamnesisUseCase;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    getAnamnesisUseCase = new GetAnamnesisUseCase(
-      mockAnamnesisRepository as unknown as IAnamnesisRepository,
-    );
+    getAnamnesisUseCase = new GetAnamnesisUseCase(mockAnamnesisRepository);
   });
 
   it("Should return anamnesis data when found", async () => {
@@ -46,7 +40,7 @@ describe("Get anamnesis use case", () => {
     const patientId = "patient123";
     const userId = "user456";
 
-    mockAnamnesisRepository.get.mockResolvedValue(undefined);
+    mockAnamnesisRepository.get.mockResolvedValue(undefined as any);
 
     const result = await getAnamnesisUseCase.execute(patientId, userId);
 
