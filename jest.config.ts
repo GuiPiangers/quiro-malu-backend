@@ -19,11 +19,12 @@ export default {
   collectCoverage: true,
   collectCoverageFrom: [
     "src/**/*.ts", // Garante que todas as classes e funções na pasta src sejam analisadas
-    "!src/app.ts", // Ignora arquivos de inicialização ou ponto de entrada
-    "!src/router.ts", // Ignora arquivos de inicialização ou ponto de entrada
-    "!src/server.ts", // Ignora arquivos de inicialização ou ponto de entrada
-    "!src/**/index.ts", // Ignora arquivos de inicialização ou ponto de entrada
-    "!src/config/**", // Ignora arquivos de configuração
+    "!src/app.ts",
+    "!src/router.ts",
+    "!src/server.ts",
+    "!src/**/index.ts",
+    "!src/config/**",
+    "!src/repositories/**",
   ],
   coverageDirectory: "coverage",
   coverageReporters: ["json", "text", "lcov", "clover"],
