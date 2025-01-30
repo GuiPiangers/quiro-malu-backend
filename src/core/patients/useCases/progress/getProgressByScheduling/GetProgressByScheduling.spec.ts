@@ -2,7 +2,7 @@ import { mockProgressRepository } from "../../../../../repositories/_mocks/Progr
 import { ApiError } from "../../../../../utils/ApiError";
 import { GetProgressBySchedulingUseCase } from "./GetProgressBySchedulingUseCase";
 
-describe("getProgressByIdUseCase", () => {
+describe("getProgressBySchedulingUseCase", () => {
   let getProgressBySchedulingUseCase: GetProgressBySchedulingUseCase;
 
   beforeEach(() => {
