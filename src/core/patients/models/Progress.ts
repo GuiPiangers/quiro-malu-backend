@@ -39,7 +39,7 @@ export class Progress extends Entity {
     this.schedulingId = schedulingId;
   }
 
-  getDTO(): ProgressDTO {
+  getDTO() {
     return {
       id: this.id,
       patientId: this.patientId,
