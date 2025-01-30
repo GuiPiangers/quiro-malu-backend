@@ -1,4 +1,5 @@
 import { IProgressRepository } from "../../../../../repositories/progress/IProgressRepository";
+import { ApiError } from "../../../../../utils/ApiError";
 import { Progress } from "../../../models/Progress";
 
 export class GetProgressBySchedulingUseCase {
@@ -19,7 +20,7 @@ export class GetProgressBySchedulingUseCase {
       userId,
     });
     if (!progressData) {
-      return null;
+      throw new ApiError("Evolução não encontrada", 404);
     }
     const progress = new Progress(progressData);
     return progress.getDTO();
