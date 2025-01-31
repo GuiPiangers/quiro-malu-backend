@@ -6,20 +6,20 @@ import { CreateSchedulingUseCase } from "./CreateSchedulingUseCase";
 describe("createSchedulingUseCase", () => {
   let createSchedulingUseCase: CreateSchedulingUseCase;
 
-  beforeAll(() => {
-    jest
-      .useFakeTimers()
-      .setSystemTime(new Date("2025-01-10T12:00:00Z").getTime());
-  });
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-    createSchedulingUseCase = new CreateSchedulingUseCase(
-      mockSchedulingRepository,
-    );
-  });
-
   describe("execute", () => {
+    beforeAll(() => {
+      jest
+        .useFakeTimers()
+        .setSystemTime(new Date("2025-01-10T12:00:00Z").getTime());
+    });
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      createSchedulingUseCase = new CreateSchedulingUseCase(
+        mockSchedulingRepository,
+      );
+    });
+
     it("should call the repository create method with the correct Data", async () => {
       const patientId = "test-patient-id";
 
