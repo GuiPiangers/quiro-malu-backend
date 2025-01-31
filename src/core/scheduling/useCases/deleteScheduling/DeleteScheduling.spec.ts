@@ -12,7 +12,7 @@ describe("DeleteSchedulingUseCase", () => {
   });
 
   describe("execute", () => {
-    it("should call the repository delete method with the correct SchedulingId and userId", async () => {
+    it("should call the repository delete method with the correct params", async () => {
       const id = "test-Scheduling-id";
       const userId = "test-user-id";
 
