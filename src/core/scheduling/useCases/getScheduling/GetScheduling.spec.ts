@@ -15,23 +15,20 @@ describe("getSchedulingUseCase", () => {
       const userId = "test-user-id";
       const id = "test-scheduling-id";
 
-      const qtdSchedulesByDayData: SchedulingDTO[] = [
-        {
-          id,
-          patientId: "test-patient-id",
-          date: "2025-01-01T10:00",
-          duration: 3600,
-          service: "service",
-          phone: "phone",
-          status: "Agendado",
-        },
-      ];
+      const schedulingData: SchedulingDTO = {
+        id,
+        patientId: "test-patient-id",
+        date: "2025-01-01T10:00",
+        duration: 3600,
+        service: "service",
+        status: "Atendido",
+      };
 
-      mockSchedulingRepository.get.mockResolvedValue(qtdSchedulesByDayData);
+      mockSchedulingRepository.get.mockResolvedValue([schedulingData]);
 
       const result = await getSchedulingUseCase.execute({ userId, id });
 
-      expect(result).toEqual(qtdSchedulesByDayData);
+      expect(result).toEqual(schedulingData);
     });
 
     it("should call the repository get method with the correct params", async () => {
@@ -46,6 +43,7 @@ describe("getSchedulingUseCase", () => {
 
       expect(mockSchedulingRepository.get).toHaveBeenCalledTimes(1);
       expect(mockSchedulingRepository.get).toHaveBeenCalledWith({
+        id,
         userId,
       });
     });
