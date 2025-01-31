@@ -1,12 +1,8 @@
 import { RealizeSchedulingUseCase } from "./realizeSchedulingUseCase";
-import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
 import { IProgressRepository } from "../../../../repositories/progress/IProgressRepository";
 import { ProgressDTO } from "../../../patients/models/Progress";
 import { ApiError } from "../../../../utils/ApiError";
-
-const mockedSchedulingRepository = {
-  update: jest.fn(),
-};
+import { mockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
 
 const mockedProgressRepository = {
   getByScheduling: jest.fn(),
@@ -18,7 +14,7 @@ describe("Realize scheduling use case", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     realizeSchedulingUseCase = new RealizeSchedulingUseCase(
-      mockedSchedulingRepository as unknown as ISchedulingRepository,
+      mockSchedulingRepository,
       mockedProgressRepository as unknown as IProgressRepository,
     );
   });
@@ -36,7 +32,7 @@ describe("Realize scheduling use case", () => {
       } as ProgressDTO,
     ]);
 
-    mockedSchedulingRepository.update.mockResolvedValue(undefined);
+    mockSchedulingRepository.update.mockResolvedValue(undefined);
 
     const result = await realizeSchedulingUseCase.execute(
       realizeSchedulingData,
@@ -48,7 +44,7 @@ describe("Realize scheduling use case", () => {
       userId: realizeSchedulingData.userId,
     });
 
-    expect(mockedSchedulingRepository.update).toHaveBeenCalledWith({
+    expect(mockSchedulingRepository.update).toHaveBeenCalledWith({
       id: realizeSchedulingData.schedulingId,
       userId: realizeSchedulingData.userId,
       status: "Atendido",
@@ -65,12 +61,6 @@ describe("Realize scheduling use case", () => {
 
     mockedProgressRepository.getByScheduling.mockResolvedValue([]);
 
-    // expect(mockedProgressRepository.getByScheduling).toHaveBeenCalledWith({
-    //   schedulingId: realizeSchedulingData.schedulingId,
-    //   patientId: realizeSchedulingData.patientId,
-    //   userId: realizeSchedulingData.userId,
-    // });
-
     await expect(
       realizeSchedulingUseCase.execute(realizeSchedulingData),
     ).rejects.toThrow(ApiError);
@@ -84,6 +74,40 @@ describe("Realize scheduling use case", () => {
       expect((error as ApiError).statusCode).toBe(401);
     }
 
-    expect(mockedSchedulingRepository.update).not.toHaveBeenCalled();
+    expect(mockSchedulingRepository.update).not.toHaveBeenCalled();
+  });
+
+  it("should propagate an error if the scheduling repository update method throws", async () => {
+    const userId = "test-user-id";
+    const patientId = "test-patient-id";
+    const schedulingId = "test-scheduling-id";
+    const errorMessage = "Failed to listQtdSchedulesByDay";
+
+    mockedProgressRepository.getByScheduling.mockResolvedValue([
+      {
+        patientId,
+        schedulingId,
+      } as ProgressDTO,
+    ]);
+    mockSchedulingRepository.update.mockRejectedValue(new Error(errorMessage));
+
+    await expect(
+      realizeSchedulingUseCase.execute({ userId, patientId, schedulingId }),
+    ).rejects.toThrow(errorMessage);
+  });
+
+  it("should propagate an error if the progress repository getByScheduling method throws", async () => {
+    const userId = "test-user-id";
+    const patientId = "test-patient-id";
+    const schedulingId = "test-scheduling-id";
+    const errorMessage = "Failed to listQtdSchedulesByDay";
+
+    mockedProgressRepository.getByScheduling.mockRejectedValue(
+      new Error(errorMessage),
+    );
+
+    await expect(
+      realizeSchedulingUseCase.execute({ userId, patientId, schedulingId }),
+    ).rejects.toThrow(errorMessage);
   });
 });
