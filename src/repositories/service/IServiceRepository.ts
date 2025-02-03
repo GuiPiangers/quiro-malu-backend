@@ -13,7 +13,12 @@ export interface IServiceRepository {
     ...data
   }: ServiceDTO & { userId: string; id: string }): Promise<void>;
   list(data: listServiceProps): Promise<ServiceDTO[]>;
-  count({ userId }: { userId: string }): Promise<[{ total: number }]>;
+  count({
+    userId,
+  }: {
+    userId: string;
+    search?: string;
+  }): Promise<[{ total: number }]>;
   get(data: { id: string; userId: string }): Promise<ServiceDTO[]>;
   getByName(data: { name: string; userId: string }): Promise<ServiceDTO[]>;
   delete(data: { id: string; userId: string }): Promise<void>;

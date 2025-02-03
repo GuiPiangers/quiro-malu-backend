@@ -38,11 +38,17 @@ export class KnexServiceRepository implements IServiceRepository {
     return await result;
   }
 
-  async count({ userId }: { userId: string }): Promise<[{ total: number }]> {
+  async count({
+    userId,
+    search,
+  }: {
+    userId: string;
+    search?: string;
+  }): Promise<[{ total: number }]> {
     const [result] = await Knex(ETableNames.SERVICES)
       .count("id as total")
-      .where({ userId });
-
+      .where({ userId })
+      .andWhere("name", "like", `%${search ?? ""}%`);
     return [result] as [{ total: number }];
   }
 
