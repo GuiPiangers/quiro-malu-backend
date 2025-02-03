@@ -26,7 +26,7 @@ describe("ListService", () => {
     await listServiceUseCase.execute({
       userId,
       page: 1,
-      search: "Quiropraxia"
+      search: "Quiropraxia",
     });
 
     expect(mockServiceRepository.list).toHaveBeenCalledTimes(1);
