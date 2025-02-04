@@ -1,5 +1,5 @@
 import { KnexExamsRepository } from "../../../../repositories/examsRepository/KnexExamsRepository";
-import { RestoreExamUseCase } from "../../useCases/RestoreExamUSeCase";
+import { RestoreExamUseCase } from "../../useCases/restoreExam/RestoreExamUseCase";
 import { RestoreExamController } from "./RestoreExamController";
 
 const examRepository = new KnexExamsRepository();

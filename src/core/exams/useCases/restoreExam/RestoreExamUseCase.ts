@@ -1,4 +1,4 @@
-import { IExamsRepository } from "../../../repositories/examsRepository/IExamsRepository";
+import { IExamsRepository } from "../../../../repositories/examsRepository/IExamsRepository";
 
 export class RestoreExamUseCase {
   constructor(private examRepository: IExamsRepository) {}

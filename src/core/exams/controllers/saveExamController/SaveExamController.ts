@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { SaveExamUseCase } from "../../useCases/SaveExamUseCase";
+import { SaveExamUseCase } from "../../useCases/saveExam/SaveExamUseCase";
 import { ApiError } from "../../../../utils/ApiError";
 import { responseError } from "../../../../utils/ResponseError";
 

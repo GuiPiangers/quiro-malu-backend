@@ -1,6 +1,6 @@
-import { IExamsFileStorageRepository } from "../../../repositories/examsFileStorage/IExamsFileStorageRepository";
-import { IExamsRepository } from "../../../repositories/examsRepository/IExamsRepository";
-import { Exam, ExamDTO } from "../models/Exam";
+import { IExamsFileStorageRepository } from "../../../../repositories/examsFileStorage/IExamsFileStorageRepository";
+import { IExamsRepository } from "../../../../repositories/examsRepository/IExamsRepository";
+import { Exam, ExamDTO } from "../../models/Exam";
 
 export class SaveExamUseCase {
   constructor(

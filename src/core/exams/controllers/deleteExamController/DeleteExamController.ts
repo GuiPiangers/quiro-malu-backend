@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ApiError } from "../../../../utils/ApiError";
 import { responseError } from "../../../../utils/ResponseError";
-import { DeleteExamUseCase } from "../../useCases/deleteExam/DeleteExamUSeCase";
+import { DeleteExamUseCase } from "../../useCases/deleteExam/DeleteExamUseCase";
 
 export class DeleteExamController {
   constructor(private deleteExamUseCase: DeleteExamUseCase) {}

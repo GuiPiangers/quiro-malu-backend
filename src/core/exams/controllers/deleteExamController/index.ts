@@ -1,5 +1,5 @@
 import { KnexExamsRepository } from "../../../../repositories/examsRepository/KnexExamsRepository";
-import { DeleteExamUseCase } from "../../useCases/deleteExam/DeleteExamUSeCase";
+import { DeleteExamUseCase } from "../../useCases/deleteExam/DeleteExamUseCase";
 import { DeleteExamController } from "./DeleteExamController";
 
 const examRepository = new KnexExamsRepository();
