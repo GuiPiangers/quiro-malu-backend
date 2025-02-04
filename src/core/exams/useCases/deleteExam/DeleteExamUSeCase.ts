@@ -1,5 +1,5 @@
-import { IExamsRepository } from "../../../repositories/examsRepository/IExamsRepository";
-import { DateTime } from "../../shared/Date";
+import { IExamsRepository } from "../../../../repositories/examsRepository/IExamsRepository";
+import { DateTime } from "../../../shared/Date";
 
 export class DeleteExamUseCase {
   constructor(private examRepository: IExamsRepository) {}

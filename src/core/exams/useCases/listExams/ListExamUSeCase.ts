@@ -1,5 +1,5 @@
-import { IExamsFileStorageRepository } from "../../../repositories/examsFileStorage/IExamsFileStorageRepository";
-import { IExamsRepository } from "../../../repositories/examsRepository/IExamsRepository";
+import { IExamsFileStorageRepository } from "../../../../repositories/examsFileStorage/IExamsFileStorageRepository";
+import { IExamsRepository } from "../../../../repositories/examsRepository/IExamsRepository";
 
 export class ListExamUseCase {
   constructor(

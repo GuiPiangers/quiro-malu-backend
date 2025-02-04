@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ApiError } from "../../../../utils/ApiError";
 import { responseError } from "../../../../utils/ResponseError";
-import { ListExamUseCase } from "../../useCases/ListExamUSeCase";
+import { ListExamUseCase } from "../../useCases/listExams/ListExamUSeCase";
 
 export class ListExamController {
   constructor(private listExamUseCase: ListExamUseCase) {}
