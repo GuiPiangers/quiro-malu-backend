@@ -6,10 +6,14 @@ import {
 
 describe("SaveExamUseCase", () => {
   let saveExamUseCase: SaveExamUseCase;
-  const mockExamRepository = createMockExamRepository();
-  const mockExamFileStorageRepository = createMockExamFileStorageRepository();
+  let mockExamRepository: ReturnType<typeof createMockExamRepository>;
+  let mockExamFileStorageRepository: ReturnType<
+    typeof createMockExamFileStorageRepository
+  >;
 
   beforeEach(() => {
+    mockExamRepository = createMockExamRepository();
+    mockExamFileStorageRepository = createMockExamFileStorageRepository();
     jest.clearAllMocks();
     saveExamUseCase = new SaveExamUseCase(
       mockExamRepository,
