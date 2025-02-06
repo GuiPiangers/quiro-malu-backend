@@ -26,6 +26,7 @@ export default {
     "!src/config/**",
     "!src/repositories/**",
     "!src/database/**",
+    "!src/**/controllers/**",
   ],
   coverageDirectory: "coverage",
   coverageReporters: ["json", "text", "lcov", "clover"],
