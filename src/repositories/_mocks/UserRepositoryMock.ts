@@ -8,12 +8,14 @@ export const createMockUserRepository = (): IUserRepository => ({
   save: jest.fn(),
 });
 
-export const createMockRefreshTokenProvider = (): IRefreshTokenProvider => ({
-  delete: jest.fn(),
-  generate: jest.fn(),
-  getRefreshToken: jest.fn(),
-});
+export const createMockRefreshTokenProvider =
+  (): jest.Mocked<IRefreshTokenProvider> => ({
+    delete: jest.fn(),
+    generate: jest.fn(),
+    getRefreshToken: jest.fn(),
+  });
 
-export const createMockGenerateTokenProvider = (): IGenerateTokenProvider => ({
-  execute: jest.fn(),
-});
+export const createMockGenerateTokenProvider =
+  (): jest.Mocked<IGenerateTokenProvider> => ({
+    execute: jest.fn(),
+  });
