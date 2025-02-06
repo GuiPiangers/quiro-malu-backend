@@ -1,10 +1,11 @@
-import { mockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
+import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
 import { ApiError } from "../../../../utils/ApiError";
 import { SchedulingDTO } from "../../models/Scheduling";
 import { UpdateSchedulingUseCase } from "./UpdateSchedulingUseCase";
 
 describe("updateSchedulingUseCase", () => {
   let updateSchedulingUseCase: UpdateSchedulingUseCase;
+  const mockSchedulingRepository = createMockSchedulingRepository();
 
   describe("execute", () => {
     beforeAll(() => {

@@ -1,15 +1,17 @@
-import { mockFinanceRepository } from "../../../../repositories/_mocks/FinanceRepositoryMock";
+import { createMockFinanceRepository } from "../../../../repositories/_mocks/FinanceRepositoryMock";
 import { DeleteFinanceUseCase } from "./deleteFinanceUseCase";
 
 describe("DeleteFinanceUseCase", () => {
   let deleteFinanceUseCase: DeleteFinanceUseCase;
 
-  describe("execute", () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-      deleteFinanceUseCase = new DeleteFinanceUseCase(mockFinanceRepository);
-    });
+  const mockFinanceRepository = createMockFinanceRepository();
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+    deleteFinanceUseCase = new DeleteFinanceUseCase(mockFinanceRepository);
+  });
+
+  describe("execute", () => {
     it("Should call repository delete method with correct arguments ", async () => {
       const userId = "test-user-id";
       const FinanceId = "test-Finance-id";

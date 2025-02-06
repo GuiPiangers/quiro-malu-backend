@@ -1,18 +1,18 @@
-import { mockExamRepository } from "../../../../repositories/_mocks/ExamRepositoryMock";
+import { createMockExamRepository } from "../../../../repositories/_mocks/ExamRepositoryMock";
 import { DeleteExamUseCase } from "./DeleteExamUseCase";
 
 describe("DeleteExamUseCase", () => {
   let deleteExamUseCase: DeleteExamUseCase;
+  const mockExamRepository = createMockExamRepository();
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest
+      .useFakeTimers()
+      .setSystemTime(new Date("2025-01-10T12:00:00Z").getTime());
+    deleteExamUseCase = new DeleteExamUseCase(mockExamRepository);
+  });
   describe("execute", () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-      jest
-        .useFakeTimers()
-        .setSystemTime(new Date("2025-01-10T12:00:00Z").getTime());
-      deleteExamUseCase = new DeleteExamUseCase(mockExamRepository);
-    });
-
     it("Should call repository update method with correct arguments to set as deleted", async () => {
       const userId = "test-user-id";
       const examId = "test-Exam-id";

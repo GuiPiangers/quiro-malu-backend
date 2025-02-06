@@ -1,16 +1,18 @@
-import { mockServiceRepository } from "../../../../repositories/_mocks/ServiceRepositoryMock";
+import { createMockServiceRepository } from "../../../../repositories/_mocks/ServiceRepositoryMock";
 import { ServiceDTO } from "../../models/Service";
 import { GetServiceUseCase } from "./GetServiceUseCase";
 
 describe("getServiceUseCase", () => {
   let getServiceUseCase: GetServiceUseCase;
 
-  describe("execute", () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-      getServiceUseCase = new GetServiceUseCase(mockServiceRepository);
-    });
+  const mockServiceRepository = createMockServiceRepository();
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+    getServiceUseCase = new GetServiceUseCase(mockServiceRepository);
+  });
+
+  describe("execute", () => {
     it("Should return service data", async () => {
       const userId = "test-user-id";
       const serviceId = "test-service-id";

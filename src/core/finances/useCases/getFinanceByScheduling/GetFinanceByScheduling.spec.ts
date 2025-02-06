@@ -1,18 +1,20 @@
-import { mockFinanceRepository } from "../../../../repositories/_mocks/FinanceRepositoryMock";
+import { createMockFinanceRepository } from "../../../../repositories/_mocks/FinanceRepositoryMock";
 import { FinanceDTO } from "../../models/Finance";
 import { GetFinanceBySchedulingUseCase } from "./getFinanceByScheduling";
 
 describe("GetFinanceBySchedulingUseCase", () => {
   let getFinanceBySchedulingUseCase: GetFinanceBySchedulingUseCase;
 
-  describe("execute", () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-      getFinanceBySchedulingUseCase = new GetFinanceBySchedulingUseCase(
-        mockFinanceRepository,
-      );
-    });
+  const mockFinanceRepository = createMockFinanceRepository();
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+    getFinanceBySchedulingUseCase = new GetFinanceBySchedulingUseCase(
+      mockFinanceRepository,
+    );
+  });
+
+  describe("execute", () => {
     it("Should return Finance data", async () => {
       const userId = "test-user-id";
       const schedulingId = "test-scheduling-id";

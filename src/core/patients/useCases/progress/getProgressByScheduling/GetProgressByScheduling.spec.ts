@@ -1,9 +1,10 @@
-import { mockProgressRepository } from "../../../../../repositories/_mocks/ProgressRepositoryMock";
+import { createMockProgressRepository } from "../../../../../repositories/_mocks/ProgressRepositoryMock";
 import { ApiError } from "../../../../../utils/ApiError";
 import { GetProgressBySchedulingUseCase } from "./GetProgressBySchedulingUseCase";
 
 describe("getProgressBySchedulingUseCase", () => {
   let getProgressBySchedulingUseCase: GetProgressBySchedulingUseCase;
+  const mockProgressRepository = createMockProgressRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();

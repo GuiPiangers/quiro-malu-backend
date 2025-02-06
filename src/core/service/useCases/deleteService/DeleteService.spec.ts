@@ -1,15 +1,15 @@
-import { mockServiceRepository } from "../../../../repositories/_mocks/ServiceRepositoryMock";
+import { createMockServiceRepository } from "../../../../repositories/_mocks/ServiceRepositoryMock";
 import { DeleteServiceUseCase } from "./DeleteServiceUseCase";
 
 describe("DeleteServiceUseCase", () => {
   let deleteServiceUseCase: DeleteServiceUseCase;
+  const mockServiceRepository = createMockServiceRepository();
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+    deleteServiceUseCase = new DeleteServiceUseCase(mockServiceRepository);
+  });
   describe("execute", () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-      deleteServiceUseCase = new DeleteServiceUseCase(mockServiceRepository);
-    });
-
     it("Should call repository delete method with correct arguments ", async () => {
       const userId = "test-user-id";
       const serviceId = "test-service-id";

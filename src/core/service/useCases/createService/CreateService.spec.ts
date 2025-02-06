@@ -1,17 +1,18 @@
-import { mockServiceRepository } from "../../../../repositories/_mocks/ServiceRepositoryMock";
+import { createMockServiceRepository } from "../../../../repositories/_mocks/ServiceRepositoryMock";
 import { ApiError } from "../../../../utils/ApiError";
 import { ServiceDTO } from "../../models/Service";
 import { CreateServiceUseCase } from "./CreateServiceUseCase";
 
 describe("CreateServiceUseCase", () => {
   let createServiceUseCase: CreateServiceUseCase;
+  const mockServiceRepository = createMockServiceRepository();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    createServiceUseCase = new CreateServiceUseCase(mockServiceRepository);
+  });
 
   describe("execute", () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-      createServiceUseCase = new CreateServiceUseCase(mockServiceRepository);
-    });
-
     it("Should throw an ApiError if service name already exists", async () => {
       const userId = "test-user-id";
       const serviceData: ServiceDTO = {

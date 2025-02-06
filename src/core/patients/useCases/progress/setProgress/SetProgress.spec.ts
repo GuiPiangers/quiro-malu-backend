@@ -1,9 +1,10 @@
-import { mockProgressRepository } from "../../../../../repositories/_mocks/ProgressRepositoryMock";
+import { createMockProgressRepository } from "../../../../../repositories/_mocks/ProgressRepositoryMock";
 import { ProgressDTO } from "../../../models/Progress";
 import { SetProgressUseCase } from "./SetProgressUseCase";
 
 describe("setProgressUseCase", () => {
   let setProgressUseCase: SetProgressUseCase;
+  const mockProgressRepository = createMockProgressRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();

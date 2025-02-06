@@ -1,6 +1,6 @@
 import { IPatientRepository } from "../patient/IPatientRepository";
 
-export const mockPatientRepository: jest.Mocked<IPatientRepository> = {
+export const createMockPatientRepository= (): jest.Mocked<IPatientRepository>  => ( {
   getById: jest.fn(),
   countAll: jest.fn(),
   delete: jest.fn(),
@@ -10,4 +10,4 @@ export const mockPatientRepository: jest.Mocked<IPatientRepository> = {
   update: jest.fn(),
   getByHash: jest.fn(),
   saveMany: jest.fn(),
-};
+});

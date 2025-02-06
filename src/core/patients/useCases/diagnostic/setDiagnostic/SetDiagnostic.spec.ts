@@ -1,8 +1,9 @@
-import { mockDiagnosticRepository } from "../../../../../repositories/_mocks/DiagnosticRepositoryMock";
+import { createMockDiagnosticRepository } from "../../../../../repositories/_mocks/DiagnosticRepositoryMock";
 import { SetDiagnosticUseCase } from "./SetDiagnosticUseCase";
 
 describe("setDiagnosticUseCase", () => {
   let setDiagnosticUseCase: SetDiagnosticUseCase;
+  const mockDiagnosticRepository = createMockDiagnosticRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();

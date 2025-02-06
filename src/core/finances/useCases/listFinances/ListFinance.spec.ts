@@ -1,4 +1,4 @@
-import { mockFinanceRepository } from "../../../../repositories/_mocks/FinanceRepositoryMock";
+import { createMockFinanceRepository } from "../../../../repositories/_mocks/FinanceRepositoryMock";
 import { ApiError } from "../../../../utils/ApiError";
 import { FinanceDTO } from "../../models/Finance";
 import { ListFinancesUseCase } from "./listFinancesUseCase";
@@ -6,12 +6,14 @@ import { ListFinancesUseCase } from "./listFinancesUseCase";
 describe("listFinanceUseCase", () => {
   let listFinancesUseCase: ListFinancesUseCase;
 
-  describe("execute", () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-      listFinancesUseCase = new ListFinancesUseCase(mockFinanceRepository);
-    });
+  const mockFinanceRepository = createMockFinanceRepository();
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+    listFinancesUseCase = new ListFinancesUseCase(mockFinanceRepository);
+  });
+
+  describe("execute", () => {
     it("Should return Finance data", async () => {
       const userId = "test-user-id";
       const yearAndMonth = "2025-01";

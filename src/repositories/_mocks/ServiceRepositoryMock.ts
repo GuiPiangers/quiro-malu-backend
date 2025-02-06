@@ -1,6 +1,6 @@
 import { IServiceRepository } from "../service/IServiceRepository";
 
-export const mockServiceRepository: jest.Mocked<IServiceRepository> = {
+export const createMockServiceRepository= (): jest.Mocked<IServiceRepository>  => ( {
   save: jest.fn(),
   update: jest.fn(),
   list: jest.fn(),
@@ -8,4 +8,4 @@ export const mockServiceRepository: jest.Mocked<IServiceRepository> = {
   get: jest.fn(),
   getByName: jest.fn(),
   delete: jest.fn(),
-};
+});

@@ -1,9 +1,11 @@
-import { mockLocationRepository } from "../../../../repositories/_mocks/LocationRepositoryMock";
-import { mockPatientRepository } from "../../../../repositories/_mocks/PatientRepositoryMock";
+import { createMockLocationRepository } from "../../../../repositories/_mocks/LocationRepositoryMock";
+import { createMockPatientRepository } from "../../../../repositories/_mocks/PatientRepositoryMock";
 import { GetPatientUseCase } from "./GetPatientUseCase";
 
 describe("getPatientUseCase", () => {
   let getPatientUseCase: GetPatientUseCase;
+  const mockPatientRepository = createMockPatientRepository();
+  const mockLocationRepository = createMockLocationRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();

@@ -1,9 +1,10 @@
 import { PatientDTO } from "../../../models/Patient";
 import { ListPatientsUseCase } from "../ListPatientsUseCase";
-import { mockPatientRepository } from "../../../../../repositories/_mocks/PatientRepositoryMock";
+import { createMockPatientRepository } from "../../../../../repositories/_mocks/PatientRepositoryMock";
 
 describe("List patients", () => {
   let listPatientUseCase: ListPatientsUseCase;
+  const mockPatientRepository = createMockPatientRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();

@@ -1,8 +1,9 @@
-import { mockProgressRepository } from "../../../../../repositories/_mocks/ProgressRepositoryMock";
+import { createMockProgressRepository } from "../../../../../repositories/_mocks/ProgressRepositoryMock";
 import { ListProgressUseCase } from "./ListProgressUseCase";
 
 describe("listProgressUseCase", () => {
   let listProgressUseCase: ListProgressUseCase;
+  const mockProgressRepository = createMockProgressRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();

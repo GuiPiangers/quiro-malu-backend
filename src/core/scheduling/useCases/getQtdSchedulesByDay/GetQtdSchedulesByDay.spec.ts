@@ -1,8 +1,9 @@
-import { mockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
+import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
 import { GetQtdSchedulesByDay } from "./GetQtdSchedulesByDay";
 
 describe("getQtdSchedulesByDayUseCase", () => {
   let getQtdSchedulesByDayUseCase: GetQtdSchedulesByDay;
+  const mockSchedulingRepository = createMockSchedulingRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();

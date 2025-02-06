@@ -1,9 +1,10 @@
 import { GetAnamnesisUseCase } from "./GetAnamnesisUseCase";
 import { AnamnesisDTO } from "../../../models/Anamnesis";
-import { mockAnamnesisRepository } from "../../../../../repositories/_mocks/AnamnesisRepositoryMock";
+import { createMockAnamnesisRepository } from "../../../../../repositories/_mocks/AnamnesisRepositoryMock";
 
 describe("Get anamnesis use case", () => {
   let getAnamnesisUseCase: GetAnamnesisUseCase;
+  const mockAnamnesisRepository = createMockAnamnesisRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();

@@ -1,10 +1,11 @@
-import { mockServiceRepository } from "../../../../repositories/_mocks/ServiceRepositoryMock";
+import { createMockServiceRepository } from "../../../../repositories/_mocks/ServiceRepositoryMock";
 import { ApiError } from "../../../../utils/ApiError";
 import { ServiceDTO } from "../../models/Service";
 import { UpdateServiceUseCase } from "./UpdateServiceUseCase";
 
 describe("updateServiceUseCase", () => {
   let updateServiceUseCase: UpdateServiceUseCase;
+  const mockServiceRepository = createMockServiceRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();

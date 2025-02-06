@@ -1,18 +1,19 @@
-import { mockExamRepository } from "../../../../repositories/_mocks/ExamRepositoryMock";
+import { createMockExamRepository } from "../../../../repositories/_mocks/ExamRepositoryMock";
 import { RestoreExamUseCase } from "./RestoreExamUseCase";
 
 describe("restoreExamUseCase", () => {
   let restoreExamUseCase: RestoreExamUseCase;
+  const mockExamRepository = createMockExamRepository();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest
+      .useFakeTimers()
+      .setSystemTime(new Date("2025-01-10T12:00:00Z").getTime());
+    restoreExamUseCase = new RestoreExamUseCase(mockExamRepository);
+  });
 
   describe("execute", () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-      jest
-        .useFakeTimers()
-        .setSystemTime(new Date("2025-01-10T12:00:00Z").getTime());
-      restoreExamUseCase = new RestoreExamUseCase(mockExamRepository);
-    });
-
     it("Should call repository update method with correct arguments to set as restored", async () => {
       const userId = "test-user-id";
       const examId = "test-Exam-id";

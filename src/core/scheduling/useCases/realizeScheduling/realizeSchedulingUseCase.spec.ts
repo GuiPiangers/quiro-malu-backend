@@ -2,7 +2,7 @@ import { RealizeSchedulingUseCase } from "./realizeSchedulingUseCase";
 import { IProgressRepository } from "../../../../repositories/progress/IProgressRepository";
 import { ProgressDTO } from "../../../patients/models/Progress";
 import { ApiError } from "../../../../utils/ApiError";
-import { mockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
+import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
 
 const mockedProgressRepository = {
   getByScheduling: jest.fn(),
@@ -10,6 +10,7 @@ const mockedProgressRepository = {
 
 describe("Realize scheduling use case", () => {
   let realizeSchedulingUseCase: RealizeSchedulingUseCase;
+  const mockSchedulingRepository = createMockSchedulingRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -18,6 +19,7 @@ describe("Realize scheduling use case", () => {
       mockedProgressRepository as unknown as IProgressRepository,
     );
   });
+
   it("Should be able to set scheduling Realized if a progress has been associated to scheduling", async () => {
     const realizeSchedulingData = {
       userId: "userId1",

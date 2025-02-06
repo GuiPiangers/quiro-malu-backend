@@ -1,18 +1,19 @@
-import { mockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
+import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
 import { ApiError } from "../../../../utils/ApiError";
 import { SchedulingDTO } from "../../models/Scheduling";
 import { CreateSchedulingUseCase } from "./CreateSchedulingUseCase";
 
 describe("createSchedulingUseCase", () => {
   let createSchedulingUseCase: CreateSchedulingUseCase;
+  const mockSchedulingRepository = createMockSchedulingRepository();
+
+  beforeAll(() => {
+    jest
+      .useFakeTimers()
+      .setSystemTime(new Date("2025-01-10T12:00:00Z").getTime());
+  });
 
   describe("execute", () => {
-    beforeAll(() => {
-      jest
-        .useFakeTimers()
-        .setSystemTime(new Date("2025-01-10T12:00:00Z").getTime());
-    });
-
     beforeEach(() => {
       jest.clearAllMocks();
       createSchedulingUseCase = new CreateSchedulingUseCase(

@@ -1,9 +1,10 @@
-import { mockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
+import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
 import { SchedulingStatus } from "../../models/Scheduling";
 import { ListSchedulingUseCase } from "./ListSchedulingUseCase";
 
 describe("listSchedulingUseCase", () => {
   let listSchedulingUseCase: ListSchedulingUseCase;
+  const mockSchedulingRepository = createMockSchedulingRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();

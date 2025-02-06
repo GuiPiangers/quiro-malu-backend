@@ -1,6 +1,6 @@
 import { IProgressRepository } from "../progress/IProgressRepository";
 
-export const mockProgressRepository: jest.Mocked<IProgressRepository> = {
+export const createMockProgressRepository= (): jest.Mocked<IProgressRepository>  => ( {
   count: jest.fn(),
   delete: jest.fn(),
   get: jest.fn(),
@@ -8,4 +8,4 @@ export const mockProgressRepository: jest.Mocked<IProgressRepository> = {
   list: jest.fn(),
   save: jest.fn(),
   update: jest.fn(),
-};
+});

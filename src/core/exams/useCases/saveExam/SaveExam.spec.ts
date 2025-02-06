@@ -1,22 +1,13 @@
 import { SaveExamUseCase } from "./SaveExamUseCase";
 import {
-  mockExamFileStorageRepository,
-  mockExamRepository,
+  createMockExamFileStorageRepository,
+  createMockExamRepository,
 } from "../../../../repositories/_mocks/ExamRepositoryMock";
 
 describe("SaveExamUseCase", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   let saveExamUseCase: SaveExamUseCase;
-
-  const patientId = "patient1";
-  const userId = "user1";
-  const dummyFile = {
-    originalname: "dummy.pdf",
-    size: 1234,
-  } as Express.Multer.File;
+  const mockExamRepository = createMockExamRepository();
+  const mockExamFileStorageRepository = createMockExamFileStorageRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -25,12 +16,14 @@ describe("SaveExamUseCase", () => {
       mockExamFileStorageRepository,
     );
   });
+  const patientId = "patient1";
+  const userId = "user1";
+  const dummyFile = {
+    originalname: "dummy.pdf",
+    size: 1234,
+  } as Express.Multer.File;
 
   describe("Verificação de chamadas de métodos com os parâmetros corretos", () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-    });
-
     it("deve chamar mockExamFileStorageRepository.save e mockExamRepository.save com os parâmetros corretos", async () => {
       await saveExamUseCase.execute({ file: dummyFile, patientId, userId });
 
@@ -52,10 +45,6 @@ describe("SaveExamUseCase", () => {
   });
 
   describe("Propagação de erros", () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-    });
-
     it("deve propagar erro se mockExamFileStorageRepository.save lançar um erro", async () => {
       const errorMessage = "Erro no save do storage";
       mockExamFileStorageRepository.save.mockRejectedValue(

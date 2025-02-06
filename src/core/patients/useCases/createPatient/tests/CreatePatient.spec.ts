@@ -1,13 +1,14 @@
 import { Patient, PatientDTO } from "../../../models/Patient";
 import { CreatePatientUseCase } from "../CreatePatientUseCase";
-import { ILocationRepository } from "../../../../../repositories/location/ILocationRepository";
 import { ApiError } from "../../../../../utils/ApiError";
-import { mockPatientRepository } from "../../../../../repositories/_mocks/PatientRepositoryMock";
-import { mockLocationRepository } from "../../../../../repositories/_mocks/LocationRepositoryMock";
+import { createMockPatientRepository } from "../../../../../repositories/_mocks/PatientRepositoryMock";
+import { createMockLocationRepository } from "../../../../../repositories/_mocks/LocationRepositoryMock";
 
 describe("Create patients", () => {
   let createPatientUseCase: CreatePatientUseCase;
   const userId = "userId";
+  const mockPatientRepository = createMockPatientRepository();
+  const mockLocationRepository = createMockLocationRepository();
 
   beforeAll(() => {
     jest.clearAllMocks();

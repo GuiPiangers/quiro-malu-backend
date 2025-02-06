@@ -1,8 +1,9 @@
-import { mockPatientRepository } from "../../../../repositories/_mocks/PatientRepositoryMock";
+import { createMockPatientRepository } from "../../../../repositories/_mocks/PatientRepositoryMock";
 import { DeletePatientUseCase } from "./DeletePatientUseCase";
 
 describe("DeletePatientUseCase", () => {
   let deletePatientUseCase: DeletePatientUseCase;
+  const mockPatientRepository = createMockPatientRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();

@@ -1,6 +1,6 @@
 import {
-  mockExamFileStorageRepository,
-  mockExamRepository,
+  createMockExamFileStorageRepository,
+  createMockExamRepository,
 } from "../../../../repositories/_mocks/ExamRepositoryMock";
 import { ListExamUseCase } from "./ListExamUseCase";
 
@@ -9,6 +9,8 @@ describe("ListExamUseCase", () => {
 
   const patientId = "patient1";
   const userId = "user1";
+  const mockExamRepository = createMockExamRepository();
+  const mockExamFileStorageRepository = createMockExamFileStorageRepository();
 
   beforeEach(() => {
     listExamUseCase = new ListExamUseCase(
