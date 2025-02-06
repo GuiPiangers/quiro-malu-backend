@@ -25,4 +25,15 @@ export class Notification extends Entity {
     this.type = type;
     this.read = read;
   }
+
+  getDTO() {
+    return {
+      createdAt: this.createdAt,
+      message: this.message,
+      read: this.read,
+      title: this.title,
+      type: this.type,
+      id: this.id,
+    };
+  }
 }
