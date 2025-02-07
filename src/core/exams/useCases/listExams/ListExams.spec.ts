@@ -57,6 +57,21 @@ describe("ListExamUseCase", () => {
       });
     });
 
+    it("deve ajustar page para 1 quando o valor não é informado", async () => {
+      const limit = 5;
+      const offset = 0;
+      mockExamRepository.list.mockResolvedValue([]);
+      mockExamRepository.count.mockResolvedValue({ total: 0 });
+
+      await listExamUseCase.execute({ patientId, userId });
+
+      expect(mockExamRepository.list).toHaveBeenCalledWith({
+        patientId,
+        userId,
+        config: { limit, offset },
+      });
+    });
+
     it("deve chamar examFileStorage.get para cada exame retornado", async () => {
       const examData = [
         { id: "exam1", fileName: "file1.pdf", patientId: "test-patient-id" },
