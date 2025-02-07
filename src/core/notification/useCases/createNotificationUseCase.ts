@@ -1,10 +1,10 @@
 import { INotificationRepository } from "../../../repositories/notification/INotificationRepository";
-import { Notification, NotificationDOT } from "../models/Notification";
+import { Notification, NotificationDTO } from "../models/Notification";
 
 export default class CreateNotificationUseCase {
   constructor(private notificationRepository: INotificationRepository) {}
 
-  async execute({ userId, ...data }: NotificationDOT & { userId: string }) {
+  async execute({ userId, ...data }: NotificationDTO & { userId: string }) {
     const notification = new Notification(data);
     const notificationDTO = notification.getDTO();
 

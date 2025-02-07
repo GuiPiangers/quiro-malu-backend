@@ -1,6 +1,6 @@
 import { createMockNotificationRepository } from "../../../repositories/_mocks/NotificationRepositoryMock";
 import { DateTime } from "../../shared/Date";
-import { NotificationDOT } from "../models/Notification";
+import { NotificationDTO } from "../models/Notification";
 import CreateNotificationUseCase from "./createNotificationUseCase";
 
 describe("CreateNotificationUseCase", () => {
@@ -16,7 +16,7 @@ describe("CreateNotificationUseCase", () => {
     );
   });
 
-  const notification: NotificationDOT & { userId: string } = {
+  const notification: NotificationDTO & { userId: string } = {
     createdAt: DateTime.now(),
     message: "Message",
     read: false,
