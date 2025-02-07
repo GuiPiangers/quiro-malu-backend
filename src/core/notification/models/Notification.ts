@@ -15,7 +15,7 @@ export class Notification extends Entity {
   readonly type: string;
   readonly message: string;
   readonly createdAt: DateTime;
-  readonly read?: boolean;
+  readonly read: boolean;
 
   constructor({ id, createdAt, message, read, title, type }: NotificationDOT) {
     super(id);
