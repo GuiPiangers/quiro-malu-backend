@@ -36,7 +36,7 @@ export class Patient extends Entity {
   readonly profession?: string;
   readonly maritalStatus?: MaritalStatusType;
 
-  constructor(props: PatientDTO) {
+  constructor(props: Omit<PatientDTO, "hashData">) {
     const {
       id,
       phone,
@@ -45,7 +45,6 @@ export class Patient extends Entity {
       location,
       dateOfBirth,
       gender,
-      hashData,
       education,
       maritalStatus,
       profession,
@@ -62,15 +61,13 @@ export class Patient extends Entity {
     this.dateOfBirth = dateOfBirth
       ? new DateTime(dateOfBirth, { onlyPassDate: true })
       : undefined;
-    this.hashData =
-      hashData ??
-      Crypto.createFixedHash(
-        JSON.stringify({
-          name: this.name.value.replace(" ", "").toLocaleLowerCase(),
-          phone: this.phone.replace(" ", ""),
-          dateOfBirth: this.dateOfBirth?.value,
-        }),
-      );
+    this.hashData = Crypto.createFixedHash(
+      JSON.stringify({
+        name: this.name.value.replace(" ", "").toLocaleLowerCase(),
+        phone: this.phone.replace(" ", ""),
+        dateOfBirth: this.dateOfBirth?.value,
+      }),
+    );
   }
 
   get phone() {
