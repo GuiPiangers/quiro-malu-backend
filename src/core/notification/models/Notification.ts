@@ -1,7 +1,7 @@
 import { DateTime } from "../../shared/Date";
 import { Entity } from "../../shared/Entity";
 
-export type NotificationDOT = {
+export type NotificationDTO = {
   id?: string;
   title: string;
   type: string;
@@ -17,7 +17,7 @@ export class Notification extends Entity {
   readonly createdAt: DateTime;
   readonly read: boolean;
 
-  constructor({ id, createdAt, message, read, title, type }: NotificationDOT) {
+  constructor({ id, createdAt, message, read, title, type }: NotificationDTO) {
     super(id);
     this.title = title;
     this.createdAt = createdAt;
