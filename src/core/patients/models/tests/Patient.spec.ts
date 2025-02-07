@@ -156,42 +156,75 @@ describe("Patient", () => {
     ).toThrow("A data informada não é válida");
   });
 
-  it("should return patient data as DTO", () => {
-    const patientData: PatientDTO = {
-      id: "3",
-      name: "Alice Doe",
-      phone: "(56) 12345 6789",
-      dateOfBirth: "1990-10-10T00:00",
-      gender: "feminino",
-      cpf: "987.654.321-00",
-      location: { city: "Another City", state: "Another State" },
-      education: "Fundamental completo",
-      maritalStatus: "casado",
-      profession: "advogado",
-    };
+  describe("getDTO", () => {
+    it("should return patient data as DTO", () => {
+      const patientData: PatientDTO = {
+        id: "3",
+        name: "Alice Doe",
+        phone: "(56) 12345 6789",
+        dateOfBirth: "1990-10-10T00:00",
+        gender: "feminino",
+        cpf: "987.654.321-00",
+        location: { city: "Another City", state: "Another State" },
+        education: "Fundamental completo",
+        maritalStatus: "casado",
+        profession: "advogado",
+      };
 
-    const patient = new Patient(patientData);
+      const patient = new Patient(patientData);
 
-    const patientDTO = patient.getPatientDTO();
+      const patientDTO = patient.getPatientDTO();
 
-    expect(patientDTO).toEqual({
-      id: "3",
-      name: "Alice Doe",
-      phone: "(56) 12345 6789",
-      dateOfBirth: "1990-10-10",
-      gender: "feminino",
-      cpf: "987.654.321-00",
-      hashData: patient.hashData,
-      education: "fundamental completo",
-      maritalStatus: "casado",
-      profession: "advogado",
-      location: {
-        city: "Another City",
-        state: "Another State",
-        address: undefined,
-        cep: undefined,
-        neighborhood: undefined,
-      },
+      expect(patientDTO).toEqual({
+        id: "3",
+        name: "Alice Doe",
+        phone: "(56) 12345 6789",
+        dateOfBirth: "1990-10-10",
+        gender: "feminino",
+        cpf: "987.654.321-00",
+        hashData: patient.hashData,
+        education: "fundamental completo",
+        maritalStatus: "casado",
+        profession: "advogado",
+        location: {
+          city: "Another City",
+          state: "Another State",
+          address: undefined,
+          cep: undefined,
+          neighborhood: undefined,
+        },
+      });
+    });
+
+    it("should return patient data as DTO without optional fields", () => {
+      const patientData: PatientDTO = {
+        id: "3",
+        name: "Alice Doe",
+        phone: "(56) 12345 6789",
+        gender: "feminino",
+        cpf: "987.654.321-00",
+        education: "Fundamental completo",
+        maritalStatus: "casado",
+        profession: "advogado",
+      };
+
+      const patient = new Patient(patientData);
+
+      const patientDTO = patient.getPatientDTO();
+
+      expect(patientDTO).toEqual({
+        id: "3",
+        name: "Alice Doe",
+        phone: "(56) 12345 6789",
+        dateOfBirth: undefined,
+        gender: "feminino",
+        cpf: "987.654.321-00",
+        hashData: patient.hashData,
+        education: "fundamental completo",
+        maritalStatus: "casado",
+        profession: "advogado",
+        location: undefined,
+      });
     });
   });
 });
