@@ -1,14 +1,14 @@
 import { Notification } from "../../../notification/models/Notification";
 
-export type Observer = (
+export type NotificationObserverEvent = (
   notification: Notification,
   totalNotRead: number,
 ) => Promise<void>;
 
 class NotificationObserver {
-  private observers = new Set<Observer>();
+  private observers = new Set<NotificationObserverEvent>();
 
-  addObserver(observer: Observer) {
+  addObserver(observer: NotificationObserverEvent) {
     this.observers.add(observer);
   }
 
