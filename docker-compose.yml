@@ -27,6 +27,17 @@ services:
     networks:
       - minha_rede
 
+  mongo:
+    image: mongo:8.0.4
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - mongoDb:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - minha_rede
   prometheus:
     container_name: prometheus
     image: prom/prometheus
@@ -72,6 +83,7 @@ services:
 
 volumes:
   db:
+  mongoDb:
   loki_data:
 networks:
   minha_rede:
