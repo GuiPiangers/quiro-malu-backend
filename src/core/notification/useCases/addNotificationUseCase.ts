@@ -1,4 +1,5 @@
 import { INotificationRepository } from "../../../repositories/notification/INotificationRepository";
+import { notificationObserver } from "../../shared/observers/NotificationObserver/NotificationObserver";
 import { Notification, NotificationDTO } from "../models/Notification";
 
 export default class CreateNotificationUseCase {
@@ -9,5 +10,10 @@ export default class CreateNotificationUseCase {
     const notificationDTO = notification.getDTO();
 
     await this.notificationRepository.save({ ...notificationDTO, userId });
+    const totalNotRead = await this.notificationRepository.countNotRead({
+      userId,
+    });
+
+    notificationObserver.notify(notification, totalNotRead);
   }
 }
