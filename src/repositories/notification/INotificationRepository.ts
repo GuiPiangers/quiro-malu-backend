@@ -1,11 +1,11 @@
 import { NotificationDTO } from "../../core/notification/models/Notification";
 
-export type SaveNotificationParams = NotificationDTO & {
+export type SaveNotificationParams = Omit<NotificationDTO, "createdAt"> & {
   id: string;
   userId: string;
 };
 
-export type UpdateNotificationParams = NotificationDTO & {
+export type UpdateNotificationParams = Omit<NotificationDTO, "createdAt"> & {
   id: string;
   userId: string;
 };
@@ -30,7 +30,7 @@ export interface INotificationRepository {
   save(data: SaveNotificationParams): Promise<void>;
   delete(data: DeleteNotificationParams): Promise<void>;
   update(data: UpdateNotificationParams): Promise<void>;
-  get(data: GetNotificationParams): Promise<void>;
-  list(data: ListNotificationParams): Promise<void>;
+  get(data: GetNotificationParams): Promise<NotificationDTO | null>;
+  list(data: ListNotificationParams): Promise<NotificationDTO[]>;
   countNotRead(data: CountNotReadNotificationParams): Promise<number>;
 }
