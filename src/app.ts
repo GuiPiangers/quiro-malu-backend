@@ -33,6 +33,10 @@ app.get("/metrics", async (req, res) => {
   res.end(await register.metrics());
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
 app.use(router);
 
 export { app };
