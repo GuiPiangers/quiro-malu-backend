@@ -1,4 +1,4 @@
-import e, { Router } from "express";
+import { Router } from "express";
 import { createUserController } from "./core/authentication/controllers/createUserController";
 import { loginUserController } from "./core/authentication/controllers/loginUserController";
 import { refreshTokenController } from "./core/authentication/controllers/refreshTokenController";
