@@ -7,7 +7,7 @@ import { getUserProfileController } from "./core/authentication/controllers/getU
 import { createPatientController } from "./core/patients/controllers/createPatientController";
 import { listPatientsController } from "./core/patients/controllers/listPatientsController";
 import { getPatientController } from "./core/patients/controllers/getPatientController";
-import { updatePatientController } from "./core/patients/controllers/updatePatientContoller";
+import { updatePatientController } from "./core/patients/controllers/updatePatientController";
 import { logoutController } from "./core/authentication/controllers/logout";
 import { deletePatientController } from "./core/patients/controllers/deletePatientsController";
 import { setAnamnesisController } from "./core/patients/controllers/setAnamnesisController";
