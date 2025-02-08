@@ -5,6 +5,7 @@ import cors from "cors";
 import { responseTimeMiddleware } from "./metrics/restResponseTimeHistogram";
 import { register } from "./metrics";
 import { httpRequestCounterMiddleware } from "./metrics/requestCounter";
+import { mongoConnect } from "./database/mongoose";
 
 const app = express();
 
@@ -38,5 +39,7 @@ app.get("/health", (req, res) => {
 });
 
 app.use(router);
+
+mongoConnect();
 
 export { app };
