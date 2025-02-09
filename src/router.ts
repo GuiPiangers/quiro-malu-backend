@@ -43,6 +43,9 @@ import { saveExamController } from "./core/exams/controllers/saveExamController"
 import { deleteExamController } from "./core/exams/controllers/deleteExamController";
 import { listExamController } from "./core/exams/controllers/listExamController";
 import { restoreExamController } from "./core/exams/controllers/restoreExamController";
+import { SentWebPushController } from "./core/notification/controllers/sentNotification/sentWebPushController";
+import { notificationObserver } from "./core/shared/observers/NotificationObserver/NotificationObserver";
+import { Notification } from "./core/notification/models/Notification";
 
 const router = Router();
 const multerConfig = multer({
@@ -225,6 +228,27 @@ router.post("/exams/:patientId/:id", authMiddleware, (request, response) => {
 });
 router.get("/exams/:patientId", authMiddleware, (request, response) => {
   listExamController.handle(request, response);
+});
+
+router.post("/subscribe", (request, response) => {
+  console.log("cegou aqui");
+  const sentWebPushController = new SentWebPushController();
+
+  sentWebPushController.handle(request, response);
+});
+
+router.post("/notify", (req, res) => {
+  const { title, message } = req.body;
+
+  const notification = new Notification({
+    title,
+    type: "type",
+    message,
+    read: false,
+  });
+
+  notificationObserver.notify(notification);
+  res.json({ success: true });
 });
 
 export { router };
