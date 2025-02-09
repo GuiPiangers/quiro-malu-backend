@@ -6,7 +6,7 @@ export type NotificationDTO = {
   title: string;
   type: string;
   message: string;
-  createdAt: DateTime;
+  createdAt?: DateTime;
   read: boolean;
 };
 
@@ -14,7 +14,7 @@ export class Notification extends Entity {
   readonly title: string;
   readonly type: string;
   readonly message: string;
-  readonly createdAt: DateTime;
+  readonly createdAt?: DateTime;
   readonly read: boolean;
 
   constructor({ id, createdAt, message, read, title, type }: NotificationDTO) {
