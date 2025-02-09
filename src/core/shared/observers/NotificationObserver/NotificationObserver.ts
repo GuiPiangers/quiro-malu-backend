@@ -20,6 +20,10 @@ class NotificationObserver {
     );
     await Promise.allSettled(executeObserver);
   }
+
+  list() {
+    return Array.from(this.observers);
+  }
 }
 
 const notificationObserver = new NotificationObserver();
