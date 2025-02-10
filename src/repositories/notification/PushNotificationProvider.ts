@@ -1,7 +1,11 @@
 import { NotificationDTO } from "../../core/notification/models/Notification";
+import { SubscriptionModel } from "../../database/mongoose/schemas/Sbuscription";
 import {
+  GetSubscriptionsParams,
   IPushNotificationProvider,
+  SubscribeParams,
   Subscription,
+  UnsubscribeParams,
 } from "./IPushNotificationProvider";
 import PushNotifications from "node-pushnotifications";
 
@@ -30,7 +34,7 @@ export class PushNotificationProvider implements IPushNotificationProvider {
     };
     const push = new PushNotifications(settings);
 
-    const payload = { title: title, body: message };
+    const payload = { title, body: message };
     push.send(subscription, payload, (err, result) => {
       if (err) {
         console.log(err);
@@ -38,18 +42,24 @@ export class PushNotificationProvider implements IPushNotificationProvider {
     });
   }
 
-  async subscribe(subscription: Subscription): Promise<void> {
-    throw new Error("Method not implemented.");
+  async subscribe({ userId, subscription }: SubscribeParams): Promise<void> {
+    await SubscriptionModel.findOneAndUpdate(
+      { userId },
+      { $push: { subscriptions: subscription } },
+      { upsert: true, new: true },
+    );
   }
 
-  async unsubscribe(data: {
+  async unsubscribe({ userId }: UnsubscribeParams): Promise<void> {
+    await SubscriptionModel.deleteOne({
+      userId,
+    });
+  }
+
+  async getSubscriptions({ userId }: GetSubscriptionsParams): Promise<{
     userId: string;
-    subscription: Subscription;
-  }): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-
-  async getSubscriptions(data: { userId: string }): Promise<Subscription[]> {
-    throw new Error("Method not implemented.");
+    subscriptions: Subscription[];
+  } | null> {
+    return await SubscriptionModel.findOne({ userId });
   }
 }
