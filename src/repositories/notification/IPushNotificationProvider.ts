@@ -3,12 +3,24 @@ import { NotificationDTO } from "../../core/notification/models/Notification";
 
 export type Subscription = PushSubscription;
 
+export type SubscribeParams = {
+  userId: string;
+  subscription: Subscription;
+};
+
+export type UnsubscribeParams = {
+  userId: string;
+};
+
+export type GetSubscriptionsParams = {
+  userId: string;
+};
+
 export interface IPushNotificationProvider {
   send(subscription: Subscription, payload: NotificationDTO): Promise<void>;
-  subscribe(subscription: Subscription): Promise<void>;
-  unsubscribe(data: {
-    userId: string;
-    subscription: Subscription;
-  }): Promise<void>;
-  getSubscriptions(data: { userId: string }): Promise<Subscription[]>;
+  subscribe(data: SubscribeParams): Promise<void>;
+  unsubscribe(data: UnsubscribeParams): Promise<void>;
+  getSubscriptions(
+    data: GetSubscriptionsParams,
+  ): Promise<{ userId: string; subscriptions: Subscription[] } | null>;
 }
