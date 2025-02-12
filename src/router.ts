@@ -46,6 +46,8 @@ import { restoreExamController } from "./core/exams/controllers/restoreExamContr
 import { SendWebPushController } from "./core/notification/controllers/sendNotification/sendWebPushController";
 import { notificationObserver } from "./core/shared/observers/NotificationObserver/NotificationObserver";
 import { Notification } from "./core/notification/models/Notification";
+import { subscribeNotificationController } from "./core/notification/useCases/subscribeNotification";
+import { sendPushNotificationUseCase } from "./core/notification/useCases/sendPushNotification";
 
 const router = Router();
 const multerConfig = multer({
@@ -230,25 +232,32 @@ router.get("/exams/:patientId", authMiddleware, (request, response) => {
   listExamController.handle(request, response);
 });
 
-router.post("/subscribe", (request, response) => {
-  console.log("cegou aqui");
-  const sentWebPushController = new SendWebPushController();
-
-  sentWebPushController.handle(request, response);
+router.post("/subscribe", authMiddleware, async (request, response) => {
+  return await subscribeNotificationController.handle(request, response);
 });
 
-router.post("/notify", (req, res) => {
-  const { title, message } = req.body;
+router.post("/notify", authMiddleware, async (req, res) => {
+  try {
+    const { title, message } = req.body;
+    const userId = req.user?.id;
 
-  const notification = new Notification({
-    title,
-    type: "type",
-    message,
-    read: false,
-  });
+    if (!userId) return res.send({ message: "O usuário deve estar logado" });
 
-  notificationObserver.notify(notification);
-  res.json({ success: true });
+    const notificationData = new Notification({
+      title,
+      type: "type",
+      message,
+      read: false,
+    });
+
+    await notificationObserver.notify(notificationData);
+
+    await sendPushNotificationUseCase.execute({ notificationData, userId });
+
+    res.json({ success: true });
+  } catch (error: any) {
+    res.send({ message: error.message });
+  }
 });
 
 export { router };
