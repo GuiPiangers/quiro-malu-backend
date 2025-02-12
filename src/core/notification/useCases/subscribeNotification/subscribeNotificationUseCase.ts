@@ -18,8 +18,6 @@ export class SubscribeNotificationUseCase {
         userId,
       })) || { subscriptions: [] };
 
-    console.log("chegou qui");
-
     if (subscriptions.every((sub) => sub.endpoint !== subscription.endpoint))
       await this.pushNotificationProvider.subscribe({ subscription, userId });
   }
