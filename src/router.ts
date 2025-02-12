@@ -43,7 +43,6 @@ import { saveExamController } from "./core/exams/controllers/saveExamController"
 import { deleteExamController } from "./core/exams/controllers/deleteExamController";
 import { listExamController } from "./core/exams/controllers/listExamController";
 import { restoreExamController } from "./core/exams/controllers/restoreExamController";
-import { SendWebPushController } from "./core/notification/controllers/sendNotification/sendWebPushController";
 import { notificationObserver } from "./core/shared/observers/NotificationObserver/NotificationObserver";
 import { Notification } from "./core/notification/models/Notification";
 import { subscribeNotificationController } from "./core/notification/useCases/subscribeNotification";
