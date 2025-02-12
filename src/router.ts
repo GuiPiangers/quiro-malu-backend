@@ -45,7 +45,7 @@ import { listExamController } from "./core/exams/controllers/listExamController"
 import { restoreExamController } from "./core/exams/controllers/restoreExamController";
 import { notificationObserver } from "./core/shared/observers/NotificationObserver/NotificationObserver";
 import { Notification } from "./core/notification/models/Notification";
-import { subscribeNotificationController } from "./core/notification/useCases/subscribeNotification";
+import { subscribeNotificationController } from "./core/notification/controllers/subscribeNotification";
 import { sendPushNotificationUseCase } from "./core/notification/useCases/sendPushNotification";
 
 const router = Router();

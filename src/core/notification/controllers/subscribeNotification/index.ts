@@ -1,5 +1,5 @@
-import { SubscribeNotificationUseCase } from "./subscribeNotificationUseCase";
-import { SubscribeNotificationController } from "../../controllers/subscribeNotification/subscribeNotificationController";
+import { SubscribeNotificationUseCase } from "../../useCases/subscribeNotification/subscribeNotificationUseCase";
+import { SubscribeNotificationController } from "./subscribeNotificationController";
 import { PushNotificationProvider } from "../../../../repositories/notification/PushNotificationProvider";
 
 const pushNotificationProvider = new PushNotificationProvider();
