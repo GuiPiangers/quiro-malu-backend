@@ -43,7 +43,7 @@ import { saveExamController } from "./core/exams/controllers/saveExamController"
 import { deleteExamController } from "./core/exams/controllers/deleteExamController";
 import { listExamController } from "./core/exams/controllers/listExamController";
 import { restoreExamController } from "./core/exams/controllers/restoreExamController";
-import { SentWebPushController } from "./core/notification/controllers/sentNotification/sentWebPushController";
+import { SendWebPushController } from "./core/notification/controllers/sendNotification/sendWebPushController";
 import { notificationObserver } from "./core/shared/observers/NotificationObserver/NotificationObserver";
 import { Notification } from "./core/notification/models/Notification";
 
@@ -232,7 +232,7 @@ router.get("/exams/:patientId", authMiddleware, (request, response) => {
 
 router.post("/subscribe", (request, response) => {
   console.log("cegou aqui");
-  const sentWebPushController = new SentWebPushController();
+  const sentWebPushController = new SendWebPushController();
 
   sentWebPushController.handle(request, response);
 });

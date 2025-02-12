@@ -14,7 +14,7 @@ export class sentNotificationController {
       response.setHeader("Cache-Control", "no-cache");
       response.setHeader("Connection", "keep-alive");
 
-      const sentNotificationObserver: NotificationObserverEvent = async (
+      const sendNotificationObserver: NotificationObserverEvent = async (
         notification: NotificationDTO,
         totalNotRead: number,
       ) => {
@@ -22,7 +22,7 @@ export class sentNotificationController {
           `data: ${JSON.stringify({ notification, totalNotRead })}\n\n`,
         );
       };
-      notificationObserver.addObserver(sentNotificationObserver);
+      notificationObserver.addObserver(sendNotificationObserver);
 
       const interval = setInterval(() => {
         const eventData = {

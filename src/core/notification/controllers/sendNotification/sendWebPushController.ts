@@ -11,7 +11,7 @@ import PushNotifications from "node-pushnotifications";
 const publicVapidKey = process.env.VAPID_PUBLIC_KEY!;
 const privateVapidKey = process.env.VAPID_PRIVATE_KEY!;
 
-export class SentWebPushController {
+export class SendWebPushController {
   async handle(request: Request, response: Response) {
     try {
       const subscription = request.body as PushSubscription;
