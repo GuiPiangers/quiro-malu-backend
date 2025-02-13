@@ -5,6 +5,7 @@ export type Subscription = PushSubscription;
 
 export type SubscribeParams = {
   userId: string;
+  allowPushNotifications: boolean;
   subscription: Subscription;
 };
 
@@ -19,8 +20,9 @@ export type GetSubscriptionsParams = {
 export interface IPushNotificationProvider {
   send(subscription: Subscription, payload: NotificationDTO): Promise<void>;
   subscribe(data: SubscribeParams): Promise<void>;
+  updateSubscription(data: SubscribeParams): Promise<void>;
   unsubscribe(data: UnsubscribeParams): Promise<void>;
-  getSubscriptions(
+  getAllowedSubscriptions(
     data: GetSubscriptionsParams,
   ): Promise<{ userId: string; subscriptions: Subscription[] } | null>;
 }

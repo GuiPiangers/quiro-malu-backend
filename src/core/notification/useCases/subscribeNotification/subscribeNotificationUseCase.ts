@@ -14,11 +14,15 @@ export class SubscribeNotificationUseCase {
     subscription: Subscription;
   }) {
     const { subscriptions } =
-      (await this.pushNotificationProvider.getSubscriptions({
+      (await this.pushNotificationProvider.getAllowedSubscriptions({
         userId,
       })) || { subscriptions: [] };
 
     if (subscriptions.every((sub) => sub.endpoint !== subscription.endpoint))
-      await this.pushNotificationProvider.subscribe({ subscription, userId });
+      await this.pushNotificationProvider.subscribe({
+        subscription,
+        userId,
+        allowPushNotifications: true,
+      });
   }
 }

@@ -14,6 +14,10 @@ const privateVapidKey = process.env.VAPID_PRIVATE_KEY!;
 const email = process.env.EMAIL!;
 
 export class PushNotificationProvider implements IPushNotificationProvider {
+  updateSubscription(data: SubscribeParams): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
   async send(
     subscription: Subscription,
     { message, title }: NotificationDTO,
@@ -56,10 +60,13 @@ export class PushNotificationProvider implements IPushNotificationProvider {
     });
   }
 
-  async getSubscriptions({ userId }: GetSubscriptionsParams): Promise<{
+  async getAllowedSubscriptions({ userId }: GetSubscriptionsParams): Promise<{
     userId: string;
     subscriptions: Subscription[];
   } | null> {
-    return await SubscriptionModel.findOne({ userId });
+    return await SubscriptionModel.findOne({
+      userId,
+      allowPushNotifications: true,
+    });
   }
 }

@@ -15,7 +15,7 @@ export class SendPushNotificationUseCase {
     const notificationDTO = notification.getDTO();
 
     const { subscriptions } =
-      (await this.pushNotificationProvider.getSubscriptions({
+      (await this.pushNotificationProvider.getAllowedSubscriptions({
         userId,
       })) || {};
 
