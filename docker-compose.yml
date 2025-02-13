@@ -38,6 +38,18 @@ services:
       - "27017:27017"
     networks:
       - minha_rede
+
+  redis:
+    image: redis:7.4.2-alpine
+    restart: always
+    container_name: redis
+    volumes:
+      - redisDb:/data
+    ports
+      - "6379:6379"
+    networks:
+      - minha_rede
+
   prometheus:
     container_name: prometheus
     image: prom/prometheus
@@ -85,6 +97,7 @@ volumes:
   db:
   mongoDb:
   loki_data:
+  redisDb:
 networks:
   minha_rede:
     driver: bridge
