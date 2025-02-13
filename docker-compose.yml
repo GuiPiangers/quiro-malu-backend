@@ -41,8 +41,10 @@ services:
 
   redis:
     image: redis:7.4.2-alpine
-    restart: always
     container_name: redis
+    restart: always
+    env_file:
+      - .env
     volumes:
       - redisDb:/data
     ports
