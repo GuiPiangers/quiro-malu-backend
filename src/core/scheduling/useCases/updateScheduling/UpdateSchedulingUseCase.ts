@@ -33,11 +33,11 @@ export class UpdateSchedulingUseCase {
     scheduling: Scheduling;
     userId: string;
   }) {
-    if (!scheduling.date?.value) return;
+    if (!scheduling.date?.dateTime) return;
 
     const schedules = await this.SchedulingRepository.list({
       userId,
-      date: new DateTime(scheduling.date.value).date,
+      date: new DateTime(scheduling.date.dateTime).date,
     });
 
     if (scheduling.notAvailableDate(schedules))

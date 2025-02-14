@@ -7,7 +7,7 @@ describe("DateTime", () => {
     const timezone = "Etc/UTC"; // Define o fuso horário como UTC
     const dateTime = new DateTime(dateStr, {}, timezone);
 
-    expect(dateTime.value).toMatch(/^2024-11-01T10:30$/);
+    expect(dateTime.dateTime).toMatch(/^2024-11-01T10:30$/);
   });
 
   it("should throw an ApiError when the date is invalid", () => {
@@ -63,6 +63,6 @@ describe("DateTime", () => {
     const timezone = "Etc/UTC";
     const dateTime = new DateTime(dateStr, {}, timezone);
 
-    expect(dateTime.value).toMatch(/^2024-11-01T10:30$/);
+    expect(dateTime.dateTime).toMatch(/^2024-11-01T10:30$/);
   });
 });

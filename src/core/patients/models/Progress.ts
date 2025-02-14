@@ -45,7 +45,7 @@ export class Progress extends Entity {
       patientId: this.patientId,
       service: this.service,
       actualProblem: this.actualProblem,
-      date: this.date?.value,
+      date: this.date?.dateTime,
       procedures: this.procedures,
       schedulingId: this.schedulingId,
     };

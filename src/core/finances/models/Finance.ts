@@ -36,7 +36,7 @@ export class Finance extends Entity {
   }: FinanceDTO) {
     super(id);
 
-    this.date = new DateTime(date).value;
+    this.date = new DateTime(date).dateTime;
     this.description = description;
     this.type = type;
     this.paymentMethod = paymentMethod;

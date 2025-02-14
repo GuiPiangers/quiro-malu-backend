@@ -7,8 +7,9 @@ type DateTimeConfig = {
 };
 
 export class DateTime {
-  readonly value: string;
+  readonly dateTime: string;
   readonly timezone: string;
+  readonly value: Date;
 
   constructor(
     dateStr: string,
@@ -43,7 +44,7 @@ export class DateTime {
       }
     }
 
-    this.value = `${dateStr.substring(0, 16)}`;
+    this.dateTime = `${dateStr.substring(0, 16)}`;
   }
 
   private isValidDate(dateString: string): boolean {
@@ -64,11 +65,11 @@ export class DateTime {
   }
 
   get date(): string {
-    return this.value.substring(0, 10);
+    return this.dateTime.substring(0, 10);
   }
 
   get time(): string {
-    return this.value.substring(11, 16);
+    return this.dateTime.substring(11, 16);
   }
 
   static toIsoDate(date: string) {

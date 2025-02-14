@@ -4,7 +4,7 @@ import { DateTime } from "../../shared/Date";
 jest.mock("../../shared/Date", () => {
   return {
     DateTime: jest.fn().mockImplementation((date: string) => ({
-      value: `formatted-${date}`,
+      dateTime: `formatted-${date}`,
     })),
   };
 });

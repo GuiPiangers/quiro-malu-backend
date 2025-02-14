@@ -75,7 +75,7 @@ export class Scheduling extends Entity {
     return {
       id: this.id,
       patientId: this.patientId,
-      date: this.date?.value,
+      date: this.date?.dateTime,
       duration: this.duration,
       status: this.status,
       service: this.service,
@@ -83,22 +83,22 @@ export class Scheduling extends Entity {
   }
 
   notAvailableDate(data: SchedulingDTO[]): boolean {
-    if (!this.date?.value) throw new ApiError("A data deve ser definida");
+    if (!this.date?.dateTime) throw new ApiError("A data deve ser definida");
     if (!this.duration) throw new ApiError("A duração deve ser definida");
 
     return data.some((schedulingValue) => {
       const endDate = new Date(`${schedulingValue.date}:00.000Z`);
       endDate.setSeconds(this.duration!);
 
-      const schedulingDate = new Date(`${this.date!.value}:00.000Z`);
+      const schedulingDate = new Date(`${this.date!.dateTime}:00.000Z`);
       schedulingDate.setSeconds(this.duration!);
 
-      const schedulingStart = this.date!.value;
+      const schedulingStart = this.date!.dateTime;
       const schedulingEnd = new DateTime(schedulingDate.toISOString(), {})
-        .value;
+        .dateTime;
 
-      const start = new DateTime(schedulingValue.date!).value;
-      const end = new DateTime(endDate.toISOString()).value;
+      const start = new DateTime(schedulingValue.date!).dateTime;
+      const end = new DateTime(endDate.toISOString()).dateTime;
 
       const unavailableStartDate =
         start <= schedulingStart && schedulingStart < end;

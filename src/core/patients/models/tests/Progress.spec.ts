@@ -46,7 +46,7 @@ describe("Progress", () => {
       patientId: "patient-4",
       service: "Check-up",
       actualProblem: "Routine check",
-      date: new DateTime("2023-11-01T00:00").value,
+      date: new DateTime("2023-11-01T00:00").dateTime,
       procedures: "Blood test",
       schedulingId: "schedulingId",
     };

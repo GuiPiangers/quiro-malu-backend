@@ -65,7 +65,7 @@ export class Patient extends Entity {
       JSON.stringify({
         name: this.name.value.replace(" ", "").toLocaleLowerCase(),
         phone: this.phone.replace(" ", ""),
-        dateOfBirth: this.dateOfBirth?.value,
+        dateOfBirth: this.dateOfBirth?.dateTime,
       }),
     );
   }
