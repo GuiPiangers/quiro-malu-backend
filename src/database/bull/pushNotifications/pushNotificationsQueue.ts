@@ -1,6 +1,7 @@
 import { Queue } from "bullmq";
 import IORedis from "ioredis";
 import { NotificationDTO } from "../../../core/notification/models/Notification";
+import { Crypto } from "../../../core/shared/helpers/Crypto";
 
 const host = process.env.DB_HOST;
 const redisPassword = process.env.REDIS_PASSWORD;
@@ -22,7 +23,11 @@ export class PushNotificationQueue {
     await this.pushNotificationQueue.add(
       "notifyUser",
       { notification, userId },
-      { delay },
+      {
+        delay,
+        removeOnComplete: 60 * 10, // 10 min
+        removeOnFail: 60 * 10, // 10 min
+      },
     );
   }
 }
