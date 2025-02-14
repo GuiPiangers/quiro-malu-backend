@@ -3,6 +3,7 @@ import { ISchedulingRepository } from "../../../../repositories/scheduling/ISche
 import { ApiError } from "../../../../utils/ApiError";
 import { DateTime } from "../../../shared/Date";
 import DatabaseStatusStrategy from "../../models/status/DatabaseStatusStrategy";
+import { schedulingObserver } from "../../../shared/observers/SchedulingObserver/SchedulingObserver";
 
 export class CreateSchedulingUseCase {
   constructor(private SchedulingRepository: ISchedulingRepository) {}
@@ -24,6 +25,8 @@ export class CreateSchedulingUseCase {
       throw new ApiError("Horário indisponível", 400, "date");
 
     await this.SchedulingRepository.save({ ...schedulingDTO, userId });
+
+    schedulingObserver.emit("create", { ...schedulingDTO, userId });
 
     return schedulingDTO;
   }
