@@ -45,6 +45,7 @@ export class DateTime {
     }
 
     this.dateTime = `${dateStr.substring(0, 16)}`;
+    this.value = new Date(dateStr);
   }
 
   private isValidDate(dateString: string): boolean {
