@@ -80,4 +80,8 @@ export class DateTime {
   static now(props: DateTimeConfig = {}) {
     return new DateTime(new Date().toISOString(), props);
   }
+
+  static difference(date1: DateTime, date2: DateTime) {
+    return date1.value.getTime() - date2.value.getTime();
+  }
 }
