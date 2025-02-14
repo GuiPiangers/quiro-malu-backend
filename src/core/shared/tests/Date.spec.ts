@@ -73,6 +73,14 @@ describe("DateTime", () => {
 
       expect(dateTime.dateTime).toMatch(/^2024-11-01T10:30$/);
     });
+
+    it("should create DataTime with only date", () => {
+      const dateStr = "2024-11-01";
+      const dateTime = new DateTime(dateStr);
+
+      expect(dateTime).toBeInstanceOf(DateTime);
+      expect(dateTime.dateTime).toBe("2024-11-01");
+    });
   });
 
   describe("now", () => {
@@ -99,6 +107,16 @@ describe("DateTime", () => {
       const dateDifference = DateTime.difference(date1, date2);
 
       expect(dateDifference).toBe(3600000 * 24);
+    });
+  });
+
+  describe("toIsoDate", () => {
+    it("should return new DateTime instance with current date and time", () => {
+      const date1 = "10/01/2025";
+
+      const isoDate = DateTime.toIsoDate(date1);
+
+      expect(isoDate).toBe("2025-01-10");
     });
   });
 });
