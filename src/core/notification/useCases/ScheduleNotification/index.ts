@@ -1,11 +1,11 @@
 import { pushNotificationQueue } from "../../../../database/bull/pushNotifications/pushNotificationsQueue";
-import { KnexPatientRepository } from "../../../../repositories/patient/KnexPatientRepository";
+import { MySqlSchedulingRepository } from "../../../../repositories/scheduling/MySqlSchedulingRepository";
 import { ScheduleNotificationUseCase } from "./ScheduleNotificationUseCase";
 
-const patientRepository = new KnexPatientRepository();
+const schedulingRepository = new MySqlSchedulingRepository();
 const scheduleNotificationUseCase = new ScheduleNotificationUseCase(
   pushNotificationQueue,
-  patientRepository,
+  schedulingRepository,
 );
 
 export { scheduleNotificationUseCase };
