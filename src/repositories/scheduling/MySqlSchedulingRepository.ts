@@ -80,7 +80,7 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
     userId: string;
   }): Promise<SchedulingDTO[]> {
     const sql =
-      "SELECT id, userId, patientId, duration, service, status, DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date FROM schedules WHERE id = ? AND userId = ?";
+      "SELECT s.id, s.patientId, p.name as patient, p.phone, DATE_FORMAT(s.date, '%Y-%m-%dT%H:%i') as date, s.duration, s.service, s.status, s.updated_at as updateAt, s.created_at as createAt FROM schedules as s LEFT JOIN patients as p ON s.patientId = p.id AND s.userId = p.userId WHERE s.id = ? AND s.userId = ?";
     const errorMessage = `Não foi possível realizar a busca`;
     const result = await query<SchedulingDTO[]>(errorMessage, sql, [
       id,
