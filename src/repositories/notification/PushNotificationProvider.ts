@@ -66,7 +66,6 @@ export class PushNotificationProvider implements IPushNotificationProvider {
   } | null> {
     return await SubscriptionModel.findOne({
       userId,
-      allowPushNotifications: true,
     });
   }
 }
