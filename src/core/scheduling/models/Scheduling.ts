@@ -105,6 +105,7 @@ export class Scheduling extends Entity {
       const unavailableEndDate = start < schedulingEnd && schedulingEnd < end;
 
       return (
+        schedulingValue.status !== "Cancelado" &&
         schedulingValue.id !== this.id &&
         (unavailableEndDate || unavailableStartDate)
       );
