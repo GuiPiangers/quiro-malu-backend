@@ -25,6 +25,31 @@ services:
     networks:
       - minha_rede
 
+  mongo:
+    image: mongo:8.0.4
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - mongoDb:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - minha_rede
+
+  redis:
+    image: redis:7.4.2-alpine
+    container_name: redis
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - redisDb:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - minha_rede
+
   nginx:
     image: nginx:latest
     container_name: nginx
