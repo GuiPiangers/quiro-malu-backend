@@ -3,6 +3,7 @@ import { ISchedulingRepository } from "../../../../repositories/scheduling/ISche
 import { ApiError } from "../../../../utils/ApiError";
 import { DateTime } from "../../../shared/Date";
 import DatabaseStatusStrategy from "../../models/status/DatabaseStatusStrategy";
+import { schedulingObserver } from "../../../shared/observers/SchedulingObserver/SchedulingObserver";
 
 export class UpdateSchedulingUseCase {
   constructor(private SchedulingRepository: ISchedulingRepository) {}
@@ -21,6 +22,12 @@ export class UpdateSchedulingUseCase {
       userId,
       id: data.id,
       ...schedulingDTO,
+    });
+
+    schedulingObserver.emit("update", {
+      ...schedulingDTO,
+      userId,
+      id: data.id,
     });
 
     return schedulingDTO;
