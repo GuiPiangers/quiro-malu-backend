@@ -120,6 +120,8 @@ services:
 volumes:
   db:
   loki_data:
+  mongoDb:
+  redisDb:
 networks:
   minha_rede:
     driver: bridge
