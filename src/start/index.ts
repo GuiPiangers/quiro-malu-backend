@@ -5,4 +5,8 @@ export function start() {
   schedulingObserver.on("create", async (data) => {
     scheduleNotificationUseCase.schedule(data);
   });
+  schedulingObserver.on("delete", async ({ id }) => {
+    if (!id) return;
+    scheduleNotificationUseCase.deleteSchedule({ scheduleId: id });
+  });
 }
