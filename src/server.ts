@@ -1,6 +1,6 @@
 import { app } from "./app";
 import "dotenv/config";
-import { start } from "./core/start";
+import { start } from "./start";
 
 const PORT = process.env.PORT ?? 8000;
 
