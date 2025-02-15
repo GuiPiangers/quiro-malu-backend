@@ -1,5 +1,5 @@
 import { IPushNotificationQueue } from "../../../../database/bull/pushNotifications/IPushNotificationQueue";
-import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
+import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
 import { SchedulingDTO } from "../../../scheduling/models/Scheduling";
 import { DateTime } from "../../../shared/Date";
 import { Notification } from "../../models/Notification";
@@ -7,31 +7,28 @@ import { Notification } from "../../models/Notification";
 export class ScheduleNotificationUseCase {
   constructor(
     private pushNotificationQueue: IPushNotificationQueue,
-    private patientRepository: IPatientRepository,
+    private scheduleRepository: ISchedulingRepository,
   ) {}
 
   async schedule({ userId, ...schedule }: SchedulingDTO & { userId: string }) {
     if (!schedule.id) return;
-
-    const [patient] = await this.patientRepository.getById(
-      schedule.patientId,
-      userId,
-    );
-
-    if (!patient || !schedule.date) return;
-
     const preTimer = 15;
-    const scheduledDate = new Date(schedule.date);
-    scheduledDate.setMinutes(scheduledDate.getMinutes() - preTimer);
 
-    const scheduleDateTime = new DateTime(scheduledDate.toISOString());
+    const [data] = await this.scheduleRepository.get({
+      id: schedule.id,
+      userId,
+    });
 
-    const delay = DateTime.difference(scheduleDateTime, DateTime.now());
+    if (!data || !schedule.date) return;
+    if (schedule.status === "Cancelado" || schedule.status === "Atendido")
+      return;
+
+    const delay = this.calculateDelay(schedule.date, preTimer);
 
     const notification = new Notification({
       id: schedule.id,
       type: "scheduling",
-      message: `A consulta com o(a) paciente ${patient.name} está agendada para daqui a ${preTimer} minutos`,
+      message: `A consulta com o(a) paciente ${data.patient} está agendada para daqui a ${preTimer} minutos`,
       title: "A consulta está prestes a começar!",
     }).getDTO();
 
@@ -42,7 +39,24 @@ export class ScheduleNotificationUseCase {
     });
   }
 
-  deleteSchedule({ scheduleId }: { scheduleId: string }) {
-    this.pushNotificationQueue.delete({ id: scheduleId });
+  async deleteSchedule({ scheduleId }: { scheduleId: string }) {
+    await this.pushNotificationQueue.delete({ id: scheduleId });
+  }
+
+  async update({ userId, ...schedule }: SchedulingDTO & { userId: string }) {
+    if (!schedule.id) return;
+
+    await this.deleteSchedule({ scheduleId: schedule.id });
+    await this.schedule({ userId, ...schedule });
+  }
+
+  private calculateDelay(date: string, preTimer: number) {
+    const scheduledDate = new Date(date);
+    scheduledDate.setMinutes(scheduledDate.getMinutes() - preTimer);
+
+    const scheduleDateTime = new DateTime(scheduledDate.toISOString());
+
+    const delay = DateTime.difference(scheduleDateTime, DateTime.now());
+    return delay;
   }
 }
