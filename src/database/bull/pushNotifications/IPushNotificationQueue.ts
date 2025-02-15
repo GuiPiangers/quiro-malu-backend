@@ -6,6 +6,11 @@ export type PushNotificationQueuePrams = {
   delay: number;
 };
 
+export type deleteNotificationQueueParams = {
+  id: string;
+};
+
 export interface IPushNotificationQueue {
   add: (data: PushNotificationQueuePrams) => void;
+  delete: (data: deleteNotificationQueueParams) => void;
 }

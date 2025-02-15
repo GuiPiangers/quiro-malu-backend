@@ -3,6 +3,7 @@ import IORedis from "ioredis";
 import { NotificationDTO } from "../../../core/notification/models/Notification";
 import { sendPushNotificationUseCase } from "../../../core/notification/useCases/sendPushNotification";
 import {
+  deleteNotificationQueueParams,
   IPushNotificationQueue,
   PushNotificationQueuePrams,
 } from "./IPushNotificationQueue";
@@ -24,11 +25,16 @@ export class PushNotificationQueue implements IPushNotificationQueue {
       "notifyUser",
       { notification, userId },
       {
+        jobId: notification.id,
         delay,
         removeOnComplete: 60 * 10, // 10 min
         removeOnFail: 60 * 10, // 10 min
       },
     );
+  }
+
+  delete({ id }: deleteNotificationQueueParams) {
+    this.pushNotificationQueue.remove(id);
   }
 }
 
