@@ -11,20 +11,24 @@ export class SendPushNotificationUseCase {
     userId: string;
     notificationData: NotificationDTO;
   }) {
-    const notification = new Notification(notificationData);
-    const notificationDTO = notification.getDTO();
+    try {
+      const notification = new Notification(notificationData);
+      const notificationDTO = notification.getDTO();
 
-    const { subscriptions } =
-      (await this.pushNotificationProvider.getAllowedSubscriptions({
-        userId,
-      })) || {};
+      const { subscriptions } =
+        (await this.pushNotificationProvider.getAllowedSubscriptions({
+          userId,
+        })) || {};
 
-    if (!subscriptions) {
-      return;
+      if (!subscriptions) {
+        return;
+      }
+
+      subscriptions.map((subscription) =>
+        this.pushNotificationProvider.send(subscription, notificationDTO),
+      );
+    } catch (error) {
+      console.log(error);
     }
-
-    subscriptions.map((subscription) =>
-      this.pushNotificationProvider.send(subscription, notificationDTO),
-    );
   }
 }
