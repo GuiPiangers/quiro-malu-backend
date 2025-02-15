@@ -9,6 +9,8 @@ services:
       - "8000:8000"
     depends_on: 
       - "mysql-db"
+      - "mongo"
+      - "redis"
     networks:
       - minha_rede
 
