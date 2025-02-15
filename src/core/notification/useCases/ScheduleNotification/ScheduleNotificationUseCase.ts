@@ -29,6 +29,7 @@ export class ScheduleNotificationUseCase {
     const delay = DateTime.difference(scheduleDateTime, DateTime.now());
 
     const notification = new Notification({
+      id: schedule.id,
       type: "scheduling",
       message: `A consulta com o(a) paciente ${patient.name} está agendada para daqui a ${preTimer} minutos`,
       title: "A consulta está prestes a começar!",
@@ -39,5 +40,9 @@ export class ScheduleNotificationUseCase {
       notification,
       userId,
     });
+  }
+
+  deleteSchedule({ scheduleId }: { scheduleId: string }) {
+    this.pushNotificationQueue.delete({ id: scheduleId });
   }
 }
