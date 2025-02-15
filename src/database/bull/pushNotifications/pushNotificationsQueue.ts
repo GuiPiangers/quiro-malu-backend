@@ -25,7 +25,7 @@ export class PushNotificationQueue implements IPushNotificationQueue {
       "notifyUser",
       { notification, userId },
       {
-        jobId: notification.id,
+        jobId: `a${notification.id}`,
         delay,
         removeOnComplete: 60 * 10, // 10 min
         removeOnFail: 60 * 10, // 10 min
@@ -33,8 +33,15 @@ export class PushNotificationQueue implements IPushNotificationQueue {
     );
   }
 
-  delete({ id }: deleteNotificationQueueParams) {
-    this.pushNotificationQueue.remove(id);
+  async update({ delay, notification, userId }: PushNotificationQueuePrams) {
+    const jobId = `a${notification.id}`;
+    await this.delete({ id: jobId });
+
+    await this.add({ delay, notification, userId });
+  }
+
+  async delete({ id }: deleteNotificationQueueParams) {
+    await this.pushNotificationQueue.remove(`a${id}`);
   }
 }
 

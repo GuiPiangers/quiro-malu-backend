@@ -12,5 +12,6 @@ export type deleteNotificationQueueParams = {
 
 export interface IPushNotificationQueue {
   add: (data: PushNotificationQueuePrams) => void;
+  update: (data: PushNotificationQueuePrams) => void;
   delete: (data: deleteNotificationQueueParams) => void;
 }
