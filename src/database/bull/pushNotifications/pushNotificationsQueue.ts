@@ -33,13 +33,6 @@ export class PushNotificationQueue implements IPushNotificationQueue {
     );
   }
 
-  async update({ delay, notification, userId }: PushNotificationQueuePrams) {
-    const jobId = `a${notification.id}`;
-    await this.delete({ id: jobId });
-
-    await this.add({ delay, notification, userId });
-  }
-
   async delete({ id }: deleteNotificationQueueParams) {
     await this.pushNotificationQueue.remove(`a${id}`);
   }
