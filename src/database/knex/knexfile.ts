@@ -10,8 +10,8 @@ export const development: Knex.Config = {
   useNullAsDefault: true,
   connection: {
     host: process.env.DB_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
+    user: process.env.MYSQL_ROOT_USER,
+    password: process.env.MYSQL_ROOT_PASSWORD,
     database: process.env.MYSQL_DATABASE,
   },
   pool: {
@@ -30,8 +30,8 @@ export const production: Knex.Config = {
   useNullAsDefault: true,
   connection: {
     host: process.env.DB_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
+    user: process.env.MYSQL_ROOT_USER,
+    password: process.env.MYSQL_ROOT_PASSWORD,
     database: process.env.MYSQL_DATABASE,
   },
   pool: {
