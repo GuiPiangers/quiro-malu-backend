@@ -9,11 +9,9 @@ import {
 } from "./IPushNotificationQueue";
 
 const host = process.env.DB_HOST;
-const redisPassword = process.env.REDIS_PASSWORD;
 
 const connection = new IORedis({
   host,
-  password: redisPassword,
   maxRetriesPerRequest: null,
 });
 
