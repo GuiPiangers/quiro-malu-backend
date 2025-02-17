@@ -8,7 +8,7 @@ import {
   PushNotificationQueuePrams,
 } from "./IPushNotificationQueue";
 
-const host = process.env.DB_HOST;
+const host = process.env.DB_REDIS_HOST;
 
 const connection = new IORedis({
   host,
