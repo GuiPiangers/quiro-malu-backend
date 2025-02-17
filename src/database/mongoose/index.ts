@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const HOST = process.env.DB_HOST ?? "localhost";
+const HOST = process.env.DB_MONGO_HOST ?? "localhost";
 const MONGO_DATABASE = process.env.MONGO_INITDB_DATABASE;
 const MONGO_USER = process.env.MONGO_INITDB_ROOT_USERNAME;
 const MONGO_PASSWORD = process.env.MONGO_INITDB_ROOT_PASSWORD;
