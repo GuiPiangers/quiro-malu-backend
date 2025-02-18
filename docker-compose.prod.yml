@@ -5,11 +5,10 @@ services:
     image: guipiangers/quiro-backend:1.0
     env_file:
       - .env
-    ports: 
+    ports:
       - "8000:8000"
-    depends_on: 
+    depends_on:
       - "mysql-db"
-      - "mongo"
       - "redis"
     networks:
       - minha_rede
