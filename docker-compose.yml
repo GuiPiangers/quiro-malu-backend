@@ -29,7 +29,7 @@ services:
 
   mongo:
     image: mongo:8.0.4
-    name: mongo
+    container_name: mongo
     restart: always
     env_file:
       - .env
