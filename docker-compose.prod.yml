@@ -16,6 +16,7 @@ services:
 
   mysql-db:
     image: mysql:8.0
+    name: mongo
     container_name: mysqldb
     restart: always
     env_file:
