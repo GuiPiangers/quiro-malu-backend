@@ -28,13 +28,14 @@ services:
       - minha_rede
 
   mongo:
-    image: mongo:8.0.4
+    image: mongo:8
     container_name: mongo
     restart: always
     env_file:
       - .env
     volumes:
       - mongoDb:/data/db
+      - mongoConfig:/data/configdb
     ports:
       - "27017:27017"
     networks:
@@ -101,6 +102,7 @@ volumes:
   mongoDb:
   loki_data:
   redisDb:
+  mongoConfig:
 networks:
   minha_rede:
     driver: bridge
