@@ -8,7 +8,6 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - "mysql-db"
       - "redis"
     networks:
       - minha_rede
