@@ -1,4 +1,3 @@
-import { tryCatch } from "bullmq";
 import { IPushNotificationQueue } from "../../../../database/bull/pushNotifications/IPushNotificationQueue";
 import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
 import { SchedulingDTO } from "../../../scheduling/models/Scheduling";
