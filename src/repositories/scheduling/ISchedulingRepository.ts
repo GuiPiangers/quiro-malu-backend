@@ -1,4 +1,5 @@
 import { SchedulingDTO } from "../../core/scheduling/models/Scheduling";
+import { SchedulingWithPatientDTO } from "../../core/scheduling/models/SchedulingWithPatient";
 
 export type UpdateSchedulingParams = Partial<SchedulingDTO> & {
   userId: string;
@@ -14,7 +15,7 @@ export interface ISchedulingRepository {
     userId: string;
     date: string;
     config?: { limit: number; offSet: number };
-  }): Promise<(SchedulingDTO & { patient: string; phone: string })[]>;
+  }): Promise<SchedulingWithPatientDTO[]>;
 
   count(data: { userId: string; date: string }): Promise<[{ total: number }]>;
 
@@ -24,7 +25,10 @@ export interface ISchedulingRepository {
     userId: string;
   }): Promise<{ formattedDate: string; qtd: number }[]>;
 
-  get(data: { id: string; userId: string }): Promise<SchedulingDTO[]>;
+  get(data: {
+    id: string;
+    userId: string;
+  }): Promise<SchedulingWithPatientDTO[]>;
 
   delete(data: { id: string; userId: string }): Promise<void>;
 }

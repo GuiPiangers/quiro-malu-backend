@@ -1,6 +1,6 @@
 import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
 import { ApiError } from "../../../../utils/ApiError";
-import { Scheduling } from "../../models/Scheduling";
+import { SchedulingWithPatient } from "../../models/SchedulingWithPatient";
 
 export class GetSchedulingUseCase {
   constructor(private SchedulingRepository: ISchedulingRepository) {}
@@ -13,6 +13,6 @@ export class GetSchedulingUseCase {
 
     if (!schedulingData) throw new ApiError("Agendamento não encontrado", 404);
 
-    return new Scheduling(schedulingData).getDTO();
+    return new SchedulingWithPatient(schedulingData).getDTO();
   }
 }

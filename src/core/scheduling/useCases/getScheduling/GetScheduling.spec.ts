@@ -1,5 +1,5 @@
 import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
-import { SchedulingDTO } from "../../models/Scheduling";
+import { SchedulingWithPatientDTO } from "../../models/SchedulingWithPatient";
 import { GetSchedulingUseCase } from "./GetSchedulingUseCase";
 
 describe("getSchedulingUseCase", () => {
@@ -16,13 +16,15 @@ describe("getSchedulingUseCase", () => {
       const userId = "test-user-id";
       const id = "test-scheduling-id";
 
-      const schedulingData: SchedulingDTO = {
+      const schedulingData: SchedulingWithPatientDTO = {
         id,
         patientId: "test-patient-id",
         date: "2025-01-01T10:00",
         duration: 3600,
         service: "service",
         status: "Atendido",
+        patient: "papient name",
+        phone: "(99) 99999 9999",
       };
 
       mockSchedulingRepository.get.mockResolvedValue([schedulingData]);
@@ -37,7 +39,13 @@ describe("getSchedulingUseCase", () => {
       const id = "test-scheduling-id";
 
       mockSchedulingRepository.get.mockResolvedValue([
-        { id, patientId: "test-patient-id", date: "2025-01-01T10:00" },
+        {
+          id,
+          patientId: "test-patient-id",
+          date: "2025-01-01T10:00",
+          patient: "patient name",
+          phone: "(99) 99999 9999",
+        },
       ]);
 
       await getSchedulingUseCase.execute({ userId, id });

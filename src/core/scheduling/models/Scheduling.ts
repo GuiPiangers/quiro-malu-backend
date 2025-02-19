@@ -13,8 +13,6 @@ export type SchedulingStatus =
 export interface SchedulingDTO {
   id?: string;
   patientId: string;
-  patient?: string;
-  phone?: string;
   date?: string;
   duration?: number;
   service?: string;
@@ -25,8 +23,6 @@ export interface SchedulingDTO {
 
 export class Scheduling extends Entity {
   readonly patientId: string;
-  readonly patient?: string;
-  readonly phone?: string;
   readonly date?: DateTime;
   readonly duration?: number;
   readonly service?: string;
@@ -45,8 +41,6 @@ export class Scheduling extends Entity {
       createAt,
       service,
       updateAt,
-      patient,
-      phone,
     }: SchedulingDTO,
     statusStrategy?: StatusStrategy,
   ) {
@@ -60,8 +54,6 @@ export class Scheduling extends Entity {
 
     this.createAt = createAt;
     this.updateAt = updateAt;
-    this.patient = patient;
-    this.phone = phone;
   }
 
   get status() {

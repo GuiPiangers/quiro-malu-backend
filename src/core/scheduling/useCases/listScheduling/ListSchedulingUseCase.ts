@@ -1,6 +1,6 @@
 import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
 import { DateTime } from "../../../shared/Date";
-import { Scheduling } from "../../models/Scheduling";
+import { SchedulingWithPatient } from "../../models/SchedulingWithPatient";
 import ClientStatusStrategy from "../../models/status/ClientStatusStrategy";
 
 export class ListSchedulingUseCase {
@@ -34,15 +34,10 @@ export class ListSchedulingUseCase {
 
     return {
       schedules: schedules.map((scheduling) => {
-        const result = new Scheduling(
+        return new SchedulingWithPatient(
           scheduling,
           clientStatusStrategy,
         ).getDTO();
-        return {
-          ...result,
-          patient: scheduling.patient,
-          phone: scheduling.phone,
-        };
       }),
       total: total[0].total,
       limit,
