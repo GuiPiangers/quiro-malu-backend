@@ -14,6 +14,7 @@ export class ScheduleNotificationUseCase {
     try {
       if (!schedule.id) return;
       const preTimer = 15;
+      const maxOldDelay = 3600 * 1000; // 1 hora
 
       const [data] = await this.scheduleRepository.get({
         id: schedule.id,
@@ -26,11 +27,16 @@ export class ScheduleNotificationUseCase {
 
       const delay = this.calculateDelay(schedule.date, preTimer);
 
+      if (delay < -maxOldDelay) return;
+
+      const scheduleData = new DateTime(schedule.date).date;
+      const scheduleTime = new DateTime(schedule.date).time;
+
       const notification = new Notification({
         id: schedule.id,
         type: "scheduling",
-        message: `A consulta com o(a) paciente ${data.patient} está agendada para daqui a ${preTimer} minutos`,
-        title: "A consulta está prestes a começar!",
+        title: `Você tem uma consulta agendada com o(a) paciente ${data.patient}`,
+        message: `A consulta com o(a) paciente ${data.patient} está agendada para às ${scheduleTime} do dia ${scheduleData}`,
       }).getDTO();
 
       this.pushNotificationQueue.add({
