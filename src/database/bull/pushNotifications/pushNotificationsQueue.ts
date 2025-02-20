@@ -1,5 +1,4 @@
 import { Queue, Worker } from "bullmq";
-import IORedis from "ioredis";
 import { NotificationDTO } from "../../../core/notification/models/Notification";
 import { sendPushNotificationUseCase } from "../../../core/notification/useCases/sendPushNotification";
 import {
