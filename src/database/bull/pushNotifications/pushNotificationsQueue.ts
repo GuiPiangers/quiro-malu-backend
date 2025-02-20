@@ -7,13 +7,9 @@ import {
   IPushNotificationQueue,
   PushNotificationQueuePrams,
 } from "./IPushNotificationQueue";
+import { redis } from "../../redis";
 
-const host = process.env.DB_REDIS_HOST;
-
-const connection = new IORedis({
-  host,
-  maxRetriesPerRequest: null,
-});
+const connection = redis;
 
 export class PushNotificationQueue implements IPushNotificationQueue {
   private pushNotificationQueue = new Queue("pushNotification", { connection });
