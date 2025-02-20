@@ -9,6 +9,8 @@ export class RefreshTokenCache implements IRefreshTokenProvider {
     await redis.set(
       `refresh-token:${refreshToken.id}`,
       JSON.stringify(refreshToken),
+      "EX",
+      60 * 60 * 24, // 1 dia
     );
     return await this.refreshTokenProvider.generate(refreshToken);
   }
