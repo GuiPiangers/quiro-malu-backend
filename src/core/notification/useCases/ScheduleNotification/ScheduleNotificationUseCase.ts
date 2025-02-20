@@ -29,7 +29,9 @@ export class ScheduleNotificationUseCase {
 
       if (delay < -maxOldDelay) return;
 
-      const scheduleData = new DateTime(schedule.date).date;
+      const scheduleData = DateTime.toLocaleDate(
+        new DateTime(schedule.date).date,
+      );
       const scheduleTime = new DateTime(schedule.date).time;
 
       const notification = new Notification({
