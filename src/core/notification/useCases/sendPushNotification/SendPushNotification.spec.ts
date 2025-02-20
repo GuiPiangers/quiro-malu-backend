@@ -1,5 +1,4 @@
 import { SendPushNotificationUseCase } from "./SendPushNotificationUseCase";
-import { Notification } from "../../models/Notification";
 import { createMockPushNotificationProvider } from "../../../../repositories/_mocks/PushNotificationProviderMock";
 
 describe("SendPushNotificationUseCase", () => {
