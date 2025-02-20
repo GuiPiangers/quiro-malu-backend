@@ -9,7 +9,7 @@ class GenerateTokenProvider implements IGenerateTokenProvider {
     if (!process.env.JWT_SECRET)
       throw new ApiError("Erro de configuração do servidor", 500);
     const token = await jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-      expiresIn: 60 * 10,
+      expiresIn: 60 * 20,
     });
     return token;
   }
