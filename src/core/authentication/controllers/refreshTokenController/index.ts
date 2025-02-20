@@ -2,8 +2,14 @@ import { refreshTokenProvider } from "../../../../repositories/token/RefreshToke
 import { generateTokenProvider } from "../../../../repositories/token/GenerateTokenProvider";
 import { RefreshTokenController } from "./RefreshTokenController";
 import { RefreshTokenUseCase } from "../../useCases/refreshToken/RefreshTokenUseCase";
+import { RefreshTokenCache } from "../../../../repositories/token/RefreshTokenCache";
 
-const refreshTokenUseCase = new RefreshTokenUseCase(refreshTokenProvider, generateTokenProvider)
-const refreshTokenController = new RefreshTokenController(refreshTokenUseCase)
+const refreshTokenCache = new RefreshTokenCache(refreshTokenProvider);
 
-export { refreshTokenController }
+const refreshTokenUseCase = new RefreshTokenUseCase(
+  refreshTokenCache,
+  generateTokenProvider,
+);
+const refreshTokenController = new RefreshTokenController(refreshTokenUseCase);
+
+export { refreshTokenController };
