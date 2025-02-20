@@ -1,10 +1,11 @@
 import { SchedulingDTO } from "../../core/scheduling/models/Scheduling";
+import { SchedulingWithPatientDTO } from "../../core/scheduling/models/SchedulingWithPatient";
 import {
   ISchedulingRepository,
   UpdateSchedulingParams,
 } from "./ISchedulingRepository";
 
-interface inMemoryInterface extends SchedulingDTO {
+interface inMemoryInterface extends SchedulingWithPatientDTO {
   userId: string;
 }
 
@@ -43,14 +44,16 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
     userId,
     ...data
   }: SchedulingDTO & { userId: string }): Promise<void> {
-    this.dbSchedules.push({ ...data, userId });
+    this.dbSchedules.push({ ...data, userId, patient: "", phone: "" });
   }
 
   async list({
     userId,
   }: {
     userId: string;
-  }): Promise<(SchedulingDTO & { patient: string; phone: string })[]> {
+  }): Promise<
+    (SchedulingWithPatientDTO & { patient: string; phone: string })[]
+  > {
     return this.dbSchedules
       .filter((scheduling) => scheduling.userId === userId)
       .map(({ patient, phone, ...rest }) => ({
@@ -66,7 +69,7 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
   }: {
     id: string;
     userId: string;
-  }): Promise<SchedulingDTO[]> {
+  }): Promise<SchedulingWithPatientDTO[]> {
     return this.dbSchedules.filter((Scheduling) => {
       return Scheduling.id === id && Scheduling.userId === userId;
     });
