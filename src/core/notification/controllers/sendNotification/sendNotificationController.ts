@@ -7,7 +7,7 @@ import {
   NotificationObserverEvent,
 } from "../../../shared/observers/NotificationObserver/NotificationObserver";
 
-export class sentNotificationController {
+export class SendNotificationController {
   async handle(request: Request, response: Response) {
     try {
       response.setHeader("Content-Type", "text/event-stream");

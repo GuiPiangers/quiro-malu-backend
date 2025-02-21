@@ -48,6 +48,7 @@ import { Notification } from "./core/notification/models/Notification";
 import { subscribeNotificationController } from "./core/notification/controllers/subscribeNotification";
 import { sendPushNotificationUseCase } from "./core/notification/useCases/sendPushNotification";
 import { unsubscribeNotificationController } from "./core/notification/controllers/unsubscribeNotification";
+import { sendNotificationController } from "./core/notification/controllers/sendNotification";
 
 const router = Router();
 const multerConfig = multer({
@@ -238,6 +239,10 @@ router.post("/subscribe", authMiddleware, async (request, response) => {
 
 router.post("/unsubscribe", authMiddleware, async (request, response) => {
   return await unsubscribeNotificationController.handle(request, response);
+});
+
+router.get("/notification", async (request, response) => {
+  return await sendNotificationController.handle(request, response);
 });
 
 router.post("/notify", authMiddleware, async (req, res) => {
