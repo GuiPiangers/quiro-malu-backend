@@ -23,19 +23,6 @@ export class SendNotificationController {
         );
       };
       notificationObserver.addObserver(sendNotificationObserver);
-
-      const interval = setInterval(() => {
-        const eventData = {
-          timestamp: new Date().toISOString(),
-          message: "Novo evento!",
-        };
-        response.write(`data: ${JSON.stringify(eventData)}\n\n`);
-      }, 3000);
-
-      request.on("close", () => {
-        clearInterval(interval);
-        response.end();
-      });
     } catch (err: any) {
       return responseError(response, err);
     }
