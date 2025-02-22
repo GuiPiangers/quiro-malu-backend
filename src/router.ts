@@ -241,7 +241,7 @@ router.post("/unsubscribe", authMiddleware, async (request, response) => {
   return await unsubscribeNotificationController.handle(request, response);
 });
 
-router.get("/notification", async (request, response) => {
+router.get("/notification", authMiddleware, async (request, response) => {
   return await sendNotificationController.handle(request, response);
 });
 
