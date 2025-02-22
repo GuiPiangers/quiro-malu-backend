@@ -6,10 +6,15 @@ import {
   notificationObserver,
   NotificationObserverEvent,
 } from "../../../shared/observers/NotificationObserver/NotificationObserver";
+import { ApiError } from "../../../../utils/ApiError";
 
 export class SendNotificationController {
   async handle(request: Request, response: Response) {
     try {
+      const userId = request.user.id;
+
+      if (!userId) throw new ApiError("Acesso não autorizado", 401);
+
       response.setHeader("Content-Type", "text/event-stream");
       response.setHeader("Cache-Control", "no-cache");
       response.setHeader("Connection", "keep-alive");
@@ -22,7 +27,7 @@ export class SendNotificationController {
           `data: ${JSON.stringify({ notification, totalNotRead })}\n\n`,
         );
       };
-      notificationObserver.addObserver(sendNotificationObserver);
+      notificationObserver.addObserver(userId, sendNotificationObserver);
     } catch (err: any) {
       return responseError(response, err);
     }

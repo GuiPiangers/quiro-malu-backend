@@ -259,7 +259,10 @@ router.post("/notify", authMiddleware, async (req, res) => {
       read: false,
     });
 
-    await notificationObserver.notify(notificationData);
+    await notificationObserver.notify(userId, {
+      notification: notificationData,
+      totalNotRead: 1,
+    });
 
     await sendPushNotificationUseCase.execute({ notificationData, userId });
 
