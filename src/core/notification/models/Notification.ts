@@ -17,14 +17,24 @@ export class Notification extends Entity {
   readonly message: string;
   readonly createdAt?: DateTime;
   readonly read: boolean;
+  readonly needAction?: boolean;
 
-  constructor({ id, createdAt, message, read, title, type }: NotificationDTO) {
+  constructor({
+    id,
+    createdAt,
+    message,
+    read,
+    title,
+    type,
+    needAction,
+  }: NotificationDTO) {
     super(id);
     this.title = title;
     this.createdAt = createdAt;
     this.message = message;
     this.type = type;
     this.read = read !== undefined ? read : false;
+    this.needAction = needAction;
   }
 
   getDTO() {
@@ -35,6 +45,7 @@ export class Notification extends Entity {
       title: this.title,
       type: this.type,
       id: this.id,
+      needAction: this.needAction,
     };
   }
 }
