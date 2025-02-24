@@ -8,6 +8,7 @@ export type NotificationDTO = {
   message: string;
   createdAt?: DateTime;
   read?: boolean;
+  needAction?: boolean;
 };
 
 export class Notification extends Entity {
