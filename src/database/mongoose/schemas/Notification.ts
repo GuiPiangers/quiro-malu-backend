@@ -15,6 +15,7 @@ const notificationSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  actionNeeded: Boolean,
 });
 
 export const NotificationModel = mongoose.model(
