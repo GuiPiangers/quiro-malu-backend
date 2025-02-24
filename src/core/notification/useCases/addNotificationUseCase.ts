@@ -10,7 +10,7 @@ export default class AddNotificationUseCase {
     const notificationDTO = notification.getDTO();
 
     await this.notificationRepository.save({ ...notificationDTO, userId });
-    const totalNotRead = await this.notificationRepository.countNotRead({
+    const totalNotRead = await this.notificationRepository.countNotReadOrNeedAct({
       userId,
     });
 

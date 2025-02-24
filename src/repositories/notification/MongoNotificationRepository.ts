@@ -59,9 +59,12 @@ export class MongoNotificationRepository implements INotificationRepository {
     return await NotificationModel.find({ userId });
   }
 
-  async countNotRead({
+  async countNotReadOrNeedAct({
     userId,
   }: CountNotReadNotificationParams): Promise<number> {
-    return await NotificationModel.countDocuments({ userId, read: true });
+    return await NotificationModel.countDocuments({
+      userId,
+      $or: [{ read: false }, { needAction: true }],
+    });
   }
 }

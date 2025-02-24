@@ -32,5 +32,5 @@ export interface INotificationRepository {
   update(data: UpdateNotificationParams): Promise<void>;
   get(data: GetNotificationParams): Promise<NotificationDTO | null>;
   list(data: ListNotificationParams): Promise<NotificationDTO[]>;
-  countNotRead(data: CountNotReadNotificationParams): Promise<number>;
+  countNotReadOrNeedAct(data: CountNotReadNotificationParams): Promise<number>;
 }
