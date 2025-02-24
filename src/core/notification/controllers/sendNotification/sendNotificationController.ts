@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { NotificationDTO } from "../../models/Notification";
 import { responseError } from "../../../../utils/ResponseError";
 
 import {
