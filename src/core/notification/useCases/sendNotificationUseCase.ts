@@ -5,16 +5,20 @@ import { Notification, NotificationDTO } from "../models/Notification";
 export default class SendAppNotificationUseCase {
   constructor(private notificationRepository: INotificationRepository) {}
 
-  async execute({ userId, ...data }: NotificationDTO & { userId: string }) {
-    const notification = new Notification(data);
-    const notificationDTO = notification.getDTO();
-
-    await this.notificationRepository.save({ ...notificationDTO, userId });
+  async execute({
+    userId,
+    notification: notificationDTO,
+  }: {
+    notification?: NotificationDTO;
+    userId: string;
+  }) {
+    const notification = notificationDTO
+      ? new Notification(notificationDTO)
+      : undefined;
     const totalNotRead =
       await this.notificationRepository.countNotReadOrNeedAct({
         userId,
       });
-
     notificationObserver.notify(userId, { notification, totalNotRead });
   }
 }

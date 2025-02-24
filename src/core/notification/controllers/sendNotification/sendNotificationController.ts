@@ -7,8 +7,11 @@ import {
   NotificationObserverEvent,
 } from "../../../shared/observers/NotificationObserver/NotificationObserver";
 import { ApiError } from "../../../../utils/ApiError";
+import SendAppNotificationUseCase from "../../useCases/sendNotificationUseCase";
 
 export class SendNotificationController {
+  constructor(private sendNotificationUseCase: SendAppNotificationUseCase) {}
+
   async handle(request: Request, response: Response) {
     try {
       const userId = request.user.id;
@@ -28,6 +31,8 @@ export class SendNotificationController {
         );
       };
       notificationObserver.addObserver(userId, sendNotificationObserver);
+
+      await this.sendNotificationUseCase.execute({ userId });
     } catch (err: any) {
       return responseError(response, err);
     }
