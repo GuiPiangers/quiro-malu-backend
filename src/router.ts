@@ -245,6 +245,14 @@ router.get("/notification", authMiddleware, async (request, response) => {
   return await sendNotificationController.handle(request, response);
 });
 
+router.get(
+  "/notification/connect",
+  authMiddleware,
+  async (request, response) => {
+    return await sendNotificationController.handle(request, response);
+  },
+);
+
 router.post("/notify", authMiddleware, async (req, res) => {
   try {
     const { title, message } = req.body;
