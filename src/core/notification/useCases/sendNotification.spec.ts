@@ -1,7 +1,7 @@
 import { createMockNotificationRepository } from "../../../repositories/_mocks/NotificationRepositoryMock";
 import { DateTime } from "../../shared/Date";
 import { NotificationDTO } from "../models/Notification";
-import CreateNotificationUseCase from "./addNotificationUseCase";
+import CreateNotificationUseCase from "./sendNotificationUseCase";
 
 describe("CreateNotificationUseCase", () => {
   let createNotificationUseCase: CreateNotificationUseCase;
