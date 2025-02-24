@@ -19,10 +19,10 @@ export class SendNotificationController {
       response.setHeader("Cache-Control", "no-cache");
       response.setHeader("Connection", "keep-alive");
 
-      const sendNotificationObserver: NotificationObserverEvent = async (
-        notification: NotificationDTO,
-        totalNotRead: number,
-      ) => {
+      const sendNotificationObserver: NotificationObserverEvent = async ({
+        notification,
+        totalNotRead,
+      }) => {
         response.write(
           `data: ${JSON.stringify({ notification, totalNotRead })}\n\n`,
         );
