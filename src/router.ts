@@ -50,6 +50,7 @@ import { sendPushNotificationUseCase } from "./core/notification/useCases/sendPu
 import { unsubscribeNotificationController } from "./core/notification/controllers/unsubscribeNotification";
 import { sendNotificationController } from "./core/notification/controllers/sendNotification";
 import { listNotificationsController } from "./core/notification/controllers/listNotification";
+import SaveSendAppNotificationUseCase from "./core/notification/useCases/sendAndSaveNotification/sendAndSaveNotification";
 
 const router = Router();
 const multerConfig = multer({
@@ -268,10 +269,7 @@ router.post("/notify", authMiddleware, async (req, res) => {
       read: false,
     });
 
-    await notificationObserver.notify(userId, {
-      notification: notificationData,
-      totalNotRead: 1,
-    });
+    SaveSendAppNotificationUseCase();
 
     await sendPushNotificationUseCase.execute({ notificationData, userId });
 

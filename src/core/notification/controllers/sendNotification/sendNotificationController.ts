@@ -6,10 +6,10 @@ import {
   NotificationObserverEvent,
 } from "../../../shared/observers/NotificationObserver/NotificationObserver";
 import { ApiError } from "../../../../utils/ApiError";
-import SendAppNotificationUseCase from "../../useCases/sendNotificationUseCase";
+import SendNotificationUseCase from "../../useCases/sendNotificationUseCase";
 
 export class SendNotificationController {
-  constructor(private sendNotificationUseCase: SendAppNotificationUseCase) {}
+  constructor(private sendNotificationUseCase: SendNotificationUseCase) {}
 
   async handle(request: Request, response: Response) {
     try {

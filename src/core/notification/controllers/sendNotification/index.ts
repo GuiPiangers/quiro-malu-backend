@@ -1,9 +1,9 @@
 import { MongoNotificationRepository } from "../../../../repositories/notification/MongoNotificationRepository";
-import SendAppNotificationUseCase from "../../useCases/sendNotificationUseCase";
+import SendNotificationUseCase from "../../useCases/sendNotificationUseCase";
 import { SendNotificationController } from "./sendNotificationController";
 
 const notificationRepository = new MongoNotificationRepository();
-const sendNotificationUseCase = new SendAppNotificationUseCase(
+const sendNotificationUseCase = new SendNotificationUseCase(
   notificationRepository,
 );
 
