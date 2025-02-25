@@ -43,14 +43,13 @@ import { saveExamController } from "./core/exams/controllers/saveExamController"
 import { deleteExamController } from "./core/exams/controllers/deleteExamController";
 import { listExamController } from "./core/exams/controllers/listExamController";
 import { restoreExamController } from "./core/exams/controllers/restoreExamController";
-import { notificationObserver } from "./core/shared/observers/NotificationObserver/NotificationObserver";
 import { Notification } from "./core/notification/models/Notification";
 import { subscribeNotificationController } from "./core/notification/controllers/subscribeNotification";
 import { sendPushNotificationUseCase } from "./core/notification/useCases/sendPushNotification";
 import { unsubscribeNotificationController } from "./core/notification/controllers/unsubscribeNotification";
 import { sendNotificationController } from "./core/notification/controllers/sendNotification";
 import { listNotificationsController } from "./core/notification/controllers/listNotification";
-import SaveSendAppNotificationUseCase from "./core/notification/useCases/sendAndSaveNotification/sendAndSaveNotification";
+import { sendAndSaveNotificationUseCase } from "./core/notification/useCases/sendAndSaveNotification";
 
 const router = Router();
 const multerConfig = multer({
@@ -248,7 +247,7 @@ router.get("/notifications", authMiddleware, async (request, response) => {
 });
 
 router.get(
-  "/notification/connect",
+  "/notifications/connect",
   authMiddleware,
   async (request, response) => {
     return await sendNotificationController.handle(request, response);
@@ -269,7 +268,12 @@ router.post("/notify", authMiddleware, async (req, res) => {
       read: false,
     });
 
-    SaveSendAppNotificationUseCase();
+    await sendAndSaveNotificationUseCase.execute({
+      message: "Notificação teste de uma função route customizada",
+      title: "Titulo da notificação",
+      type: "sendMessage",
+      userId,
+    });
 
     await sendPushNotificationUseCase.execute({ notificationData, userId });
 
