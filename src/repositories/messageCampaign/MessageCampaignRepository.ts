@@ -31,7 +31,7 @@ export class MessageCampaign implements IMessageCampaignRepository {
     patientsId,
   }: removeNotMessagePatientsProps): Promise<void> {
     await Knex(ETableNames.NOT_MESSAGE_PATIENTS)
-      .where(messageCampaignId)
+      .where({ messageCampaignId })
       .whereIn("patientId", patientsId)
       .del();
   }
@@ -43,6 +43,6 @@ export class MessageCampaign implements IMessageCampaignRepository {
   > {
     return await Knex(ETableNames.NOT_MESSAGE_PATIENTS)
       .select("*")
-      .where({ id: messageCampaignId });
+      .where({ messageCampaignId });
   }
 }

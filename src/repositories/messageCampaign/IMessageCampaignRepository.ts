@@ -4,6 +4,7 @@ export type SaveMessageCampaignProps = MessageCampaignDTO & { userId: string };
 export type GetMessageCampaignProps = { userId: string; id: string };
 
 export type setNotMessagePatientsProps = Array<{
+  userId: string;
   messageCampaignId: string;
   patientId: string;
 }>;
