@@ -10,4 +10,5 @@ export enum ETableNames {
   SCHEDULES = "schedules",
   FINANCES = "finances",
   EXAMS = "exams",
+  NOT_MESSAGE_PATIENTS = "notMessagePatients",
 }

@@ -1,16 +1,17 @@
 import { MessageCampaignDTO } from "../../core/messageCampaign/models/MessageCampaign";
 
 export type SaveMessageCampaignProps = MessageCampaignDTO & { userId: string };
+export type GetMessageCampaignProps = { userId: string; id: string };
 
 export type setNotMessagePatientsProps = Array<{
   messageCampaignId: string;
   patientId: string;
 }>;
 
-export type removeNotMessagePatientsProps = Array<{
+export type removeNotMessagePatientsProps = {
   messageCampaignId: string;
-  patientId: string;
-}>;
+  patientsId: string[];
+};
 
 export type listNotMessagePatients = {
   messageCampaignId: string;
@@ -18,7 +19,9 @@ export type listNotMessagePatients = {
 
 export interface IMessageCampaignRepository {
   save(data: SaveMessageCampaignProps): Promise<void>;
-  getMessageCampaign(): Promise<MessageCampaignDTO>;
+  getMessageCampaign(
+    data: GetMessageCampaignProps,
+  ): Promise<MessageCampaignDTO | null>;
   setNotMessagePatients(data: setNotMessagePatientsProps): Promise<void>;
   removeNotMessagePatients(data: removeNotMessagePatientsProps): Promise<void>;
   listNotMessagePatients(
