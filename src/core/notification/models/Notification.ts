@@ -11,6 +11,10 @@ export type NotificationDTO = {
   needAction?: boolean;
 };
 
+export type ComplexNotificationDTO<T = undefined> = NotificationDTO & {
+  params: T;
+};
+
 export class Notification extends Entity {
   readonly title: string;
   readonly type: string;
@@ -46,6 +50,22 @@ export class Notification extends Entity {
       type: this.type,
       id: this.id,
       needAction: this.needAction,
+    };
+  }
+}
+
+export abstract class ComplexNotification<T> extends Notification {
+  readonly params: T;
+
+  constructor({ params, ...data }: ComplexNotificationDTO<T>) {
+    super(data);
+    this.params = params;
+  }
+
+  getDTO() {
+    return {
+      ...super.getDTO(),
+      params: this.params,
     };
   }
 }
