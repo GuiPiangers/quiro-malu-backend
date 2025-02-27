@@ -1,7 +1,9 @@
 import { Phone } from "../../shared/Phone";
 import { ComplexNotification } from "./Notification";
 
-export class NotificationSendMessage extends ComplexNotification<{
+export type NotificationSendMessageParams = {
   patientId: string;
   patientPhone: Phone;
-}> {}
+};
+
+export class NotificationSendMessage extends ComplexNotification<NotificationSendMessageParams> {}
