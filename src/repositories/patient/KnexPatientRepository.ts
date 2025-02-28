@@ -6,6 +6,24 @@ import { IPatientRepository } from "../../repositories/patient/IPatientRepositor
 import { ApiError } from "../../utils/ApiError";
 
 export class KnexPatientRepository implements IPatientRepository {
+  async getByDateOfBirth({
+    dateOfBirth,
+    userId,
+  }: {
+    dateOfBirth: string;
+    userId: string;
+  }): Promise<PatientDTO[]> {
+    try {
+      const result = await Knex(ETableNames.PATIENTS)
+        .select("*")
+        .where({ dateOfBirth, userId });
+
+      return result;
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
+  }
+
   async save(data: PatientDTO, userId: string): Promise<void> {
     try {
       const result = await Knex(ETableNames.PATIENTS).insert({

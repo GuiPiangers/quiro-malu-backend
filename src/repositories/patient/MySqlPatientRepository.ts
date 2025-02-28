@@ -4,6 +4,13 @@ import { IPatientRepository } from "../../repositories/patient/IPatientRepositor
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
 
 export class MySqlPatientRepository implements IPatientRepository {
+  getByDateOfBirth(data: {
+    dateOfBirth: string;
+    userId: string;
+  }): Promise<PatientDTO[]> {
+    throw new Error("Method not implemented.");
+  }
+
   saveMany(patient: (PatientDTO & { userId: string })[]): Promise<void> {
     throw new Error("Method not implemented.");
   }
