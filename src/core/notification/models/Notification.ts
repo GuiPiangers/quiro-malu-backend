@@ -1,23 +1,21 @@
 import { DateTime } from "../../shared/Date";
 import { Entity } from "../../shared/Entity";
+import { notificationTypes } from "./NotificationFactory";
 
-export type NotificationDTO = {
+export type NotificationDTO<T = undefined> = {
   id?: string;
   title: string;
-  type: string;
+  type: notificationTypes;
   message: string;
   createdAt?: DateTime;
   read?: boolean;
   needAction?: boolean;
-};
-
-export type ComplexNotificationDTO<T = undefined> = NotificationDTO & {
-  params: T;
+  params?: T;
 };
 
 export class Notification extends Entity {
   readonly title: string;
-  readonly type: string;
+  readonly type: notificationTypes;
   readonly message: string;
   readonly createdAt?: DateTime;
   readonly read: boolean;
@@ -55,9 +53,9 @@ export class Notification extends Entity {
 }
 
 export abstract class ComplexNotification<T> extends Notification {
-  readonly params: T;
+  readonly params?: T;
 
-  constructor({ params, ...data }: ComplexNotificationDTO<T>) {
+  constructor({ params, ...data }: NotificationDTO<T>) {
     super(data);
     this.params = params;
   }

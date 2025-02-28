@@ -1,31 +1,32 @@
-import {
-  ComplexNotificationDTO,
-  Notification,
-  NotificationDTO,
-} from "./Notification";
+import { Notification, NotificationDTO } from "./Notification";
 import {
   NotificationSendMessage,
   NotificationSendMessageParams,
 } from "./NotificationSendMessage";
 
-type notificationsTablesParams = {
+export type notificationsTablesParams = {
+  default: undefined;
   sendMessage: NotificationSendMessageParams;
+  undo: { item: "Ola, tudo bem" };
 };
 
-export function notificationFactory(
-  type: "sendMessage",
-  data:
-    | NotificationDTO
-    | ComplexNotificationDTO<notificationsTablesParams[typeof type]>,
+export type notificationTypes = keyof notificationsTablesParams;
+
+export function notificationFactory<T extends notificationTypes>(
+  type: T,
+  data: (NotificationDTO | NotificationDTO<notificationsTablesParams[T]>) & {
+    type: T;
+  },
 ) {
-  if ("params" in data) {
+  if (data.params) {
+    const dataParams: any = data;
     switch (type) {
       case "sendMessage":
-        return new NotificationSendMessage(data);
+        return new NotificationSendMessage(dataParams);
 
       default:
         break;
     }
   }
-  return new Notification(data);
+  return new Notification(data as NotificationDTO);
 }
