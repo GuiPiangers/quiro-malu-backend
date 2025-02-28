@@ -14,7 +14,7 @@ export default class SendNotificationUseCase {
     userId: string;
   }) {
     const notification = notificationDTO
-      ? notificationFactory("default", notificationDTO)
+      ? notificationFactory(notificationDTO.type, notificationDTO)
       : undefined;
     const totalNotRead =
       await this.notificationRepository.countNotReadOrNeedAct({
