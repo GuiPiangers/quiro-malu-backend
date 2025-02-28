@@ -2,7 +2,6 @@ import { IPushNotificationQueue } from "../../../../database/bull/pushNotificati
 import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
 import { SchedulingDTO } from "../../../scheduling/models/Scheduling";
 import { DateTime } from "../../../shared/Date";
-import { Notification } from "../../models/Notification";
 import { PushNotification } from "../../models/PushNotification";
 
 export class ScheduleNotificationUseCase {

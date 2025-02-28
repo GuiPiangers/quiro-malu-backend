@@ -268,12 +268,13 @@ router.post("/notify", authMiddleware, async (req, res) => {
       message,
     });
 
-    await sendAndSaveNotificationUseCase.execute({
-      message: "Notificação teste de uma função route customizada",
-      title: "Titulo da notificação",
-      type: "sendMessage",
-      userId,
+    const notification = new Notification({
+      message: "Mensagem que será enviada para o front-end",
+      title: "Mensagem teste",
+      type: "default",
     });
+
+    await sendAndSaveNotificationUseCase.execute({ userId, notification });
 
     await sendPushNotificationUseCase.execute({ notificationData, userId });
 

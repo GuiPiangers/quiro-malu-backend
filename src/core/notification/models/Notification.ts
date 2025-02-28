@@ -13,6 +13,10 @@ export type NotificationDTO<T = undefined> = {
   params?: T;
 };
 
+export type ComplexNotificationDTO<T> = Omit<NotificationDTO<T>, "type"> & {
+  params: T;
+};
+
 export class Notification extends Entity {
   readonly title: string;
   readonly type: notificationTypes;
@@ -58,7 +62,7 @@ export abstract class ComplexNotification<T> extends Notification {
   constructor({
     params,
     ...data
-  }: Omit<NotificationDTO, "params"> & { params: T }) {
+  }: ComplexNotificationDTO<T> & Pick<NotificationDTO<T>, "type">) {
     super({ ...data });
     this.params = params;
   }
