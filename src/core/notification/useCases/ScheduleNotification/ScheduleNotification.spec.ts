@@ -26,6 +26,10 @@ describe("ScheduleNotificationUseCase", () => {
       .setSystemTime(new Date("2025-01-01T12:15:00Z").getTime());
   });
 
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   describe("schedule", () => {
     it("should not schedule if id is missing", async () => {
       await useCase.schedule({

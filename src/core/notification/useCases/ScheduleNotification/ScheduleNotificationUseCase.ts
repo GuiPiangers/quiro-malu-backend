@@ -71,12 +71,13 @@ export class ScheduleNotificationUseCase {
   }
 
   private calculateDelay(date: string, preTimer: number) {
-    const scheduledDate = new Date(date);
+    const scheduledDate = new Date(`${date}:00.000Z`);
     scheduledDate.setMinutes(scheduledDate.getMinutes() - preTimer);
 
     const scheduleDateTime = new DateTime(scheduledDate.toISOString());
 
     const delay = DateTime.difference(scheduleDateTime, DateTime.now());
+    console.log(delay);
     return delay;
   }
 }
