@@ -3,6 +3,7 @@ import { ISchedulingRepository } from "../../../../repositories/scheduling/ISche
 import { SchedulingDTO } from "../../../scheduling/models/Scheduling";
 import { DateTime } from "../../../shared/Date";
 import { Notification } from "../../models/Notification";
+import { PushNotification } from "../../models/PushNotification";
 
 export class ScheduleNotificationUseCase {
   constructor(
@@ -34,7 +35,7 @@ export class ScheduleNotificationUseCase {
       );
       const scheduleTime = new DateTime(schedule.date).time;
 
-      const notification = new Notification({
+      const notification = new PushNotification({
         id: schedule.id,
         type: "scheduling",
         title: `Você tem uma consulta agendada com o(a) paciente ${data.patient}`,

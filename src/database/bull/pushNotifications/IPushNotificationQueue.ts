@@ -1,7 +1,7 @@
-import { NotificationDTO } from "../../../core/notification/models/Notification";
+import { PushNotificationDTO } from "../../../core/notification/models/PushNotification";
 
 export type PushNotificationQueuePrams = {
-  notification: NotificationDTO;
+  notification: PushNotificationDTO;
   userId: string;
   delay: number;
 };
