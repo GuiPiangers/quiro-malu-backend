@@ -1,5 +1,6 @@
 import { PushSubscription } from "web-push";
 import { NotificationDTO } from "../../core/notification/models/Notification";
+import { PushNotificationDTO } from "../../core/notification/models/PushNotification";
 
 export type Subscription = PushSubscription;
 
@@ -18,7 +19,7 @@ export type GetSubscriptionsParams = {
 };
 
 export interface IPushNotificationProvider {
-  send(subscription: Subscription, payload: NotificationDTO): Promise<void>;
+  send(subscription: Subscription, payload: PushNotificationDTO): Promise<void>;
   subscribe(data: SubscribeParams): Promise<void>;
   updateSubscription(data: SubscribeParams): Promise<void>;
   unsubscribe(data: UnsubscribeParams): Promise<void>;

@@ -11,15 +11,8 @@ import {
 } from "./INotificationRepository";
 
 export class MongoNotificationRepository implements INotificationRepository {
-  async save({
-    id,
-    message,
-    read,
-    title,
-    type,
-    userId,
-  }: SaveNotificationParams): Promise<void> {
-    await NotificationModel.create({ id, message, read, title, type, userId });
+  async save(data: SaveNotificationParams): Promise<void> {
+    await NotificationModel.create(data);
   }
 
   async delete({ id, userId }: DeleteNotificationParams): Promise<void> {
@@ -29,26 +22,15 @@ export class MongoNotificationRepository implements INotificationRepository {
   async update({
     id,
     userId,
-    message,
-    read,
-    title,
-    type,
+    ...data
   }: UpdateNotificationParams): Promise<void> {
-    await NotificationModel.updateOne(
-      { id, userId },
-      {
-        message,
-        read,
-        title,
-        type,
-      },
-    );
+    await NotificationModel.updateOne({ id, userId }, data);
   }
 
-  async get({
+  async get<T>({
     id,
     userId,
-  }: GetNotificationParams): Promise<NotificationDTO | null> {
+  }: GetNotificationParams): Promise<NotificationDTO<T> | null> {
     return await NotificationModel.findOne({ userId, id });
   }
 

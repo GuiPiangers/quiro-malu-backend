@@ -1,5 +1,6 @@
 import { IPushNotificationProvider } from "../../../../repositories/notification/IPushNotificationProvider";
 import { Notification, NotificationDTO } from "../../models/Notification";
+import { PushNotification } from "../../models/PushNotification";
 
 export class SendPushNotificationUseCase {
   constructor(private pushNotificationProvider: IPushNotificationProvider) {}
@@ -12,7 +13,7 @@ export class SendPushNotificationUseCase {
     notificationData: NotificationDTO;
   }) {
     try {
-      const notification = new Notification(notificationData);
+      const notification = new PushNotification(notificationData);
       const notificationDTO = notification.getDTO();
 
       const { subscriptions } =
