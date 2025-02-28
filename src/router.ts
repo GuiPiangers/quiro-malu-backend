@@ -50,6 +50,7 @@ import { unsubscribeNotificationController } from "./core/notification/controlle
 import { sendNotificationController } from "./core/notification/controllers/sendNotification";
 import { listNotificationsController } from "./core/notification/controllers/listNotification";
 import { sendAndSaveNotificationUseCase } from "./core/notification/useCases/sendAndSaveNotification";
+import { PushNotification } from "./core/notification/models/PushNotification";
 
 const router = Router();
 const multerConfig = multer({
@@ -261,11 +262,10 @@ router.post("/notify", authMiddleware, async (req, res) => {
 
     if (!userId) return res.send({ message: "O usuário deve estar logado" });
 
-    const notificationData = new Notification({
+    const notificationData = new PushNotification({
       title,
       type: "type",
       message,
-      read: false,
     });
 
     await sendAndSaveNotificationUseCase.execute({

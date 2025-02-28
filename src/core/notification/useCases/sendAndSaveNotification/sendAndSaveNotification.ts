@@ -1,12 +1,14 @@
 import { INotificationRepository } from "../../../../repositories/notification/INotificationRepository";
 import { notificationObserver } from "../../../shared/observers/NotificationObserver/NotificationObserver";
-import { NotificationDTO } from "../../models/Notification";
-import { notificationFactory } from "../../models/NotificationFactory";
+import { notificationFactory, notificationTypes } from "../../models/NotificationFactory";
 
 export default class SaveSendNotificationUseCase {
   constructor(private notificationRepository: INotificationRepository) {}
 
-  async execute({ userId, ...data }: NotificationDTO & { userId: string }) {
+  async execute<T extends notificationTypes>({
+    userId,
+    ...data
+  }: Parameters<typeof notificationFactory<T>>[1] & { userId: string }) {
     const notification = notificationFactory(data.type, data);
     const notificationDTO = notification.getDTO();
 

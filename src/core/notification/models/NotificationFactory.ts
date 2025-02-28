@@ -1,4 +1,8 @@
-import { Notification, NotificationDTO } from "./Notification";
+import {
+  ComplexNotification,
+  Notification,
+  NotificationDTO,
+} from "./Notification";
 import {
   NotificationSendMessage,
   NotificationSendMessageParams,
@@ -17,7 +21,7 @@ export function notificationFactory<T extends notificationTypes>(
   data: (NotificationDTO | NotificationDTO<notificationsTablesParams[T]>) & {
     type: T;
   },
-) {
+): Notification | ComplexNotification<T> {
   if (data.params) {
     const dataParams: any = data;
     switch (type) {

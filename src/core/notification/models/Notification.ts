@@ -53,10 +53,13 @@ export class Notification extends Entity {
 }
 
 export abstract class ComplexNotification<T> extends Notification {
-  readonly params?: T;
+  readonly params: T;
 
-  constructor({ params, ...data }: NotificationDTO<T>) {
-    super(data);
+  constructor({
+    params,
+    ...data
+  }: Omit<NotificationDTO, "params"> & { params: T }) {
+    super({ ...data });
     this.params = params;
   }
 
