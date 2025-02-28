@@ -12,7 +12,7 @@ import {
 } from "./IMessageCampaignRepository";
 
 export class MessageCampaign implements IMessageCampaignRepository {
-  async save(data: SaveMessageCampaignProps): Promise<void> {
+  async create(data: SaveMessageCampaignProps): Promise<void> {
     await MessageCampaignModel.create(data);
   }
 

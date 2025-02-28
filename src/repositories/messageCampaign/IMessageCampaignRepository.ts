@@ -19,7 +19,7 @@ export type listNotMessagePatients = {
 };
 
 export interface IMessageCampaignRepository {
-  save(data: SaveMessageCampaignProps): Promise<void>;
+  create(data: SaveMessageCampaignProps): Promise<void>;
   getMessageCampaign(
     data: GetMessageCampaignProps,
   ): Promise<MessageCampaignDTO | null>;
