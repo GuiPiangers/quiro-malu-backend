@@ -51,6 +51,7 @@ import { sendNotificationController } from "./core/notification/controllers/send
 import { listNotificationsController } from "./core/notification/controllers/listNotification";
 import { sendAndSaveNotificationUseCase } from "./core/notification/useCases/sendAndSaveNotification";
 import { PushNotification } from "./core/notification/models/PushNotification";
+import { createMessageCampaignController } from "./core/messageCampaign/controller/createMessageCampaign";
 
 const router = Router();
 const multerConfig = multer({
@@ -282,6 +283,10 @@ router.post("/notify", authMiddleware, async (req, res) => {
   } catch (error: any) {
     res.send({ message: error.message });
   }
+});
+
+router.post("/messageCampaigns", authMiddleware, async (request, response) => {
+  return await createMessageCampaignController.handle(request, response);
 });
 
 export { router };
