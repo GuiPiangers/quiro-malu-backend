@@ -8,19 +8,19 @@ export type NotificationObserverEvent = (data: {
 class NotificationObserver {
   private observers: Map<string, NotificationObserverEvent> = new Map();
 
-  addObserver(key: string, observer: NotificationObserverEvent) {
-    this.observers.set(key, observer);
+  addObserver(userId: string, observer: NotificationObserverEvent) {
+    this.observers.set(userId, observer);
   }
 
   async notify(
-    key: string,
+    userId: string,
     {
       notification,
       totalNotRead = 0,
     }: { notification?: Notification; totalNotRead?: number },
   ) {
-    if (this.observers.has(key)) {
-      const executeObserver = this.observers.get(key);
+    if (this.observers.has(userId)) {
+      const executeObserver = this.observers.get(userId);
       if (!executeObserver) return;
       await executeObserver({ notification, totalNotRead });
     }

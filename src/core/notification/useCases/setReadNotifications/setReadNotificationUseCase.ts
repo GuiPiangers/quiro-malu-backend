@@ -1,4 +1,5 @@
 import { INotificationRepository } from "../../../../repositories/notification/INotificationRepository";
+import { notificationObserver } from "../../../shared/observers/NotificationObserver/NotificationObserver";
 
 export class SetReadNotificationsUseCase {
   constructor(private notificationRepository: INotificationRepository) {}
@@ -15,5 +16,9 @@ export class SetReadNotificationsUseCase {
     );
 
     await Promise.allSettled(setNotificationsRead);
+    const totalNotRead =
+      await this.notificationRepository.countNotReadOrNeedAct({ userId });
+
+    notificationObserver.notify(userId, { totalNotRead });
   }
 }
