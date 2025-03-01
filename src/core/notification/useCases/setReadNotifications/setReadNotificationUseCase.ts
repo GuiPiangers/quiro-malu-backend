@@ -1,6 +1,6 @@
 import { INotificationRepository } from "../../../../repositories/notification/INotificationRepository";
 
-export class SetReadNotificationUseCase {
+export class SetReadNotificationsUseCase {
   constructor(private notificationRepository: INotificationRepository) {}
 
   async execute({
