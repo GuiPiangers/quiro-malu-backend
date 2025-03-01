@@ -63,7 +63,10 @@ export abstract class ComplexNotification<T> extends Notification {
     params,
     ...data
   }: ComplexNotificationDTO<T> & Pick<NotificationDTO<T>, "type">) {
-    super({ ...data, actionNeeded: data.actionNeeded || true });
+    super({
+      ...data,
+      actionNeeded: data.actionNeeded === undefined ? true : data.actionNeeded,
+    });
     this.params = params;
   }
 

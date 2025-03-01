@@ -288,7 +288,7 @@ router.post("/notify", authMiddleware, async (req, res) => {
         patientId: "18dac10e-97be-403e-a716-b9ed10b0f58e",
         patientPhone: new Phone("(51) 98035 1927"),
       },
-      actionNeeded: true,
+      actionNeeded: false,
     });
 
     await sendAndSaveNotificationUseCase.execute({ userId, notification });
