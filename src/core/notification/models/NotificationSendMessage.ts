@@ -6,8 +6,22 @@ export type NotificationSendMessageParams = {
   patientPhone: Phone;
 };
 
-export class NotificationSendMessage extends ComplexNotification<NotificationSendMessageParams> {
+type ComplexNotificationParams = Omit<
+  NotificationSendMessageParams,
+  "patientPhone"
+> & {
+  patientPhone: string;
+};
+
+export class NotificationSendMessage extends ComplexNotification<ComplexNotificationParams> {
   constructor(data: ComplexNotificationDTO<NotificationSendMessageParams>) {
-    super({ ...data, type: "sendMessage" });
+    super({
+      ...data,
+      type: "sendMessage",
+      params: {
+        ...data.params,
+        patientPhone: data.params.patientPhone.value,
+      },
+    });
   }
 }
