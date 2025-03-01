@@ -8,8 +8,7 @@ const setActionDoneNotificationUseCase = new SetActionDoneNotificationUseCase(
   notificationRepository,
 );
 
-const setReadNotificationController = new SetActionDoneNotificationController(
-  setActionDoneNotificationUseCase,
-);
+const setActionDoneNotificationController =
+  new SetActionDoneNotificationController(setActionDoneNotificationUseCase);
 
-export { setReadNotificationController };
+export { setActionDoneNotificationController };

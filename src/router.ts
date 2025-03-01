@@ -56,6 +56,7 @@ import { listMessageCampaignController } from "./core/messageCampaign/controller
 import { NotificationSendMessage } from "./core/notification/models/NotificationSendMessage";
 import { Phone } from "./core/shared/Phone";
 import { setReadNotificationsController } from "./core/notification/controllers/setReadNotifications";
+import { setActionDoneNotificationController } from "./core/notification/controllers/setActionDoneNotifications";
 
 const router = Router();
 const multerConfig = multer({
@@ -257,6 +258,14 @@ router.post(
   authMiddleware,
   async (request, response) => {
     return await setReadNotificationsController.handle(request, response);
+  },
+);
+
+router.post(
+  "/notifications/setActionDone",
+  authMiddleware,
+  async (request, response) => {
+    return await setActionDoneNotificationController.handle(request, response);
   },
 );
 
