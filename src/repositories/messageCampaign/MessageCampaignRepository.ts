@@ -3,8 +3,10 @@ import { Knex } from "../../database";
 import { ETableNames } from "../../database/ETableNames";
 import { MessageCampaignModel } from "../../database/mongoose/schemas/MessageCampaign";
 import {
+  CountMessageCampaignProps,
   GetMessageCampaignProps,
   IMessageCampaignRepository,
+  ListMessageCampaignProps,
   listNotMessagePatients,
   removeNotMessagePatientsProps,
   SaveMessageCampaignProps,
@@ -12,13 +14,19 @@ import {
 } from "./IMessageCampaignRepository";
 
 export class MessageCampaignRepository implements IMessageCampaignRepository {
+  async count({ userId }: CountMessageCampaignProps): Promise<number> {
+    return await MessageCampaignModel.countDocuments({ userId });
+  }
+
+  async list(data: ListMessageCampaignProps): Promise<MessageCampaignDTO[]> {
+    return await MessageCampaignModel.find(data);
+  }
+
   async create(data: SaveMessageCampaignProps): Promise<void> {
     await MessageCampaignModel.create(data);
   }
 
-  async getMessageCampaign(
-    data: GetMessageCampaignProps,
-  ): Promise<MessageCampaignDTO | null> {
+  async get(data: GetMessageCampaignProps): Promise<MessageCampaignDTO | null> {
     return await MessageCampaignModel.findOne(data);
   }
 
