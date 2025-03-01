@@ -11,7 +11,7 @@ import {
   setNotMessagePatientsProps,
 } from "./IMessageCampaignRepository";
 
-export class MessageCampaign implements IMessageCampaignRepository {
+export class MessageCampaignRepository implements IMessageCampaignRepository {
   async create(data: SaveMessageCampaignProps): Promise<void> {
     await MessageCampaignModel.create(data);
   }
