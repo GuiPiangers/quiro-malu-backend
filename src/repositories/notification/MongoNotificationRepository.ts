@@ -38,7 +38,9 @@ export class MongoNotificationRepository implements INotificationRepository {
     userId,
     config,
   }: ListNotificationParams): Promise<NotificationDTO[]> {
-    return await NotificationModel.find({ userId });
+    return await NotificationModel.find<NotificationDTO>({ userId }).sort({
+      createdAt: -1,
+    });
   }
 
   async countNotReadOrNeedAct({
