@@ -2,7 +2,7 @@ import { INotificationRepository } from "../../../repositories/notification/INot
 import { notificationObserver } from "../../shared/observers/NotificationObserver/NotificationObserver";
 import { Notification } from "../models/Notification";
 
-export default class SendNotificationUseCase {
+export class SendNotificationUseCase {
   constructor(private notificationRepository: INotificationRepository) {}
 
   async execute({

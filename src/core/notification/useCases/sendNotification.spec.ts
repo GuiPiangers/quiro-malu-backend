@@ -1,45 +1,59 @@
 import { createMockNotificationRepository } from "../../../repositories/_mocks/NotificationRepositoryMock";
 import { DateTime } from "../../shared/Date";
-import { NotificationDTO } from "../models/Notification";
-import CreateNotificationUseCase from "./sendNotificationUseCase";
+import { Notification, NotificationDTO } from "../models/Notification";
+import SaveSendNotificationUseCase from "./sendAndSaveNotification/sendAndSaveNotification";
 
 describe("CreateNotificationUseCase", () => {
-  let createNotificationUseCase: CreateNotificationUseCase;
+  let saveAndSendNotificationUseCase: SaveSendNotificationUseCase;
   const mockNotificationRepository: ReturnType<
     typeof createMockNotificationRepository
   > = createMockNotificationRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();
-    createNotificationUseCase = new CreateNotificationUseCase(
+    saveAndSendNotificationUseCase = new SaveSendNotificationUseCase(
       mockNotificationRepository,
     );
   });
 
-  const notification: NotificationDTO & { userId: string } = {
+  const notification: NotificationDTO = {
     createdAt: DateTime.now(),
     message: "Message",
     read: false,
     title: "Title",
-    type: "type",
-    userId: "test-user-id",
+    type: "default",
     id: "test-notification-id",
   };
 
   it("Should call save method of notificationRepository with correct params", async () => {
-    await createNotificationUseCase.execute(notification);
+    const userId = "test-user-id";
+    const simpleNotification = new Notification(notification);
+
+    await saveAndSendNotificationUseCase.execute({
+      userId,
+      notification: simpleNotification,
+    });
 
     expect(mockNotificationRepository.save).toHaveBeenCalledTimes(1);
-    expect(mockNotificationRepository.save).toHaveBeenCalledWith(notification);
+    expect(mockNotificationRepository.save).toHaveBeenCalledWith({
+      ...notification,
+      needAction: undefined,
+      userId,
+    });
   });
 
   it("Should propagate Error if repository save method throws", async () => {
     const errorMessage = "Error deleting Finance";
+    const userId = "test-user-id";
+    const simpleNotification = new Notification(notification);
 
     mockNotificationRepository.save.mockRejectedValue(new Error(errorMessage));
 
     await expect(
-      createNotificationUseCase.execute(notification),
+      saveAndSendNotificationUseCase.execute({
+        userId,
+        notification: simpleNotification,
+      }),
     ).rejects.toThrow(errorMessage);
   });
 });

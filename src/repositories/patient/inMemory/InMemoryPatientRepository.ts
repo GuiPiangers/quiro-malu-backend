@@ -6,6 +6,13 @@ interface inMemoryInterface extends PatientDTO {
 }
 
 export class InMemoryPatientRepository implements IPatientRepository {
+  getByDateOfBirth(data: {
+    dateOfBirth: string;
+    userId: string;
+  }): Promise<PatientDTO[]> {
+    throw new Error("Method not implemented.");
+  }
+
   saveMany(patient: (PatientDTO & { userId: string })[]): Promise<void> {
     throw new Error("Method not implemented.");
   }
