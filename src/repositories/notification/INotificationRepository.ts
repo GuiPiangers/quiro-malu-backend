@@ -5,7 +5,9 @@ export type SaveNotificationParams = Omit<NotificationDTO, "createdAt"> & {
   userId: string;
 };
 
-export type UpdateNotificationParams = Omit<NotificationDTO, "createdAt"> & {
+export type UpdateNotificationParams = Partial<
+  Omit<NotificationDTO, "createdAt">
+> & {
   id: string;
   userId: string;
 };
