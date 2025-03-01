@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
 import { ApiError } from "../../../../utils/ApiError";
-import { createMessageCampaignUseCase } from "../../useCases/createMessageCampaign/createMessageCampaignUseCase";
+import { CreateMessageCampaignUseCase } from "../../useCases/createMessageCampaign/createMessageCampaignUseCase";
 import { MessageCampaignDTO } from "../../models/MessageCampaign";
 
 export class CreateMessageCampaignController {
   constructor(
-    private createMessageCampaignUseCase: createMessageCampaignUseCase,
+    private createMessageCampaignUseCase: CreateMessageCampaignUseCase,
   ) {}
 
   async handle(request: Request, response: Response) {
