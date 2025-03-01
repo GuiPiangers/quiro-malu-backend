@@ -16,6 +16,6 @@ const messageCampaignSchema = new mongoose.Schema({
 });
 
 export const MessageCampaignModel = mongoose.model(
-  "Notification",
+  "MessageCampaign",
   messageCampaignSchema,
 );
