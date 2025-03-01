@@ -16,12 +16,12 @@ export class CreateMessageCampaignController {
 
       if (!userId) throw new ApiError("O id deve ser informado", 401);
 
-      const notifications = await this.createMessageCampaignUseCase.execute({
+      await this.createMessageCampaignUseCase.execute({
         userId,
         ...data,
       });
 
-      response.send(notifications);
+      response.status(201).send({ message: "Criado com sucesso!" });
     } catch (err: any) {
       return responseError(response, err);
     }
