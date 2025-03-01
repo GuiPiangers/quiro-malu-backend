@@ -9,7 +9,7 @@ export type NotificationDTO<T = undefined> = {
   message: string;
   createdAt?: DateTime;
   read?: boolean;
-  needAction?: boolean;
+  actionNeeded?: boolean;
   params?: T;
 };
 
@@ -23,7 +23,7 @@ export class Notification extends Entity {
   readonly message: string;
   readonly createdAt?: DateTime;
   readonly read: boolean;
-  readonly needAction?: boolean;
+  readonly actionNeeded?: boolean;
 
   constructor({
     id,
@@ -32,7 +32,7 @@ export class Notification extends Entity {
     read,
     title,
     type,
-    needAction,
+    actionNeeded,
   }: NotificationDTO) {
     super(id);
     this.title = title;
@@ -40,7 +40,7 @@ export class Notification extends Entity {
     this.message = message;
     this.type = type;
     this.read = read !== undefined ? read : false;
-    this.needAction = needAction;
+    this.actionNeeded = actionNeeded;
   }
 
   getDTO() {
@@ -51,7 +51,7 @@ export class Notification extends Entity {
       title: this.title,
       type: this.type,
       id: this.id,
-      needAction: this.needAction,
+      actionNeeded: this.actionNeeded,
     };
   }
 }
@@ -63,7 +63,7 @@ export abstract class ComplexNotification<T> extends Notification {
     params,
     ...data
   }: ComplexNotificationDTO<T> & Pick<NotificationDTO<T>, "type">) {
-    super({ ...data });
+    super({ ...data, actionNeeded: data.actionNeeded || true });
     this.params = params;
   }
 

@@ -37,7 +37,7 @@ describe("CreateNotificationUseCase", () => {
     expect(mockNotificationRepository.save).toHaveBeenCalledTimes(1);
     expect(mockNotificationRepository.save).toHaveBeenCalledWith({
       ...notification,
-      needAction: undefined,
+      actionNeeded: undefined,
       userId,
     });
   });

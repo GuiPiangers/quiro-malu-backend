@@ -53,6 +53,8 @@ import { sendAndSaveNotificationUseCase } from "./core/notification/useCases/sen
 import { PushNotification } from "./core/notification/models/PushNotification";
 import { createMessageCampaignController } from "./core/messageCampaign/controller/createMessageCampaign";
 import { listMessageCampaignController } from "./core/messageCampaign/controller/listMessageCampaign";
+import { NotificationSendMessage } from "./core/notification/models/NotificationSendMessage";
+import { Phone } from "./core/shared/Phone";
 
 const router = Router();
 const multerConfig = multer({
@@ -270,10 +272,14 @@ router.post("/notify", authMiddleware, async (req, res) => {
       message,
     });
 
-    const notification = new Notification({
+    const notification = new NotificationSendMessage({
       message: "Mensagem que será enviada para o front-end",
       title: "Mensagem teste",
-      type: "default",
+      params: {
+        patientId: "18dac10e-97be-403e-a716-b9ed10b0f58e",
+        patientPhone: new Phone("(51) 98035 1927"),
+      },
+      actionNeeded: true,
     });
 
     await sendAndSaveNotificationUseCase.execute({ userId, notification });
