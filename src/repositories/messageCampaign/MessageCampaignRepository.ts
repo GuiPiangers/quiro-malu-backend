@@ -2,6 +2,7 @@ import { MessageCampaignDTO } from "../../core/messageCampaign/models/MessageCam
 import { Knex } from "../../database";
 import { ETableNames } from "../../database/ETableNames";
 import { MessageCampaignModel } from "../../database/mongoose/schemas/MessageCampaign";
+import { getValidObjectValues } from "../../utils/getValidObjectValues";
 import {
   CountMessageCampaignProps,
   GetMessageCampaignProps,
@@ -18,8 +19,19 @@ export class MessageCampaignRepository implements IMessageCampaignRepository {
     return await MessageCampaignModel.countDocuments({ userId });
   }
 
-  async list(data: ListMessageCampaignProps): Promise<MessageCampaignDTO[]> {
-    return await MessageCampaignModel.find(data);
+  async list({
+    userId,
+    config,
+  }: ListMessageCampaignProps): Promise<MessageCampaignDTO[]> {
+    if (config) {
+      const result = await MessageCampaignModel.find({ userId })
+        .limit(config.limit)
+        .skip(config.offSet);
+      return result.map((value) =>
+        getValidObjectValues(value as MessageCampaignDTO),
+      );
+    }
+    return await MessageCampaignModel.find({ userId });
   }
 
   async create(data: SaveMessageCampaignProps): Promise<void> {
