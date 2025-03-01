@@ -1,10 +1,19 @@
 import { MessageCampaignRepository } from "../../../../repositories/messageCampaign/MessageCampaignRepository";
-import { MessageCampaignDTO } from "../../models/MessageCampaign";
+import {
+  MessageCampaign,
+  MessageCampaignDTO,
+} from "../../models/MessageCampaign";
 
 export class CreateMessageCampaignUseCase {
   constructor(private messageCampaignRepository: MessageCampaignRepository) {}
 
-  async execute(data: MessageCampaignDTO & { userId: string }) {
-    await this.messageCampaignRepository.create(data);
+  async execute({ userId, ...data }: MessageCampaignDTO & { userId: string }) {
+    const messageCampaign = new MessageCampaign(data);
+    const messageCampaignDTO = messageCampaign.getDTO();
+
+    await this.messageCampaignRepository.create({
+      ...messageCampaignDTO,
+      userId,
+    });
   }
 }
