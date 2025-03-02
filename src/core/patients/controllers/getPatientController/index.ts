@@ -1,4 +1,3 @@
-import { MySqlPatientRepository } from "../../../../repositories/patient/MySqlPatientRepository";
 import { GetPatientUseCase } from "../../useCases/getPatient/GetPatientUseCase";
 import { GetPatientController } from "./GetPatientController";
 import { KnexLocationRepository } from "../../../../repositories/location/KnexLocationRepository";
@@ -12,4 +11,4 @@ const getPatientUseCase = new GetPatientUseCase(
 );
 const getPatientController = new GetPatientController(getPatientUseCase);
 
-export { getPatientController };
+export { getPatientController, getPatientUseCase };
