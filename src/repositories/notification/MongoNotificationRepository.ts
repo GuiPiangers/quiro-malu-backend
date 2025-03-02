@@ -2,6 +2,7 @@ import { NotificationDTO } from "../../core/notification/models/Notification";
 import { NotificationModel } from "../../database/mongoose/schemas/Notification";
 import {
   CountNotReadNotificationParams,
+  DeleteManyNotificationParams,
   DeleteNotificationParams,
   GetNotificationParams,
   INotificationRepository,
@@ -11,6 +12,18 @@ import {
 } from "./INotificationRepository";
 
 export class MongoNotificationRepository implements INotificationRepository {
+  async deleteMany({
+    notificationsId,
+    userId,
+  }: DeleteManyNotificationParams): Promise<void> {
+    NotificationModel.deleteMany({
+      userId,
+      id: {
+        $in: notificationsId,
+      },
+    });
+  }
+
   async save(data: SaveNotificationParams): Promise<void> {
     await NotificationModel.create(data);
   }

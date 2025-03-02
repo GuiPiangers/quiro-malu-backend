@@ -27,6 +27,10 @@ export type CountNotReadNotificationParams = {
 };
 
 export type DeleteNotificationParams = { userId: string; id: string };
+export type DeleteManyNotificationParams = {
+  userId: string;
+  notificationsId: string[];
+};
 
 export interface INotificationRepository {
   save(data: SaveNotificationParams): Promise<void>;
@@ -35,4 +39,5 @@ export interface INotificationRepository {
   get(data: GetNotificationParams): Promise<NotificationDTO | null>;
   list(data: ListNotificationParams): Promise<NotificationDTO[]>;
   countNotReadOrNeedAct(data: CountNotReadNotificationParams): Promise<number>;
+  deleteMany(data: DeleteManyNotificationParams): Promise<void>;
 }
