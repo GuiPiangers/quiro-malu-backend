@@ -7,11 +7,12 @@ import {
   NotificationSendMessage,
   NotificationSendMessageParams,
 } from "./NotificationSendMessage";
+import { NotificationUndoExamParams } from "./NotificationUndoExam";
 
 export type notificationsTablesParams = {
   default: undefined;
   sendMessage: NotificationSendMessageParams;
-  undo: { item: "Ola, tudo bem" };
+  undoExam: NotificationUndoExamParams;
 };
 
 export type notificationTypes = keyof notificationsTablesParams;
