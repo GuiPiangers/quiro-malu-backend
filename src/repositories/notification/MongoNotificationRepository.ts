@@ -16,7 +16,7 @@ export class MongoNotificationRepository implements INotificationRepository {
     notificationsId,
     userId,
   }: DeleteManyNotificationParams): Promise<void> {
-    NotificationModel.deleteMany({
+    await NotificationModel.deleteMany({
       userId,
       id: {
         $in: notificationsId,
