@@ -15,12 +15,12 @@ export class DeleteManyNotificationsController {
 
       if (!userId) throw new ApiError("O id deve ser informado", 401);
 
-      const notifications = await this.listNotificationsUseCase.execute({
+      await this.listNotificationsUseCase.execute({
         userId,
         notificationsId,
       });
 
-      response.send(notifications);
+      response.send({ message: "Notificações deletadas com sucesso!" });
     } catch (err: any) {
       return responseError(response, err);
     }
