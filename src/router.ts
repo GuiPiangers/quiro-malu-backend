@@ -57,6 +57,7 @@ import { NotificationSendMessage } from "./core/notification/models/Notification
 import { Phone } from "./core/shared/Phone";
 import { setReadNotificationsController } from "./core/notification/controllers/setReadNotifications";
 import { setActionDoneNotificationController } from "./core/notification/controllers/setActionDoneNotifications";
+import { deleteManyNotificationsController } from "./core/notification/controllers/deleteManyNotification";
 
 const router = Router();
 const multerConfig = multer({
@@ -266,6 +267,14 @@ router.post(
   authMiddleware,
   async (request, response) => {
     return await setActionDoneNotificationController.handle(request, response);
+  },
+);
+
+router.delete(
+  "/notifications/deleteMany",
+  authMiddleware,
+  async (request, response) => {
+    return await deleteManyNotificationsController.handle(request, response);
   },
 );
 
