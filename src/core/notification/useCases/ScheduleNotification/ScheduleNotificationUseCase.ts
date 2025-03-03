@@ -37,8 +37,8 @@ export class ScheduleNotificationUseCase {
       const notification = new PushNotification({
         id: schedule.id,
         type: "scheduling",
-        title: `Você tem uma consulta agendada com o(a) paciente ${data.patient}`,
-        message: `A consulta com o(a) paciente ${data.patient} está agendada para às ${scheduleTime} do dia ${scheduleData}`,
+        title: `Consulta agendada com o(a) ${data.patient} está prestes a começar`,
+        message: `A consulta está agendada para às ${scheduleTime} do dia ${scheduleData}`,
       }).getDTO();
 
       this.pushNotificationQueue.add({
@@ -75,6 +75,11 @@ export class ScheduleNotificationUseCase {
     scheduledDate.setMinutes(scheduledDate.getMinutes() - preTimer);
 
     const scheduleDateTime = new DateTime(scheduledDate.toISOString());
+
+    console.log("param date: " + date);
+    console.log("scheduledDate: " + scheduledDate);
+    console.log("scheduleDateTime: " + scheduleDateTime);
+    console.log("dateTime.now: " + DateTime.now());
 
     const delay = DateTime.difference(scheduleDateTime, DateTime.now());
     console.log(delay);
