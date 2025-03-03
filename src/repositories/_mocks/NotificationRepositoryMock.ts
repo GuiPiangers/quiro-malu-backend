@@ -8,4 +8,5 @@ export const createMockNotificationRepository =
     save: jest.fn(),
     update: jest.fn(),
     countNotReadOrNeedAct: jest.fn(),
+    deleteMany: jest.fn(),
   });
