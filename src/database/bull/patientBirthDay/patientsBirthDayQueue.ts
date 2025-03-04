@@ -6,6 +6,7 @@ import {
   PatientsBirthDayQueuePrams,
 } from "./IPatientBirthDayQueue";
 import { IPatientRepository } from "../../../repositories/patient/IPatientRepository";
+import { DateTime } from "../../../core/shared/Date";
 
 const connection = redis;
 
@@ -27,6 +28,8 @@ const worker = new Worker(
   "patientsBirth",
   async (job) => {
     const patientRepository = job.data as IPatientRepository;
+    const dateNow = DateTime.now();
+    await patientRepository.getByDateOfBirth({ dateOfBirth: dateNow.date });
   },
   { connection },
 );
