@@ -109,9 +109,8 @@ describe("ScheduleNotificationUseCase", () => {
       expect(pushNotificationQueue.add).toHaveBeenCalledWith({
         delay: 0,
         notification: expect.objectContaining({
-          title: "Você tem uma consulta agendada com o(a) paciente Maria",
-          message:
-            "A consulta com o(a) paciente Maria está agendada para às 12:30 do dia 01/01/2025",
+          title: "Consulta agendada com o(a) Maria está prestes a começar",
+          message: "A consulta está agendada para às 12:30 do dia 01/01/2025",
           type: "scheduling",
         }),
         userId: "user1",

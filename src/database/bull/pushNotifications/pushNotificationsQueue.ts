@@ -21,7 +21,7 @@ export class PushNotificationQueue implements IPushNotificationQueue {
         jobId: `a${notification.id}`,
         delay,
         removeOnComplete: 60 * 10, // 10 min
-        removeOnFail: 60 * 10, // 10 min
+        removeOnFail: 60 * 10, // 10 min,
       },
     );
   }

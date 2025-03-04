@@ -8,15 +8,13 @@ import { ApiError } from "../../utils/ApiError";
 export class KnexPatientRepository implements IPatientRepository {
   async getByDateOfBirth({
     dateOfBirth,
-    userId,
   }: {
     dateOfBirth: string;
-    userId: string;
   }): Promise<PatientDTO[]> {
     try {
       const result = await Knex(ETableNames.PATIENTS)
         .select("*")
-        .where({ dateOfBirth, userId });
+        .where({ dateOfBirth });
 
       return result;
     } catch (error: any) {
