@@ -1,4 +1,5 @@
 import { IExamsRepository } from "../../../../repositories/examsRepository/IExamsRepository";
+import { NotificationUndoExam } from "../../../notification/models/NotificationUndoExam";
 
 export class RestoreExamUseCase {
   constructor(private examRepository: IExamsRepository) {}
