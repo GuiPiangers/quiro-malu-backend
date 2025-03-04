@@ -12,7 +12,6 @@ export class GetPatientsByBirthDayUseCase {
   }) {
     const patients = await this.patientRepository.getByDateOfBirth({
       dateOfBirth,
-      userId,
     });
 
     return patients;
