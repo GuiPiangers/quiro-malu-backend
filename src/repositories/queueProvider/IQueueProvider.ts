@@ -8,6 +8,17 @@ export abstract class IQueueProvider<T> {
     },
   ): Promise<void>;
 
+  abstract repeat(
+    jobTemplate: T,
+    options: {
+      jobId?: string;
+      startDate?: Date;
+      endDate?: Date;
+      limit?: number;
+      cron: string;
+    },
+  ): Promise<void>;
+
   abstract delete(data: { jobId: string }): Promise<void>;
 
   abstract process(callback: (job: T) => Promise<void>): Promise<void>;

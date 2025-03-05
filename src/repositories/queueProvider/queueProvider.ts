@@ -5,18 +5,41 @@ import { redis } from "../../database/redis";
 const connection = redis;
 
 export class QueueProvider<T> implements IQueueProvider<T> {
-  private pushNotificationQueue: Queue;
+  private queue: Queue;
   readonly queueName: string;
 
   constructor(queueName: string) {
     this.queueName = queueName;
-    this.pushNotificationQueue = new Queue(queueName, {
+    this.queue = new Queue(queueName, {
       connection,
     });
   }
 
+  async repeat(
+    jobTemplate: T,
+    {
+      cron,
+      endDate,
+      jobId,
+      limit,
+      startDate,
+    }: {
+      jobId: string;
+      startDate?: Date;
+      endDate?: Date;
+      limit?: number;
+      cron: string;
+    },
+  ): Promise<void> {
+    await this.queue.upsertJobScheduler(
+      jobId,
+      { pattern: cron, limit, startDate, endDate },
+      { data: jobTemplate },
+    );
+  }
+
   async add(jobTemplate: T, options?: { jobId?: string; delay?: number }) {
-    await this.pushNotificationQueue.add(this.queueName, jobTemplate, {
+    await this.queue.add(this.queueName, jobTemplate, {
       jobId: options?.jobId,
       delay: options?.delay,
       removeOnComplete: 60 * 10, // 10 min
@@ -25,7 +48,7 @@ export class QueueProvider<T> implements IQueueProvider<T> {
   }
 
   async delete({ jobId }: { jobId: string }) {
-    await this.pushNotificationQueue.remove(jobId);
+    await this.queue.remove(jobId);
   }
 
   async process(callback: (job: T) => Promise<void>) {
