@@ -1,6 +1,7 @@
 import { IQueueProvider } from "../IQueueProvider";
 import { IPatientRepository } from "../../patient/IPatientRepository";
 import { DateTime } from "../../../core/shared/Date";
+import { patientObserver } from "../../../core/shared/observers/PatientObserver/PatientObserver";
 
 export class PatientsBirthDayQueue {
   constructor(
@@ -19,6 +20,10 @@ export class PatientsBirthDayQueue {
     await this.queueProvider.process(async (job) => {
       const birthDays = await this.patientRepository.getByDateOfBirth({
         dateOfBirth: job.date,
+      });
+      birthDays.forEach((patient) => {
+        console.log(patient);
+        patientObserver.emit("isBirthDay", patient);
       });
     });
   }
