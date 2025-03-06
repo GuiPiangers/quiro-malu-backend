@@ -6,11 +6,7 @@ import { IPatientRepository } from "../../repositories/patient/IPatientRepositor
 import { ApiError } from "../../utils/ApiError";
 
 export class KnexPatientRepository implements IPatientRepository {
-  async getByDateOfBirth({
-    dateOfBirth,
-  }: {
-    dateOfBirth: string;
-  }): Promise<PatientDTO[]> {
+  async getByDateOfBirth({ dateOfBirth }: { dateOfBirth: string }) {
     try {
       const result = await Knex(ETableNames.PATIENTS)
         .select("*")
