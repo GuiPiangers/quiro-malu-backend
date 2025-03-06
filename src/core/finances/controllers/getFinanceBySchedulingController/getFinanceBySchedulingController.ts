@@ -18,6 +18,9 @@ export class GetFinanceBySchedulingController {
         schedulingId,
       });
 
+      if (!res)
+        throw new ApiError("Movimentação financeira não encontrada", 401);
+
       response.status(200).json(res);
     } catch (err: any) {
       return responseError(response, err);
