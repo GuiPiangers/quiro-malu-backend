@@ -34,8 +34,15 @@ export class QueueProvider<T> implements IQueueProvider<T> {
     await this.queue.upsertJobScheduler(
       jobId,
       { pattern: cron, limit, startDate, endDate },
-      { data: jobTemplate },
+      {
+        data: jobTemplate,
+        opts: { removeOnComplete: true, removeOnFail: true },
+      },
     );
+  }
+
+  async deleteRepeat({ jobId }: { jobId: string }) {
+    await this.queue.removeJobScheduler(jobId);
   }
 
   async add(jobTemplate: T, options?: { jobId?: string; delay?: number }) {

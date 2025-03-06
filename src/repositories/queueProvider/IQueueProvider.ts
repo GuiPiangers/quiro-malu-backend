@@ -20,6 +20,7 @@ export abstract class IQueueProvider<T> {
   ): Promise<void>;
 
   abstract delete(data: { jobId: string }): Promise<void>;
+  abstract deleteRepeat(data: { jobId: string }): Promise<void>;
 
   abstract process(callback: (job: T) => Promise<void>): Promise<void>;
 }
