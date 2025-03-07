@@ -1,6 +1,6 @@
 import { IExamsRepository } from "../../../../repositories/examsRepository/IExamsRepository";
 import { DateTime } from "../../../shared/Date";
-import { examObserver } from "../../../shared/observers/ExamObserver/ExamObserver";
+import { appEventListener } from "../../../shared/observers/EventListener";
 
 export class DeleteExamUseCase {
   constructor(private examRepository: IExamsRepository) {}
@@ -22,6 +22,10 @@ export class DeleteExamUseCase {
       deletedDate: DateTime.now().date,
     });
 
-    examObserver.emit("delete", { patientId, userId, id, fileName: "" });
+    appEventListener.emit("deleteExam", {
+      patientId,
+      userId,
+      id,
+    });
   }
 }
