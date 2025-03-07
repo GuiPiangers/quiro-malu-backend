@@ -3,7 +3,7 @@ import { ISchedulingRepository } from "../../../../repositories/scheduling/ISche
 import { ApiError } from "../../../../utils/ApiError";
 import { DateTime } from "../../../shared/Date";
 import DatabaseStatusStrategy from "../../models/status/DatabaseStatusStrategy";
-import { schedulingObserver } from "../../../shared/observers/SchedulingObserver/SchedulingObserver";
+import { appEventListener } from "../../../shared/observers/EventListener";
 
 export class CreateSchedulingUseCase {
   constructor(private SchedulingRepository: ISchedulingRepository) {}
@@ -26,7 +26,7 @@ export class CreateSchedulingUseCase {
 
     await this.SchedulingRepository.save({ ...schedulingDTO, userId });
 
-    schedulingObserver.emit("create", { ...schedulingDTO, userId });
+    appEventListener.emit("createSchedule", { ...schedulingDTO, userId });
 
     return schedulingDTO;
   }
