@@ -6,6 +6,7 @@ type AppEvents = {
   createPatient: PatientDTO & { userId: string };
   updatePatient: Partial<PatientDTO> & { id: string; userId: string };
   deletePatient: { userId: string; id: string };
+  patientBirthDay: PatientDTO & { userId: string };
 
   createSchedule: SchedulingDTO & { userId: string };
   updateSchedule: Partial<SchedulingDTO> & { id: string; userId: string };

@@ -1,7 +1,7 @@
 import { IQueueProvider } from "../IQueueProvider";
 import { IPatientRepository } from "../../patient/IPatientRepository";
 import { DateTime } from "../../../core/shared/Date";
-import { patientObserver } from "../../../core/shared/observers/PatientObserver/PatientObserver";
+import { appEventListener } from "../../../core/shared/observers/EventListener";
 
 export class PatientsBirthDayQueue {
   constructor(
@@ -23,7 +23,7 @@ export class PatientsBirthDayQueue {
       });
       birthDays.forEach((patient) => {
         console.log(patient);
-        patientObserver.emit("isBirthDay", patient);
+        appEventListener.emit("patientBirthDay", patient);
       });
     });
   }
