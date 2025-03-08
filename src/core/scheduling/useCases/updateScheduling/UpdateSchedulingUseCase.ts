@@ -27,7 +27,7 @@ export class UpdateSchedulingUseCase {
     appEventListener.emit("updateSchedule", {
       ...schedulingDTO,
       userId,
-      id: data.id,
+      scheduleId: data.id,
     });
 
     return schedulingDTO;

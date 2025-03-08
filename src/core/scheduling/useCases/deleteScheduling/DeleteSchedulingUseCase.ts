@@ -6,6 +6,6 @@ export class DeleteSchedulingUseCase {
 
   async execute({ id, userId }: { id: string; userId: string }) {
     await this.SchedulingRepository.delete({ id, userId });
-    appEventListener.emit("deleteSchedule", { id, userId });
+    appEventListener.emit("deleteSchedule", { scheduleId: id, userId });
   }
 }

@@ -25,7 +25,7 @@ export class DeleteExamUseCase {
     appEventListener.emit("deleteExam", {
       patientId,
       userId,
-      id,
+      examId: id,
     });
   }
 }

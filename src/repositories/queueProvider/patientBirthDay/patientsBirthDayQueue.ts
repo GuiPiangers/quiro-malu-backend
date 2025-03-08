@@ -22,8 +22,11 @@ export class PatientsBirthDayQueue {
         dateOfBirth: job.date,
       });
       birthDays.forEach((patient) => {
-        console.log(patient);
-        appEventListener.emit("patientBirthDay", patient);
+        if (patient.id)
+          appEventListener.emit("patientBirthDay", {
+            ...patient,
+            patientId: patient.id,
+          });
       });
     });
   }

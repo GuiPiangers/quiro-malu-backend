@@ -26,7 +26,11 @@ export class CreateSchedulingUseCase {
 
     await this.SchedulingRepository.save({ ...schedulingDTO, userId });
 
-    appEventListener.emit("createSchedule", { ...schedulingDTO, userId });
+    appEventListener.emit("createSchedule", {
+      ...schedulingDTO,
+      userId,
+      scheduleId: schedulingDTO.id,
+    });
 
     return schedulingDTO;
   }
