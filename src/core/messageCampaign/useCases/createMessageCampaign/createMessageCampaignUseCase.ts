@@ -15,5 +15,7 @@ export class CreateMessageCampaignUseCase {
       ...messageCampaignDTO,
       userId,
     });
+
+    messageCampaign.watchTriggers();
   }
 }
