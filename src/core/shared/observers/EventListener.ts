@@ -1,4 +1,5 @@
 import { ExamDTO } from "../../exams/models/Exam";
+import { MessageCampaignDTO } from "../../messageCampaign/models/MessageCampaign";
 import { PatientDTO } from "../../patients/models/Patient";
 import { SchedulingDTO } from "../../scheduling/models/Scheduling";
 
@@ -9,12 +10,14 @@ type AppEvents = {
   patientBirthDay: PatientDTO & { userId: string };
 
   createSchedule: SchedulingDTO & { userId: string };
-  updateSchedule: Partial<SchedulingDTO> & { id: string; userId: string };
+  updateSchedule: SchedulingDTO & { id: string; userId: string };
   deleteSchedule: { id: string; userId: string };
 
   createExam: ExamDTO & { userId: string };
   updateExam: Partial<ExamDTO> & { userId: string; id: string };
   deleteExam: { userId: string; id: string; patientId: string };
+
+  watchMessageTriggers: any;
 };
 
 type Listener<T> = (data: T) => Promise<void>;
