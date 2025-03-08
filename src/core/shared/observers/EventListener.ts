@@ -19,6 +19,8 @@ type AppEvents = {
 
 type Listener<T> = (data: T) => Promise<void>;
 
+export type AvailableAppEvents = keyof AppEvents;
+
 class AppEventListener {
   private listeners: Map<string, Array<Listener<any>>> = new Map();
 
