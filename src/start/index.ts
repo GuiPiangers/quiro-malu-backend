@@ -3,29 +3,28 @@ import { NotificationUndoExam } from "../core/notification/models/NotificationUn
 import { scheduleNotificationUseCase } from "../core/notification/useCases/ScheduleNotification";
 import { sendAndSaveNotificationUseCase } from "../core/notification/useCases/sendAndSaveNotification";
 import { getPatientUseCase } from "../core/patients/controllers/getPatientController";
-import { examObserver } from "../core/shared/observers/ExamObserver/ExamObserver";
-import { schedulingObserver } from "../core/shared/observers/SchedulingObserver/SchedulingObserver";
+import { appEventListener } from "../core/shared/observers/EventListener";
 
 export function start() {
-  schedulingObserver.on("create", async (data) => {
+  appEventListener.on("createSchedule", async (data) => {
     try {
       scheduleNotificationUseCase.schedule(data);
     } catch (error) {}
   });
-  schedulingObserver.on("delete", async ({ id }) => {
+  appEventListener.on("deleteSchedule", async ({ id }) => {
     if (!id) return;
     try {
       scheduleNotificationUseCase.deleteSchedule({ scheduleId: id });
     } catch (error) {}
   });
 
-  schedulingObserver.on("update", async (data) => {
+  appEventListener.on("updateSchedule", async (data) => {
     try {
       scheduleNotificationUseCase.update(data);
     } catch (error) {}
   });
 
-  examObserver.on("delete", async ({ patientId, userId, id }) => {
+  appEventListener.on("deleteExam", async ({ patientId, userId, id }) => {
     try {
       if (!id) return;
 
