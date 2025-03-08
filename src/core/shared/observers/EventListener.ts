@@ -4,20 +4,37 @@ import { PatientDTO } from "../../patients/models/Patient";
 import { SchedulingDTO } from "../../scheduling/models/Scheduling";
 
 type AppEvents = {
-  createPatient: PatientDTO & { userId: string };
-  updatePatient: Partial<PatientDTO> & { id: string; userId: string };
-  deletePatient: { userId: string; id: string };
-  patientBirthDay: PatientDTO & { userId: string };
+  createPatient: Omit<PatientDTO, "id"> & { userId: string; patientId: string };
+  updatePatient: Partial<Omit<PatientDTO, "id">> & {
+    patientId: string;
+    userId: string;
+  };
+  deletePatient: { userId: string; patientId: string };
+  patientBirthDay: Omit<PatientDTO, "id"> & {
+    userId: string;
+    patientId: string;
+  };
 
-  createSchedule: SchedulingDTO & { userId: string };
-  updateSchedule: SchedulingDTO & { id: string; userId: string };
-  deleteSchedule: { id: string; userId: string };
+  createSchedule: Omit<SchedulingDTO, "id"> & {
+    userId: string;
+    scheduleId: string;
+  };
+  updateSchedule: Omit<SchedulingDTO, "id"> & {
+    scheduleId: string;
+    userId: string;
+  };
+  deleteSchedule: { scheduleId: string; userId: string };
 
-  createExam: ExamDTO & { userId: string };
-  updateExam: Partial<ExamDTO> & { userId: string; id: string };
-  deleteExam: { userId: string; id: string; patientId: string };
+  createExam: Omit<ExamDTO, "id"> & { userId: string; examId: string };
+  updateExam: Partial<Omit<ExamDTO, "id">> & { userId: string; examId: string };
+  deleteExam: { userId: string; examId: string; patientId: string };
 
-  watchMessageTriggers: any;
+  watchMessageTriggers: {
+    userId: string;
+    patientId: string;
+    schedulingId?: string;
+    messageCampaign: MessageCampaignDTO;
+  };
 };
 
 type Listener<T> = (data: T) => Promise<void>;
