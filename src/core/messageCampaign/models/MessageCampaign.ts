@@ -41,13 +41,29 @@ export class MessageCampaign extends Entity {
     this.triggers = triggers;
   }
 
-  // watchTriggers() {
-  //   this.triggers.forEach((trigger) => {
-  //     appEventListener.on(trigger, (data) => {
-
-  //     });
-  //   });
-  // }
+  watchTriggers() {
+    this.triggers.forEach((trigger) => {
+      if (this.isPatientTrigger(trigger)) {
+        appEventListener.on(trigger, async (data) => {
+          appEventListener.emit("watchMessageTriggers", {
+            messageCampaign: this.getDTO(),
+            patientId: data.patientId,
+            userId: data.userId,
+          });
+        });
+      }
+      if (this.isScheduleTrigger(trigger)) {
+        appEventListener.on(trigger, async (data) => {
+          appEventListener.emit("watchMessageTriggers", {
+            messageCampaign: this.getDTO(),
+            patientId: data.patientId,
+            userId: data.userId,
+            schedulingId: data.scheduleId,
+          });
+        });
+      }
+    });
+  }
 
   getDTO() {
     return {
@@ -59,5 +75,33 @@ export class MessageCampaign extends Entity {
       initialDate: this.initialDate,
       triggers: this.triggers,
     };
+  }
+
+  private isPatientTrigger(
+    trigger: AvailableAppEvents,
+  ): trigger is "createPatient" | "patientBirthDay" | "updatePatient" {
+    const sendMessageTriggers = [
+      "createPatient",
+      "patientBirthDay",
+      "updatePatient",
+    ];
+
+    if (
+      sendMessageTriggers.some((messageTrigger) => messageTrigger === trigger)
+    )
+      return true;
+    return false;
+  }
+
+  private isScheduleTrigger(
+    trigger: AvailableAppEvents,
+  ): trigger is "createSchedule" | "updateSchedule" {
+    const sendMessageTriggers = ["createSchedule", "updateSchedule"];
+
+    if (
+      sendMessageTriggers.some((messageTrigger) => messageTrigger === trigger)
+    )
+      return true;
+    return false;
   }
 }
