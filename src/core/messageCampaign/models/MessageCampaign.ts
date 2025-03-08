@@ -1,4 +1,8 @@
 import { Entity } from "../../shared/Entity";
+import {
+  appEventListener,
+  AvailableAppEvents,
+} from "../../shared/observers/EventListener";
 
 export type MessageCampaignDTO = {
   id?: string;
@@ -7,6 +11,7 @@ export type MessageCampaignDTO = {
   active: boolean;
   initialDate?: string;
   endDate?: string;
+  triggers: AvailableAppEvents[];
 };
 
 export class MessageCampaign extends Entity {
@@ -15,6 +20,7 @@ export class MessageCampaign extends Entity {
   readonly active: boolean;
   readonly initialDate?: string;
   readonly endDate?: string;
+  readonly triggers: AvailableAppEvents[];
 
   constructor({
     active,
@@ -23,6 +29,7 @@ export class MessageCampaign extends Entity {
     endDate,
     id,
     initialDate,
+    triggers,
   }: MessageCampaignDTO) {
     super(id);
 
@@ -31,7 +38,16 @@ export class MessageCampaign extends Entity {
     this.active = active;
     this.initialDate = initialDate;
     this.endDate = endDate;
+    this.triggers = triggers;
   }
+
+  // watchTriggers() {
+  //   this.triggers.forEach((trigger) => {
+  //     appEventListener.on(trigger, (data) => {
+
+  //     });
+  //   });
+  // }
 
   getDTO() {
     return {
@@ -41,6 +57,7 @@ export class MessageCampaign extends Entity {
       endDate: this.endDate,
       id: this.id,
       initialDate: this.initialDate,
+      triggers: this.triggers,
     };
   }
 }
