@@ -13,6 +13,7 @@ const messageCampaignSchema = new mongoose.Schema({
   active: { type: Boolean, default: true },
   initialDate: Date,
   endDate: Date,
+  triggers: [String],
 });
 
 export const MessageCampaignModel = mongoose.model(
