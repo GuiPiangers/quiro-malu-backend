@@ -21,9 +21,7 @@ describe("ScheduleNotificationUseCase", () => {
   });
 
   beforeAll(() => {
-    jest
-      .useFakeTimers()
-      .setSystemTime(new Date("2025-01-01T12:15:00Z").getTime());
+    jest.useFakeTimers().setSystemTime(new Date("2025-01-01T12:15").getTime());
   });
 
   afterAll(() => {
@@ -77,7 +75,7 @@ describe("ScheduleNotificationUseCase", () => {
       expect(pushNotificationQueue.add).not.toHaveBeenCalled();
     });
 
-    it("should not schedule if daley is more than 1 hour negative", async () => {
+    it("should not schedule if delay is more than 1 hour negative", async () => {
       schedulingRepository.get.mockResolvedValue([
         { patient: "John", patientId: "123", phone: "(51) 99999 9999" },
       ]);
