@@ -1,3 +1,4 @@
+import { TZDate } from "@date-fns/tz";
 import { IPushNotificationQueue } from "../../../../database/bull/pushNotifications/IPushNotificationQueue";
 import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
 import { SchedulingDTO } from "../../../scheduling/models/Scheduling";
@@ -71,15 +72,14 @@ export class ScheduleNotificationUseCase {
   }
 
   private calculateDelay(date: string, preTimer: number) {
-    const scheduledDate = new Date(`${date}:00.000Z`);
+    const scheduledDate = new TZDate(date, "America/Sao_Paulo");
     scheduledDate.setMinutes(scheduledDate.getMinutes() - preTimer);
 
     const scheduleDateTime = new DateTime(scheduledDate.toISOString());
 
-    console.log("param date: " + date);
-    console.log("scheduledDate: " + scheduledDate);
-    console.log("scheduleDateTime: " + scheduleDateTime);
-    console.log("dateTime.now: " + DateTime.now());
+    console.log("scheduledDate: " + scheduledDate.toLocaleString());
+    console.log("scheduleDateTime: " + scheduleDateTime.dateTime);
+    console.log("dateTime.now: " + DateTime.now().dateTime);
 
     const delay = DateTime.difference(scheduleDateTime, DateTime.now());
     console.log(delay);
