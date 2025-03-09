@@ -87,7 +87,7 @@ describe("DateTime", () => {
     beforeAll(() => {
       jest
         .useFakeTimers()
-        .setSystemTime(new Date("2025-01-10T12:00:00Z").getTime());
+        .setSystemTime(new Date("2025-01-10T12:00").getTime());
     });
     it("should return new DateTime instance with current date and time", () => {
       const nowDateTime = DateTime.now();
