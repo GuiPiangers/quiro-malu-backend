@@ -31,7 +31,11 @@ export class SendMessageUseCase {
     const notification = new NotificationSendMessage({
       title: `Enviar mensagem para ${patient?.name}`,
       message: `Envie uma mensagem de  de ${message.name} para o paciente ${patient?.name}`,
-      params: { patientId, patientPhone: new Phone(patient.phone) },
+      params: {
+        patientId,
+        patientPhone: new Phone(patient.phone),
+        templateMessage: message.templateMessage,
+      },
     });
     sendAndSaveNotificationUseCase.execute({ userId, notification });
   }

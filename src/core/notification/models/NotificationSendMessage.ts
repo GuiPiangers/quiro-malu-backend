@@ -4,6 +4,7 @@ import { ComplexNotification, ComplexNotificationDTO } from "./Notification";
 export type NotificationSendMessageParams = {
   patientId: string;
   patientPhone: Phone;
+  templateMessage: string;
 };
 
 type ComplexNotificationParams = Omit<
