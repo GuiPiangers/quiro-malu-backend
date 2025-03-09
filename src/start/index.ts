@@ -57,4 +57,6 @@ export function start() {
       });
     },
   );
+
+  watchMessageTriggersUseCase.execute();
 }
