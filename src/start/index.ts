@@ -1,5 +1,6 @@
 import { getExamUseCase } from "../core/exams/useCases/getExam";
 import { sendMessageUseCase } from "../core/messageCampaign/useCases/sendMessage";
+import { watchMessageTriggersUseCase } from "../core/messageCampaign/useCases/watchMessageTriggers";
 import { NotificationUndoExam } from "../core/notification/models/NotificationUndoExam";
 import { scheduleNotificationUseCase } from "../core/notification/useCases/ScheduleNotification";
 import { sendAndSaveNotificationUseCase } from "../core/notification/useCases/sendAndSaveNotification";
@@ -46,7 +47,7 @@ export function start() {
   });
 
   appEventListener.on(
-    "watchMessageTriggers",
+    "sendMessage",
     async ({ userId, patientId, schedulingId, messageCampaign }) => {
       await sendMessageUseCase.execute({
         userId,

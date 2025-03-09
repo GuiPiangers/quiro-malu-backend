@@ -45,7 +45,7 @@ export class MessageCampaign extends Entity {
     this.triggers.forEach((trigger) => {
       if (this.isPatientTrigger(trigger)) {
         appEventListener.on(trigger, async (data) => {
-          appEventListener.emit("watchMessageTriggers", {
+          appEventListener.emit("sendMessage", {
             messageCampaign: this.getDTO(),
             patientId: data.patientId,
             userId: data.userId,
@@ -54,7 +54,7 @@ export class MessageCampaign extends Entity {
       }
       if (this.isScheduleTrigger(trigger)) {
         appEventListener.on(trigger, async (data) => {
-          appEventListener.emit("watchMessageTriggers", {
+          appEventListener.emit("sendMessage", {
             messageCampaign: this.getDTO(),
             patientId: data.patientId,
             userId: data.userId,
