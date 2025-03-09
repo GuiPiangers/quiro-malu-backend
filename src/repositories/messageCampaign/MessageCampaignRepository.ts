@@ -19,6 +19,10 @@ export class MessageCampaignRepository implements IMessageCampaignRepository {
     return await MessageCampaignModel.countDocuments({ userId });
   }
 
+  async listAll(): Promise<MessageCampaignDTO[]> {
+    return await MessageCampaignModel.find();
+  }
+
   async list({
     userId,
     config,

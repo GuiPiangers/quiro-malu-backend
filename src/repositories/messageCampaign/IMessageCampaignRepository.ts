@@ -32,6 +32,7 @@ export interface IMessageCampaignRepository {
   create(data: SaveMessageCampaignProps): Promise<void>;
   get(data: GetMessageCampaignProps): Promise<MessageCampaignDTO | null>;
   list(data: ListMessageCampaignProps): Promise<MessageCampaignDTO[]>;
+  listAll(): Promise<MessageCampaignDTO[]>;
   count(data: CountMessageCampaignProps): Promise<number>;
   setNotMessagePatients(data: setNotMessagePatientsProps): Promise<void>;
   removeNotMessagePatients(data: removeNotMessagePatientsProps): Promise<void>;
