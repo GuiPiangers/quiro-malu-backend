@@ -1,5 +1,6 @@
 import { TZDate } from "@date-fns/tz";
 import { ApiError } from "../../utils/ApiError";
+import { DateTime as Luxon } from "luxon";
 
 type DateTimeConfig = {
   onlyPassDate?: boolean;
@@ -82,9 +83,13 @@ export class DateTime {
   }
 
   static now(props: DateTimeConfig = {}) {
-    const date = new TZDate(new Date(), "America/Sao_Paulo");
+    const scheduledDate = Luxon.fromJSDate(new Date(), {
+      zone: "America/Sao_Paulo",
+    });
 
-    return new DateTime(date.toISOString(), props);
+    // const date = new TZDate(new Date(), "America/Sao_Paulo");
+
+    return new DateTime(scheduledDate.toISO()!, props);
   }
 
   static difference(date1: DateTime, date2: DateTime) {
