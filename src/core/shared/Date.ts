@@ -82,7 +82,9 @@ export class DateTime {
   }
 
   static now(props: DateTimeConfig = {}) {
-    return new DateTime(new TZDate(new Date(), "Etc/UTC").toISOString(), props);
+    const date = new TZDate(new Date(), "America/Sao_Paulo");
+
+    return new DateTime(date.toISOString(), props);
   }
 
   static difference(date1: DateTime, date2: DateTime) {
