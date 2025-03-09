@@ -1,4 +1,4 @@
-import { TZDate } from "@date-fns/tz";
+import { DateTime as Luxon } from "luxon";
 import { IPushNotificationQueue } from "../../../../database/bull/pushNotifications/IPushNotificationQueue";
 import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
 import { SchedulingDTO } from "../../../scheduling/models/Scheduling";
@@ -72,12 +72,15 @@ export class ScheduleNotificationUseCase {
   }
 
   private calculateDelay(date: string, preTimer: number) {
-    const scheduledDate = new TZDate(date, "America/Sao_Paulo");
-    scheduledDate.setMinutes(scheduledDate.getMinutes() - preTimer);
+    const scheduledDate = Luxon.fromISO(date, {
+      zone: "America/Sao_Paulo",
+    }).minus({ minutes: preTimer });
 
-    const scheduleDateTime = new DateTime(scheduledDate.toISOString());
+    console.log("luxon: " + scheduledDate.toISO()!);
 
-    console.log("scheduledDate: " + scheduledDate.toLocaleString());
+    const scheduleDateTime = new DateTime(scheduledDate.toISO()!);
+
+    console.log("param: " + date);
     console.log("scheduleDateTime: " + scheduleDateTime.dateTime);
     console.log("dateTime.now: " + DateTime.now().dateTime);
 
