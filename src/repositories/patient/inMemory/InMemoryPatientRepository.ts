@@ -8,8 +8,7 @@ interface inMemoryInterface extends PatientDTO {
 export class InMemoryPatientRepository implements IPatientRepository {
   getByDateOfBirth(data: {
     dateOfBirth: string;
-    userId: string;
-  }): Promise<PatientDTO[]> {
+  }): Promise<(PatientDTO & { userId: string })[]> {
     throw new Error("Method not implemented.");
   }
 
