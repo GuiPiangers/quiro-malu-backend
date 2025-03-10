@@ -63,7 +63,7 @@ describe("DateTime", () => {
       expect(date.time).toBe("12:00");
       expect(date.dateTime).toBe("2024-11-01T12:00");
       expect(date.value).toBeInstanceOf(Date);
-      expect(date.value.toISOString()).toBe(dateStr);
+      expect(date.value.toISO()).toBe(dateStr);
     });
 
     it("should handle timezone correctly", () => {
