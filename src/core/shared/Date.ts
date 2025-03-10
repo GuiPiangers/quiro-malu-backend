@@ -10,7 +10,7 @@ type DateTimeConfig = {
 export class DateTime {
   readonly dateTime: string;
   readonly timezone: string;
-  readonly value: Date;
+  readonly value: Luxon;
 
   constructor(
     dateStr: string,
@@ -46,7 +46,9 @@ export class DateTime {
     }
 
     this.dateTime = `${dateStr.substring(0, 16)}`;
-    this.value = new Date(dateStr);
+    this.value = Luxon.fromISO(dateStr, {
+      zone: "America/Sao_Paulo",
+    });
   }
 
   private isValidDate(dateString: string): boolean {
@@ -93,6 +95,6 @@ export class DateTime {
   }
 
   static difference(date1: DateTime, date2: DateTime) {
-    return date1.value.getTime() - date2.value.getTime();
+    return date1.value.toMillis() - date2.value.toMillis();
   }
 }
