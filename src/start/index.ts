@@ -48,12 +48,13 @@ export function start() {
 
   appEventListener.on(
     "watchTriggers",
-    async ({ userId, patientId, schedulingId, messageCampaign }) => {
+    async ({ userId, patientId, schedulingId, messageCampaign, trigger }) => {
       await sendMessageUseCase.execute({
         userId,
         messageCampaign,
         patientId,
         schedulingId,
+        trigger,
       });
     },
   );
