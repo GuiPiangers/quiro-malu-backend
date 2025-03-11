@@ -3,6 +3,7 @@ import {
   appEventListener,
   AvailableAppEvents,
 } from "../../shared/observers/EventListener";
+import { Trigger } from "./Trigger";
 
 export type MessageCampaignDTO = {
   id?: string;
@@ -11,7 +12,7 @@ export type MessageCampaignDTO = {
   active: boolean;
   initialDate?: string;
   endDate?: string;
-  triggers: AvailableAppEvents[];
+  triggers: Trigger[];
 };
 
 export class MessageCampaign extends Entity {
@@ -20,7 +21,7 @@ export class MessageCampaign extends Entity {
   readonly active: boolean;
   readonly initialDate?: string;
   readonly endDate?: string;
-  readonly triggers: AvailableAppEvents[];
+  readonly triggers: Trigger[];
 
   constructor({
     active,
@@ -43,18 +44,18 @@ export class MessageCampaign extends Entity {
 
   watchTriggers() {
     this.triggers.forEach((trigger) => {
-      if (this.isPatientTrigger(trigger)) {
-        appEventListener.on(trigger, async (data) => {
-          appEventListener.emit("sendMessage", {
+      if (this.isPatientTrigger(trigger.event)) {
+        appEventListener.on(trigger.event, async (data) => {
+          appEventListener.emit("watchTriggers", {
             messageCampaign: this.getDTO(),
             patientId: data.patientId,
             userId: data.userId,
           });
         });
       }
-      if (this.isScheduleTrigger(trigger)) {
-        appEventListener.on(trigger, async (data) => {
-          appEventListener.emit("sendMessage", {
+      if (this.isScheduleTrigger(trigger.event)) {
+        appEventListener.on(trigger.event, async (data) => {
+          appEventListener.emit("watchTriggers", {
             messageCampaign: this.getDTO(),
             patientId: data.patientId,
             userId: data.userId,

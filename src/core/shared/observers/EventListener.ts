@@ -29,7 +29,7 @@ type AppEvents = {
   updateExam: Partial<Omit<ExamDTO, "id">> & { userId: string; examId: string };
   deleteExam: { userId: string; examId: string; patientId: string };
 
-  sendMessage: {
+  watchTriggers: {
     userId: string;
     patientId: string;
     schedulingId?: string;

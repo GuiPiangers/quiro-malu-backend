@@ -47,7 +47,7 @@ export function start() {
   });
 
   appEventListener.on(
-    "sendMessage",
+    "watchTriggers",
     async ({ userId, patientId, schedulingId, messageCampaign }) => {
       await sendMessageUseCase.execute({
         userId,
