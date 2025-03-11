@@ -1,13 +1,14 @@
 import { DateTime } from "../../shared/Date";
+import { AvailableAppEvents } from "../../shared/observers/EventListener";
 
 export class Trigger {
-  readonly event: string;
+  readonly event: AvailableAppEvents;
   readonly delayOperatorInMinutes: number;
   constructor({
     event,
     delayOperatorInMinutes,
   }: {
-    event: string;
+    event: AvailableAppEvents;
     delayOperatorInMinutes?: number;
   }) {
     this.event = event;

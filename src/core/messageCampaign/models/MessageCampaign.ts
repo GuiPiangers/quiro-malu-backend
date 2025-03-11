@@ -50,6 +50,7 @@ export class MessageCampaign extends Entity {
             messageCampaign: this.getDTO(),
             patientId: data.patientId,
             userId: data.userId,
+            trigger,
           });
         });
       }
@@ -60,6 +61,7 @@ export class MessageCampaign extends Entity {
             patientId: data.patientId,
             userId: data.userId,
             schedulingId: data.scheduleId,
+            trigger,
           });
         });
       }
