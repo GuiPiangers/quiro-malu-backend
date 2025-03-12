@@ -6,6 +6,7 @@ import { scheduleNotificationUseCase } from "../core/notification/useCases/Sched
 import { sendAndSaveNotificationUseCase } from "../core/notification/useCases/sendAndSaveNotification";
 import { getPatientUseCase } from "../core/patients/controllers/getPatientController";
 import { appEventListener } from "../core/shared/observers/EventListener";
+import { sendMessageQueue } from "../repositories/queueProvider/sendMessageQueue";
 
 export function start() {
   appEventListener.on("createSchedule", async (data) => {
@@ -48,13 +49,21 @@ export function start() {
 
   appEventListener.on(
     "watchTriggers",
-    async ({ userId, patientId, schedulingId, messageCampaign, trigger }) => {
-      await sendMessageUseCase.execute({
+    async ({
+      userId,
+      patientId,
+      schedulingId,
+      messageCampaign,
+      trigger,
+      date,
+    }) => {
+      await sendMessageQueue.add({
         userId,
         messageCampaign,
         patientId,
         schedulingId,
         trigger,
+        date,
       });
     },
   );

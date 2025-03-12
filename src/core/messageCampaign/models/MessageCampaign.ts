@@ -1,3 +1,4 @@
+import { DateTime } from "../../shared/Date";
 import { Entity } from "../../shared/Entity";
 import {
   appEventListener,
@@ -62,6 +63,7 @@ export class MessageCampaign extends Entity {
             userId: data.userId,
             schedulingId: data.scheduleId,
             trigger,
+            date: data.date ? new DateTime(data.date) : undefined,
           });
         });
       }

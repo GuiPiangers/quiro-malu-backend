@@ -3,6 +3,7 @@ import { MessageCampaignDTO } from "../../messageCampaign/models/MessageCampaign
 import { Trigger } from "../../messageCampaign/models/Trigger";
 import { PatientDTO } from "../../patients/models/Patient";
 import { SchedulingDTO } from "../../scheduling/models/Scheduling";
+import { DateTime } from "../Date";
 
 type AppEvents = {
   createPatient: Omit<PatientDTO, "id"> & { userId: string; patientId: string };
@@ -36,6 +37,7 @@ type AppEvents = {
     schedulingId?: string;
     messageCampaign: MessageCampaignDTO;
     trigger: Trigger;
+    date?: DateTime;
   };
 };
 

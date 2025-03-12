@@ -7,7 +7,6 @@ import {
   MessageCampaign,
   MessageCampaignDTO,
 } from "../../models/MessageCampaign";
-import { Trigger } from "../../models/Trigger";
 
 export class SendMessageUseCase {
   constructor(
@@ -25,7 +24,6 @@ export class SendMessageUseCase {
     patientId: string;
     schedulingId?: string;
     messageCampaign: MessageCampaignDTO;
-    trigger: Trigger;
   }) {
     const message = new MessageCampaign(messageCampaign);
     const [patient] = await this.patientRepository.getById(patientId, userId);
