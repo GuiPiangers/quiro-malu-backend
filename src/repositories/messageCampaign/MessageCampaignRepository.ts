@@ -37,13 +37,10 @@ export class MessageCampaignRepository implements IMessageCampaignRepository {
         ...value,
         endDate: value.endDate?.toISOString() ?? undefined,
         initialDate: value.initialDate?.toISOString() ?? undefined,
-        triggers: value.triggers.map(
-          (trigger) =>
-            new Trigger({
-              event: trigger.event! as AvailableAppEvents,
-              delayOperatorInMinutes: trigger.delayOperatorInMinutes!,
-            }),
-        ),
+        triggers: value.triggers.map((trigger) => ({
+          event: trigger.event! as AvailableAppEvents,
+          delayOperatorInMinutes: trigger.delayOperatorInMinutes!,
+        })),
       }));
     }
     return await MessageCampaignModel.find({ userId });

@@ -1,16 +1,15 @@
 import { DateTime } from "../../shared/Date";
 import { AvailableAppEvents } from "../../shared/observers/EventListener";
 
+export type TriggerDTO = {
+  event: AvailableAppEvents;
+  delayOperatorInMinutes?: number;
+};
+
 export class Trigger {
   readonly event: AvailableAppEvents;
   readonly delayOperatorInMinutes: number;
-  constructor({
-    event,
-    delayOperatorInMinutes,
-  }: {
-    event: AvailableAppEvents;
-    delayOperatorInMinutes?: number;
-  }) {
+  constructor({ event, delayOperatorInMinutes }: TriggerDTO) {
     this.event = event;
     this.delayOperatorInMinutes = delayOperatorInMinutes ?? 0;
   }
