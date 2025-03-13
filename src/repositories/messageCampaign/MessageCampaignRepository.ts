@@ -1,4 +1,6 @@
 import { MessageCampaignDTO } from "../../core/messageCampaign/models/MessageCampaign";
+import { Trigger } from "../../core/messageCampaign/models/Trigger";
+import { AvailableAppEvents } from "../../core/shared/observers/EventListener";
 import { Knex } from "../../database";
 import { ETableNames } from "../../database/ETableNames";
 import { MessageCampaignModel } from "../../database/mongoose/schemas/MessageCampaign";
@@ -31,9 +33,18 @@ export class MessageCampaignRepository implements IMessageCampaignRepository {
       const result = await MessageCampaignModel.find({ userId })
         .limit(config.limit)
         .skip(config.offSet);
-      return result.map((value) =>
-        getValidObjectValues(value as MessageCampaignDTO),
-      );
+      return result.map((value) => ({
+        ...value,
+        endDate: value.endDate?.toISOString() ?? undefined,
+        initialDate: value.initialDate?.toISOString() ?? undefined,
+        triggers: value.triggers.map(
+          (trigger) =>
+            new Trigger({
+              event: trigger.event! as AvailableAppEvents,
+              delayOperatorInMinutes: trigger.delayOperatorInMinutes!,
+            }),
+        ),
+      }));
     }
     return await MessageCampaignModel.find({ userId });
   }
