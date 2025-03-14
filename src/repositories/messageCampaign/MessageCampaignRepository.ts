@@ -33,15 +33,7 @@ export class MessageCampaignRepository implements IMessageCampaignRepository {
       const result = await MessageCampaignModel.find({ userId })
         .limit(config.limit)
         .skip(config.offSet);
-      return result.map((value) => ({
-        ...value,
-        endDate: value.endDate?.toISOString() ?? undefined,
-        initialDate: value.initialDate?.toISOString() ?? undefined,
-        triggers: value.triggers.map((trigger) => ({
-          event: trigger.event! as AvailableAppEvents,
-          delayOperatorInMinutes: trigger.delayOperatorInMinutes!,
-        })),
-      }));
+      result as unknown as MessageCampaignDTO[];
     }
     return await MessageCampaignModel.find({ userId });
   }
