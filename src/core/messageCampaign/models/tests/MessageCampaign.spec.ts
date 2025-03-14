@@ -1,6 +1,7 @@
 import { MessageCampaign, MessageCampaignDTO } from "../MessageCampaign";
 import { Trigger, TriggerDTO } from "../Trigger";
 import { appEventListener } from "../../../shared/observers/EventListener";
+import { DateTime } from "../../../shared/Date";
 
 jest.mock("../../../shared/observers/EventListener", () => ({
   appEventListener: {
@@ -23,7 +24,7 @@ describe("MessageCampaign", () => {
       initialDate: "2025-01-01",
       endDate: "2025-12-31",
       triggers: [
-        { event: "createPatient", condition: "someCondition" } as TriggerDTO,
+        new Trigger({ event: "createPatient", delayOperatorInMinutes: 50 }),
       ],
     };
   });
@@ -75,15 +76,61 @@ describe("MessageCampaign", () => {
     });
   });
 
-  // it("should correctly identify patient-related triggers", () => {
-  //   const campaign = new MessageCampaign(messageCampaignDTO);
-  //   expect(campaign.isPatientTrigger("createPatient")).toBe(true);
-  //   expect(campaign.isPatientTrigger("updateSchedule")).toBe(false);
-  // });
+  it("should emit watchTriggers event with patientId, userId, scheduleId and date when Schedule events emitted", () => {
+    const campaign = new MessageCampaign({
+      ...messageCampaignDTO,
+      triggers: [
+        new Trigger({ event: "createSchedule", delayOperatorInMinutes: 50 }),
+      ],
+    });
+    campaign.watchTriggers();
 
-  // it("should correctly identify schedule-related triggers", () => {
-  //   const campaign = new MessageCampaign(messageCampaignDTO);
-  //   expect(campaign.isScheduleTrigger("createSchedule")).toBe(true);
-  //   expect(campaign.isScheduleTrigger("patientBirthDay")).toBe(false);
-  // });
+    const triggerEventHandler = (appEventListener.on as jest.Mock).mock
+      .calls[0][1];
+    triggerEventHandler({
+      patientId: "patientId",
+      scheduleId: "scheduleId",
+      userId: "userId",
+      date: "2025-01-01T10:00",
+    });
+
+    expect(appEventListener.emit).toHaveBeenCalledWith("watchTriggers", {
+      messageCampaign: campaign.getDTO(),
+      patientId: "patientId",
+      userId: "userId",
+      schedulingId: "scheduleId",
+      date: new DateTime("2025-01-01T10:00"),
+      trigger: new Trigger({
+        event: "createSchedule",
+        delayOperatorInMinutes: 50,
+      }),
+    });
+  });
+
+  it("should emit watchTriggers event with only patientId, userId, and messageDTO when Patients events emitted", () => {
+    const campaign = new MessageCampaign({
+      ...messageCampaignDTO,
+      triggers: [
+        new Trigger({ event: "createPatient", delayOperatorInMinutes: 50 }),
+      ],
+    });
+    campaign.watchTriggers();
+
+    const triggerEventHandler = (appEventListener.on as jest.Mock).mock
+      .calls[0][1];
+    triggerEventHandler({
+      patientId: "patientId",
+      userId: "userId",
+    });
+
+    expect(appEventListener.emit).toHaveBeenCalledWith("watchTriggers", {
+      messageCampaign: campaign.getDTO(),
+      patientId: "patientId",
+      userId: "userId",
+      trigger: new Trigger({
+        event: "createPatient",
+        delayOperatorInMinutes: 50,
+      }),
+    });
+  });
 });
