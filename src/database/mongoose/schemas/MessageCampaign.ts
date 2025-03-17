@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const messageCampaignSchema = new mongoose.Schema({
   id: { type: String, required: true, index: true },
@@ -13,7 +13,7 @@ const messageCampaignSchema = new mongoose.Schema({
   active: { type: Boolean, default: true },
   initialDate: Date,
   endDate: Date,
-  triggers: [{ event: String, delayOperatorInMinutes: Number }],
+  triggers: [{ event: String, config: Schema.Types.Mixed }],
 });
 
 export const MessageCampaignModel = mongoose.model(
