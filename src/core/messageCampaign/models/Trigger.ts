@@ -3,21 +3,22 @@ import { AvailableAppEvents } from "../../shared/observers/EventListener";
 
 export type TriggerDTO = {
   event: AvailableAppEvents;
-  delayOperatorInMinutes?: number;
 };
 
 export class Trigger {
   readonly event: AvailableAppEvents;
-  readonly delayOperatorInMinutes: number;
-  constructor({ event, delayOperatorInMinutes }: TriggerDTO) {
+  constructor({ event }: TriggerDTO) {
     this.event = event;
-    this.delayOperatorInMinutes = delayOperatorInMinutes ?? 0;
   }
 
-  calculateDelay(date: DateTime) {
-    const newDate = date.value
-      .plus({ minute: this.delayOperatorInMinutes })
-      .toISO();
+  calculateDelay({
+    date,
+    delayInMinutes = 0,
+  }: {
+    date: DateTime;
+    delayInMinutes?: number;
+  }) {
+    const newDate = date.value.plus({ minute: delayInMinutes }).toISO();
 
     if (!newDate) return 0;
 
@@ -26,5 +27,45 @@ export class Trigger {
     const delay = DateTime.difference(newDateTime, DateTime.now());
 
     return delay > 0 ? delay : 0;
+  }
+}
+
+export class TriggerAfterScheduledDelay extends Trigger {
+  constructor(
+    { event }: TriggerDTO,
+    readonly config: {
+      delay: number;
+      delayUnit: "minutes" | "hours" | "days";
+    },
+  ) {
+    super({ event });
+  }
+
+  calculateDelay({ date }: { date: DateTime }) {
+    const minutesConverterTable = {
+      minutes: 1,
+      hours: 60,
+      days: 60 * 24,
+    };
+
+    const { delay, delayUnit } = this.config;
+    const delayInMinutes = delay * minutesConverterTable[delayUnit];
+    return super.calculateDelay({ date, delayInMinutes });
+  }
+}
+
+export class TriggerWithScheduledDate extends Trigger {
+  constructor(
+    { event }: TriggerDTO,
+    readonly config: {
+      date: DateTime;
+    },
+  ) {
+    super({ event });
+  }
+
+  calculateDelay() {
+    const { date } = this.config;
+    return super.calculateDelay({ date });
   }
 }
