@@ -23,9 +23,7 @@ describe("MessageCampaign", () => {
       active: true,
       initialDate: "2025-01-01",
       endDate: "2025-12-31",
-      triggers: [
-        new Trigger({ event: "createPatient", delayOperatorInMinutes: 50 }),
-      ],
+      triggers: [new Trigger({ event: "createPatient" })],
     };
   });
 
@@ -79,9 +77,7 @@ describe("MessageCampaign", () => {
   it("should emit watchTriggers event with patientId, userId, scheduleId and date when Schedule events emitted", () => {
     const campaign = new MessageCampaign({
       ...messageCampaignDTO,
-      triggers: [
-        new Trigger({ event: "createSchedule", delayOperatorInMinutes: 50 }),
-      ],
+      triggers: [new Trigger({ event: "createSchedule" })],
     });
     campaign.watchTriggers();
 
@@ -102,7 +98,6 @@ describe("MessageCampaign", () => {
       date: new DateTime("2025-01-01T10:00"),
       trigger: new Trigger({
         event: "createSchedule",
-        delayOperatorInMinutes: 50,
       }),
     });
   });
@@ -110,9 +105,7 @@ describe("MessageCampaign", () => {
   it("should emit watchTriggers event with only patientId, userId, and messageDTO when Patients events emitted", () => {
     const campaign = new MessageCampaign({
       ...messageCampaignDTO,
-      triggers: [
-        new Trigger({ event: "createPatient", delayOperatorInMinutes: 50 }),
-      ],
+      triggers: [new Trigger({ event: "createPatient" })],
     });
     campaign.watchTriggers();
 
@@ -129,7 +122,6 @@ describe("MessageCampaign", () => {
       userId: "userId",
       trigger: new Trigger({
         event: "createPatient",
-        delayOperatorInMinutes: 50,
       }),
     });
   });
