@@ -34,7 +34,7 @@ export class SendMessageQueue {
     await this.queueProvider.add(
       { messageCampaign, patientId, trigger, userId, schedulingId, date },
       {
-        delay: date ? trigger.calculateDelay(date) : undefined,
+        delay: date ? trigger.calculateDelay({ date }) : undefined,
         jobId: `a${messageCampaign.id}`,
       },
     );

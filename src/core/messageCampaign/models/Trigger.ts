@@ -30,7 +30,7 @@ export class Trigger {
   }
 }
 
-export class TriggerAfterScheduledDelay extends Trigger {
+export class TriggerWithScheduledDelay extends Trigger {
   constructor(
     { event }: TriggerDTO,
     readonly config: {
