@@ -1,12 +1,12 @@
 import { DateTime } from "../../../shared/Date";
-import { Trigger, TriggerDTO } from "../Trigger";
+import { TriggerBase, TriggerDTO } from "../Trigger";
 
 const mockEvent = "createPatient";
 
 describe("Trigger", () => {
   it("deve inicializar corretamente com os valores fornecidos", () => {
     const dto: TriggerDTO = { event: mockEvent };
-    const trigger = new Trigger(dto);
+    const trigger = new TriggerBase(dto);
 
     expect(trigger.event).toBe(mockEvent);
   });
@@ -20,7 +20,7 @@ describe("Trigger", () => {
 
   it("deve calcular corretamente o delay com um operador positivo", () => {
     const dto: TriggerDTO = { event: mockEvent };
-    const trigger = new Trigger(dto);
+    const trigger = new TriggerBase(dto);
 
     const now = DateTime.now();
     const delay = trigger.calculateDelay({ date: now });
@@ -31,7 +31,7 @@ describe("Trigger", () => {
 
   it("deve retornar 0 se o delay já tiver passado", () => {
     const dto: TriggerDTO = { event: mockEvent };
-    const trigger = new Trigger(dto);
+    const trigger = new TriggerBase(dto);
 
     const now = DateTime.now();
     const delay = trigger.calculateDelay({ date: now });

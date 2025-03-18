@@ -1,5 +1,5 @@
 import { MessageCampaignDTO } from "../../core/messageCampaign/models/MessageCampaign";
-import { Trigger } from "../../core/messageCampaign/models/Trigger";
+import { TriggerBase } from "../../core/messageCampaign/models/Trigger";
 import { AvailableAppEvents } from "../../core/shared/observers/EventListener";
 import { Knex } from "../../database";
 import { ETableNames } from "../../database/ETableNames";

@@ -1,5 +1,5 @@
 import { MessageCampaignDTO } from "../../../core/messageCampaign/models/MessageCampaign";
-import { Trigger } from "../../../core/messageCampaign/models/Trigger";
+import { TriggerBase } from "../../../core/messageCampaign/models/Trigger";
 import { SendMessageUseCase } from "../../../core/messageCampaign/useCases/sendMessage/sendMessageUseCase";
 import { DateTime } from "../../../core/shared/Date";
 import { IQueueProvider } from "../IQueueProvider";
@@ -9,7 +9,7 @@ export type SendMessageQueuePrams = {
   patientId: string;
   schedulingId?: string;
   messageCampaign: MessageCampaignDTO;
-  trigger: Trigger;
+  trigger: TriggerBase;
   date?: DateTime;
 };
 

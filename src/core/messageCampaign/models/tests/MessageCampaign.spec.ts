@@ -1,5 +1,5 @@
 import { MessageCampaign, MessageCampaignDTO } from "../MessageCampaign";
-import { Trigger, TriggerDTO } from "../Trigger";
+import { TriggerBase, TriggerDTO } from "../Trigger";
 import { appEventListener } from "../../../shared/observers/EventListener";
 import { DateTime } from "../../../shared/Date";
 
@@ -23,7 +23,7 @@ describe("MessageCampaign", () => {
       active: true,
       initialDate: "2025-01-01",
       endDate: "2025-12-31",
-      triggers: [new Trigger({ event: "createPatient" })],
+      triggers: [new TriggerBase({ event: "createPatient" })],
     };
   });
 
@@ -33,7 +33,7 @@ describe("MessageCampaign", () => {
     expect(campaign.name).toBe("Campaign Test");
     expect(campaign.active).toBe(true);
     expect(campaign.triggers).toHaveLength(1);
-    expect(campaign.triggers[0]).toBeInstanceOf(Trigger);
+    expect(campaign.triggers[0]).toBeInstanceOf(TriggerBase);
   });
 
   it("should return DTO representation of MessageCampaign", () => {
@@ -77,7 +77,7 @@ describe("MessageCampaign", () => {
   it("should emit watchTriggers event with patientId, userId, scheduleId and date when Schedule events emitted", () => {
     const campaign = new MessageCampaign({
       ...messageCampaignDTO,
-      triggers: [new Trigger({ event: "createSchedule" })],
+      triggers: [new TriggerBase({ event: "createSchedule" })],
     });
     campaign.watchTriggers();
 
@@ -96,7 +96,7 @@ describe("MessageCampaign", () => {
       userId: "userId",
       schedulingId: "scheduleId",
       date: new DateTime("2025-01-01T10:00"),
-      trigger: new Trigger({
+      trigger: new TriggerBase({
         event: "createSchedule",
       }),
     });
@@ -105,7 +105,7 @@ describe("MessageCampaign", () => {
   it("should emit watchTriggers event with only patientId, userId, and messageDTO when Patients events emitted", () => {
     const campaign = new MessageCampaign({
       ...messageCampaignDTO,
-      triggers: [new Trigger({ event: "createPatient" })],
+      triggers: [new TriggerBase({ event: "createPatient" })],
     });
     campaign.watchTriggers();
 
@@ -120,7 +120,7 @@ describe("MessageCampaign", () => {
       messageCampaign: campaign.getDTO(),
       patientId: "patientId",
       userId: "userId",
-      trigger: new Trigger({
+      trigger: new TriggerBase({
         event: "createPatient",
       }),
     });

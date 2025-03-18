@@ -1,11 +1,12 @@
 import { DateTime } from "../../shared/Date";
 import { AvailableAppEvents } from "../../shared/observers/EventListener";
 
-export type TriggerDTO = {
+export type TriggerDTO<T = undefined> = {
   event: AvailableAppEvents;
+  config?: T;
 };
 
-export class Trigger {
+export class TriggerBase {
   readonly event: AvailableAppEvents;
   constructor({ event }: TriggerDTO) {
     this.event = event;
@@ -30,15 +31,17 @@ export class Trigger {
   }
 }
 
-export class TriggerWithScheduledDelay extends Trigger {
-  constructor(
-    { event }: TriggerDTO,
-    readonly config: {
-      delay: number;
-      delayUnit: "minutes" | "hours" | "days";
-    },
-  ) {
+type TriggerWithDelayConfig = {
+  delay: number;
+  delayUnit: "minutes" | "hours" | "days";
+};
+
+export class TriggerWithDelay extends TriggerBase {
+  readonly config: TriggerWithDelayConfig;
+
+  constructor({ event, config }: TriggerDTO<TriggerWithDelayConfig>) {
     super({ event });
+    this.config = config || { delay: 0, delayUnit: "minutes" };
   }
 
   calculateDelay({ date }: { date: DateTime }) {
@@ -54,14 +57,15 @@ export class TriggerWithScheduledDelay extends Trigger {
   }
 }
 
-export class TriggerWithScheduledDate extends Trigger {
-  constructor(
-    { event }: TriggerDTO,
-    readonly config: {
-      date: DateTime;
-    },
-  ) {
+type TriggerWithStaticDateConfig = {
+  date: DateTime;
+};
+
+export class TriggerWithStaticDate extends TriggerBase {
+  readonly config: TriggerWithStaticDateConfig;
+  constructor({ event, config }: TriggerDTO<TriggerWithStaticDateConfig>) {
     super({ event });
+    this.config = config || { date: DateTime.now() };
   }
 
   calculateDelay() {
@@ -69,3 +73,18 @@ export class TriggerWithScheduledDate extends Trigger {
     return super.calculateDelay({ date });
   }
 }
+
+export class TriggerWithDynamicDate extends TriggerBase {
+  constructor({ event }: TriggerDTO) {
+    super({ event });
+  }
+
+  calculateDelay({ date }: { date: DateTime }) {
+    return super.calculateDelay({ date });
+  }
+}
+
+export type Trigger =
+  | TriggerWithDelay
+  | TriggerWithStaticDate
+  | TriggerWithDynamicDate;

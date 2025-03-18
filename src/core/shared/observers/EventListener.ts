@@ -1,6 +1,6 @@
 import { ExamDTO } from "../../exams/models/Exam";
 import { MessageCampaignDTO } from "../../messageCampaign/models/MessageCampaign";
-import { Trigger } from "../../messageCampaign/models/Trigger";
+import { TriggerBase } from "../../messageCampaign/models/Trigger";
 import { PatientDTO } from "../../patients/models/Patient";
 import { SchedulingDTO } from "../../scheduling/models/Scheduling";
 import { DateTime } from "../Date";
@@ -36,7 +36,7 @@ type AppEvents = {
     patientId: string;
     schedulingId?: string;
     messageCampaign: MessageCampaignDTO;
-    trigger: Trigger;
+    trigger: TriggerBase;
     date?: DateTime;
   };
 };
