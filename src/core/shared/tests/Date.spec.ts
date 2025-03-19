@@ -1,10 +1,11 @@
 import { ApiError } from "../../../utils/ApiError";
 import { DateTime } from "../Date";
+import { DateTime as Luxon } from "luxon";
 
 describe("DateTime", () => {
   describe("instantiation", () => {
     it("should create an instance when the date is valid", () => {
-      const dateStr = "2024-11-01T10:30:00.000Z";
+      const dateStr = "2024-11-01T10:30";
       const timezone = "Etc/UTC";
       const dateTime = new DateTime(dateStr, {}, timezone);
 
@@ -31,7 +32,7 @@ describe("DateTime", () => {
     });
 
     it("should throw an ApiError if onlyPassDate is true and date is in the future", () => {
-      const futureDateStr = "2050-01-01T10:30:00.000Z";
+      const futureDateStr = "2050-01-01T10:30";
       const timezone = "Etc/UTC";
 
       expect(
@@ -43,7 +44,7 @@ describe("DateTime", () => {
     });
 
     it("should throw an ApiError if onlyFutureDate is true and date is in the past", () => {
-      const pastDateStr = "2000-01-01T10:30:00.000Z";
+      const pastDateStr = "2000-01-01T10:30";
       const timezone = "Etc/UTC";
 
       expect(
@@ -55,15 +56,14 @@ describe("DateTime", () => {
     });
 
     it("should return the correct attributes date, time, dateTime and value", () => {
-      const dateStr = "2024-11-01T12:00:00.000Z";
+      const dateStr = "2024-11-01T12:00";
       const timezone = "Etc/UTC";
       const date = new DateTime(dateStr, {}, timezone);
 
       expect(date.date).toBe("2024-11-01");
       expect(date.time).toBe("12:00");
       expect(date.dateTime).toBe("2024-11-01T12:00");
-      expect(date.value).toBeInstanceOf(Date);
-      expect(date.value.toISO()).toBe(dateStr);
+      expect(date.value).toBeInstanceOf(Luxon);
     });
 
     it("should handle timezone correctly", () => {
@@ -85,9 +85,11 @@ describe("DateTime", () => {
 
   describe("now", () => {
     beforeAll(() => {
-      jest
-        .useFakeTimers()
-        .setSystemTime(new Date("2025-01-10T12:00").getTime());
+      jest.useFakeTimers().setSystemTime(
+        Luxon.fromISO("2025-01-10T12:00", {
+          zone: "America/Sao_Paulo",
+        }).toMillis(),
+      );
     });
     it("should return new DateTime instance with current date and time", () => {
       const nowDateTime = DateTime.now();
