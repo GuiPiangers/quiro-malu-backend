@@ -38,4 +38,19 @@ describe("TriggerBase", () => {
 
     expect(delay).toBe(0);
   });
+
+  describe("getDTO", () => {
+    it("Deve retornar o triggerDTO correto", () => {
+      const triggerDTO: TriggerDTO = {
+        event: mockEvent,
+      };
+
+      const trigger = new TriggerBase(triggerDTO);
+
+      expect(trigger.getDTO()).toEqual({
+        event: mockEvent,
+        config: {},
+      });
+    });
+  });
 });

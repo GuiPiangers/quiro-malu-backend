@@ -40,7 +40,7 @@ export class TriggerBase {
   }
 }
 
-type TriggerWithDelayConfig = {
+export type TriggerWithDelayConfig = {
   delay: number;
   delayUnit: "minutes" | "hours" | "days";
 };
@@ -66,7 +66,7 @@ export class TriggerWithDelay extends TriggerBase {
   }
 }
 
-type TriggerWithStaticDateConfig = {
+export type TriggerWithStaticDateConfig = {
   date: DateTime;
 };
 
