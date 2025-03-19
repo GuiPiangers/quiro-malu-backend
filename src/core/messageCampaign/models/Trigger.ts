@@ -12,6 +12,8 @@ export class TriggerBase {
     this.event = event;
   }
 
+  readonly config = {};
+
   calculateDelay({
     date,
     delayInMinutes = 0,
@@ -28,6 +30,13 @@ export class TriggerBase {
     const delay = DateTime.difference(newDateTime, DateTime.now());
 
     return delay > 0 ? delay : 0;
+  }
+
+  getDTO() {
+    return {
+      event: this.event,
+      config: this.config,
+    };
   }
 }
 

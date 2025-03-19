@@ -1,17 +1,12 @@
 import { AvailableAppEvents } from "../../shared/observers/EventListener";
 import {
+  TriggerDTO,
   TriggerWithDelay,
   TriggerWithDynamicDate,
   TriggerWithStaticDate,
 } from "./Trigger";
 
-export function triggerFactor({
-  config,
-  event,
-}: {
-  event: AvailableAppEvents;
-  config: any;
-}) {
+export function triggerFactory({ config, event }: TriggerDTO) {
   const withDelayTriggers: AvailableAppEvents[] = [
     "createPatient",
     "createSchedule",

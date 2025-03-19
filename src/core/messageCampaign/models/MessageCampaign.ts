@@ -4,7 +4,8 @@ import {
   appEventListener,
   AvailableAppEvents,
 } from "../../shared/observers/EventListener";
-import { TriggerBase, TriggerDTO } from "./Trigger";
+import { Trigger, TriggerDTO } from "./Trigger";
+import { triggerFactory } from "./TriggerFactor";
 
 export type MessageCampaignDTO = {
   id?: string;
@@ -13,7 +14,7 @@ export type MessageCampaignDTO = {
   active: boolean;
   initialDate?: string;
   endDate?: string;
-  triggers: TriggerDTO[];
+  triggers: TriggerDTO<any>[];
 };
 
 export class MessageCampaign extends Entity {
@@ -22,7 +23,7 @@ export class MessageCampaign extends Entity {
   readonly active: boolean;
   readonly initialDate?: string;
   readonly endDate?: string;
-  readonly triggers: TriggerBase[];
+  readonly triggers: Trigger[];
 
   constructor({
     active,
@@ -40,7 +41,7 @@ export class MessageCampaign extends Entity {
     this.active = active;
     this.initialDate = initialDate;
     this.endDate = endDate;
-    this.triggers = triggers.map((trigger) => new TriggerBase(trigger));
+    this.triggers = triggers.map((trigger) => triggerFactory(trigger));
   }
 
   watchTriggers() {
@@ -78,7 +79,7 @@ export class MessageCampaign extends Entity {
       endDate: this.endDate,
       id: this.id,
       initialDate: this.initialDate,
-      triggers: this.triggers,
+      triggers: this.triggers.map((trigger) => trigger.getDTO()),
     };
   }
 
