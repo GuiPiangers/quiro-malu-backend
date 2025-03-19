@@ -1,6 +1,7 @@
 import { ScheduleNotificationUseCase } from "./ScheduleNotificationUseCase";
 import { createMockPushNotificationQueue } from "../../../../repositories/_mocks/PushNotificationQueueMock";
 import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
+import { DateTime as Luxon } from "luxon";
 
 describe("ScheduleNotificationUseCase", () => {
   let pushNotificationQueue: typeof createMockPushNotificationQueue;
@@ -17,11 +18,14 @@ describe("ScheduleNotificationUseCase", () => {
       pushNotificationQueue,
       schedulingRepository,
     );
-    jest.clearAllMocks();
   });
 
   beforeAll(() => {
-    jest.useFakeTimers().setSystemTime(new Date("2025-01-01T12:15").getTime());
+    jest.useFakeTimers().setSystemTime(
+      Luxon.fromISO("2025-01-01T12:15", {
+        zone: "America/Sao_Paulo",
+      }).toMillis(),
+    );
   });
 
   afterAll(() => {
