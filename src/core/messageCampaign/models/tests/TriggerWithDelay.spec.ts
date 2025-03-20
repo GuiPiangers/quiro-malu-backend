@@ -37,7 +37,7 @@ describe("TriggerBase", () => {
       const delay = trigger.calculateDelay({ date: now });
 
       expect(delay).toBeGreaterThan(0);
-      expect(delay).toBeCloseTo(10 * 60 * 1000, -10); // Aproximadamente 10 minutos em ms
+      expect(delay).toBeCloseTo(10 * 60 * 1000, -2); // Aproximadamente 10 minutos em ms
     });
 
     it("deve calcular corretamente o delay com a data fornecida e o atributo config.delayUnit = 'hours'", () => {
@@ -51,7 +51,7 @@ describe("TriggerBase", () => {
       const delay = trigger.calculateDelay({ date: now });
 
       expect(delay).toBeGreaterThan(0);
-      expect(delay).toBeCloseTo(10 * 60 * 60 * 1000, -10); // Aproximadamente 10 horas em ms
+      expect(delay).toBeCloseTo(10 * 60 * 60 * 1000, -2); // Aproximadamente 10 horas em ms
     });
 
     it("deve calcular corretamente o delay com a data fornecida e o atributo config.delayUnit = 'days'", () => {
@@ -65,7 +65,7 @@ describe("TriggerBase", () => {
       const delay = trigger.calculateDelay({ date: now });
 
       expect(delay).toBeGreaterThan(0);
-      expect(delay).toBeCloseTo(10 * 60 * 60 * 24 * 1000, -10); // Aproximadamente 10 dias em ms
+      expect(delay).toBeCloseTo(10 * 60 * 60 * 24 * 1000, -2); // Aproximadamente 10 dias em ms
     });
   });
 

@@ -16,9 +16,11 @@ describe("TriggerBase", () => {
 
   describe("calculateDelay", () => {
     beforeAll(() => {
-      jest
-        .useFakeTimers()
-        .setSystemTime(Luxon.fromISO("2025-01-01T10:00").toMillis());
+      jest.useFakeTimers().setSystemTime(
+        Luxon.fromISO("2025-01-01T10:00", {
+          zone: "America/Sao_Paulo",
+        }).toMillis(),
+      );
     });
     it("deve calcular corretamente o delay com a data fornecida", () => {
       const dto: TriggerDTO = {
@@ -30,7 +32,19 @@ describe("TriggerBase", () => {
       const delay = trigger.calculateDelay({ date });
 
       expect(delay).toBeGreaterThan(0);
-      expect(delay).toBeCloseTo(1000 * 60 * 60 * 2, -10); // Aproximadamente 2 horas em ms
+      expect(delay).toBe(1000 * 60 * 60 * 2); // 2 horas em ms
+    });
+
+    it("deve retornar 0 se a data for igual a data atual", () => {
+      const dto: TriggerDTO = {
+        event: mockEvent,
+      };
+      const trigger = new TriggerWithDynamicDate(dto);
+
+      const date = new DateTime("2025-01-01T10:00");
+      const delay = trigger.calculateDelay({ date });
+
+      expect(delay).toBe(0);
     });
   });
 
