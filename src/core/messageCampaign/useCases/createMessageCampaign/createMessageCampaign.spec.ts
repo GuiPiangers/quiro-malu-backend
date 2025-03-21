@@ -1,6 +1,7 @@
 import { CreateMessageCampaignUseCase } from "./createMessageCampaignUseCase";
 import { MessageCampaignRepository } from "../../../../repositories/messageCampaign/MessageCampaignRepository";
 import { MessageCampaign } from "../../models/MessageCampaign";
+import { createMockMessageCampaignRepository } from "../../../../repositories/_mocks/MessageCampaignRepositoryMock";
 
 jest.mock("../../models/MessageCampaign");
 
@@ -9,9 +10,7 @@ describe("CreateMessageCampaignUseCase", () => {
   let messageCampaignRepository: jest.Mocked<MessageCampaignRepository>;
 
   beforeEach(() => {
-    messageCampaignRepository = {
-      create: jest.fn(),
-    } as unknown as jest.Mocked<MessageCampaignRepository>;
+    messageCampaignRepository = createMockMessageCampaignRepository();
 
     createMessageCampaignUseCase = new CreateMessageCampaignUseCase(
       messageCampaignRepository,
