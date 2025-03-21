@@ -35,7 +35,6 @@ export class SendMessageQueue {
       { messageCampaign, patientId, trigger, userId, schedulingId, date },
       {
         delay: date ? trigger.calculateDelay({ date }) : undefined,
-        jobId: `a${messageCampaign.id}`,
       },
     );
   }
