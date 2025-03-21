@@ -4,7 +4,6 @@ import { NotificationSendMessage } from "../../../notification/models/Notificati
 import { sendAndSaveNotificationUseCase } from "../../../notification/useCases/sendAndSaveNotification";
 import { PatientDTO } from "../../../patients/models/Patient";
 import { SchedulingDTO } from "../../../scheduling/models/Scheduling";
-import { calculateAge } from "../../../shared/calculateAge";
 import { DateTime } from "../../../shared/Date";
 import { Phone } from "../../../shared/Phone";
 import {
@@ -29,28 +28,35 @@ export class SendMessageUseCase {
     schedulingId?: string;
     messageCampaign: MessageCampaignDTO;
   }) {
-    const message = new MessageCampaign(messageCampaign);
-    const [patient] = await this.patientRepository.getById(patientId, userId);
-    const [scheduling] = schedulingId
-      ? await this.schedulingRepository.get({
-          id: schedulingId,
-          userId,
-        })
-      : [];
+    try {
+      console.log("sendMessage, chegou aqui");
+      const message = new MessageCampaign(messageCampaign);
 
-    const notification = new NotificationSendMessage({
-      title: `Enviar mensagem para ${patient?.name}`,
-      message: `Envie uma mensagem de  de ${message.name} para o paciente ${patient?.name}`,
-      params: {
-        patientId,
-        patientPhone: new Phone(patient.phone),
-        templateMessage: this.replaceVariables(message.templateMessage, {
-          patient,
-          scheduling,
-        }),
-      },
-    });
-    sendAndSaveNotificationUseCase.execute({ userId, notification });
+      const [patient] = await this.patientRepository.getById(patientId, userId);
+
+      const [scheduling] = schedulingId
+        ? await this.schedulingRepository.get({
+            id: schedulingId,
+            userId,
+          })
+        : [];
+
+      const notification = new NotificationSendMessage({
+        title: `Enviar mensagem para ${patient?.name}`,
+        message: `Envie uma mensagem de  de ${message.name} para o paciente ${patient?.name}`,
+        params: {
+          patientId,
+          patientPhone: new Phone(patient.phone),
+          templateMessage: this.replaceVariables(message.templateMessage, {
+            patient,
+            scheduling,
+          }),
+        },
+      });
+      sendAndSaveNotificationUseCase.execute({ userId, notification });
+    } catch (error: any) {
+      console.log(error.message);
+    }
   }
 
   private replaceVariables(
@@ -66,17 +72,17 @@ export class SendMessageUseCase {
     const extractRegex = /(\{\{)|(\}\})/g;
 
     const variableDictionary: Record<string, string> = {
-      nome: patient.name,
-      telefone: patient.phone,
-      genero: patient.gender ?? "",
-      idade: patient.dateOfBirth ? `${calculateAge(patient.dateOfBirth)}` : "",
-      dataConsulta: scheduling?.date
+      nome_paciente: patient.name,
+      telefone_paciente: patient.phone,
+      genero_paciente: patient.gender ?? "",
+      // idade: patient.dateOfBirth ? `${calculateAge(patient.dateOfBirth)}` : "",
+      data_consulta: scheduling?.date
         ? new DateTime(scheduling?.date).date +
           " às " +
           new DateTime(scheduling?.date).time
         : "",
-      servico: scheduling?.service ?? "",
-      status: scheduling?.status ?? "",
+      servico_consulta: scheduling?.service ?? "",
+      status_consulta: scheduling?.status ?? "",
     };
 
     const variables = this.extractVariables(messageTemplate);

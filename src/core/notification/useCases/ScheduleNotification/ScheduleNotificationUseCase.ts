@@ -75,17 +75,9 @@ export class ScheduleNotificationUseCase {
     const scheduledDate = Luxon.fromISO(date, {
       zone: "America/Sao_Paulo",
     }).minus({ minutes: preTimer });
-
-    console.log("luxon: " + scheduledDate.toISO()!);
-
     const scheduleDateTime = new DateTime(scheduledDate.toISO()!);
 
-    console.log("param: " + date);
-    console.log("scheduleDateTime: " + scheduleDateTime.dateTime);
-    console.log("dateTime.now: " + DateTime.now().dateTime);
-
     const delay = DateTime.difference(scheduleDateTime, DateTime.now());
-    console.log(delay);
     return delay;
   }
 }

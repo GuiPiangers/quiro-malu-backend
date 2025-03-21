@@ -1,5 +1,4 @@
 import { getExamUseCase } from "../core/exams/useCases/getExam";
-import { sendMessageUseCase } from "../core/messageCampaign/useCases/sendMessage";
 import { watchMessageTriggersUseCase } from "../core/messageCampaign/useCases/watchMessageTriggers";
 import { NotificationUndoExam } from "../core/notification/models/NotificationUndoExam";
 import { scheduleNotificationUseCase } from "../core/notification/useCases/ScheduleNotification";
@@ -8,7 +7,9 @@ import { getPatientUseCase } from "../core/patients/controllers/getPatientContro
 import { appEventListener } from "../core/shared/observers/EventListener";
 import { sendMessageQueue } from "../repositories/queueProvider/sendMessageQueue";
 
-export function start() {
+export async function start() {
+  await watchMessageTriggersUseCase.execute();
+
   appEventListener.on("createSchedule", async (data) => {
     try {
       scheduleNotificationUseCase.schedule({ ...data, id: data.scheduleId });
@@ -67,6 +68,4 @@ export function start() {
       });
     },
   );
-
-  watchMessageTriggersUseCase.execute();
 }

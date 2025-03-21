@@ -60,7 +60,7 @@ export class QueueProvider<T> implements IQueueProvider<T> {
 
   async process(callback: (job: T) => Promise<void>) {
     const worker = new Worker(
-      "pushNotification",
+      this.queueName,
       async (job) => {
         await callback(job.data);
       },
