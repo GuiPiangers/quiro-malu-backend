@@ -2,6 +2,7 @@ import { IPatientRepository } from "../../../../repositories/patient/IPatientRep
 import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
 import { NotificationSendMessage } from "../../../notification/models/NotificationSendMessage";
 import { sendAndSaveNotificationUseCase } from "../../../notification/useCases/sendAndSaveNotification";
+import SaveSendNotificationUseCase from "../../../notification/useCases/sendAndSaveNotification/sendAndSaveNotification";
 import { PatientDTO } from "../../../patients/models/Patient";
 import { SchedulingDTO } from "../../../scheduling/models/Scheduling";
 import { DateTime } from "../../../shared/Date";
@@ -12,10 +13,16 @@ import {
 } from "../../models/MessageCampaign";
 
 export class SendMessageUseCase {
+  private sendAndSaveNotificationUseCase: SaveSendNotificationUseCase;
+
   constructor(
     private patientRepository: IPatientRepository,
     private schedulingRepository: ISchedulingRepository,
-  ) {}
+    sendAndSaveNotification?: SaveSendNotificationUseCase,
+  ) {
+    this.sendAndSaveNotificationUseCase =
+      sendAndSaveNotification ?? sendAndSaveNotificationUseCase;
+  }
 
   async execute({
     userId,
@@ -29,7 +36,6 @@ export class SendMessageUseCase {
     messageCampaign: MessageCampaignDTO;
   }) {
     try {
-      console.log("sendMessage, chegou aqui");
       const message = new MessageCampaign(messageCampaign);
 
       const [patient] = await this.patientRepository.getById(patientId, userId);
@@ -53,7 +59,7 @@ export class SendMessageUseCase {
           }),
         },
       });
-      sendAndSaveNotificationUseCase.execute({ userId, notification });
+      this.sendAndSaveNotificationUseCase.execute({ userId, notification });
     } catch (error: any) {
       console.log(error.message);
     }
