@@ -1,5 +1,5 @@
 import knex from "knex";
-import { development, production } from "./knex/knexfile";
+import { development, production } from "./knexfile";
 import * as dotenv from "dotenv";
 dotenv.config();
 

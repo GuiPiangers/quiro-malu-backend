@@ -1,7 +1,7 @@
 import { DiagnosticDTO } from "../../core/patients/models/Diagnostic";
 import { IDiagnosticRepository } from "./IDiagnosticRepository";
 import { ETableNames } from "../../database/ETableNames";
-import { Knex } from "../../database";
+import { Knex } from "../../database/knex";
 
 export class KnexDiagnosticRepository implements IDiagnosticRepository {
   async save(

@@ -2,7 +2,7 @@
 import { IAnamnesisRepository } from "./IAnamnesisRepository";
 import { AnamnesisDTO } from "../../core/patients/models/Anamnesis";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
-import { Knex } from "../../database";
+import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
 
 export class KnexAnamnesisRepository implements IAnamnesisRepository {

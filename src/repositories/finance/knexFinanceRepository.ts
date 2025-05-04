@@ -1,5 +1,5 @@
 import { Finance, FinanceDTO } from "../../core/finances/models/Finance";
-import { Knex } from "../../database";
+import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
 import {
   setFinanceProps,

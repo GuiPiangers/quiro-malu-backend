@@ -1,6 +1,6 @@
 import { ProgressDTO } from "../../core/patients/models/Progress";
 import { IProgressRepository } from "./IProgressRepository";
-import { Knex } from "../../database";
+import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
 
 export class KnexProgressRepository implements IProgressRepository {

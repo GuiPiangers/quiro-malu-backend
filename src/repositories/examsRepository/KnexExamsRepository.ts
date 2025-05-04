@@ -1,5 +1,5 @@
 import { ExamDTO } from "../../core/exams/models/Exam";
-import { Knex } from "../../database";
+import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
 import {
   countExamRepositoryProps,

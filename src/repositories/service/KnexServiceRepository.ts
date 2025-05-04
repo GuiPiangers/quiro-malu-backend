@@ -1,5 +1,5 @@
 import { ServiceDTO } from "../../core/service/models/Service";
-import { Knex } from "../../database";
+import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
 import { IServiceRepository, listServiceProps } from "./IServiceRepository";
 

@@ -1,6 +1,6 @@
 import { UserDTO } from "../../core/authentication/models/User";
 import { IUserRepository } from "./IUserRepository";
-import { Knex } from "../../database";
+import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
 
 export class KnexUserRepository implements IUserRepository {

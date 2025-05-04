@@ -3,7 +3,7 @@ import {
   SchedulingDTO,
 } from "../../core/scheduling/models/Scheduling";
 import { SchedulingWithPatientDTO } from "../../core/scheduling/models/SchedulingWithPatient";
-import { Knex } from "../../database";
+import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
 import { query } from "../../database/mySqlConnection";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";

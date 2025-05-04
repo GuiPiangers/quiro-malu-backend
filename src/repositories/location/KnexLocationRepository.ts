@@ -1,7 +1,7 @@
 import { ILocationRepository } from "./ILocationRepository";
 import { LocationDTO } from "../../core/shared/Location";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
-import { Knex } from "../../database";
+import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
 
 export class KnexLocationRepository implements ILocationRepository {

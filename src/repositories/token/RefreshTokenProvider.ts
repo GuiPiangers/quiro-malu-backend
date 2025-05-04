@@ -1,6 +1,6 @@
 import { RefreshTokenDTO } from "../../core/authentication/models/RefreshToken";
 import { IRefreshTokenProvider } from "./IRefreshTokenProvider";
-import { Knex } from "../../database";
+import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
 
 class RefreshTokenProvider implements IRefreshTokenProvider {

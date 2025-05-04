@@ -1,7 +1,5 @@
 import { MessageCampaignDTO } from "../../core/messageCampaign/models/MessageCampaign";
-import { TriggerBase } from "../../core/messageCampaign/models/Trigger";
-import { AvailableAppEvents } from "../../core/shared/observers/EventListener";
-import { Knex } from "../../database";
+import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
 import { MessageCampaignModel } from "../../database/mongoose/schemas/MessageCampaign";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
