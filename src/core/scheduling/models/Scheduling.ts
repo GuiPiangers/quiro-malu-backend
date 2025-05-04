@@ -80,7 +80,7 @@ export class Scheduling extends Entity {
 
     return data.some((schedulingValue) => {
       const endDate = new Date(`${schedulingValue.date}:00.000Z`);
-      endDate.setSeconds(this.duration!);
+      endDate.setSeconds(schedulingValue.duration!);
 
       const schedulingDate = new Date(`${this.date!.dateTime}:00.000Z`);
       schedulingDate.setSeconds(this.duration!);
