@@ -58,6 +58,7 @@ import { Phone } from "./core/shared/Phone";
 import { setReadNotificationsController } from "./core/notification/controllers/setReadNotifications";
 import { setActionDoneNotificationController } from "./core/notification/controllers/setActionDoneNotifications";
 import { deleteManyNotificationsController } from "./core/notification/controllers/deleteManyNotification";
+import { addBlockSchedulingController } from "./core/scheduling/controllers/addBlockScheduleController";
 
 const router = Router();
 const multerConfig = multer({
@@ -188,6 +189,10 @@ router.post("/realizeScheduling", authMiddleware, (request, response) => {
 });
 router.delete("/schedules", authMiddleware, (request, response) => {
   deleteSchedulingController.handle(request, response);
+});
+
+router.post("/blockSchedules", authMiddleware, (request, response) => {
+  addBlockSchedulingController.handle(request, response);
 });
 
 router.post(

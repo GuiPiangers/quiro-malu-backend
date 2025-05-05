@@ -8,11 +8,11 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
     { endDate, id, startDate, description }: BlockSchedule,
     userId: string,
   ): Promise<void> {
-    Knex(ETableNames.BLOCK_SCHEDULES).insert({
+    await Knex(ETableNames.BLOCK_SCHEDULES).insert({
       description,
       id,
-      startDate,
-      endDate,
+      startDate: startDate.dateTime,
+      endDate: endDate.dateTime,
       userId,
     });
   }

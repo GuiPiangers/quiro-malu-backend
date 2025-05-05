@@ -11,7 +11,6 @@ import {
   ISchedulingRepository,
   ListBetweenDatesParams,
 } from "../scheduling/ISchedulingRepository";
-import knex from "knex";
 
 export class MySqlSchedulingRepository implements ISchedulingRepository {
   async listBetweenDates({
@@ -19,7 +18,7 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
     startDate,
     userId,
   }: ListBetweenDatesParams): Promise<Scheduling[]> {
-    const result = await knex(ETableNames.SCHEDULES)
+    const result = await Knex(ETableNames.SCHEDULES)
       .select("*")
       .where({
         userId,

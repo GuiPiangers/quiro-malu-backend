@@ -2,8 +2,12 @@ import { MySqlSchedulingRepository } from "../../../../repositories/scheduling/M
 import { CreateSchedulingUseCase } from "../../useCases/createScheduling/CreateSchedulingUseCase";
 import { CreateSchedulingController } from "./CreateSchedulingController";
 
-const schedulingRepository = new MySqlSchedulingRepository()
-const createSchedulingUseCase = new CreateSchedulingUseCase(schedulingRepository)
-const createSchedulingController = new CreateSchedulingController(createSchedulingUseCase)
+const schedulingRepository = new MySqlSchedulingRepository();
+const createSchedulingUseCase = new CreateSchedulingUseCase(
+  schedulingRepository,
+);
+const createSchedulingController = new CreateSchedulingController(
+  createSchedulingUseCase,
+);
 
-export { createSchedulingController }
+export { createSchedulingController };
