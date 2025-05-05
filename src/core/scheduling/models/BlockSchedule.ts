@@ -1,18 +1,21 @@
 import { DateTime } from "../../shared/Date";
+import { Entity } from "../../shared/Entity";
 import { Scheduling } from "./Scheduling";
 
 export type BlockScheduleParams = {
+  id?: string;
   startDate: DateTime;
   endDate: DateTime;
   description?: string;
 };
 
-export class BlockSchedule {
+export class BlockSchedule extends Entity {
   readonly startDate: DateTime;
   readonly endDate: DateTime;
   readonly description?: string;
 
-  constructor({ description, endDate, startDate }: BlockScheduleParams) {
+  constructor({ description, endDate, startDate, id }: BlockScheduleParams) {
+    super(id);
     this.startDate = startDate;
     this.endDate = endDate;
     this.description = description;

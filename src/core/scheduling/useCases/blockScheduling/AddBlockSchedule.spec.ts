@@ -46,6 +46,7 @@ describe("AddBlockScheduleUseCase", () => {
         startDate: new DateTime("2025-01-01T10:00"),
         endDate: new DateTime("2025-01-01T11:00"),
       }),
+      "userId",
     );
   });
 

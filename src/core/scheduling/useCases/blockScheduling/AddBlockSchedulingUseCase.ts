@@ -42,6 +42,9 @@ export class AddBlockSchedulingUseCase {
         "Existe agendamentos marcados no horário que deseja bloquear",
       );
 
-    await this.blockSchedulingRepository.save(blockScheduling);
+    await this.blockSchedulingRepository.save(
+      blockScheduling,
+      blockSchedulingDTO.userId,
+    );
   }
 }
