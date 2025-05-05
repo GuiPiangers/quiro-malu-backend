@@ -4,13 +4,13 @@ import { Scheduling } from "./Scheduling";
 export type BlockScheduleParams = {
   startDate: DateTime;
   endDate: DateTime;
-  description: string;
+  description?: string;
 };
 
 export class BlockSchedule {
   readonly startDate: DateTime;
   readonly endDate: DateTime;
-  readonly description: string;
+  readonly description?: string;
 
   constructor({ description, endDate, startDate }: BlockScheduleParams) {
     this.startDate = startDate;
