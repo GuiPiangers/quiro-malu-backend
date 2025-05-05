@@ -7,9 +7,28 @@ import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
 import { query } from "../../database/mySqlConnection";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
-import { ISchedulingRepository } from "../scheduling/ISchedulingRepository";
+import {
+  ISchedulingRepository,
+  ListBetweenDatesParams,
+} from "../scheduling/ISchedulingRepository";
+import knex from "knex";
 
 export class MySqlSchedulingRepository implements ISchedulingRepository {
+  async listBetweenDates({
+    endDate,
+    startDate,
+    userId,
+  }: ListBetweenDatesParams): Promise<Scheduling[]> {
+    const result = await knex(ETableNames.SCHEDULES)
+      .select("*")
+      .where({
+        userId,
+      })
+      .andWhereBetween("date", [startDate.dateTime, endDate.dateTime]);
+
+    return result.map((schedulingDTO) => new Scheduling(schedulingDTO));
+  }
+
   async save({
     createAt,
     updateAt,

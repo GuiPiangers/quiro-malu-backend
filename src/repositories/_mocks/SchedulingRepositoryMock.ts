@@ -9,4 +9,5 @@ export const createMockSchedulingRepository =
     qdtSchedulesByDay: jest.fn(),
     save: jest.fn(),
     update: jest.fn(),
+    listBetweenDates: jest.fn(),
   });

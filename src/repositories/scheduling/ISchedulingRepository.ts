@@ -1,9 +1,19 @@
-import { SchedulingDTO } from "../../core/scheduling/models/Scheduling";
+import {
+  Scheduling,
+  SchedulingDTO,
+} from "../../core/scheduling/models/Scheduling";
 import { SchedulingWithPatientDTO } from "../../core/scheduling/models/SchedulingWithPatient";
+import { DateTime } from "../../core/shared/Date";
 
 export type UpdateSchedulingParams = Partial<SchedulingDTO> & {
   userId: string;
   id: string;
+};
+
+export type ListBetweenDatesParams = {
+  userId: string;
+  startDate: DateTime;
+  endDate: DateTime;
 };
 
 export interface ISchedulingRepository {
@@ -16,6 +26,8 @@ export interface ISchedulingRepository {
     date: string;
     config?: { limit: number; offSet: number };
   }): Promise<SchedulingWithPatientDTO[]>;
+
+  listBetweenDates(data: ListBetweenDatesParams): Promise<Scheduling[]>;
 
   count(data: { userId: string; date: string }): Promise<[{ total: number }]>;
 
