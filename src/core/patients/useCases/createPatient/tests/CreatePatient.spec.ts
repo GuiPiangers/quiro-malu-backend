@@ -11,11 +11,14 @@ describe("Create patients", () => {
   const mockLocationRepository = createMockLocationRepository();
 
   beforeAll(() => {
-    jest.clearAllMocks();
     createPatientUseCase = new CreatePatientUseCase(
       mockPatientRepository,
       mockLocationRepository,
     );
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
   it("Should not be able to create a patient with an existing CPF", async () => {
