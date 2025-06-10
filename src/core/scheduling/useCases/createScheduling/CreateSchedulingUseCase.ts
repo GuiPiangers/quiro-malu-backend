@@ -4,9 +4,13 @@ import { ApiError } from "../../../../utils/ApiError";
 import { DateTime } from "../../../shared/Date";
 import DatabaseStatusStrategy from "../../models/status/DatabaseStatusStrategy";
 import { appEventListener } from "../../../shared/observers/EventListener";
+import { IBlockScheduleRepository } from "../../../../repositories/blockScheduleRepository/IBlockScheduleRepository";
 
 export class CreateSchedulingUseCase {
-  constructor(private SchedulingRepository: ISchedulingRepository) {}
+  constructor(
+    private SchedulingRepository: ISchedulingRepository,
+    private BlockSchedulingRepository: IBlockScheduleRepository,
+  ) {}
 
   async execute({
     userId,
