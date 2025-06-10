@@ -148,6 +148,7 @@ describe("createSchedulingUseCase", () => {
       const blockScheduling = new BlockSchedule({
         startDate: new DateTime("2025-01-10T14:00"),
         endDate: new DateTime("2025-02-10T14:00"),
+        description: "event",
       });
 
       mockBlockScheduleRepository.listBetweenDates.mockResolvedValue([
@@ -169,7 +170,9 @@ describe("createSchedulingUseCase", () => {
       const responsePromise = createSchedulingUseCase.execute(schedulingData);
 
       expect(responsePromise).rejects.toThrow(ApiError);
-      expect(responsePromise).rejects.toThrow("Horário indisponível");
+      expect(responsePromise).rejects.toThrow(
+        `O horário informado está bloqueado por um evento ${blockScheduling.description}`,
+      );
       expect(mockSchedulingRepository.save).not.toHaveBeenCalled();
     });
 
