@@ -51,6 +51,16 @@ export class DateTime {
     });
   }
 
+  setMinutes(minutes: number): DateTime | undefined {
+    const newDate = this.value.set({
+      minute: minutes,
+    });
+
+    const newIsoDate = newDate.toISO()?.substring(0, 16);
+
+    if (newIsoDate) return new DateTime(newIsoDate);
+  }
+
   private isValidDate(dateString: string): boolean {
     const regexDate = /^(\d{4}-\d{2}-\d{2})/;
     const regexTime = /T(\d{2}:\d{2})/;
