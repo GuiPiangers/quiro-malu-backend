@@ -1,3 +1,4 @@
+import { createMockBlockScheduleRepository } from "../../../../repositories/_mocks/BlockScheduleRepositoryMock";
 import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
 import { ApiError } from "../../../../utils/ApiError";
 import { SchedulingDTO } from "../../models/Scheduling";
@@ -6,6 +7,7 @@ import { CreateSchedulingUseCase } from "./CreateSchedulingUseCase";
 describe("createSchedulingUseCase", () => {
   let createSchedulingUseCase: CreateSchedulingUseCase;
   const mockSchedulingRepository = createMockSchedulingRepository();
+  const blockScheduleRepository = createMockBlockScheduleRepository();
 
   beforeAll(() => {
     jest
@@ -18,6 +20,7 @@ describe("createSchedulingUseCase", () => {
       jest.clearAllMocks();
       createSchedulingUseCase = new CreateSchedulingUseCase(
         mockSchedulingRepository,
+        blockScheduleRepository,
       );
     });
 
@@ -116,14 +119,15 @@ describe("createSchedulingUseCase", () => {
         patientId,
         date: "2025-01-10T14:00",
         duration: 3600,
-        status: "Atendido",
+        status: "Agendado",
         service: "Quiropraxia",
       };
 
       mockSchedulingRepository.list.mockResolvedValue([
         {
           ...schedulingData,
-          date: "2025-01-10T114:30:00",
+          id: "test-Scheduling-id2",
+          date: "2025-01-10T14:30",
           patient: "Lucas Fernando",
           phone: "(99) 99999 9999",
         },
@@ -132,6 +136,7 @@ describe("createSchedulingUseCase", () => {
       const responsePromise = createSchedulingUseCase.execute(schedulingData);
 
       expect(responsePromise).rejects.toThrow(ApiError);
+      expect(responsePromise).rejects.toThrow("Horário indisponível");
       expect(mockSchedulingRepository.save).not.toHaveBeenCalled();
     });
 

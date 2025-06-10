@@ -122,8 +122,10 @@ describe("updateSchedulingUseCase", () => {
 
       mockSchedulingRepository.list.mockResolvedValue([
         {
-          ...schedulingData,
-          date: "2025-01-10T114:30:00",
+          duration: 3600,
+          patientId: "test-patient-id-2",
+          id: "test-Scheduling-id-2",
+          date: "2025-01-10T14:30",
           patient: "Lucas Fernando",
           phone: "(99) 99999 9999",
         },
