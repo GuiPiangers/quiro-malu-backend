@@ -63,6 +63,13 @@ export class Scheduling extends Entity {
     });
   }
 
+  get endDate(): DateTime | undefined {
+    const durationInMinutes = this.duration ? this.duration / 60 : 0;
+    const endDate = this.date?.setMinutes(durationInMinutes);
+
+    return endDate ?? this.date;
+  }
+
   getDTO() {
     return {
       id: this.id,
