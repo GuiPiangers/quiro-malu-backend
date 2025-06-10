@@ -1,5 +1,5 @@
-import { DateTime } from "luxon";
 import { BlockSchedule } from "../../core/scheduling/models/BlockSchedule";
+import { DateTime } from "../../core/shared/Date";
 
 export type BlockScheduleListBetweenDatesParams = {
   userId: string;
