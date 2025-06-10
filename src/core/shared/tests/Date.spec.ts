@@ -121,4 +121,15 @@ describe("DateTime", () => {
       expect(isoDate).toBe("2025-01-10");
     });
   });
+
+  describe("setMinutes", () => {
+    it("Should return new DateTime with minutes updated", () => {
+      const newMinutes = 75;
+
+      const date = new DateTime("2025-01-01T10:00");
+      const dateUpdated = date.setMinutes(newMinutes);
+
+      expect(dateUpdated?.dateTime).toBe("2025-01-01T11:15");
+    });
+  });
 });
