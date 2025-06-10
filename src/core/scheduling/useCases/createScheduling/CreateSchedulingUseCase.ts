@@ -19,6 +19,26 @@ export class CreateSchedulingUseCase {
     const dataBaseStatusStrategy = new DatabaseStatusStrategy();
     const scheduling = new Scheduling(data, dataBaseStatusStrategy);
 
+    const blockSchedules =
+      scheduling.date && scheduling.endDate
+        ? await this.BlockSchedulingRepository.listBetweenDates({
+            userId,
+            endDate: scheduling.date,
+            startDate: scheduling.endDate,
+          })
+        : [];
+
+    blockSchedules?.forEach((blockSchedule) => {
+      const scheduleOverlaps = blockSchedule.overlapsWith(scheduling);
+
+      if (scheduleOverlaps)
+        throw new ApiError(
+          `O horário informado está bloqueado por um evento ${
+            blockSchedule.description ?? ""
+          }`,
+        );
+    });
+
     const schedulingDTO = scheduling.getDTO();
     const schedules = await this.SchedulingRepository.list({
       userId,
