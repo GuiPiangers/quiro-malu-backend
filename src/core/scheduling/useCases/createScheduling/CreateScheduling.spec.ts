@@ -1,13 +1,15 @@
 import { createMockBlockScheduleRepository } from "../../../../repositories/_mocks/BlockScheduleRepositoryMock";
 import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
 import { ApiError } from "../../../../utils/ApiError";
+import { DateTime } from "../../../shared/Date";
+import { BlockSchedule } from "../../models/BlockSchedule";
 import { SchedulingDTO } from "../../models/Scheduling";
 import { CreateSchedulingUseCase } from "./CreateSchedulingUseCase";
 
 describe("createSchedulingUseCase", () => {
   let createSchedulingUseCase: CreateSchedulingUseCase;
   const mockSchedulingRepository = createMockSchedulingRepository();
-  const blockScheduleRepository = createMockBlockScheduleRepository();
+  const mockBlockScheduleRepository = createMockBlockScheduleRepository();
 
   beforeAll(() => {
     jest
@@ -20,7 +22,7 @@ describe("createSchedulingUseCase", () => {
       jest.clearAllMocks();
       createSchedulingUseCase = new CreateSchedulingUseCase(
         mockSchedulingRepository,
-        blockScheduleRepository,
+        mockBlockScheduleRepository,
       );
     });
 
@@ -132,6 +134,37 @@ describe("createSchedulingUseCase", () => {
           phone: "(99) 99999 9999",
         },
       ]);
+
+      const responsePromise = createSchedulingUseCase.execute(schedulingData);
+
+      expect(responsePromise).rejects.toThrow(ApiError);
+      expect(responsePromise).rejects.toThrow("Horário indisponível");
+      expect(mockSchedulingRepository.save).not.toHaveBeenCalled();
+    });
+
+    it("should throw an ApiError if scheduling are overlaps with block scheduling event", async () => {
+      const patientId = "test-patient-id";
+
+      const blockScheduling = new BlockSchedule({
+        startDate: new DateTime("2025-01-10T14:00"),
+        endDate: new DateTime("2025-02-10T14:00"),
+      });
+
+      mockBlockScheduleRepository.listBetweenDates.mockResolvedValue([
+        blockScheduling,
+      ]);
+
+      const schedulingData: SchedulingDTO & { userId: string; date: string } = {
+        userId: "test-user-id",
+        id: "test-Scheduling-id",
+        patientId,
+        date: "2025-01-10T14:00",
+        duration: 3600,
+        status: "Agendado",
+        service: "Quiropraxia",
+      };
+
+      mockSchedulingRepository.list.mockResolvedValue([]);
 
       const responsePromise = createSchedulingUseCase.execute(schedulingData);
 
