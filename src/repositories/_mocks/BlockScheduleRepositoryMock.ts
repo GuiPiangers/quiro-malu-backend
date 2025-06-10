@@ -3,4 +3,5 @@ import { IBlockScheduleRepository } from "../blockScheduleRepository/IBlockSched
 export const createMockBlockScheduleRepository =
   (): jest.Mocked<IBlockScheduleRepository> => ({
     save: jest.fn(),
+    listBetweenDates: jest.fn(),
   });
