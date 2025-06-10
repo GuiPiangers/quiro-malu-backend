@@ -1,4 +1,6 @@
+import { DateTime as Luxon } from "luxon";
 import { Scheduling, SchedulingDTO } from "../Scheduling";
+import { DateTime } from "../../../shared/Date";
 
 describe("Scheduling", () => {
   const validDate = "2024-11-01T10:00";
@@ -101,5 +103,22 @@ describe("Scheduling", () => {
 
     const newScheduling = new Scheduling(newSchedulingData);
     expect(newScheduling.notAvailableDate(existingSchedules)).toBe(false); // This time does not overlap
+  });
+
+  describe("endDate", () => {
+    it("should return the end date based on duration time", () => {
+      const duration = 75 * 60; // duration in ms
+
+      const scheduling = new Scheduling({
+        patientId: "test",
+        date: "2025-01-01T10:00",
+        duration,
+      });
+
+      const endDate = scheduling.endDate;
+
+      expect(endDate?.dateTime).toBe("2025-01-01T11:15");
+      expect(endDate).toBeInstanceOf(DateTime);
+    });
   });
 });
