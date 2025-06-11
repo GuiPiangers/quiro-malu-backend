@@ -127,9 +127,12 @@ describe("DateTime", () => {
       const newMinutes = 75;
 
       const date = new DateTime("2025-01-01T10:00");
+      const date2 = new DateTime("2025-01-01T10:30");
       const dateUpdated = date.setMinutes(newMinutes);
+      const dateUpdated2 = date2.setMinutes(newMinutes);
 
       expect(dateUpdated?.dateTime).toBe("2025-01-01T11:15");
+      expect(dateUpdated2?.dateTime).toBe("2025-01-01T11:45");
     });
   });
 });
