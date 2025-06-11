@@ -7,10 +7,30 @@ import {
 } from "./IBlockScheduleRepository";
 
 export class BlockScheduleRepository implements IBlockScheduleRepository {
-  listBetweenDates(
-    data: BlockScheduleListBetweenDatesParams,
-  ): Promise<BlockSchedule[]> {
-    throw new Error("Method not implemented.");
+  async listBetweenDates({
+    endDate,
+    startDate,
+    userId,
+  }: BlockScheduleListBetweenDatesParams): Promise<BlockSchedule[]> {
+    const blockSchedulesDto = await Knex(ETableNames.BLOCK_SCHEDULES)
+      .select(
+        "id",
+        "userId",
+        "description",
+        Knex.raw(`DATE_FORMAT(startDate, '%Y-%m-%dT%H:%i') as startDate`),
+        Knex.raw(`DATE_FORMAT(endDate, '%Y-%m-%dT%H:%i') as endDate`),
+      )
+      .where("userId", userId)
+      .andWhere((qb) => {
+        qb.whereBetween("startDate", [
+          startDate.dateTime,
+          endDate.dateTime,
+        ]).orWhereBetween("endDate", [startDate.dateTime, endDate.dateTime]);
+      });
+
+    return blockSchedulesDto.map(
+      (blockSchedule) => new BlockSchedule(blockSchedule),
+    );
   }
 
   async save(
