@@ -52,7 +52,7 @@ export class DateTime {
   }
 
   setMinutes(minutes: number): DateTime | undefined {
-    const newDate = this.value.set({
+    const newDate = this.value.plus({
       minute: minutes,
     });
 
