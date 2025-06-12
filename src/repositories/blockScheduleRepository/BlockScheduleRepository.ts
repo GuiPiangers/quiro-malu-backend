@@ -27,13 +27,16 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
         Knex.raw(`DATE_FORMAT(startDate, '%Y-%m-%dT%H:%i') as startDate`),
         Knex.raw(`DATE_FORMAT(endDate, '%Y-%m-%dT%H:%i') as endDate`),
       )
-      .where("userId", userId);
-    // .andWhere((qb) => {
-    //   qb.whereBetween("startDate", [
-    //     startDate.dateTime,
-    //     endDate.dateTime,
-    //   ]).orWhereBetween("endDate", [startDate.dateTime, endDate.dateTime]);
-    // });
+      .where("userId", userId)
+      .andWhere((qb) => {
+        qb.whereBetween("startDate", [startDate.dateTime, endDate.dateTime])
+          .orWhereBetween("endDate", [startDate.dateTime, endDate.dateTime])
+          .orWhere((subQb) => {
+            subQb
+              .where("startDate", "<=", startDate.dateTime)
+              .andWhere("endDate", ">=", startDate.dateTime);
+          });
+      });
 
     return blockSchedulesDto.map(
       (blockSchedule) =>
