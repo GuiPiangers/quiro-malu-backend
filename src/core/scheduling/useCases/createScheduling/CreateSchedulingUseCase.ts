@@ -29,7 +29,7 @@ export class CreateSchedulingUseCase {
         : [];
 
     blockSchedules?.forEach((blockSchedule) => {
-      const scheduleOverlaps = blockSchedule.overlapsWith(scheduling);
+      const scheduleOverlaps = blockSchedule.overlapsWithSchedule(scheduling);
 
       if (scheduleOverlaps)
         throw new ApiError(

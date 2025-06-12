@@ -22,10 +22,17 @@ export class AddBlockSchedulingUseCase {
     const endDate = new DateTime(blockSchedulingDTO.endDate);
 
     const schedules = await this.schedulingRepository.listBetweenDates({
-      endDate: startDate,
-      startDate: endDate,
+      endDate,
+      startDate,
       userId: blockSchedulingDTO.userId,
     });
+
+    const blockSchedules =
+      await this.blockSchedulingRepository.listBetweenDates({
+        endDate,
+        startDate,
+        userId: blockSchedulingDTO.userId,
+      });
 
     const blockScheduling = new BlockSchedule({
       startDate,
@@ -33,11 +40,24 @@ export class AddBlockSchedulingUseCase {
       description: blockSchedulingDTO.description,
     });
 
-    const hasOverlaps = schedules?.some((scheduling) => {
-      return blockScheduling.overlapsWith(scheduling);
+    const hasOverlapsWithSchedule = schedules?.some((scheduling) => {
+      return blockScheduling.overlapsWithSchedule(scheduling);
     });
 
-    if (hasOverlaps)
+    const hasOverlapsWithBlockSchedule = blockSchedules?.some(
+      (blockSchedule) => {
+        return blockSchedule.overlapsWithBlockSchedule(blockScheduling);
+      },
+    );
+
+    if (hasOverlapsWithSchedule)
+      throw new ApiError(
+        "Existe agendamentos marcados no horário que deseja bloquear",
+      );
+
+    console.log("overlapse", hasOverlapsWithBlockSchedule);
+
+    if (hasOverlapsWithBlockSchedule)
       throw new ApiError(
         "Existe agendamentos marcados no horário que deseja bloquear",
       );

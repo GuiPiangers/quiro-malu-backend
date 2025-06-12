@@ -35,8 +35,8 @@ describe("BlockSchedule", () => {
         duration: 30 * 60,
       });
 
-      expect(blockSchedule.overlapsWith(schedule)).toBe(true);
-      expect(blockSchedule.overlapsWith(schedule2)).toBe(true);
+      expect(blockSchedule.overlapsWithSchedule(schedule)).toBe(true);
+      expect(blockSchedule.overlapsWithSchedule(schedule2)).toBe(true);
     });
 
     it("Should return false if the scheduling not overlaps between the block schedule startDate and endDate", () => {
@@ -58,8 +58,8 @@ describe("BlockSchedule", () => {
         duration: 30 * 60,
       });
 
-      expect(blockSchedule.overlapsWith(schedule)).toBe(false);
-      expect(blockSchedule.overlapsWith(schedule2)).toBe(false);
+      expect(blockSchedule.overlapsWithSchedule(schedule)).toBe(false);
+      expect(blockSchedule.overlapsWithSchedule(schedule2)).toBe(false);
     });
   });
 });
