@@ -1,7 +1,4 @@
-import {
-  BlockSchedule,
-  BlockScheduleParams,
-} from "../../core/scheduling/models/BlockSchedule";
+import { BlockSchedule } from "../../core/scheduling/models/BlockSchedule";
 import { ETableNames } from "../../database/ETableNames";
 import { Knex } from "../../database/knex";
 import {
@@ -12,6 +9,23 @@ import { BlockScheduleDto } from "../../core/scheduling/models/dtos/BlockSchedul
 import { DateTime } from "../../core/shared/Date";
 
 export class BlockScheduleRepository implements IBlockScheduleRepository {
+  async count({
+    endDate,
+    startDate,
+    userId,
+  }: BlockScheduleListBetweenDatesParams): Promise<{ total: number }> {
+    const result = await Knex(ETableNames.BLOCK_SCHEDULES)
+      .count("id")
+      .where("userId", userId)
+      .andWhereBetween("startDate", [startDate.dateTime, endDate.dateTime])
+      .andWhereBetween("endDate", [startDate.dateTime, endDate.dateTime])
+      .first();
+
+    return {
+      total: Number(result?.total) || 0,
+    };
+  }
+
   async listBetweenDates({
     endDate,
     startDate,

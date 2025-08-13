@@ -20,4 +20,6 @@ export interface IBlockScheduleRepository {
     date: string;
     config?: { limit: number; offSet: number };
   }): Promise<BlockScheduleDto[]>;
+
+  count(data: BlockScheduleListBetweenDatesParams): Promise<{ total: number }>;
 }
