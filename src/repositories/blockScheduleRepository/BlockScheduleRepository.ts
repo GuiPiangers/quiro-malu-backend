@@ -48,6 +48,39 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
     );
   }
 
+  async list(data: {
+    userId: string;
+    date: string;
+    config?: { limit: number; offSet: number };
+  }): Promise<BlockScheduleDto[]> {
+    const { userId, date, config } = data;
+
+    const query = Knex(ETableNames.BLOCK_SCHEDULES)
+      .select(
+        "id",
+        "userId",
+        "description",
+        Knex.raw(`DATE_FORMAT(startDate, '%Y-%m-%dT%H:%i') as startDate`),
+        Knex.raw(`DATE_FORMAT(endDate, '%Y-%m-%dT%H:%i') as endDate`),
+      )
+      .where("userId", userId)
+      .andWhere((qb) => {
+        qb.where("startDate", ">=", date)
+          .orWhere("endDate", "<=", date)
+          .orWhere((subQb) => {
+            subQb
+              .where("startDate", "<=", date)
+              .andWhere("endDate", ">=", date);
+          });
+      });
+
+    if (config) {
+      return query.limit(config.limit).offset(config.offSet);
+    }
+
+    return query;
+  }
+
   async save(
     { endDate, id, startDate, description }: BlockSchedule,
     userId: string,
