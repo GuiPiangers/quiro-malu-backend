@@ -19,7 +19,15 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
     userId,
   }: ListBetweenDatesParams): Promise<Scheduling[]> {
     const result = await Knex(ETableNames.SCHEDULES)
-      .select("*")
+      .select(
+        "id",
+        "userId",
+        "patientId",
+        Knex.raw(`DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date`),
+        "duration",
+        "status",
+        "service",
+      )
       .where({
         userId,
       })
