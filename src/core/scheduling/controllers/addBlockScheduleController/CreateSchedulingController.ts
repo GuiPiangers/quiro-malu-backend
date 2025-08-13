@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
-import { AddBlockSchedulingUseCase } from "../../useCases/blockScheduling/AddBlockSchedulingUseCase";
+import { AddBlockSchedulingUseCase } from "../../useCases/blockScheduling/AddBlockScheduling/AddBlockSchedulingUseCase";
 
 export class AddBlockScheduleController {
   constructor(private addBlockScheduleUseCase: AddBlockSchedulingUseCase) {}

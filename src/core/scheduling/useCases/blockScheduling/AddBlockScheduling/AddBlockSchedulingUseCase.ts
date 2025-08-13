@@ -1,8 +1,8 @@
-import { IBlockScheduleRepository } from "../../../../repositories/blockScheduleRepository/IBlockScheduleRepository";
-import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
-import { ApiError } from "../../../../utils/ApiError";
-import { DateTime } from "../../../shared/Date";
-import { BlockSchedule } from "../../models/BlockSchedule";
+import { IBlockScheduleRepository } from "../../../../../repositories/blockScheduleRepository/IBlockScheduleRepository";
+import { ISchedulingRepository } from "../../../../../repositories/scheduling/ISchedulingRepository";
+import { ApiError } from "../../../../../utils/ApiError";
+import { DateTime } from "../../../../shared/Date";
+import { BlockSchedule } from "../../../models/BlockSchedule";
 
 export interface AddBlockSchedulingDTO {
   description?: string;

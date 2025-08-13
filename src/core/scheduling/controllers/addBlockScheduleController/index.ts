@@ -1,6 +1,6 @@
 import { BlockScheduleRepository } from "../../../../repositories/blockScheduleRepository/BlockScheduleRepository";
 import { MySqlSchedulingRepository } from "../../../../repositories/scheduling/MySqlSchedulingRepository";
-import { AddBlockSchedulingUseCase } from "../../useCases/blockScheduling/AddBlockSchedulingUseCase";
+import { AddBlockSchedulingUseCase } from "../../useCases/blockScheduling/AddBlockScheduling/AddBlockSchedulingUseCase";
 import { AddBlockScheduleController } from "./CreateSchedulingController";
 
 const blockScheduleRepository = new BlockScheduleRepository();

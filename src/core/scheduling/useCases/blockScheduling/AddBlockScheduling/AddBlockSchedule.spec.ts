@@ -1,8 +1,8 @@
-import { createMockBlockScheduleRepository } from "../../../../repositories/_mocks/BlockScheduleRepositoryMock";
-import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
-import { DateTime } from "../../../shared/Date";
-import { BlockSchedule } from "../../models/BlockSchedule";
-import { Scheduling } from "../../models/Scheduling";
+import { createMockBlockScheduleRepository } from "../../../../../repositories/_mocks/BlockScheduleRepositoryMock";
+import { createMockSchedulingRepository } from "../../../../../repositories/_mocks/SchedulingRepositoryMock";
+import { DateTime } from "../../../../shared/Date";
+import { BlockSchedule } from "../../../models/BlockSchedule";
+import { Scheduling } from "../../../models/Scheduling";
 
 import {
   AddBlockSchedulingUseCase,
