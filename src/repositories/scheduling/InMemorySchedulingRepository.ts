@@ -1,7 +1,11 @@
-import { SchedulingDTO } from "../../core/scheduling/models/Scheduling";
+import {
+  Scheduling,
+  SchedulingDTO,
+} from "../../core/scheduling/models/Scheduling";
 import { SchedulingWithPatientDTO } from "../../core/scheduling/models/SchedulingWithPatient";
 import {
   ISchedulingRepository,
+  ListBetweenDatesParams,
   UpdateSchedulingParams,
 } from "./ISchedulingRepository";
 
@@ -10,6 +14,10 @@ interface inMemoryInterface extends SchedulingWithPatientDTO {
 }
 
 export class InMemorySchedulingRepository implements ISchedulingRepository {
+  listBetweenDates(data: ListBetweenDatesParams): Promise<Scheduling[]> {
+    throw new Error("Method not implemented.");
+  }
+
   private dbSchedules: inMemoryInterface[] = [];
 
   qdtSchedulesByDay(data: {
