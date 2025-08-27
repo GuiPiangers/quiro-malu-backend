@@ -1,5 +1,6 @@
 import { DateTime } from "../../shared/Date";
 import { Entity } from "../../shared/Entity";
+import { BlockScheduleDto } from "./dtos/BlockSchedule.dto";
 import { Scheduling } from "./Scheduling";
 
 export type BlockScheduleParams = {
@@ -78,5 +79,14 @@ export class BlockSchedule extends Entity {
     console.log(hasSameDates);
 
     return unavailableStartDate || unavailableEndDate || hasSameDates;
+  }
+
+  getDTO(): BlockScheduleDto {
+    return {
+      id: this.id,
+      startDate: this.startDate.dateTime,
+      endDate: this.endDate.dateTime,
+      description: this.description,
+    };
   }
 }
