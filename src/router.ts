@@ -60,6 +60,7 @@ import { setActionDoneNotificationController } from "./core/notification/control
 import { deleteManyNotificationsController } from "./core/notification/controllers/deleteManyNotification";
 import { addBlockSchedulingController } from "./core/scheduling/controllers/addBlockScheduleController";
 import { listBlockSchedulingController } from "./core/scheduling/controllers/ListBlockScheduleController";
+import { listEventsController } from "./core/scheduling/controllers/ListEventsController";
 
 const router = Router();
 const multerConfig = multer({
@@ -197,6 +198,10 @@ router.post("/blockSchedules", authMiddleware, (request, response) => {
 });
 router.get("/blockSchedules", authMiddleware, (request, response) => {
   listBlockSchedulingController.handle(request, response);
+});
+
+router.get("/events", authMiddleware, (request, response) => {
+  listEventsController.handle(request, response);
 });
 
 router.post(
