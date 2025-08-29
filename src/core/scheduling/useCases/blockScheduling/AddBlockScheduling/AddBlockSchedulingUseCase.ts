@@ -6,7 +6,7 @@ import { BlockSchedule } from "../../../models/BlockSchedule";
 
 export interface AddBlockSchedulingDTO {
   description?: string;
-  startDate: string;
+  date: string;
   endDate: string;
   userId: string;
 }
@@ -18,24 +18,24 @@ export class AddBlockSchedulingUseCase {
   ) {}
 
   async execute(blockSchedulingDTO: AddBlockSchedulingDTO) {
-    const startDate = new DateTime(blockSchedulingDTO.startDate);
+    const date = new DateTime(blockSchedulingDTO.date);
     const endDate = new DateTime(blockSchedulingDTO.endDate);
 
     const schedules = await this.schedulingRepository.listBetweenDates({
       endDate,
-      startDate,
+      startDate: date,
       userId: blockSchedulingDTO.userId,
     });
 
     const blockSchedules =
       await this.blockSchedulingRepository.listBetweenDates({
         endDate,
-        startDate,
+        startDate: date,
         userId: blockSchedulingDTO.userId,
       });
 
     const blockScheduling = new BlockSchedule({
-      date: startDate,
+      date,
       endDate,
       description: blockSchedulingDTO.description,
     });

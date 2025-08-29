@@ -8,7 +8,7 @@ export class AddBlockScheduleController {
   async handle(request: Request, response: Response) {
     try {
       const data = request.body as {
-        startDate: string;
+        date: string;
         endDate: string;
         description?: string;
       };
