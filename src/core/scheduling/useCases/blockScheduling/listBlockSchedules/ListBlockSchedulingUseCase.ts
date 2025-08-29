@@ -37,7 +37,7 @@ export class ListBlockSchedulingUseCase {
 
     return blockSchedules.map((blockSchedule) => ({
       id: blockSchedule.id,
-      startDate: blockSchedule.startDate.dateTime,
+      date: blockSchedule.date.dateTime,
       endDate: blockSchedule.endDate.dateTime,
       description: blockSchedule.description,
     }));

@@ -44,7 +44,7 @@ describe("AddBlockScheduleUseCase", () => {
     expect(mockBlockSchedulingRepository.save).toHaveBeenCalledWith(
       expect.objectContaining({
         description: "Descrição",
-        startDate: new DateTime("2025-01-01T10:00"),
+        date: new DateTime("2025-01-01T10:00"),
         endDate: new DateTime("2025-01-01T11:00"),
       }),
       "userId",
@@ -86,7 +86,7 @@ describe("AddBlockScheduleUseCase", () => {
     mockBlockSchedulingRepository.listBetweenDates.mockResolvedValue([
       new BlockSchedule({
         endDate: new DateTime(blockSchedulingDTO.endDate),
-        startDate: new DateTime(blockSchedulingDTO.startDate),
+        date: new DateTime(blockSchedulingDTO.startDate),
       }),
     ]);
 

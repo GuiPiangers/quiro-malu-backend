@@ -35,7 +35,7 @@ export class AddBlockSchedulingUseCase {
       });
 
     const blockScheduling = new BlockSchedule({
-      startDate,
+      date: startDate,
       endDate,
       description: blockSchedulingDTO.description,
     });

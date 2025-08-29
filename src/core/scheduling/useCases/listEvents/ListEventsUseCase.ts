@@ -41,7 +41,7 @@ export class ListEventsUseCase {
     ]);
 
     const combinedList = [...schedules, ...blockedSchedules].sort((a, b) => {
-      const dateA = this.isBlockSchedule(a) ? a.startDate.dateTime : a.date;
+      const dateA = this.isBlockSchedule(a) ? a.date.dateTime : a.date;
       const dateB = this.isBlockSchedule(b) ? b.endDate.dateTime : b.date;
       return dateA?.localeCompare(dateB || "") ?? 0;
     });

@@ -34,7 +34,7 @@ describe("listEventsUseCase", () => {
       const blockSchedules = [
         new BlockSchedule({
           id: "1",
-          startDate: new DateTime("2025-08-27T10:00:00"),
+          date: new DateTime("2025-08-27T10:00:00"),
           endDate: new DateTime("2025-08-27T11:00:00"),
         }),
       ];
@@ -64,7 +64,7 @@ describe("listEventsUseCase", () => {
       const blockSchedules = [
         new BlockSchedule({
           id: "1",
-          startDate: new DateTime("2025-08-27T10:00:00"),
+          date: new DateTime("2025-08-27T10:00:00"),
           endDate: new DateTime("2025-08-27T11:00:00"),
         }),
       ];

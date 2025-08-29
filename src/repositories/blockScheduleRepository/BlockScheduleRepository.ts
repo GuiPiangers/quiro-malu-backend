@@ -38,7 +38,7 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
         "id",
         "userId",
         "description",
-        Knex.raw(`DATE_FORMAT(startDate, '%Y-%m-%dT%H:%i') as startDate`),
+        Knex.raw(`DATE_FORMAT(startDate, '%Y-%m-%dT%H:%i') as date`),
         Knex.raw(`DATE_FORMAT(endDate, '%Y-%m-%dT%H:%i') as endDate`),
       )
       .where("userId", userId)
@@ -56,7 +56,7 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
       (blockSchedule) =>
         new BlockSchedule({
           ...blockSchedule,
-          startDate: new DateTime(blockSchedule.startDate),
+          date: new DateTime(blockSchedule.date),
           endDate: new DateTime(blockSchedule.endDate),
         }),
     );
@@ -96,7 +96,7 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
   }
 
   async save(
-    { endDate, id, startDate, description }: BlockSchedule,
+    { endDate, id, date: startDate, description }: BlockSchedule,
     userId: string,
   ): Promise<void> {
     await Knex(ETableNames.BLOCK_SCHEDULES).insert({

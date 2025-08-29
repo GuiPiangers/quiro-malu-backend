@@ -5,19 +5,24 @@ import { Scheduling } from "./Scheduling";
 
 export type BlockScheduleParams = {
   id?: string;
-  startDate: DateTime;
+  date: DateTime;
   endDate: DateTime;
   description?: string;
 };
 
 export class BlockSchedule extends Entity {
-  readonly startDate: DateTime;
+  readonly date: DateTime;
   readonly endDate: DateTime;
   readonly description?: string;
 
-  constructor({ description, endDate, startDate, id }: BlockScheduleParams) {
+  constructor({
+    description,
+    endDate,
+    date: startDate,
+    id,
+  }: BlockScheduleParams) {
     super(id);
-    this.startDate = startDate;
+    this.date = startDate;
     this.endDate = endDate;
     this.description = description;
   }
@@ -46,7 +51,7 @@ export class BlockSchedule extends Entity {
   overlapsWithBlockSchedule(blockSchedule: BlockSchedule): boolean {
     return this.overlapsDate({
       endDate: blockSchedule.endDate,
-      startDate: blockSchedule.startDate,
+      startDate: blockSchedule.date,
     });
   }
 
@@ -58,21 +63,21 @@ export class BlockSchedule extends Entity {
     endDate: DateTime;
   }): boolean {
     const unavailableStartDate =
-      this.startDate.dateTime <= startDate.dateTime &&
+      this.date.dateTime <= startDate.dateTime &&
       startDate.dateTime < this.endDate.dateTime;
 
     const unavailableEndDate =
-      this.startDate.dateTime < endDate.dateTime &&
+      this.date.dateTime < endDate.dateTime &&
       endDate.dateTime < this.endDate.dateTime;
 
     const hasSameDates =
-      startDate.dateTime === this.startDate.dateTime &&
+      startDate.dateTime === this.date.dateTime &&
       endDate.dateTime === this.endDate.dateTime;
 
     console.table({
       testStartDate: startDate.dateTime,
       testEndDate: endDate.dateTime,
-      startDate: this.startDate.dateTime,
+      startDate: this.date.dateTime,
       endDate: this.endDate.dateTime,
       hasSameDates,
     });
@@ -84,7 +89,7 @@ export class BlockSchedule extends Entity {
   getDTO(): BlockScheduleDto {
     return {
       id: this.id,
-      startDate: this.startDate.dateTime,
+      date: this.date.dateTime,
       endDate: this.endDate.dateTime,
       description: this.description,
     };

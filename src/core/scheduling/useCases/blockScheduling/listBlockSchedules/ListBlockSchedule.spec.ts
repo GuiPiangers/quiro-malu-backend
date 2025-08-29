@@ -40,13 +40,13 @@ describe("ListBlockScheduleUseCase", () => {
     const mockBlockSchedules: BlockSchedule[] = [
       new BlockSchedule({
         id: "block-1",
-        startDate: new DateTime("2025-01-01T10:00:00Z"),
+        date: new DateTime("2025-01-01T10:00:00Z"),
         endDate: new DateTime("2025-01-01T11:00:00Z"),
         description: "Reunião importante",
       }),
       new BlockSchedule({
         id: "block-2",
-        startDate: new DateTime("2025-01-01T14:00:00Z"),
+        date: new DateTime("2025-01-01T14:00:00Z"),
         endDate: new DateTime("2025-01-01T15:00:00Z"),
         description: "Almoço",
       }),
@@ -55,13 +55,13 @@ describe("ListBlockScheduleUseCase", () => {
     const expectedBlockScheduleDtos: BlockScheduleDto[] = [
       {
         id: "block-1",
-        startDate: "2025-01-01T10:00",
+        date: "2025-01-01T10:00",
         endDate: "2025-01-01T11:00",
         description: "Reunião importante",
       },
       {
         id: "block-2",
-        startDate: "2025-01-01T14:00",
+        date: "2025-01-01T14:00",
         endDate: "2025-01-01T15:00",
         description: "Almoço",
       },
@@ -169,7 +169,7 @@ describe("ListBlockScheduleUseCase", () => {
     it("should map BlockSchedule entities to BlockScheduleDto correctly", async () => {
       const blockScheduleWithDescription = new BlockSchedule({
         id: "block-3",
-        startDate: new DateTime("2025-01-01T12:00:00Z"),
+        date: new DateTime("2025-01-01T12:00:00Z"),
         endDate: new DateTime("2025-01-01T13:00:00Z"),
         description: "Consulta médica",
       });
@@ -183,7 +183,7 @@ describe("ListBlockScheduleUseCase", () => {
       expect(result).toEqual([
         {
           id: "block-3",
-          startDate: "2025-01-01T12:00",
+          date: "2025-01-01T12:00",
           endDate: "2025-01-01T13:00",
           description: "Consulta médica",
         },
@@ -193,7 +193,7 @@ describe("ListBlockScheduleUseCase", () => {
     it("should handle block schedule without description", async () => {
       const blockScheduleWithoutDescription = new BlockSchedule({
         id: "block-4",
-        startDate: new DateTime("2025-01-01T16:00:00Z"),
+        date: new DateTime("2025-01-01T16:00:00Z"),
         endDate: new DateTime("2025-01-01T17:00:00Z"),
       });
 
@@ -206,7 +206,7 @@ describe("ListBlockScheduleUseCase", () => {
       expect(result).toEqual([
         {
           id: "block-4",
-          startDate: "2025-01-01T16:00",
+          date: "2025-01-01T16:00",
           endDate: "2025-01-01T17:00",
           description: undefined,
         },
