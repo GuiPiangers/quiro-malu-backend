@@ -74,15 +74,6 @@ export class BlockSchedule extends Entity {
       startDate.dateTime === this.date.dateTime &&
       endDate.dateTime === this.endDate.dateTime;
 
-    console.table({
-      testStartDate: startDate.dateTime,
-      testEndDate: endDate.dateTime,
-      startDate: this.date.dateTime,
-      endDate: this.endDate.dateTime,
-      hasSameDates,
-    });
-    console.log(hasSameDates);
-
     return unavailableStartDate || unavailableEndDate || hasSameDates;
   }
 
