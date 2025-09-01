@@ -11,6 +11,10 @@ export type BlockScheduleListBetweenDatesParams = {
 export interface IBlockScheduleRepository {
   save(data: BlockSchedule, userId: string): Promise<void>;
 
+  edit(data: BlockSchedule, userId: string): Promise<void>;
+
+  findById(id: string, userId: string): Promise<BlockSchedule | null>;
+
   listBetweenDates(
     data: BlockScheduleListBetweenDatesParams,
   ): Promise<BlockSchedule[]>;
