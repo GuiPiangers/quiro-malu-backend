@@ -1,8 +1,8 @@
-import { createMockBlockScheduleRepository } from "../../../../repositories/_mocks/BlockScheduleRepositoryMock";
-import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
-import { DateTime } from "../../../shared/Date";
-import { BlockSchedule } from "../../models/BlockSchedule";
-import { Scheduling } from "../../models/Scheduling";
+import { createMockBlockScheduleRepository } from "../../../../../repositories/_mocks/BlockScheduleRepositoryMock";
+import { createMockSchedulingRepository } from "../../../../../repositories/_mocks/SchedulingRepositoryMock";
+import { DateTime } from "../../../../shared/Date";
+import { BlockSchedule } from "../../../models/BlockSchedule";
+import { Scheduling } from "../../../models/Scheduling";
 
 import {
   AddBlockSchedulingUseCase,
@@ -30,7 +30,7 @@ describe("AddBlockScheduleUseCase", () => {
 
   it("Should call save method of BlockScheduleRepository with correct params", async () => {
     const blockSchedulingDTO: AddBlockSchedulingDTO = {
-      startDate: "2025-01-01T10:00",
+      date: "2025-01-01T10:00",
       endDate: "2025-01-01T11:00",
       description: "Descrição",
       userId: "userId",
@@ -44,7 +44,7 @@ describe("AddBlockScheduleUseCase", () => {
     expect(mockBlockSchedulingRepository.save).toHaveBeenCalledWith(
       expect.objectContaining({
         description: "Descrição",
-        startDate: new DateTime("2025-01-01T10:00"),
+        date: new DateTime("2025-01-01T10:00"),
         endDate: new DateTime("2025-01-01T11:00"),
       }),
       "userId",
@@ -53,7 +53,7 @@ describe("AddBlockScheduleUseCase", () => {
 
   it("Should not save BlockSchedule if it overlaps with existing schedules", async () => {
     const blockSchedulingDTO: AddBlockSchedulingDTO = {
-      startDate: "2025-01-01T10:00",
+      date: "2025-01-01T10:00",
       endDate: "2025-01-01T11:00",
       description: "Descrição",
       userId: "userId",
@@ -76,7 +76,7 @@ describe("AddBlockScheduleUseCase", () => {
 
   it("Should not save BlockSchedule if it overlaps with existing blockSchedule", async () => {
     const blockSchedulingDTO: AddBlockSchedulingDTO = {
-      startDate: "2025-01-01T10:00",
+      date: "2025-01-01T10:00",
       endDate: "2025-01-01T11:00",
       description: "Descrição",
       userId: "userId",
@@ -86,7 +86,7 @@ describe("AddBlockScheduleUseCase", () => {
     mockBlockSchedulingRepository.listBetweenDates.mockResolvedValue([
       new BlockSchedule({
         endDate: new DateTime(blockSchedulingDTO.endDate),
-        startDate: new DateTime(blockSchedulingDTO.startDate),
+        date: new DateTime(blockSchedulingDTO.date),
       }),
     ]);
 

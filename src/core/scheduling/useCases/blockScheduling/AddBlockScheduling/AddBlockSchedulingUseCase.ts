@@ -1,12 +1,12 @@
-import { IBlockScheduleRepository } from "../../../../repositories/blockScheduleRepository/IBlockScheduleRepository";
-import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
-import { ApiError } from "../../../../utils/ApiError";
-import { DateTime } from "../../../shared/Date";
-import { BlockSchedule } from "../../models/BlockSchedule";
+import { IBlockScheduleRepository } from "../../../../../repositories/blockScheduleRepository/IBlockScheduleRepository";
+import { ISchedulingRepository } from "../../../../../repositories/scheduling/ISchedulingRepository";
+import { ApiError } from "../../../../../utils/ApiError";
+import { DateTime } from "../../../../shared/Date";
+import { BlockSchedule } from "../../../models/BlockSchedule";
 
 export interface AddBlockSchedulingDTO {
   description?: string;
-  startDate: string;
+  date: string;
   endDate: string;
   userId: string;
 }
@@ -18,24 +18,24 @@ export class AddBlockSchedulingUseCase {
   ) {}
 
   async execute(blockSchedulingDTO: AddBlockSchedulingDTO) {
-    const startDate = new DateTime(blockSchedulingDTO.startDate);
+    const date = new DateTime(blockSchedulingDTO.date);
     const endDate = new DateTime(blockSchedulingDTO.endDate);
 
     const schedules = await this.schedulingRepository.listBetweenDates({
       endDate,
-      startDate,
+      startDate: date,
       userId: blockSchedulingDTO.userId,
     });
 
     const blockSchedules =
       await this.blockSchedulingRepository.listBetweenDates({
         endDate,
-        startDate,
+        startDate: date,
         userId: blockSchedulingDTO.userId,
       });
 
     const blockScheduling = new BlockSchedule({
-      startDate,
+      date,
       endDate,
       description: blockSchedulingDTO.description,
     });
@@ -54,8 +54,6 @@ export class AddBlockSchedulingUseCase {
       throw new ApiError(
         "Existe agendamentos marcados no horário que deseja bloquear",
       );
-
-    console.log("overlapse", hasOverlapsWithBlockSchedule);
 
     if (hasOverlapsWithBlockSchedule)
       throw new ApiError(

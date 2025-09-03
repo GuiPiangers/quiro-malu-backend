@@ -146,7 +146,7 @@ describe("createSchedulingUseCase", () => {
       const patientId = "test-patient-id";
 
       const blockScheduling = new BlockSchedule({
-        startDate: new DateTime("2025-01-10T14:00"),
+        date: new DateTime("2025-01-10T14:00"),
         endDate: new DateTime("2025-02-10T14:00"),
         description: "event",
       });

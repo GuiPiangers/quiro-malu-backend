@@ -5,12 +5,12 @@ import { Scheduling } from "../Scheduling";
 describe("BlockSchedule", () => {
   it("Should instantiate with the correct values", () => {
     const blockSchedule = new BlockSchedule({
-      startDate: new DateTime("2025-01-01T10:00"),
+      date: new DateTime("2025-01-01T10:00"),
       endDate: new DateTime("2025-01-01T11:00"),
       description: "Descrição",
     });
 
-    expect(blockSchedule.startDate.dateTime).toBe("2025-01-01T10:00");
+    expect(blockSchedule.date.dateTime).toBe("2025-01-01T10:00");
     expect(blockSchedule.endDate.dateTime).toBe("2025-01-01T11:00");
     expect(blockSchedule.description).toBe("Descrição");
   });
@@ -18,7 +18,7 @@ describe("BlockSchedule", () => {
   describe("overlapsWith", () => {
     it("Should return true if the scheduling overlaps between the block schedule startDate and endDate", () => {
       const blockSchedule = new BlockSchedule({
-        startDate: new DateTime("2025-01-01T10:00"),
+        date: new DateTime("2025-01-01T10:00"),
         endDate: new DateTime("2025-01-01T11:00"),
         description: "Descrição",
       });
@@ -41,7 +41,7 @@ describe("BlockSchedule", () => {
 
     it("Should return false if the scheduling not overlaps between the block schedule startDate and endDate", () => {
       const blockSchedule = new BlockSchedule({
-        startDate: new DateTime("2025-01-01T10:00"),
+        date: new DateTime("2025-01-01T10:00"),
         endDate: new DateTime("2025-01-01T11:00"),
         description: "Descrição",
       });

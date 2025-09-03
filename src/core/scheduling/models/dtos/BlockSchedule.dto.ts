@@ -1,6 +1,6 @@
 export interface BlockScheduleDto {
   id?: string;
-  startDate: string;
+  date: string;
   endDate: string;
   description?: string;
 }

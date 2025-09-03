@@ -1,16 +1,18 @@
 import { BlockScheduleRepository } from "../../../../repositories/blockScheduleRepository/BlockScheduleRepository";
 import { MySqlSchedulingRepository } from "../../../../repositories/scheduling/MySqlSchedulingRepository";
-import { AddBlockSchedulingUseCase } from "../../useCases/blockScheduling/AddBlockScheduling/AddBlockSchedulingUseCase";
-import { AddBlockScheduleController } from "./CreateSchedulingController";
+import { EditBlockScheduleUseCase } from "../../useCases/blockScheduling/editBlockScheduleUseCase";
+import { EditBlockScheduleController } from "./editBlockScheduleController";
 
 const blockScheduleRepository = new BlockScheduleRepository();
 const schedulingRepository = new MySqlSchedulingRepository();
-const addBlockSchedulingUseCase = new AddBlockSchedulingUseCase(
+
+const editBlockScheduleUseCase = new EditBlockScheduleUseCase(
   blockScheduleRepository,
   schedulingRepository,
 );
-const addBlockSchedulingController = new AddBlockScheduleController(
-  addBlockSchedulingUseCase,
+
+const editBlockScheduleController = new EditBlockScheduleController(
+  editBlockScheduleUseCase,
 );
 
-export { addBlockSchedulingController };
+export { editBlockScheduleController };
