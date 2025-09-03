@@ -16,7 +16,7 @@ export class EditBlockScheduleController {
 
       await this.editBlockScheduleUseCase.execute({ ...data, id }, userId!);
 
-      return response.status(204).send();
+      return response.status(200).json({ message: "Atualizado com sucesso!" });
     } catch (err: any) {
       return responseError(response, err);
     }
