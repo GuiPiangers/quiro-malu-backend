@@ -11,7 +11,7 @@ import { DateTime } from "../../core/shared/Date";
 
 export class BlockScheduleRepository implements IBlockScheduleRepository {
   async delete({ id, userId }: BlockScheduleDeleteParams): Promise<void> {
-    await Knex().where({ userId, id }).del();
+    await Knex(ETableNames.BLOCK_SCHEDULES).where({ userId, id }).del();
   }
 
   async edit(

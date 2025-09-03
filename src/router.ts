@@ -43,7 +43,6 @@ import { saveExamController } from "./core/exams/controllers/saveExamController"
 import { deleteExamController } from "./core/exams/controllers/deleteExamController";
 import { listExamController } from "./core/exams/controllers/listExamController";
 import { restoreExamController } from "./core/exams/controllers/restoreExamController";
-import { Notification } from "./core/notification/models/Notification";
 import { subscribeNotificationController } from "./core/notification/controllers/subscribeNotification";
 import { sendPushNotificationUseCase } from "./core/notification/useCases/sendPushNotification";
 import { unsubscribeNotificationController } from "./core/notification/controllers/unsubscribeNotification";
@@ -62,6 +61,7 @@ import { addBlockSchedulingController } from "./core/scheduling/controllers/addB
 import { listBlockSchedulingController } from "./core/scheduling/controllers/ListBlockScheduleController";
 import { listEventsController } from "./core/scheduling/controllers/ListEventsController";
 import { editBlockScheduleController } from "./core/scheduling/controllers/editBlockScheduleController";
+import { deleteBlockScheduleController } from "./core/scheduling/controllers/deleteBlockScheduleController";
 
 const router = Router();
 const multerConfig = multer({
@@ -203,6 +203,10 @@ router.get("/blockSchedules", authMiddleware, (request, response) => {
 
 router.patch("/blockSchedules/:id", authMiddleware, (request, response) => {
   editBlockScheduleController.handle(request, response);
+});
+
+router.delete("/blockSchedules/:id", authMiddleware, (request, response) => {
+  deleteBlockScheduleController.handle(request, response);
 });
 
 router.get("/events", authMiddleware, (request, response) => {
