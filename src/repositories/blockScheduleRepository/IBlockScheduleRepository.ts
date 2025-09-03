@@ -8,6 +8,11 @@ export type BlockScheduleListBetweenDatesParams = {
   endDate: DateTime;
 };
 
+export type BlockScheduleDeleteParams = {
+  id: string;
+  userId: string;
+};
+
 export interface IBlockScheduleRepository {
   save(data: BlockSchedule, userId: string): Promise<void>;
 
@@ -26,4 +31,6 @@ export interface IBlockScheduleRepository {
   }): Promise<BlockScheduleDto[]>;
 
   count(data: BlockScheduleListBetweenDatesParams): Promise<{ total: number }>;
+
+  delete(data: BlockScheduleDeleteParams): Promise<void>;
 }

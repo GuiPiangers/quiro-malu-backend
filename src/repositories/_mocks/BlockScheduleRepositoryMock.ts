@@ -8,4 +8,5 @@ export const createMockBlockScheduleRepository =
     listBetweenDates: jest.fn(),
     list: jest.fn(),
     count: jest.fn(),
+    delete: jest.fn(),
   });

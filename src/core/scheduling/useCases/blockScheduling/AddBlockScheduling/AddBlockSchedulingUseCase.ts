@@ -55,8 +55,6 @@ export class AddBlockSchedulingUseCase {
         "Existe agendamentos marcados no horário que deseja bloquear",
       );
 
-    console.log("overlapse", hasOverlapsWithBlockSchedule);
-
     if (hasOverlapsWithBlockSchedule)
       throw new ApiError(
         "Existe agendamentos marcados no horário que deseja bloquear",
