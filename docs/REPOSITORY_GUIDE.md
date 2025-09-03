@@ -17,6 +17,7 @@
   - Implementa a interface `I[nome_do_repositorio]Repository`.
   - Utiliza por padrão knex para comunicação com banco de dados relacional.
   - Não utiliza o objeto Date do JavaScript quando busca data, sempre deve ser convertido em string ou DateTime
+  - Utiliza o enum ETableNames para se referir a nomes de tabelas do banco de dados
 
 ## Exemplo (IBlockScheduleRepository)
 ```ts
