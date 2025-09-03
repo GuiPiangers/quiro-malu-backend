@@ -2,6 +2,7 @@ import { BlockSchedule } from "../../core/scheduling/models/BlockSchedule";
 import { ETableNames } from "../../database/ETableNames";
 import { Knex } from "../../database/knex";
 import {
+  BlockScheduleDeleteParams,
   BlockScheduleListBetweenDatesParams,
   IBlockScheduleRepository,
 } from "./IBlockScheduleRepository";
@@ -9,6 +10,10 @@ import { BlockScheduleDto } from "../../core/scheduling/models/dtos/BlockSchedul
 import { DateTime } from "../../core/shared/Date";
 
 export class BlockScheduleRepository implements IBlockScheduleRepository {
+  async delete({ id, userId }: BlockScheduleDeleteParams): Promise<void> {
+    await Knex().where({ userId, id }).del();
+  }
+
   async edit(
     { endDate, id, date: startDate, description }: BlockSchedule,
     userId: string,
