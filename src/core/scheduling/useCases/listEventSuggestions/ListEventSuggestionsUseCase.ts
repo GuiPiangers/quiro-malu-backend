@@ -3,8 +3,8 @@ import { IEventSuggestionRepository } from "../../../../repositories/eventSugges
 export class ListEventSuggestionsUseCase {
   constructor(private eventSuggestionRepository: IEventSuggestionRepository) {}
 
-  async execute(userId: string) {
-    const eventSuggestions = await this.eventSuggestionRepository.list(userId);
+  async execute(params: { userId: string; config?: { filter?: string } }) {
+    const eventSuggestions = await this.eventSuggestionRepository.list(params);
 
     const data = eventSuggestions.map((suggestion) => suggestion.getDTO());
 

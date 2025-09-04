@@ -25,11 +25,15 @@ describe("ListEventSuggestionsUseCase", () => {
       suggestion2,
     ]);
 
-    const result = await listEventSuggestionsUseCase.execute("user-id");
+    const result = await listEventSuggestionsUseCase.execute({
+      userId: "user-id",
+    });
 
     expect(result.data).toHaveLength(2);
     expect(result.data[0]).toEqual(suggestion1.getDTO());
     expect(result.data[1]).toEqual(suggestion2.getDTO());
-    expect(eventSuggestionRepository.list).toHaveBeenCalledWith("user-id");
+    expect(eventSuggestionRepository.list).toHaveBeenCalledWith({
+      userId: "user-id",
+    });
   });
 });
