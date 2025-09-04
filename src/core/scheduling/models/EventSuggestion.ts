@@ -10,7 +10,7 @@ export type EventSuggestionDTO = {
 export class EventSuggestion extends Entity {
   readonly description: string;
   readonly durationInMinutes: string;
-  readonly frequency: number;
+  private _frequency: number;
 
   constructor({
     description,
@@ -21,7 +21,11 @@ export class EventSuggestion extends Entity {
     super(id);
     this.description = description;
     this.durationInMinutes = durationInMinutes;
-    this.frequency = frequency;
+    this._frequency = frequency;
+  }
+
+  get frequency() {
+    return this._frequency;
   }
 
   getDTO() {
@@ -31,5 +35,9 @@ export class EventSuggestion extends Entity {
       durationInMinutes: this.durationInMinutes,
       frequency: this.frequency,
     };
+  }
+
+  incrementFrequency() {
+    this._frequency += 1;
   }
 }
