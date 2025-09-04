@@ -2,6 +2,7 @@ import { ExamDTO } from "../../exams/models/Exam";
 import { MessageCampaignDTO } from "../../messageCampaign/models/MessageCampaign";
 import { TriggerBase } from "../../messageCampaign/models/Trigger";
 import { PatientDTO } from "../../patients/models/Patient";
+import { BlockScheduleDto } from "../../scheduling/models/dtos/BlockSchedule.dto";
 import { SchedulingDTO } from "../../scheduling/models/Scheduling";
 import { DateTime } from "../Date";
 
@@ -39,6 +40,8 @@ type AppEvents = {
     trigger: TriggerBase;
     date?: DateTime;
   };
+
+  createBlockSchedule: BlockScheduleDto;
 };
 
 type Listener<T> = (data: T) => Promise<void>;
@@ -68,4 +71,4 @@ class AppEventListener {
 
 const appEventListener = new AppEventListener();
 
-export { appEventListener };
+export { appEventListener, AppEventListener };
