@@ -71,4 +71,43 @@ describe("SaveEventSuggestionUseCase", () => {
     );
     expect(eventSuggestionRepository.save).not.toHaveBeenCalled();
   });
+
+  it("should update an existing event suggestion with a different duration", async () => {
+    const eventSuggestionRepository = createMockEventSuggestionRepository();
+    const saveEventSuggestionUseCase = new SaveEventSuggestionUseCase(
+      eventSuggestionRepository,
+    );
+
+    const existingSuggestion = new EventSuggestion({
+      id: "existing-id",
+      description: "Test Description",
+      durationInMinutes: 30,
+      frequency: 1,
+    });
+
+    const dto: EventSuggestionDTO = {
+      description: "Test Description",
+      durationInMinutes: 60,
+      frequency: 1,
+    };
+
+    eventSuggestionRepository.getByDescription.mockResolvedValue(
+      existingSuggestion,
+    );
+
+    await saveEventSuggestionUseCase.execute(dto, "user-id");
+
+    expect(eventSuggestionRepository.getByDescription).toHaveBeenCalledWith({
+      description: "Test Description",
+      userId: "user-id",
+    });
+    expect(eventSuggestionRepository.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        frequency: 2,
+        durationInMinutes: 60,
+      }),
+      "user-id",
+    );
+    expect(eventSuggestionRepository.save).not.toHaveBeenCalled();
+  });
 });

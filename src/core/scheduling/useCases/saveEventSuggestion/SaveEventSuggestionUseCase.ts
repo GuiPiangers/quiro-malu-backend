@@ -15,9 +15,17 @@ export class SaveEventSuggestionUseCase {
       });
 
     if (existingSuggestion) {
-      existingSuggestion.incrementFrequency();
+      const updatedEventSuggestion = new EventSuggestion({
+        ...existingSuggestion.getDTO(),
+        durationInMinutes: dto.durationInMinutes,
+      });
 
-      await this.eventSuggestionRepository.update(existingSuggestion, userId);
+      updatedEventSuggestion.incrementFrequency();
+
+      await this.eventSuggestionRepository.update(
+        updatedEventSuggestion,
+        userId,
+      );
     } else {
       const newSuggestion = new EventSuggestion(dto);
       await this.eventSuggestionRepository.save(newSuggestion, userId);
