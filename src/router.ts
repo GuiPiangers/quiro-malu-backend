@@ -62,6 +62,7 @@ import { listBlockSchedulingController } from "./core/scheduling/controllers/Lis
 import { listEventsController } from "./core/scheduling/controllers/ListEventsController";
 import { editBlockScheduleController } from "./core/scheduling/controllers/editBlockScheduleController";
 import { deleteBlockScheduleController } from "./core/scheduling/controllers/deleteBlockScheduleController";
+import { listEventSuggestionsController } from "./core/scheduling/controllers/listEventSuggestionsController";
 
 const router = Router();
 const multerConfig = multer({
@@ -211,6 +212,10 @@ router.delete("/blockSchedules/:id", authMiddleware, (request, response) => {
 
 router.get("/events", authMiddleware, (request, response) => {
   listEventsController.handle(request, response);
+});
+
+router.get("/event-suggestions", authMiddleware, (request, response) => {
+  listEventSuggestionsController.handle(request, response);
 });
 
 router.post(
