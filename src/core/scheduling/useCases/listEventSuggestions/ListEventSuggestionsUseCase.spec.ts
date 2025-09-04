@@ -11,12 +11,12 @@ describe("ListEventSuggestionsUseCase", () => {
 
     const suggestion1 = new EventSuggestion({
       description: "Test 1",
-      durationInMinutes: "30",
+      durationInMinutes: 30,
       frequency: 1,
     });
     const suggestion2 = new EventSuggestion({
       description: "Test 2",
-      durationInMinutes: "60",
+      durationInMinutes: 60,
       frequency: 2,
     });
 

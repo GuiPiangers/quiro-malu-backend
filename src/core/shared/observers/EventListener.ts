@@ -41,7 +41,7 @@ type AppEvents = {
     date?: DateTime;
   };
 
-  createBlockSchedule: BlockScheduleDto;
+  createBlockSchedule: BlockScheduleDto & { userId: string };
 };
 
 type Listener<T> = (data: T) => Promise<void>;

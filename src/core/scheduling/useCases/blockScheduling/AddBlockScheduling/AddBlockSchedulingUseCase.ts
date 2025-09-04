@@ -67,9 +67,9 @@ export class AddBlockSchedulingUseCase {
       blockSchedulingDTO.userId,
     );
 
-    this.appEventListener?.emit(
-      "createBlockSchedule",
-      blockScheduling.getDTO(),
-    );
+    this.appEventListener?.emit("createBlockSchedule", {
+      ...blockScheduling.getDTO(),
+      userId: blockSchedulingDTO.userId,
+    });
   }
 }

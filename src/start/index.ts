@@ -4,6 +4,8 @@ import { NotificationUndoExam } from "../core/notification/models/NotificationUn
 import { scheduleNotificationUseCase } from "../core/notification/useCases/ScheduleNotification";
 import { sendAndSaveNotificationUseCase } from "../core/notification/useCases/sendAndSaveNotification";
 import { getPatientUseCase } from "../core/patients/controllers/getPatientController";
+import { factoryEventSuggestionWithStartEndDate } from "../core/scheduling/models/EventSuggestion";
+import { saveEventSuggestionUseCase } from "../core/scheduling/useCases/saveEventSuggestion";
 import { appEventListener } from "../core/shared/observers/EventListener";
 import { sendMessageQueue } from "../repositories/queueProvider/sendMessageQueue";
 
@@ -68,4 +70,20 @@ export async function start() {
       });
     },
   );
+
+  appEventListener.on("createBlockSchedule", async (data) => {
+    try {
+      const eventSuggestion = factoryEventSuggestionWithStartEndDate({
+        description: data.description ?? "",
+        startDate: data.date,
+        endDate: data.endDate,
+      });
+      await saveEventSuggestionUseCase.execute(
+        eventSuggestion.getDTO(),
+        data.userId,
+      );
+    } catch (error) {
+      console.error("Error creating block schedule:", error);
+    }
+  });
 }
