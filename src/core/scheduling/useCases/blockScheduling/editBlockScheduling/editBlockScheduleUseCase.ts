@@ -1,9 +1,9 @@
-import { BlockSchedule } from "../../../scheduling/models/BlockSchedule";
-import { IBlockScheduleRepository } from "../../../../repositories/blockScheduleRepository/IBlockScheduleRepository";
-import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
-import { ApiError } from "../../../../utils/ApiError";
-import { DateTime } from "../../../shared/Date";
-import { BlockScheduleDto } from "../../models/dtos/BlockSchedule.dto";
+import { BlockSchedule } from "../../../models/BlockSchedule";
+import { IBlockScheduleRepository } from "../../../../../repositories/blockScheduleRepository/IBlockScheduleRepository";
+import { ISchedulingRepository } from "../../../../../repositories/scheduling/ISchedulingRepository";
+import { ApiError } from "../../../../../utils/ApiError";
+import { DateTime } from "../../../../shared/Date";
+import { BlockScheduleDto } from "../../../models/dtos/BlockSchedule.dto";
 
 export type EditBlockScheduleDTO = Partial<BlockScheduleDto> & { id: string };
 

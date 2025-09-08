@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import {
   EditBlockScheduleDTO,
   EditBlockScheduleUseCase,
-} from "../../useCases/blockScheduling/editBlockScheduleUseCase";
+} from "../../useCases/blockScheduling/editBlockScheduling/editBlockScheduleUseCase";
 import { responseError } from "../../../../utils/ResponseError";
 
 export class EditBlockScheduleController {
