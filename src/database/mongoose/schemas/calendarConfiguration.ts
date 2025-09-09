@@ -19,13 +19,13 @@ const dayConfigurationSchema = new mongoose.Schema(
 
 const calendarConfigurationSchema = new mongoose.Schema({
   userId: { type: String, required: true, index: true },
-  0: dayConfigurationSchema, // Monday
-  1: dayConfigurationSchema, // Tuesday
-  2: dayConfigurationSchema, // Wednesday
-  3: dayConfigurationSchema, // Thursday
-  4: dayConfigurationSchema, // Friday
-  5: dayConfigurationSchema, // Saturday
-  6: dayConfigurationSchema, // Sunday
+  domingo: dayConfigurationSchema,
+  segunda: dayConfigurationSchema,
+  terca: dayConfigurationSchema,
+  quarta: dayConfigurationSchema,
+  quinta: dayConfigurationSchema,
+  sexta: dayConfigurationSchema,
+  sabado: dayConfigurationSchema,
 });
 
 export const CalendarConfigurationModel = mongoose.model(

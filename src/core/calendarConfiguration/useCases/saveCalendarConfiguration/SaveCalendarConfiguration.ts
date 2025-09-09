@@ -6,13 +6,13 @@ import {
 
 export type SaveCalendarConfigurationDTO = {
   userId: string;
-  0?: DayConfiguration;
-  1?: DayConfiguration;
-  2?: DayConfiguration;
-  3?: DayConfiguration;
-  4?: DayConfiguration;
-  5?: DayConfiguration;
-  6?: DayConfiguration;
+  domingo?: DayConfiguration;
+  segunda?: DayConfiguration;
+  terca?: DayConfiguration;
+  quarta?: DayConfiguration;
+  quinta?: DayConfiguration;
+  sexta?: DayConfiguration;
+  sabado?: DayConfiguration;
 };
 
 export class SaveCalendarConfigurationUseCase {

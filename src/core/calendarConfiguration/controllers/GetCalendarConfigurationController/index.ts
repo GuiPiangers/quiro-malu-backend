@@ -2,12 +2,12 @@ import { MongooseCalendarConfigurationRepository } from "../../../../repositorie
 import { GetCalendarConfigurationUseCase } from "../../useCases/getCalendarConfiguration/GetCalendarConfiguration";
 import { GetCalendarConfigurationController } from "./GetCalendarConfigurationController";
 
-const calendarConfigurationRepository = new MongooseCalendarConfigurationRepository();
+const calendarConfigurationRepository =
+  new MongooseCalendarConfigurationRepository();
 const getCalendarConfigurationUseCase = new GetCalendarConfigurationUseCase(
   calendarConfigurationRepository,
 );
-const getCalendarConfigurationController = new GetCalendarConfigurationController(
-  getCalendarConfigurationUseCase,
-);
+const getCalendarConfigurationController =
+  new GetCalendarConfigurationController(getCalendarConfigurationUseCase);
 
 export { getCalendarConfigurationController };

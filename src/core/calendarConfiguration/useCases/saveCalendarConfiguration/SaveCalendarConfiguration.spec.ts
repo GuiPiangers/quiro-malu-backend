@@ -17,7 +17,7 @@ describe("SaveCalendarConfigurationUseCase", () => {
 
   const dto: SaveCalendarConfigurationDTO = {
     userId: "user-1",
-    0: {
+    domingo: {
       workTimeIncrementInMinutes: 30,
       workSchedules: [{ start: "09:00", end: "18:00" }],
     },

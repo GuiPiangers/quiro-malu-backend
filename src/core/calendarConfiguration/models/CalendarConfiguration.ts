@@ -11,46 +11,46 @@ export type DayConfiguration = {
 
 export type CalendarConfigurationDTO = {
   userId: string;
-  0?: DayConfiguration;
-  1?: DayConfiguration;
-  2?: DayConfiguration;
-  3?: DayConfiguration;
-  4?: DayConfiguration;
-  5?: DayConfiguration;
-  6?: DayConfiguration;
+  domingo?: DayConfiguration;
+  segunda?: DayConfiguration;
+  terca?: DayConfiguration;
+  quarta?: DayConfiguration;
+  quinta?: DayConfiguration;
+  sexta?: DayConfiguration;
+  sabado?: DayConfiguration;
 };
 
 export class CalendarConfiguration {
   readonly userId: string;
-  readonly 0?: DayConfiguration;
-  readonly 1?: DayConfiguration;
-  readonly 2?: DayConfiguration;
-  readonly 3?: DayConfiguration;
-  readonly 4?: DayConfiguration;
-  readonly 5?: DayConfiguration;
-  readonly 6?: DayConfiguration;
+  readonly domingo?: DayConfiguration;
+  readonly segunda?: DayConfiguration;
+  readonly terca?: DayConfiguration;
+  readonly quarta?: DayConfiguration;
+  readonly quinta?: DayConfiguration;
+  readonly sexta?: DayConfiguration;
+  readonly sabado?: DayConfiguration;
 
   constructor(dto: CalendarConfigurationDTO) {
     this.userId = dto.userId;
-    this[0] = dto[0];
-    this[1] = dto[1];
-    this[2] = dto[2];
-    this[3] = dto[3];
-    this[4] = dto[4];
-    this[5] = dto[5];
-    this[6] = dto[6];
+    this.domingo = dto.domingo;
+    this.segunda = dto.segunda;
+    this.terca = dto.terca;
+    this.quarta = dto.quarta;
+    this.quinta = dto.quinta;
+    this.sexta = dto.sexta;
+    this.sabado = dto.sabado;
   }
 
   getDTO(): CalendarConfigurationDTO {
     return {
       userId: this.userId,
-      0: this[0],
-      1: this[1],
-      2: this[2],
-      3: this[3],
-      4: this[4],
-      5: this[5],
-      6: this[6],
+      domingo: this.domingo,
+      segunda: this.segunda,
+      terca: this.terca,
+      quarta: this.quarta,
+      quinta: this.quinta,
+      sexta: this.sexta,
+      sabado: this.sabado,
     };
   }
 }
