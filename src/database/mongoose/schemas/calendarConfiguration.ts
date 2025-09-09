@@ -12,6 +12,7 @@ const dayConfigurationSchema = new mongoose.Schema(
   {
     workTimeIncrementInMinutes: { type: Number, required: true },
     workSchedules: [workScheduleSchema],
+    isActive: { type: Boolean, default: true },
   },
   { _id: false },
 );

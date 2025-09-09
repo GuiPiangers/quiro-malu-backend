@@ -6,6 +6,7 @@ export type WorkSchedule = {
 export type DayConfiguration = {
   workTimeIncrementInMinutes: number;
   workSchedules: WorkSchedule[];
+  isActive?: boolean;
 };
 
 export type CalendarConfigurationDTO = {
