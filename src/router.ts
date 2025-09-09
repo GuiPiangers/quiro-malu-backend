@@ -63,6 +63,7 @@ import { listEventsController } from "./core/scheduling/controllers/ListEventsCo
 import { editBlockScheduleController } from "./core/scheduling/controllers/editBlockScheduleController";
 import { deleteBlockScheduleController } from "./core/scheduling/controllers/deleteBlockScheduleController";
 import { listEventSuggestionsController } from "./core/scheduling/controllers/listEventSuggestionsController";
+import { saveCalendarConfigurationController } from "./core/calendarConfiguration/controllers/SaveCalendarConfigurationController";
 
 const router = Router();
 const multerConfig = multer({
@@ -216,6 +217,10 @@ router.get("/events", authMiddleware, (request, response) => {
 
 router.get("/event-suggestions", authMiddleware, (request, response) => {
   listEventSuggestionsController.handle(request, response);
+});
+
+router.put("/calendar-configuration", authMiddleware, (request, response) => {
+  saveCalendarConfigurationController.handle(request, response);
 });
 
 router.post(
