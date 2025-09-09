@@ -1,5 +1,5 @@
 import { MongooseCalendarConfigurationRepository } from "../../../../repositories/calendarConfiguration/MongooseCalendarConfigurationRepository";
-import { SaveCalendarConfigurationUseCase } from "../../useCases/SaveCalendarConfiguration";
+import { SaveCalendarConfigurationUseCase } from "../../useCases/saveCalendarConfiguration/SaveCalendarConfiguration";
 import { SaveCalendarConfigurationController } from "./SaveCalendarConfigurationController";
 
 const calendarConfigurationRepository =

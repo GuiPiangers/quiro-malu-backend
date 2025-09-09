@@ -2,9 +2,9 @@ import {
   SaveCalendarConfigurationUseCase,
   SaveCalendarConfigurationDTO,
 } from "./SaveCalendarConfiguration";
-import { CalendarConfiguration } from "../models/CalendarConfiguration";
-import { ICalendarConfigurationRepository } from "../../../repositories/calendarConfiguration/ICalendarConfigurationRepository";
-import { createMockCalendarConfigurationRepository } from "../../../repositories/_mocks/CalendarConfigurationRepositoryMock";
+import { CalendarConfiguration } from "../../models/CalendarConfiguration";
+import { ICalendarConfigurationRepository } from "../../../../repositories/calendarConfiguration/ICalendarConfigurationRepository";
+import { createMockCalendarConfigurationRepository } from "../../../../repositories/_mocks/CalendarConfigurationRepositoryMock";
 
 describe("SaveCalendarConfigurationUseCase", () => {
   let useCase: SaveCalendarConfigurationUseCase;

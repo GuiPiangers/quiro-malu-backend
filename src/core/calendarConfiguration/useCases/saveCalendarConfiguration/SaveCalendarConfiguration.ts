@@ -1,8 +1,8 @@
-import { ICalendarConfigurationRepository } from "../../../repositories/calendarConfiguration/ICalendarConfigurationRepository";
+import { ICalendarConfigurationRepository } from "../../../../repositories/calendarConfiguration/ICalendarConfigurationRepository";
 import {
   CalendarConfiguration,
   DayConfiguration,
-} from "../models/CalendarConfiguration";
+} from "../../models/CalendarConfiguration";
 
 export type SaveCalendarConfigurationDTO = {
   userId: string;

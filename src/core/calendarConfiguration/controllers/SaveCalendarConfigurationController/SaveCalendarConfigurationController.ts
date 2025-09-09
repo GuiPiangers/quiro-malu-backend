@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { SaveCalendarConfigurationUseCase } from "../../useCases/SaveCalendarConfiguration";
+import { SaveCalendarConfigurationUseCase } from "../../useCases/saveCalendarConfiguration/SaveCalendarConfiguration";
 import { responseError } from "../../../../utils/ResponseError";
 import { DayConfiguration } from "../../models/CalendarConfiguration";
 import { ApiError } from "../../../../utils/ApiError";
