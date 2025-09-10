@@ -17,8 +17,8 @@ describe("GetCalendarConfigurationUseCase", () => {
   it("should return calendar configuration DTO when found", async () => {
     const configEntity = new CalendarConfiguration({
       userId,
+      workTimeIncrementInMinutes: 60,
       domingo: {
-        workTimeIncrementInMinutes: 60,
         workSchedules: [{ start: "08:00", end: "17:00" }],
       },
     });

@@ -6,6 +6,7 @@ import {
 
 export type SaveCalendarConfigurationDTO = {
   userId: string;
+  workTimeIncrementInMinutes?: number;
   domingo?: DayConfiguration;
   segunda?: DayConfiguration;
   terca?: DayConfiguration;

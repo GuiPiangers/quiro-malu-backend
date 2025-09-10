@@ -4,13 +4,13 @@ export type WorkSchedule = {
 };
 
 export type DayConfiguration = {
-  workTimeIncrementInMinutes: number;
   workSchedules: WorkSchedule[];
   isActive?: boolean;
 };
 
 export type CalendarConfigurationDTO = {
   userId: string;
+  workTimeIncrementInMinutes?: number;
   domingo?: DayConfiguration;
   segunda?: DayConfiguration;
   terca?: DayConfiguration;
@@ -21,6 +21,7 @@ export type CalendarConfigurationDTO = {
 };
 
 export class CalendarConfiguration {
+  readonly workTimeIncrementInMinutes: number;
   readonly userId: string;
   readonly domingo?: DayConfiguration;
   readonly segunda?: DayConfiguration;
@@ -32,6 +33,7 @@ export class CalendarConfiguration {
 
   constructor(dto: CalendarConfigurationDTO) {
     this.userId = dto.userId;
+    this.workTimeIncrementInMinutes = dto.workTimeIncrementInMinutes || 30;
     this.domingo = dto.domingo;
     this.segunda = dto.segunda;
     this.terca = dto.terca;
@@ -44,6 +46,7 @@ export class CalendarConfiguration {
   getDTO(): CalendarConfigurationDTO {
     return {
       userId: this.userId,
+      workTimeIncrementInMinutes: this.workTimeIncrementInMinutes,
       domingo: this.domingo,
       segunda: this.segunda,
       terca: this.terca,

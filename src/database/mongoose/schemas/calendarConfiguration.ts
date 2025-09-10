@@ -10,7 +10,6 @@ const workScheduleSchema = new mongoose.Schema(
 
 const dayConfigurationSchema = new mongoose.Schema(
   {
-    workTimeIncrementInMinutes: { type: Number, required: true },
     workSchedules: [workScheduleSchema],
     isActive: { type: Boolean, default: true },
   },
@@ -19,6 +18,7 @@ const dayConfigurationSchema = new mongoose.Schema(
 
 const calendarConfigurationSchema = new mongoose.Schema({
   userId: { type: String, required: true, index: true },
+  workTimeIncrementInMinutes: { type: Number, required: true },
   domingo: dayConfigurationSchema,
   segunda: dayConfigurationSchema,
   terca: dayConfigurationSchema,

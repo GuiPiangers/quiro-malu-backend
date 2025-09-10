@@ -13,6 +13,7 @@ export class SaveCalendarConfigurationController {
     try {
       const userId = request.user.id;
       const body = request.body as {
+        workTimeIncrementInMinutes?: number;
         domingo?: DayConfiguration;
         segunda?: DayConfiguration;
         terca?: DayConfiguration;
