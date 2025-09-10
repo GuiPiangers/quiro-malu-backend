@@ -18,6 +18,8 @@ export class GetCalendarConfigurationController {
         userId,
       });
 
+      if (!result) throw new ApiError("Configuração não encontrada", 404);
+
       return response.status(200).json(result);
     } catch (err: any) {
       return responseError(response, err);
