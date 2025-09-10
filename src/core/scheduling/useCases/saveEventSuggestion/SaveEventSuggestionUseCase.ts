@@ -8,6 +8,8 @@ export class SaveEventSuggestionUseCase {
   constructor(private eventSuggestionRepository: IEventSuggestionRepository) {}
 
   async execute(dto: EventSuggestionDTO, userId: string) {
+    if (!dto.description) return;
+
     const existingSuggestion =
       await this.eventSuggestionRepository.getByDescription({
         description: dto.description,

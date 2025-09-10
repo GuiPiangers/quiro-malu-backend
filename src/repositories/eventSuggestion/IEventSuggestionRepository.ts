@@ -1,7 +1,4 @@
-import {
-  EventSuggestion,
-  EventSuggestionDTO,
-} from "../../core/scheduling/models/EventSuggestion";
+import { EventSuggestion } from "../../core/scheduling/models/EventSuggestion";
 
 export interface IEventSuggestionRepository {
   save(eventSuggestion: EventSuggestion, userId: string): Promise<void>;

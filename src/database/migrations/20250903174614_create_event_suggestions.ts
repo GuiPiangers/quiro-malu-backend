@@ -5,8 +5,9 @@ export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable(ETableNames.EVENT_SUGGESTIONS, (table) => {
     table.string("id", 100).primary();
     table.string("userId", 100).index().notNullable();
-    table.string("description", 200).index().unique();
+    table.string("description", 200).index();
     table.integer("durationInMinutes").defaultTo(60);
+    table.integer("frequency").defaultTo(0);
     table
       .foreign("userId")
       .references("id")
