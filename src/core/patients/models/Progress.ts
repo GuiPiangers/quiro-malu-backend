@@ -1,6 +1,47 @@
+import { ApiError } from "../../../utils/ApiError";
 import { DateTime } from "../../shared/Date";
 import { Entity } from "../../shared/Entity";
 
+export class PainScaleDto {
+  id?: string;
+  painLevel: number;
+  description: string;
+}
+
+export class PainScale extends Entity {
+  private readonly minPainScale = 0;
+  private readonly maxPainScale = 10;
+  readonly painLevel: number;
+  readonly description: string;
+
+  constructor({ description, painLevel, id }: PainScaleDto) {
+    super(id);
+
+    this.validateMinMax(painLevel);
+
+    this.painLevel = painLevel;
+    this.description = description;
+  }
+
+  private validateMinMax(painLevel: number) {
+    if (painLevel < this.minPainScale)
+      throw new ApiError(
+        `O valor mínimo para a escala de dor é ${this.minPainScale}`,
+      );
+
+    if (painLevel > this.maxPainScale)
+      throw new ApiError(
+        `O valor máximo para a escala de dor é ${this.maxPainScale}`,
+      );
+  }
+
+  getDTO() {
+    return {
+      painLevel: this.painLevel,
+      description: this.description,
+    };
+  }
+}
 export interface ProgressDTO {
   id?: string;
   schedulingId?: string;
@@ -11,6 +52,7 @@ export interface ProgressDTO {
   date?: string;
   createAt?: string;
   updateAt?: string;
+  painScales?: PainScaleDto[];
 }
 
 export class Progress extends Entity {
@@ -20,6 +62,7 @@ export class Progress extends Entity {
   readonly actualProblem?: string;
   readonly procedures?: string;
   readonly schedulingId?: string;
+  readonly painScales?: PainScale[];
 
   constructor({
     id,
@@ -29,6 +72,7 @@ export class Progress extends Entity {
     procedures,
     patientId,
     schedulingId,
+    painScales,
   }: ProgressDTO) {
     super(id || `${Date.now()}`);
     this.patientId = patientId;
@@ -37,6 +81,7 @@ export class Progress extends Entity {
     if (date) this.date = new DateTime(date);
     this.procedures = procedures;
     this.schedulingId = schedulingId;
+    this.painScales = painScales?.map((painScale) => new PainScale(painScale));
   }
 
   getDTO() {
@@ -48,6 +93,7 @@ export class Progress extends Entity {
       date: this.date?.dateTime,
       procedures: this.procedures,
       schedulingId: this.schedulingId,
+      painScales: this.painScales?.map((painScale) => painScale.getDTO()),
     };
   }
 }
