@@ -45,7 +45,11 @@ export class KnexProgressRepository implements IProgressRepository {
         Knex.raw('DATE_FORMAT(p.date, "%Y-%m-%dT%H:%i") as date'),
       )
       .select()
-      .where({ schedulingId, patientId, userId });
+      .where({
+        "p.schedulingId": schedulingId,
+        "p.patientId": patientId,
+        "p.userId": userId,
+      });
 
     return this.groupProgressPainScales(rows);
   }
@@ -53,6 +57,7 @@ export class KnexProgressRepository implements IProgressRepository {
   async save({
     patientId,
     userId,
+    painScales,
     ...data
   }: ProgressDTO & { userId: string }): Promise<void> {
     return await Knex(ETableNames.PROGRESS).insert({
@@ -66,6 +71,7 @@ export class KnexProgressRepository implements IProgressRepository {
     id,
     patientId,
     userId,
+    painScales,
     ...data
   }: ProgressDTO & { userId: string }): Promise<void> {
     await Knex(ETableNames.PROGRESS).update(data).where({
@@ -102,7 +108,11 @@ export class KnexProgressRepository implements IProgressRepository {
         Knex.raw('DATE_FORMAT(p.date, "%Y-%m-%dT%H:%i") as date'),
       )
       .select()
-      .where({ id, patientId, userId });
+      .where({
+        "p.id": id,
+        "p.patientId": patientId,
+        "p.userId": userId,
+      });
 
     const result = this.groupProgressPainScales(rows);
 
@@ -134,7 +144,10 @@ export class KnexProgressRepository implements IProgressRepository {
         Knex.raw('DATE_FORMAT(p.date, "%Y-%m-%dT%H:%i") as date'),
       )
       .select()
-      .where({ patientId, userId })
+      .where({
+        "p.patientId": patientId,
+        "p.userId": userId,
+      })
       .orderBy("date", "desc");
 
     if (config) {
