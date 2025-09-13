@@ -90,10 +90,24 @@ export class KnexProgressRepository implements IProgressRepository {
     painScales,
     ...data
   }: ProgressDTO & { userId: string }): Promise<void> {
-    await Knex(ETableNames.PROGRESS).update(data).where({
-      id,
-      patientId,
-      userId,
+    await Knex.transaction(async (trx) => {
+      await trx(ETableNames.PROGRESS)
+        .update(data)
+        .where({ id, patientId, userId });
+
+      if (painScales) {
+        await trx(ETableNames.PAIN_SCALES).where({ progressId: id }).del();
+
+        if (painScales.length > 0) {
+          const painScaleRows = painScales.map((ps) => ({
+            progressId: id,
+            painLevel: ps.painLevel,
+            description: ps.description,
+          }));
+
+          await trx(ETableNames.PAIN_SCALES).insert(painScaleRows);
+        }
+      }
     });
   }
 
