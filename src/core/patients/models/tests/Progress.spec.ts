@@ -104,6 +104,7 @@ describe("Progress", () => {
       schedulingId: "schedulingId",
       painScales: [
         {
+          id: "5",
           painLevel: 5,
           description: "Headache",
         },
@@ -124,6 +125,7 @@ describe("Progress", () => {
       schedulingId: "schedulingId",
       painScales: [
         {
+          id: "5",
           painLevel: 5,
           description: "Headache",
         },

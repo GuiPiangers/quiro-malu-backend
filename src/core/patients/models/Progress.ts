@@ -37,6 +37,7 @@ export class PainScale extends Entity {
 
   getDTO() {
     return {
+      id: this.id,
       painLevel: this.painLevel,
       description: this.description,
     };
