@@ -61,7 +61,7 @@ export class KnexProgressRepository implements IProgressRepository {
     ...data
   }: ProgressDTO & { userId: string }): Promise<void> {
     await Knex.transaction(async (trx) => {
-      const [progressId] = await trx(ETableNames.PROGRESS).insert(
+      await trx(ETableNames.PROGRESS).insert(
         {
           ...data,
           userId,
@@ -70,7 +70,7 @@ export class KnexProgressRepository implements IProgressRepository {
         ["id"],
       );
 
-      if (progressId && painScales && painScales.length > 0) {
+      if (data.id && painScales && painScales.length > 0) {
         const painScaleRows = painScales.map((ps) => ({
           id: ps.id,
           progressId: data.id,
@@ -100,6 +100,7 @@ export class KnexProgressRepository implements IProgressRepository {
 
         if (painScales.length > 0) {
           const painScaleRows = painScales.map((ps) => ({
+            id: ps.id,
             progressId: id,
             painLevel: ps.painLevel,
             description: ps.description,
