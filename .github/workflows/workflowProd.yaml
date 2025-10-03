@@ -80,4 +80,4 @@ jobs:
           docker compose -f docker-compose.prod.yml up -d app
           docker exec app npm run knex:migrate
           EOF
-        needs: build
+    needs: build
