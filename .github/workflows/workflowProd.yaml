@@ -6,6 +6,36 @@ on:
       - main
 
 jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 22.x
+      - run: npm ci
+      - run: npm run build
+
+
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: quiro-app
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 22.x
+      - name: Login DockerHub
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+      - name: Build docker image
+        run: docker build -f Dockerfile.prod -t guipiangers/quiro-backend:1.0 .
+      - name: Push image docker
+        run: docker push guipiangers/quiro-backend:1.0
+
+    needs: tests
+
   deploy:
     runs-on: ubuntu-latest
 
@@ -38,3 +68,16 @@ jobs:
 
       - name: Testar conexão SSH
         run: ssh -o StrictHostKeyChecking=no meu-servidor "echo Conexão funcionando!"
+
+      
+      - name: Deploy the applications
+        run: |
+          ssh -o StrictHostKeyChecking=no meu-servidor << EOF
+          cd ./quiro-malu-backend
+          git pull origin main
+          docker pull guipiangers/quiro-backend:1.0
+          docker compose down app
+          docker compose -f docker-compose.prod.yml up -d app
+          docker exec app npm run knex:migrate
+          EOF
+        needs: build
