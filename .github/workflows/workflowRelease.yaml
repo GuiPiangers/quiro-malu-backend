@@ -1,0 +1,83 @@
+name: Continues Integration and Delivery
+
+on: 
+  push:
+    branches:
+      - release
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 22.x
+      - run: npm ci
+      - run: npm run build
+
+
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: quiro-app
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 22.x
+      - name: Login DockerHub
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+      - name: Build docker image
+        run: docker build -f Dockerfile.prod -t guipiangers/quiro-backend:1.0 .
+      - name: Push image docker
+        run: docker push guipiangers/quiro-backend:1.0
+
+    needs: tests
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Setup cloudflared (safe action)
+        uses: AnimMouse/setup-cloudflared@v2
+
+      - name: Configurar SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_ed25519
+
+          cat >> ~/.ssh/config <<EOL
+          Host meu-servidor
+            HostName ssh.quiromalu.com.br
+            User guilherme
+            ProxyCommand cloudflared access ssh --hostname %h
+          EOL
+
+          mkdir -p ~/.cloudflared
+          echo "${{ secrets.CLOUDFLARED_CERT }}" > ~/.cloudflared/cert.pem
+          chmod 600 ~/.cloudflared/cert.pem
+
+      - name: Testar conexão SSH
+        run: ssh -o StrictHostKeyChecking=no meu-servidor "echo Conexão funcionando!"
+
+      
+      - name: Deploy the applications
+        run: |
+          ssh -o StrictHostKeyChecking=no meu-servidor << EOF
+          cd ./quiro-malu-backend
+          git pull origin main
+          docker pull guipiangers/quiro-backend:1.0
+          docker compose down app-release
+          docker compose -f docker-compose.release.yml up -d app-release
+          docker exec app-release npm run knex:migrate
+          EOF
+    needs: build
