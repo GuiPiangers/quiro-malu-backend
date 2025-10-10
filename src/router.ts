@@ -65,6 +65,7 @@ import { deleteBlockScheduleController } from "./core/scheduling/controllers/del
 import { listEventSuggestionsController } from "./core/scheduling/controllers/listEventSuggestionsController";
 import { saveCalendarConfigurationController } from "./core/calendarConfiguration/controllers/SaveCalendarConfigurationController";
 import { getCalendarConfigurationController } from "./core/calendarConfiguration/controllers/GetCalendarConfigurationController";
+import { createTranscriptionController } from "./core/transcriptions/controllers/createTranscriptionController";
 
 const router = Router();
 const multerConfig = multer({
@@ -75,6 +76,19 @@ const multerConfig = multer({
     cb(null, true);
   },
 });
+
+const storage = multer.memoryStorage();
+
+export const upload = multer({
+  storage,
+  limits: {
+    fileSize: 25 * 1024 * 1024, // limita o tamanho do áudio a 25MB
+  },
+});
+
+router.post("/transcription", upload.single("audio"), (req, res) =>
+  createTranscriptionController.handle(req, res),
+);
 
 router.post("/register", (request, response) => {
   createUserController.handle(request, response);
