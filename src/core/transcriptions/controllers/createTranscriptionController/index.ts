@@ -1,4 +1,4 @@
-import { AzureSpeechTranscriptionAdapter } from "../../../../services/transcription/adapters/AzureSpeechTranscriptionAdapter";
+import { AzureSpeechTranscriptionAdapter } from "../../../../repositories/transcription/adapters/AzureSpeechTranscriptionAdapter";
 import { CreateTranscriptionUseCase } from "../../useCases/CreateTranscriptionUseCase";
 import { CreateTranscriptionController } from "./createTranscriptionController";
 

@@ -1,4 +1,4 @@
-import { ITranscriptionService } from "../../../services/transcription/ITranscriptionService";
+import { ITranscriptionService } from "../../../repositories/transcription/ITranscriptionService";
 
 export class CreateTranscriptionUseCase {
   constructor(private readonly transcriptionService: ITranscriptionService) {}
