@@ -27,6 +27,10 @@ export class AzureSpeechTranscriptionAdapter implements ITranscriptionService {
     }
 
     const data = await response.json();
-    return { text: data.text };
+    const text = data.combinedPhrases
+      .map((phrase: any) => phrase.text)
+      .join(" ");
+
+    return { text };
   }
 }
