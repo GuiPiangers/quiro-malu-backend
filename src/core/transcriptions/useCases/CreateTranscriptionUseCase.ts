@@ -3,8 +3,8 @@ import { ITranscriptionService } from "../../../repositories/transcription/ITran
 export class CreateTranscriptionUseCase {
   constructor(private readonly transcriptionService: ITranscriptionService) {}
 
-  execute(audioBuffer: Buffer) {
-    this.transcriptionService.transcribe(audioBuffer);
-    return this.transcriptionService;
+  async execute(audioBuffer: Buffer) {
+    const result = await this.transcriptionService.transcribe(audioBuffer);
+    return result;
   }
 }
