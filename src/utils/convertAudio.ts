@@ -1,10 +1,14 @@
 import { spawn } from "child_process";
 
 export async function convertToWav(buffer: Buffer): Promise<Buffer> {
+  const speed = 1.5; // 🔹 fator de aceleração (1.0 = normal, 2.0 = 2x mais rápido)
+
   return new Promise((resolve, reject) => {
     const ffmpeg = spawn("ffmpeg", [
       "-i",
       "pipe:0",
+      "-filter:a",
+      `atempo=${speed}`,
       "-ar",
       "16000",
       "-ac",
