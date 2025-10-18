@@ -5,7 +5,11 @@ export class AzureSpeechTranscriptionAdapter implements ITranscriptionService {
     const path = `https://${process.env.AZURE_SPEECH_REGION}.api.cognitive.microsoft.com/speechtotext/transcriptions:transcribe?api-version=2024-11-15`;
 
     // Cria um arquivo Blob (ou File) a partir do Buffer
-    const audioFile = new File([file], "audio.wav", { type: "audio/wav" });
+    const audioFile = new File(
+      [file as ArrayBufferView<ArrayBuffer>],
+      "audio.wav",
+      { type: "audio/wav" },
+    );
 
     const formData = new FormData();
     formData.append("audio", audioFile);

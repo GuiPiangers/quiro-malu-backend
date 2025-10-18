@@ -3,7 +3,11 @@ export class WhisperTranscriptionAdapter {
     const path = "https://api.openai.com/v1/audio/transcriptions";
 
     // Cria um arquivo Blob (ou File) a partir do Buffer
-    const audioFile = new File([file], "audio.wav", { type: "audio/wav" });
+    const audioFile = new File(
+      [file as ArrayBufferView<ArrayBuffer>],
+      "audio.wav",
+      { type: "audio/wav" },
+    );
 
     const formData = new FormData();
     formData.append("file", audioFile);
