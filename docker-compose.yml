@@ -79,19 +79,17 @@ services:
     ports:
       - "3100:3100"
     volumes:
-      - ./loki-config.yaml:/etc/loki/local-config.yaml
       - loki_data:/loki
-    command: -config.file=/etc/loki/local-config.yaml
     networks:
       - minha_rede
 
   promtail:
-    image: grafana/promtail:2.9.1
+    image: grafana/promtail:2.9.4
     container_name: promtail
     volumes:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - /var/log:/var/log
-      - ./promtail/promtail-config.yaml:/etc/promtail/promtail-config.yaml
+      - /var/run/docker.sock:/var/run/docker.sock:ro 
+      - ./promtail/promtail-config.yaml:/etc/promtail/promtail-config.yaml:ro
     command:
       -config.file=/etc/promtail/promtail-config.yaml
     networks:
