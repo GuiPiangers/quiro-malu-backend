@@ -2,10 +2,13 @@ import "express-async-errors";
 import express from "express";
 import { router } from "./router";
 import cors from "cors";
-import { responseTimeMiddleware } from "./metrics/httpRequestDuration";
+import { httpRequestDurationMiddleware } from "./metrics/httpRequestDuration";
 import { register } from "./metrics";
 import { httpRequestCounterMiddleware } from "./metrics/requestCounter";
 import { mongoConnect } from "./database/mongoose";
+import { httpRequestsInProgressMiddleware } from "./metrics/httpRequestsInProgress";
+import { httpResponseSizeMiddleware } from "./metrics/httpResponseSize";
+import { httpErrorsCounterMiddleware } from "./metrics/httpErrorsCounter";
 
 const app = express();
 
@@ -26,8 +29,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(responseTimeMiddleware);
+app.use(httpRequestsInProgressMiddleware);
+app.use(httpRequestDurationMiddleware);
 app.use(httpRequestCounterMiddleware);
+app.use(httpErrorsCounterMiddleware);
+app.use(httpResponseSizeMiddleware);
 
 app.get("/metrics", async (req, res) => {
   res.set("Content-Type", register.contentType);
