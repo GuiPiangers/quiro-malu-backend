@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   app:
     restart: always
@@ -7,10 +9,16 @@ services:
       - .env
     ports:
       - "8000:8000"
+    volumes:
+      - app-logs:/var/log/app
     depends_on:
-      - "redis"
+      - redis
     networks:
       - minha_rede
+    labels:
+      logging: "promtail"
+      logging_jobname: "backend"
+      app_type: "nodejs"
 
   mysql-db:
     image: mysql:8.0
@@ -20,10 +28,15 @@ services:
       - .env
     volumes:
       - db:/var/lib/mysql
+      - mysql-logs:/var/log/mysql
     ports:
       - "3306:3306"
     networks:
       - minha_rede
+    labels:
+      logging: "promtail"
+      logging_jobname: "mysql"
+      app_type: "database"
 
   mongo:
     image: mongo:8.0.4
@@ -33,10 +46,15 @@ services:
       - .env
     volumes:
       - mongoDb:/data/db
+      - mongo-logs:/var/log/mongodb
     ports:
       - "27017:27017"
     networks:
       - minha_rede
+    labels:
+      logging: "promtail"
+      logging_jobname: "mongodb"
+      app_type: "database"
 
   redis:
     image: redis:7.4.2-alpine
@@ -50,79 +68,121 @@ services:
       - "6379:6379"
     networks:
       - minha_rede
+    labels:
+      logging: "promtail"
+      logging_jobname: "redis"
+      app_type: "cache"
 
   nginx:
     image: nginx:latest
     container_name: nginx
     restart: always
     ports:
-      - "80:80"   # Porta HTTP para o Certbot verificar o domínio
-      - "443:443" # Porta HTTPS para conexões seguras
+      - "3400:80"
+      - "443:443"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf    # Configuração do Nginx
-      - ./certbot/conf:/etc/letsencrypt             # Diretório dos certificados SSL
-      - ./certbot/www:/var/www/certbot  
-    depends_on: 
-      - "app"
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - nginx-logs:/var/log/nginx
+    depends_on:
+      - app
     networks:
       - minha_rede
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt             # Diretório dos certificados SSL
-      - ./certbot/www:/var/www/certbot              # Pasta temporária para o Certbot
-    command: certonly --webroot -w /var/www/certbot --force-renewal --email eduardomartinspiangers@gmail.com -d quiromalu-server.duckdns.org --agree-tos
-    networks:
-      - minha_rede
+    labels:
+      logging: "promtail"
+      logging_jobname: "nginx"
+      app_type: "proxy"
 
   prometheus:
     container_name: prometheus
     image: prom/prometheus
-    ports: 
+    restart: always
+    ports:
       - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
     networks:
       - minha_rede
+    labels:
+      logging: "promtail"
+      logging_jobname: "prometheus"
 
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:10.2.3
+    container_name: grafana
+    restart: always
     ports:
       - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
     networks:
       - minha_rede
-
+    labels:
+      logging: "promtail"
+      logging_jobname: "grafana"
+    depends_on:
+      - loki
+      - prometheus
 
   loki:
-    image: grafana/loki:2.9.1
+    image: grafana/loki:2.9.3
     container_name: loki
+    restart: always
     ports:
       - "3100:3100"
     volumes:
-      - loki_data:/loki
+      - ./loki/loki-config.yml:/etc/loki/local-config.yaml
+      - loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
     networks:
       - minha_rede
+    labels:
+      logging: "promtail"
+      logging_jobname: "loki"
 
   promtail:
-    image: grafana/promtail:2.9.1
+    image: grafana/promtail:2.9.3
     container_name: promtail
+    restart: always
     volumes:
+      # Configuração do Promtail
+      - ./promtail/promtail-config.yml:/etc/promtail/config.yml
+      # Socket do Docker para service discovery
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # Logs dos containers
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro 
-      - ./promtail/promtail-config.yaml:/etc/promtail/promtail-config.yaml
-    command:
-      -config.file=/etc/promtail/promtail-config.yaml
+      # Logs específicos dos serviços
+      - nginx-logs:/var/log/nginx:ro
+      - app-logs:/var/log/app:ro
+      - mysql-logs:/var/log/mysql:ro
+      - mongo-logs:/var/log/mongodb:ro
+    command: -config.file=/etc/promtail/config.yml
     networks:
       - minha_rede
+    depends_on:
+      - loki
 
 volumes:
   db:
-  loki_data:
   mongoDb:
   redisDb:
+  loki-data:
+  grafana-data:
+  prometheus-data:
+  nginx-logs:
+  app-logs:
+  mysql-logs:
+  mongo-logs:
+
 networks:
   minha_rede:
     driver: bridge

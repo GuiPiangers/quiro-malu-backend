@@ -6,3 +6,4 @@ certbot/conf/
 certbot/www/
 coverage
 GEMINI.md
+.env.release
