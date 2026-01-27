@@ -2,7 +2,7 @@ import "express-async-errors";
 import express from "express";
 import { router } from "./router";
 import cors from "cors";
-import { responseTimeMiddleware } from "./metrics/restResponseTimeHistogram";
+import { responseTimeMiddleware } from "./metrics/httpRequestDuration";
 import { register } from "./metrics";
 import { httpRequestCounterMiddleware } from "./metrics/requestCounter";
 import { mongoConnect } from "./database/mongoose";
