@@ -1,8 +1,55 @@
 services:
+  # ================================================
+  # Servidor Webhook de Deploy
+  # ================================================
+  deploy-webhook:
+    build:
+      context: .
+      dockerfile: Dockerfile.deploy
+    container_name: deploy-webhook
+    restart: always
+
+    environment:
+      - NODE_ENV=production
+      - PORT=3333
+      - DEPLOY_SECRET=${DEPLOY_SECRET}
+
+    # Porta apenas localhost (segurança)
+    ports:
+      - "127.0.0.1:3333:3333"
+
+    volumes:
+      # Socket do Docker (SEM :ro para permitir comandos)
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Compose file para deploy
+      - ./docker-compose.prod.yml:/app/docker-compose.yml:ro
+      # Script de deploy
+      - ./deploy/deploy.sh:/usr/local/bin/deploy.sh:ro
+      # Logs
+      - deploy-logs:/var/log
+
+    networks:
+      - minha_rede
+
+    labels:
+      logging: "promtail"
+      logging_jobname: "deploy-webhook"
+      app_type: "webhook"
+
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3333/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # ================================================
+  # Aplicação Backend
+  # ================================================
   app:
     restart: always
     container_name: app
-    image: guipiangers/quiro-backend:1.0
+    image: guipiangers/quiro-backend:latest
     env_file:
       - .env
     ports:
@@ -11,6 +58,7 @@ services:
       - app-logs:/var/log/app
     depends_on:
       - redis
+      - mysql-db
     networks:
       - minha_rede
     labels:
@@ -18,36 +66,15 @@ services:
       logging_jobname: "backend"
       app_type: "nodejs"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
       interval: 10s
       timeout: 5s
       retries: 3
       start_period: 30s
 
-  deploy-webhook:
-    restart: always
-    container_name: deploy-webhook
-    image: guipiangers/quiro-deploy-webhook:latest
-    env_file:
-      - .env
-    ports:
-      - "3333:3333"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - deploy-logs:/var/log/deploy
-    networks:
-      - minha_rede
-    labels:
-      logging: "promtail"
-      logging_jobname: "deploy-webhook"
-      app_type: "nodejs"
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3333/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
+  # ================================================
+  # MySQL Database
+  # ================================================
   mysql-db:
     image: mysql:8.0
     container_name: mysqldb
@@ -65,7 +92,15 @@ services:
       logging: "promtail"
       logging_jobname: "mysql"
       app_type: "database"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  # ================================================
+  # MongoDB
+  # ================================================
   mongo:
     image: mongo:8.0.4
     container_name: mongo
@@ -83,7 +118,15 @@ services:
       logging: "promtail"
       logging_jobname: "mongodb"
       app_type: "database"
+    healthcheck:
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  # ================================================
+  # Redis Cache
+  # ================================================
   redis:
     image: redis:7.4.2-alpine
     container_name: redis
@@ -100,7 +143,15 @@ services:
       logging: "promtail"
       logging_jobname: "redis"
       app_type: "cache"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  # ================================================
+  # Nginx Reverse Proxy
+  # ================================================
   nginx:
     image: nginx:latest
     container_name: nginx
@@ -120,6 +171,9 @@ services:
       logging_jobname: "nginx"
       app_type: "proxy"
 
+  # ================================================
+  # Prometheus (Métricas)
+  # ================================================
   prometheus:
     container_name: prometheus
     image: prom/prometheus
@@ -139,6 +193,9 @@ services:
       logging: "promtail"
       logging_jobname: "prometheus"
 
+  # ================================================
+  # Grafana (Visualização)
+  # ================================================
   grafana:
     image: grafana/grafana:10.2.3
     container_name: grafana
@@ -161,6 +218,9 @@ services:
       - loki
       - prometheus
 
+  # ================================================
+  # Loki (Armazenamento de Logs)
+  # ================================================
   loki:
     image: grafana/loki:2.9.3
     container_name: loki
@@ -177,6 +237,9 @@ services:
       logging: "promtail"
       logging_jobname: "loki"
 
+  # ================================================
+  # Promtail (Coleta de Logs)
+  # ================================================
   promtail:
     image: grafana/promtail:2.9.3
     container_name: promtail
@@ -200,6 +263,9 @@ services:
     depends_on:
       - loki
 
+# ================================================
+# Volumes
+# ================================================
 volumes:
   db:
   mongoDb:
@@ -213,6 +279,9 @@ volumes:
   mongo-logs:
   deploy-logs:
 
+    # ================================================
+    # Networks
+    # ================================================
 networks:
   minha_rede:
     driver: bridge

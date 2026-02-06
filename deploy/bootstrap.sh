@@ -2,136 +2,59 @@
 set -euo pipefail
 
 # ==========================
-# Bootstrap Script
+# Bootstrap Script - Docker Version
 # ==========================
-# Este script instala e configura o sistema de deploy automático
-# - Instala o deploy.sh em /usr/local/bin/
-# - Cria o serviço systemd
-# - Configura permissões
-# - Cria diretórios necessários
+# Prepara o ambiente para deploy via Docker
+# - Instala deploy.sh no host
+# - Cria arquivo de log
+# - Cria volume Docker
 
-# Cores para output
+# Cores
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+NC='\033[0m'
+
+log_info() { echo -e "${GREEN}[INFO]${NC} $*"; }
+log_warn() { echo -e "${YELLOW}[WARN]${NC} $*"; }
+log_error() { echo -e "${RED}[ERROR]${NC} $*"; }
 
 # ==========================
-# Funções de logging
-# ==========================
-log_info() {
-    echo -e "${GREEN}[INFO]${NC} $*"
-}
-
-log_warn() {
-    echo -e "${YELLOW}[WARN]${NC} $*"
-}
-
-log_error() {
-    echo -e "${RED}[ERROR]${NC} $*"
-}
-
-# ==========================
-# Verificações iniciais
+# Verificações
 # ==========================
 log_info "Iniciando bootstrap do sistema de deploy..."
 
-# Verifica se está rodando como root
 if [[ $EUID -ne 0 ]]; then
-   log_error "Este script precisa ser executado como root (use sudo)"
+   log_error "Execute como root (use sudo)"
    exit 1
 fi
 
-# Verifica se Docker está instalado
 if ! command -v docker &> /dev/null; then
-    log_error "Docker não está instalado. Instale o Docker primeiro."
+    log_error "Docker não está instalado"
     exit 1
 fi
 
-# Verifica se docker compose está disponível
 if ! docker compose version &> /dev/null; then
-    log_error "Docker Compose não está disponível. Instale o Docker Compose v2."
-    exit 1
-fi
-
-# Verifica se Node.js está instalado
-if ! command -v node &> /dev/null; then
-    log_error "Node.js não está instalado. Instale o Node.js primeiro."
+    log_error "Docker Compose v2 não está disponível"
     exit 1
 fi
 
 # ==========================
 # Configurações
 # ==========================
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEPLOY_SCRIPT=""
+DEPLOY_SCRIPT="${1:-./deploy/deploy.sh}"
 DEPLOY_SCRIPT_TARGET="/usr/local/bin/deploy.sh"
-LOG_DIR="/var/log"
-LOG_FILE="$LOG_DIR/deploy-agent.log"
-SYSTEMD_SERVICE="/etc/systemd/system/deploy-webhook.service"
-
-# Valores padrão (podem ser sobrescritos por argumentos)
-DEPLOY_USER="${DEPLOY_USER:-deployuser}"
-WORKING_DIR="${WORKING_DIR:-/app}"
-PORT="${PORT:-3333}"
-
-# ==========================
-# Parse argumentos
-# ==========================
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --user)
-      DEPLOY_USER="$2"
-      shift 2
-      ;;
-    --workdir)
-      WORKING_DIR="$2"
-      shift 2
-      ;;
-    --deploy-script)
-      DEPLOY_SCRIPT="$2"
-      shift 2
-      ;;
-    --port)
-      PORT="$2"
-      shift 2
-      ;;
-    --help)
-      echo "Uso: $0 [opções]"
-      echo ""
-      echo "Opções:"
-      echo "  --user USER            Usuário que irá rodar o serviço (padrão: deployuser)"
-      echo "  --workdir DIR          Diretório de trabalho da aplicação (padrão: /app)"
-      echo "  --deploy-script PATH   Caminho completo para o deploy.sh (padrão: <workdir>/deploy/deploy.sh)"
-      echo "  --port PORT            Porta do webhook server (padrão: 3333)"
-      echo "  --help                 Mostra esta mensagem"
-      echo ""
-      echo "Exemplo:"
-      echo "  sudo ./bootstrap.sh --user myuser --workdir /opt/myapp --deploy-script /opt/myapp/deploy/deploy.sh"
-      exit 0
-      ;;
-    *)
-      log_error "Argumento desconhecido: $1"
-      echo "Use --help para ver as opções disponíveis"
-      exit 1
-      ;;
-  esac
-done
-
-# Define deploy script padrão se não foi passado
-if [[ -z "$DEPLOY_SCRIPT" ]]; then
-    DEPLOY_SCRIPT="$WORKING_DIR/deploy/deploy.sh"
-    log_info "Usando deploy script padrão: $DEPLOY_SCRIPT"
-fi
+LOG_FILE="/var/log/deploy-agent.log"
 
 # ==========================
 # 1. Instalar deploy.sh
 # ==========================
-log_info "Instalando deploy.sh..."
+log_info "Instalando deploy.sh no host..."
 
 if [[ ! -f "$DEPLOY_SCRIPT" ]]; then
-    log_error "Arquivo deploy.sh não encontrado em: $DEPLOY_SCRIPT"
-    log_error "Certifique-se de que deploy.sh está no mesmo diretório que bootstrap.sh"
+    log_error "deploy.sh não encontrado: $DEPLOY_SCRIPT"
+    log_error "Uso: sudo ./bootstrap.sh [caminho/para/deploy.sh]"
+    log_error "Exemplo: sudo ./bootstrap.sh ./deploy/deploy.sh"
     exit 1
 fi
 
@@ -140,79 +63,101 @@ chmod +x "$DEPLOY_SCRIPT_TARGET"
 log_info "✓ deploy.sh instalado em $DEPLOY_SCRIPT_TARGET"
 
 # ==========================
-# 2. Criar diretório de logs
+# 2. Criar arquivo de log
 # ==========================
-log_info "Configurando diretório de logs..."
+log_info "Criando arquivo de log..."
 
-if [[ ! -d "$LOG_DIR" ]]; then
-    mkdir -p "$LOG_DIR"
-fi
-
+mkdir -p "$(dirname "$LOG_FILE")"
 touch "$LOG_FILE"
 chmod 666 "$LOG_FILE"
-log_info "✓ Arquivo de log criado: $LOG_FILE"
+log_info "✓ Log criado: $LOG_FILE"
 
 # ==========================
-# 3. Criar usuário se não existir
+# 3. Criar volume Docker
 # ==========================
-log_info "Verificando usuário $DEPLOY_USER..."
+log_info "Criando volume Docker para logs..."
 
-if ! id "$DEPLOY_USER" &>/dev/null; then
-    log_info "Criando usuário $DEPLOY_USER..."
-    useradd -r -s /bin/bash -d /home/$DEPLOY_USER -m $DEPLOY_USER
-    log_info "✓ Usuário $DEPLOY_USER criado"
+if docker volume inspect deploy-logs &>/dev/null; then
+    log_info "✓ Volume deploy-logs já existe"
 else
-    log_info "✓ Usuário $DEPLOY_USER já existe"
-fi
-
-# Adicionar usuário ao grupo docker
-if ! groups "$DEPLOY_USER" | grep -q docker; then
-    usermod -aG docker "$DEPLOY_USER"
-    log_info "✓ Usuário $DEPLOY_USER adicionado ao grupo docker"
+    docker volume create deploy-logs
+    log_info "✓ Volume deploy-logs criado"
 fi
 
 # ==========================
-# 4. Criar diretório de trabalho
+# 4. Verificar arquivos necessários
 # ==========================
-log_info "Configurando diretório de trabalho..."
+log_info "Verificando arquivos necessários..."
 
-if [[ ! -d "$WORKING_DIR" ]]; then
-    log_warn "Diretório $WORKING_DIR não existe. Criando..."
-    mkdir -p "$WORKING_DIR"
+WARNINGS=0
+
+if [[ ! -f ".env" ]]; then
+    log_warn "Arquivo .env não encontrado"
+    WARNINGS=$((WARNINGS + 1))
 fi
 
-chown -R "$DEPLOY_USER:$DEPLOY_USER" "$WORKING_DIR"
-log_info "✓ Permissões do diretório $WORKING_DIR configuradas"
+if [[ ! -f "docker-compose.prod.yml" ]]; then
+    log_warn "Arquivo docker-compose.prod.yml não encontrado"
+    WARNINGS=$((WARNINGS + 1))
+fi
+
+if [[ ! -f "Dockerfile.deploy" ]]; then
+    log_warn "Arquivo Dockerfile.deploy não encontrado"
+    WARNINGS=$((WARNINGS + 1))
+fi
+
+# Verificar DEPLOY_SECRET no .env
+if [[ -f ".env" ]]; then
+    if ! grep -q "DEPLOY_SECRET=" .env; then
+        log_warn "DEPLOY_SECRET não encontrado no .env"
+        WARNINGS=$((WARNINGS + 1))
+    else
+        log_info "✓ DEPLOY_SECRET encontrado no .env"
+    fi
+fi
 
 # ==========================
 # Resumo final
 # ==========================
 echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-log_info "Bootstrap concluído com sucesso! ✓"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+if [[ $WARNINGS -eq 0 ]]; then
+    log_info "Bootstrap concluído com sucesso! ✓"
+else
+    log_warn "Bootstrap concluído com $WARNINGS avisos"
+fi
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "📋 Configuração:"
-echo "   Usuário: $DEPLOY_USER"
-echo "   Diretório: $WORKING_DIR"
-echo "   Deploy Script: $DEPLOY_SCRIPT_TARGET"
-echo "   Porta: $PORT"
+echo "📋 Arquivos instalados:"
+echo "   deploy.sh: $DEPLOY_SCRIPT_TARGET"
 echo "   Log: $LOG_FILE"
+echo "   Volume: deploy-logs"
 echo ""
 echo "📝 Próximos passos:"
 echo ""
-echo "1. Verificar/criar o arquivo .env em $WORKING_DIR:"
-echo "   NODE_ENV=production"
-echo "   PORT=$PORT"
-echo "   DEPLOY_SECRET=<seu-secret>"
+echo "1. Verificar .env (DEPLOY_SECRET configurado?)"
+if [[ ! -f ".env" ]] || ! grep -q "DEPLOY_SECRET=" .env 2>/dev/null; then
+    echo "   echo 'DEPLOY_SECRET=$(openssl rand -hex 32)' >> .env"
+fi
 echo ""
-echo "2. Compilar a aplicação (se ainda não compilou):"
-echo "   cd $WORKING_DIR"
-echo "   npm install"
-echo "   npm run build"
+echo "2. Build da imagem do webhook:"
+echo "   docker compose -f docker-compose.prod.yml build deploy-webhook"
 echo ""
-echo "⚠️  LEMBRE-SE:"
-echo "   - Configure o .env com DEPLOY_SECRET antes de iniciar"
-echo "   - O secret deve ser o mesmo usado no GitHub Actions"
+echo "3. Iniciar todos os serviços:"
+echo "   docker compose -f docker-compose.prod.yml up -d"
 echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "4. Verificar status:"
+echo "   docker compose -f docker-compose.prod.yml ps"
+echo "   curl http://localhost:3333/health"
+echo ""
+echo "5. Ver logs:"
+echo "   docker compose -f docker-compose.prod.yml logs -f deploy-webhook"
+echo "   tail -f $LOG_FILE"
+echo ""
+
+if [[ $WARNINGS -gt 0 ]]; then
+    echo "⚠️  Resolva os avisos acima antes de continuar"
+    echo ""
+fi
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
