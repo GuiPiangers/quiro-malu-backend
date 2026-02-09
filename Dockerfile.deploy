@@ -2,49 +2,36 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copiar arquivos de configuração
 COPY package*.json ./
 COPY tsconfig.json ./
 
-# Instalar dependências
 RUN npm ci
 
-# Copiar código fonte
 COPY src/ ./src/
+COPY deploy/ ./deploy/
+COPY @types/ ./@types/
 
-# Compilar TypeScript
 RUN npm run build
 
-# ============================================
-# Production Image
 # ============================================
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Instalar apenas dependências de produção
 COPY package*.json ./
 RUN npm ci --only=production && \
     npm cache clean --force
 
-# Copiar código compilado do builder
-# Assumindo que o build gera em /app/build/
-COPY --from=builder /app/build/ ./dist/
+# Copia CONTEÚDO de build/deploy direto na raiz
+COPY --from=builder /app/build/deploy/ ./
 
-# Criar usuário não-root
 RUN addgroup -g 1001 -S webhookuser && \
     adduser -S -u 1001 -G webhookuser webhookuser && \
     chown -R webhookuser:webhookuser /app
 
-# Mudar para usuário não-root
 USER webhookuser
 
-# Expor porta
 EXPOSE 3333
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:3333/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"
-
-# Comando para iniciar
-CMD ["node", "dist/deploy/server.js"]
+# Agora server.js está direto em /app/
+CMD ["node", "server.js"]
