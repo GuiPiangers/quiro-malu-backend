@@ -11,6 +11,7 @@ IMAGE=""
 TAG=""
 ROLLBACK_TAG="previous"
 ENV_FILE="${ENV_FILE:-/app/.env}"
+PROJECT_NAME="${PROJECT_NAME:-quiro}"
 
 # ==========================
 # Logging functions
@@ -130,14 +131,14 @@ docker tag "$IMAGE:$TAG" "$IMAGE:latest" 2>&1 | tee -a "$LOG"
 log "Pulling compose services"
 for svc in "${SERVICES[@]}"; do
   log "Pulling service: $svc"
-  docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" pull "$svc" 2>&1 | tee -a "$LOG" || {
+  docker compose -p "$PROJECT_NAME" -f "$COMPOSE_FILE" --env-file "$ENV_FILE" pull "$svc" 2>&1 | tee -a "$LOG" || {
       log "Warning: Failed to pull $svc (might not use the image we just pulled)"
   }
 done
 
 # Restart services with new version
 log "Starting services: ${SERVICES[*]}"
-if ! docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d --no-deps --remove-orphans "${SERVICES[@]}" 2>&1 | tee -a "$LOG"; then
+if ! docker compose -p "$PROJECT_NAME" -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d --no-deps --remove-orphans "${SERVICES[@]}" 2>&1 | tee -a "$LOG"; then
     log_error "Failed to start services"
     log "Attempting rollback..."
     rollback
@@ -151,7 +152,7 @@ check_health() {
     local svc=$1
     local cid
     
-    cid=$(docker compose -f "$COMPOSE_FILE" ps -q "$svc" 2>/dev/null || true)
+    cid=$(docker compose -p "$PROJECT_NAME" -f "$COMPOSE_FILE" ps -q "$svc" 2>/dev/null || true)
     
     if [[ -z "$cid" ]]; then
         log "Service $svc: container not found"

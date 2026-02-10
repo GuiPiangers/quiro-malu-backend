@@ -1,3 +1,5 @@
+name: quiro
+
 services:
   # ================================================
   # Servidor Webhook de Deploy
