@@ -4,19 +4,19 @@ import { promisify } from "util";
 const execAsync = promisify(exec);
 
 interface RunDeployParams {
-    image: string;
-    tag: string;
-    services: string[];
-    composeFile: string;
+  image: string;
+  tag: string;
+  services: string[];
+  composeFile: string;
 }
 
 interface RunDeployOptions {
-    onError: (err: Error) => void;
-    onSuccess: (stdout: string) => void;
+  onError: (err: Error) => void;
+  onSuccess: (stdout: string) => void;
 }
 
 function escapeShellArg(arg: string): string {
-    return `'${arg.replace(/'/g, "'\\''")}'`;
+  return `'${arg.replace(/'/g, "'\\''")}'`;
 }
 
 export function runDeploy(
@@ -25,13 +25,16 @@ export function runDeploy(
 ) {
   const imageEscaped = escapeShellArg(image);
   const tagEscaped = escapeShellArg(tag);
-  const composeFileEscaped = escapeShellArg(composeFile);
-  
+  // Mapeia o caminho do host para o caminho interno do container
+  // O volume está montado em /app/docker-compose.yml
+  const containerComposeFile = '/app/docker-compose.yml';
+  const composeFileEscaped = escapeShellArg(containerComposeFile);
+
   const servicesFlags = services
     .map(svc => `--service ${escapeShellArg(svc)}`)
     .join(' ');
 
-  const cmd = `/usr/local/bin/deploy.sh \
+  const cmd = `bash /usr/local/bin/deploy.sh \
     --image ${imageEscaped} \
     --tag ${tagEscaped} \
     --compose-file ${composeFileEscaped} \
@@ -40,8 +43,9 @@ export function runDeploy(
 
   console.log('[DEPLOY] Executing command:', cmd);
 
-  exec(cmd, { 
+  exec(cmd, {
     env: process.env,
+    shell: '/bin/bash',
     timeout: 600000, // 10 minutos timeout
     maxBuffer: 10 * 1024 * 1024 // 10MB buffer para logs grandes
   }, (err, stdout, stderr) => {
@@ -54,11 +58,11 @@ export function runDeploy(
       onError(err);
       return;
     }
-    
+
     if (stderr) {
       console.warn('[DEPLOY] Warnings:', stderr);
     }
-    
+
     console.log('[DEPLOY] Success:', stdout);
     onSuccess(stdout);
   });
@@ -70,7 +74,7 @@ export async function runDeployAsync(
   const imageEscaped = escapeShellArg(image);
   const tagEscaped = escapeShellArg(tag);
   const composeFileEscaped = escapeShellArg(composeFile);
-  
+
   const servicesFlags = services
     .map(svc => `--service ${escapeShellArg(svc)}`)
     .join(' ');

@@ -16,18 +16,30 @@ RUN npm run build
 # ============================================
 FROM node:20-alpine
 
+ARG DOCKER_GID=999
+
 WORKDIR /app
 
 COPY package*.json ./
 RUN npm ci --only=production && \
-    npm cache clean --force
+    npm cache clean --force && \
+    npm cache clean --force && \
+    apk add --no-cache bash coreutils shadow docker-cli docker-cli-compose
 
 # Copia CONTEÚDO de build/deploy direto na raiz
 COPY --from=builder /app/build/deploy/ ./
 
-RUN addgroup -g 1001 -S webhookuser && \
-    adduser -S -u 1001 -G webhookuser webhookuser && \
+RUN existing_docker_group="$(awk -F: -v gid="${DOCKER_GID}" '$3==gid{print $1}' /etc/group)"; \
+    if [ -z "$existing_docker_group" ]; then \
+      addgroup -g ${DOCKER_GID} -S docker; \
+      existing_docker_group="docker"; \
+    fi; \
+    addgroup -g 1001 -S webhookuser && \
+    adduser -S -u 1001 -G webhookuser -h /home/webhookuser webhookuser && \
+    addgroup webhookuser "$existing_docker_group" && \
     chown -R webhookuser:webhookuser /app
+
+ENV HOME=/home/webhookuser
 
 USER webhookuser
 

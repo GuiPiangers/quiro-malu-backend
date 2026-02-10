@@ -10,17 +10,20 @@ LOG="/var/log/deploy-agent.log"
 IMAGE=""
 TAG=""
 ROLLBACK_TAG="previous"
+ENV_FILE="${ENV_FILE:-/app/.env}"
 
 # ==========================
 # Logging functions
 # ==========================
 log() {
-    echo "$(date --iso-8601=seconds) - $*" | tee -a "$LOG"
+    echo "$(date "+%Y-%m-%dT%H:%M:%S%z") - $*" | tee -a "$LOG"
 }
 
 log_error() {
-    echo "$(date --iso-8601=seconds) - ERROR: $*" | tee -a "$LOG" >&2
+    echo "$(date "+%Y-%m-%dT%H:%M:%S%z") - ERROR: $*" | tee -a "$LOG" >&2
 }
+
+# ==========================
 
 # ==========================
 # Args parsing
@@ -49,6 +52,21 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+# ==========================
+# Docker Login
+# ==========================
+if [[ -n "${DOCKER_USERNAME:-}" ]] && [[ -n "${DOCKER_PASSWORD:-}" ]]; then
+    log "Logging into Docker Hub..."
+    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin || log_error "Failed to login to Docker Hub"
+else
+    # Check for logs warning function or just rely on log
+    if declare -f log_warn > /dev/null; then
+        log_warn "DOCKER_USERNAME or DOCKER_PASSWORD not set. Skipping docker login."
+    else
+        log "WARNING: DOCKER_USERNAME or DOCKER_PASSWORD not set. Skipping docker login."
+    fi
+fi
 
 # ==========================
 # Validation
@@ -112,14 +130,14 @@ docker tag "$IMAGE:$TAG" "$IMAGE:latest" 2>&1 | tee -a "$LOG"
 log "Pulling compose services"
 for svc in "${SERVICES[@]}"; do
   log "Pulling service: $svc"
-  docker compose -f "$COMPOSE_FILE" pull "$svc" 2>&1 | tee -a "$LOG" || {
+  docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" pull "$svc" 2>&1 | tee -a "$LOG" || {
       log "Warning: Failed to pull $svc (might not use the image we just pulled)"
   }
 done
 
 # Restart services with new version
 log "Starting services: ${SERVICES[*]}"
-if ! docker compose -f "$COMPOSE_FILE" up -d --no-deps --remove-orphans "${SERVICES[@]}" 2>&1 | tee -a "$LOG"; then
+if ! docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d --no-deps --remove-orphans "${SERVICES[@]}" 2>&1 | tee -a "$LOG"; then
     log_error "Failed to start services"
     log "Attempting rollback..."
     rollback
@@ -240,4 +258,8 @@ if rollback; then
 else
     log_error "Deploy failed and rollback also failed - manual intervention required!"
     exit 2
+fi
+if [[ -n "$ENV_FILE" ]] && [[ ! -f "$ENV_FILE" ]]; then
+  log_error "Env file not found: $ENV_FILE"
+  exit 1
 fi

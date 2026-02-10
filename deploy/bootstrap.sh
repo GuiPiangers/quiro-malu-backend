@@ -70,6 +70,10 @@ log_info "Criando arquivo de log..."
 mkdir -p "$(dirname "$LOG_FILE")"
 touch "$LOG_FILE"
 chmod 666 "$LOG_FILE"
+# Garante que o arquivo exista antes do Docker subir
+if [[ ! -f "$LOG_FILE" ]]; then
+    log_warn "Falha ao criar arquivo de log: $LOG_FILE"
+fi
 log_info "✓ Log criado: $LOG_FILE"
 
 # ==========================

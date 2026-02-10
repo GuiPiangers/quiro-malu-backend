@@ -6,13 +6,22 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.deploy
+      args:
+        DOCKER_GID: ${DOCKER_GID:-999}
     container_name: deploy-webhook
     restart: always
-
+    env_file:
+      - .env
     environment:
       - NODE_ENV=production
       - PORT=3333
       - DEPLOY_SECRET=${DEPLOY_SECRET}
+      - DOCKER_USERNAME=${DOCKER_USERNAME}
+      - DOCKER_PASSWORD=${DOCKER_PASSWORD}
+      - HOME=/home/webhookuser
+      - DOCKER_CONFIG=/home/webhookuser/.docker
+    group_add:
+      - "${DOCKER_GID:-999}"
 
     # Porta apenas localhost (segurança)
     ports:
@@ -23,10 +32,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       # Compose file para deploy
       - ./docker-compose.prod.yml:/app/docker-compose.yml:ro
+      # Env file para docker compose
+      - ./.env:/app/.env:ro
       # Script de deploy
       - ./deploy/deploy.sh:/usr/local/bin/deploy.sh:ro
       # Logs
-      - deploy-logs:/var/log
+      - /var/log/deploy-agent.log:/var/log/deploy-agent.log
 
     networks:
       - minha_rede
@@ -256,7 +267,7 @@ services:
       - app-logs:/var/log/app:ro
       - mysql-logs:/var/log/mysql:ro
       - mongo-logs:/var/log/mongodb:ro
-      - deploy-logs:/var/log/deploy:ro
+      - /var/log/deploy-agent.log:/var/log/deploy/deploy-agent.log:ro
     command: -config.file=/etc/promtail/config.yml
     networks:
       - minha_rede
@@ -277,7 +288,6 @@ volumes:
   app-logs:
   mysql-logs:
   mongo-logs:
-  deploy-logs:
 
     # ================================================
     # Networks
