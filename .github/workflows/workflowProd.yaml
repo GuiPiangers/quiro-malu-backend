@@ -74,7 +74,7 @@ jobs:
 
           SIGNATURE=$(echo -n "$PAYLOAD" | openssl dgst -sha256 -hmac ${{ secrets.DEPLOY_SIGNATURE }} | sed 's/^.*= //')
 
-          curl -X POST ${{ secrets.DEPLOY_URL }} \
+          curl -X POST ${{ secrets.DEPLOY_URL }}/deploy \
             -H "Content-Type: application/json" \
             -H "X-Deploy-Signature: sha256=$SIGNATURE" \
             -d "$PAYLOAD"
