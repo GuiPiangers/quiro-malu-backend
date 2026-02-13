@@ -5,8 +5,7 @@ import {
   RunDeployUseCase,
 } from "../useCases/RunDeployUseCase";
 
-const PRODUCTION_COMPOSE_FILE =
-  "/home/gui_piangers/Programacao/QuiroMalu/quiro-malu-backend/docker-compose.prod.yml";
+const PRODUCTION_COMPOSE_FILE = "/app/docker-compose.yml";
 
 export class ProductionDeployController {
   constructor(private readonly runDeployUseCase: RunDeployUseCase) {}

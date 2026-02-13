@@ -1,6 +1,5 @@
 import { exec } from "child_process";
 import { promisify } from "util";
-import path from "path";
 
 const execAsync = promisify(exec);
 
@@ -26,10 +25,7 @@ export function runDeploy(
 ) {
   const imageEscaped = escapeShellArg(image);
   const tagEscaped = escapeShellArg(tag);
-  // Uses the compose filename and resolves it inside webhook container /app mount.
-  const composeFileName = path.basename(composeFile);
-  const containerComposeFile = path.posix.join("/app", composeFileName);
-  const composeFileEscaped = escapeShellArg(containerComposeFile);
+  const composeFileEscaped = escapeShellArg(composeFile);
 
   const servicesFlags = services
     .map((svc) => `--service ${escapeShellArg(svc)}`)
@@ -81,9 +77,7 @@ export async function runDeployAsync({
 }: RunDeployParams): Promise<string> {
   const imageEscaped = escapeShellArg(image);
   const tagEscaped = escapeShellArg(tag);
-  const composeFileName = path.basename(composeFile);
-  const containerComposeFile = path.posix.join("/app", composeFileName);
-  const composeFileEscaped = escapeShellArg(containerComposeFile);
+  const composeFileEscaped = escapeShellArg(composeFile);
 
   const servicesFlags = services
     .map((svc) => `--service ${escapeShellArg(svc)}`)

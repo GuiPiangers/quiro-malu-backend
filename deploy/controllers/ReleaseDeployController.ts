@@ -5,11 +5,10 @@ import {
   RunDeployUseCase,
 } from "../useCases/RunDeployUseCase";
 
-const RELEASE_COMPOSE_FILE =
-  "/home/gui_piangers/Programacao/QuiroMalu/quiro-malu-backend/docker-compose.release.yml";
+const RELEASE_COMPOSE_FILE = "/app/docker-compose.release.yml";
 
 export class ReleaseDeployController {
-  constructor(private readonly runDeployUseCase: RunDeployUseCase) {}
+  constructor(private readonly runDeployUseCase: RunDeployUseCase) { }
 
   handle(req: RequestWithRawBody, res: Response) {
     try {
