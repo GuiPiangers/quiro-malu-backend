@@ -2,7 +2,7 @@
 
 ## Localização
 - Cada caso de uso deve estar em:  
-  `src/core/<módulo>/useCases/NomeDoUseCase.ts`
+  `<módulo>/useCases/NomeDoUseCase.ts`
 
 ## Estrutura do Caso de Uso
 - Cada caso de uso é uma **classe** com:
@@ -15,7 +15,7 @@
 ## Padrão a seguir
 1. **Injeção de dependências** via interface do repositório.  
 2. **Receber DTO de entrada** no método `execute`.  
-3. **Instanciar entidade** do módulo (ex: `new Patient(...)`).  
+3. **Instanciar entidade** do módulo (ex: `new Patient(...)`), em alguns casos também é possível receber a entidade já instanciada.  
 4. **Executar validações** dentro da entidade ou tiny classes de `shared`.  
 5. **Consultar repositório** quando necessário (ex: verificar duplicidade).  
 6. **Persistir dados** usando o método adequado do repositório (`save`, `list`, etc.).  

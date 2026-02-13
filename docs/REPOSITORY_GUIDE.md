@@ -2,7 +2,7 @@
 
 ## Localização
 - Cada caso de uso deve estar em:  
-  `src/repositories/[modulo]/NomeDoRepository.ts`
+  `repositories/[modulo]/NomeDoRepository.ts`
 
 ## Estrutura do Repositório
 
