@@ -1,5 +1,6 @@
 import { exec } from "child_process";
 import { promisify } from "util";
+import path from "path";
 
 const execAsync = promisify(exec);
 
@@ -21,18 +22,18 @@ function escapeShellArg(arg: string): string {
 
 export function runDeploy(
   { image, tag, composeFile, services }: RunDeployParams,
-  { onError, onSuccess }: RunDeployOptions
+  { onError, onSuccess }: RunDeployOptions,
 ) {
   const imageEscaped = escapeShellArg(image);
   const tagEscaped = escapeShellArg(tag);
-  // Mapeia o caminho do host para o caminho interno do container
-  // O volume está montado em /app/docker-compose.yml
-  const containerComposeFile = '/app/docker-compose.yml';
+  // Uses the compose filename and resolves it inside webhook container /app mount.
+  const composeFileName = path.basename(composeFile);
+  const containerComposeFile = path.posix.join("/app", composeFileName);
   const composeFileEscaped = escapeShellArg(containerComposeFile);
 
   const servicesFlags = services
-    .map(svc => `--service ${escapeShellArg(svc)}`)
-    .join(' ');
+    .map((svc) => `--service ${escapeShellArg(svc)}`)
+    .join(" ");
 
   const cmd = `bash /usr/local/bin/deploy.sh \
     --image ${imageEscaped} \
@@ -41,43 +42,52 @@ export function runDeploy(
     ${servicesFlags}
   `;
 
-  console.log('[DEPLOY] Executing command:', cmd);
+  console.log("[DEPLOY] Executing command:", cmd);
 
-  exec(cmd, {
-    env: process.env,
-    shell: '/bin/bash',
-    timeout: 600000, // 10 minutos timeout
-    maxBuffer: 10 * 1024 * 1024 // 10MB buffer para logs grandes
-  }, (err, stdout, stderr) => {
-    if (err) {
-      console.error('[DEPLOY] Error:', {
-        code: err.code,
-        message: err.message,
-        stderr: stderr
-      });
-      onError(err);
-      return;
-    }
+  exec(
+    cmd,
+    {
+      env: process.env,
+      shell: "/bin/bash",
+      timeout: 600000, // 10 minutos timeout
+      maxBuffer: 10 * 1024 * 1024, // 10MB buffer para logs grandes
+    },
+    (err, stdout, stderr) => {
+      if (err) {
+        console.error("[DEPLOY] Error:", {
+          code: err.code,
+          message: err.message,
+          stderr,
+        });
+        onError(err);
+        return;
+      }
 
-    if (stderr) {
-      console.warn('[DEPLOY] Warnings:', stderr);
-    }
+      if (stderr) {
+        console.warn("[DEPLOY] Warnings:", stderr);
+      }
 
-    console.log('[DEPLOY] Success:', stdout);
-    onSuccess(stdout);
-  });
+      console.log("[DEPLOY] Success:", stdout);
+      onSuccess(stdout);
+    },
+  );
 }
 
-export async function runDeployAsync(
-  { image, tag, composeFile, services }: RunDeployParams
-): Promise<string> {
+export async function runDeployAsync({
+  image,
+  tag,
+  composeFile,
+  services,
+}: RunDeployParams): Promise<string> {
   const imageEscaped = escapeShellArg(image);
   const tagEscaped = escapeShellArg(tag);
-  const composeFileEscaped = escapeShellArg(composeFile);
+  const composeFileName = path.basename(composeFile);
+  const containerComposeFile = path.posix.join("/app", composeFileName);
+  const composeFileEscaped = escapeShellArg(containerComposeFile);
 
   const servicesFlags = services
-    .map(svc => `--service ${escapeShellArg(svc)}`)
-    .join(' ');
+    .map((svc) => `--service ${escapeShellArg(svc)}`)
+    .join(" ");
 
   const cmd = `/usr/local/bin/deploy.sh \
     --image ${imageEscaped} \
@@ -90,20 +100,20 @@ export async function runDeployAsync(
     const { stdout, stderr } = await execAsync(cmd, {
       env: process.env,
       timeout: 600000,
-      maxBuffer: 10 * 1024 * 1024
+      maxBuffer: 10 * 1024 * 1024,
     });
 
     if (stderr) {
-      console.warn('[DEPLOY] Warnings:', stderr);
+      console.warn("[DEPLOY] Warnings:", stderr);
     }
 
     return stdout;
   } catch (error) {
     const err = error as Error & { code?: number; stderr?: string };
-    console.error('[DEPLOY] Error:', {
+    console.error("[DEPLOY] Error:", {
       code: err.code,
       message: err.message,
-      stderr: err.stderr
+      stderr: err.stderr,
     });
     throw error;
   }
