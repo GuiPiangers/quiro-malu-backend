@@ -66,8 +66,7 @@ jobs:
           {
             "image": "guipiangers/quiro-backend",
             "tag": "$TAG",
-            "services": ["app"],
-            "composeFile": "/home/gui_piangers/Programacao/QuiroMalu/quiro-malu-backend/docker-compose.prod.yml"
+            "services": ["app"]
           }
           EOF
           )

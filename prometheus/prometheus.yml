@@ -7,6 +7,10 @@ scrape_configs:
     static_configs:
       - targets: ['app:8000']
 
+  - job_name: 'quiro_release_app'
+    static_configs:
+      - targets: ['release-app:8000']
+
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']

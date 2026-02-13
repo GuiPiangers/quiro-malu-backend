@@ -1,46 +1,89 @@
+name: quiro
+
 services:
-  app-release:
+  # ================================================
+  # Aplicação Backend
+  # ================================================
+  release-app:
     restart: always
-    container_name: app-release
-    image: guipiangers/quiro-backend:1.0
+    image: guipiangers/quiro-backend:latest
     env_file:
       - .env.release
     ports:
-      - "8100:8000"   
+      - "8001:8000"
+    volumes:
+      - app-logs-release:/var/log/app
     depends_on:
-      - "redis-release"
+      - release-redis
+      - release-mysql-db
     networks:
-      - minha_rede_release
+      - minha_rede
+    labels:
+      logging: "promtail"
+      logging_jobname: "backend-release"
+      app_type: "nodejs"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
 
-  mysql-db-release:
+  # ================================================
+  # MySQL Database
+  # ================================================
+  release-mysql-db:
     image: mysql:8.0
-    container_name: mysqldb-release
     restart: always
     env_file:
       - .env.release
     volumes:
       - db-release:/var/lib/mysql
+      - mysql-logs-release:/var/log/mysql
     ports:
-      - "13306:3306"   
+      - "3307:3306"
     networks:
-      - minha_rede_release
+      - minha_rede
+    labels:
+      logging: "promtail"
+      logging_jobname: "mysql-release"
+      app_type: "database"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  mongo-release:
+  # ================================================
+  # MongoDB
+  # ================================================
+  release-mongo:
     image: mongo:8.0.4
-    container_name: mongo-release
     restart: always
     env_file:
       - .env.release
     volumes:
       - mongoDb-release:/data/db
+      - mongo-logs-release:/var/log/mongodb
     ports:
       - "27018:27017"
     networks:
-      - minha_rede_release
+      - minha_rede
+    labels:
+      logging: "promtail"
+      logging_jobname: "mongodb-release"
+      app_type: "database"
+    healthcheck:
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  redis-release:
+  # ================================================
+  # Redis Cache
+  # ================================================
+  release-redis:
     image: redis:7.4.2-alpine
-    container_name: redis-release
     restart: always
     env_file:
       - .env.release
@@ -49,26 +92,53 @@ services:
     ports:
       - "6380:6379"
     networks:
-      - minha_rede_release
+      - minha_rede
+    labels:
+      logging: "promtail"
+      logging_jobname: "redis-release"
+      app_type: "cache"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  nginx-release:
+  # ================================================
+  # Nginx Reverse Proxy
+  # ================================================
+  release-nginx:
     image: nginx:latest
-    container_name: nginx-release
     restart: always
     ports:
       - "8080:80"
-      - "8443:443"
+      - "4444:443"
     volumes:
       - ./nginx/nginx.release.conf:/etc/nginx/nginx.conf
-    depends_on: 
-      - "app-release"
+      - nginx-logs-release:/var/log/nginx
+    depends_on:
+      - release-app
     networks:
-      - minha_rede_release
+      - minha_rede
+    labels:
+      logging: "promtail"
+      logging_jobname: "nginx-release"
+      app_type: "proxy"
 
+# ================================================
+# Volumes
+# ================================================
 volumes:
   db-release:
   mongoDb-release:
   redisDb-release:
+  nginx-logs-release:
+  app-logs-release:
+  mysql-logs-release:
+  mongo-logs-release:
 
+    # ================================================
+    # Networks
+    # ================================================
 networks:
-  minha_rede_release:
+  minha_rede:
+    driver: bridge

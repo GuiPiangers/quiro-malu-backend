@@ -34,8 +34,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       # Compose file para deploy
       - ./docker-compose.prod.yml:/app/docker-compose.yml:ro
+      # Compose file para release deploy
+      - ./docker-compose.release.yml:/app/docker-compose.release.yml:ro
       # Env file para docker compose
       - ./.env:/app/.env:ro
+      # Env file para release compose
+      - ./.env.release:/app/.env.release:ro
       # Script de deploy
       - ./deploy/deploy.sh:/usr/local/bin/deploy.sh:ro
       # Logs
