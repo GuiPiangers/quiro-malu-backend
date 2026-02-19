@@ -1,8 +1,8 @@
-import { AzureSpeechTranscriptionAdapter } from "../../../../repositories/transcription/AzureSpeechTranscriptionAdapter";
+import { GroqTranscriptionAdapter } from "../../../../repositories/transcription/GroqTranscriptionAdapter";
 import { CreateTranscriptionUseCase } from "../../useCases/CreateTranscriptionUseCase";
 import { CreateTranscriptionController } from "./createTranscriptionController";
 
-const transcriptionService = new AzureSpeechTranscriptionAdapter();
+const transcriptionService = new GroqTranscriptionAdapter();
 const createTranscriptionUseCase = new CreateTranscriptionUseCase(
   transcriptionService,
 );

@@ -1,4 +1,6 @@
-export class WhisperTranscriptionAdapter {
+import { ITranscriptionService } from "./ITranscriptionService";
+
+export class WhisperTranscriptionAdapter implements ITranscriptionService{
   async transcribe(file: Buffer) {
     const path = "https://api.openai.com/v1/audio/transcriptions";
 
