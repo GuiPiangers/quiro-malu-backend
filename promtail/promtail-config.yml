@@ -87,61 +87,6 @@ scrape_configs:
           source: log
 
   # ============================================
-  # Nginx - Logs de acesso e erro
-  # ============================================
-  - job_name: nginx_access
-    static_configs:
-      - targets:
-          - localhost
-        labels:
-          job: nginx
-          log_type: access
-          __path__: /var/log/nginx/access.log
-
-    pipeline_stages:
-      # Parse do formato combined do Nginx
-      - regex:
-          expression: '^(?P<remote_addr>[\w\.:]+) - (?P<remote_user>[\w\-]+) \[(?P<time_local>[^\]]+)\] "(?P<method>\w+) (?P<request>[^\s]+) (?P<protocol>[\w/\.]+)" (?P<status>\d+) (?P<body_bytes_sent>\d+) "(?P<http_referer>[^"]*)" "(?P<http_user_agent>[^"]*)"( "(?P<http_x_forwarded_for>[^"]*)")?'
-
-      # Extrai labels importantes
-      - labels:
-          method:
-          status:
-
-      # Adiciona label de erro se status >= 400
-      - match:
-          selector: '{job="nginx"} |~ "\" [45]\\d{2} "'
-          stages:
-            - static_labels:
-                error: "true"
-
-      # Timestamp
-      - timestamp:
-          source: time_local
-          format: '02/Jan/2006:15:04:05 -0700'
-
-  - job_name: nginx_error
-    static_configs:
-      - targets:
-          - localhost
-        labels:
-          job: nginx
-          log_type: error
-          __path__: /var/log/nginx/error.log
-
-    pipeline_stages:
-      # Parse básico de erro do Nginx
-      - regex:
-          expression: '^(?P<timestamp>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}) \[(?P<level>\w+)\] (?P<message>.*)$'
-
-      - labels:
-          level:
-
-      - timestamp:
-          source: timestamp
-          format: '2006/01/02 15:04:05'
-
-  # ============================================
   # Aplicação Node.js - Logs estruturados
   # ============================================
   - job_name: app_logs
@@ -219,6 +164,28 @@ scrape_configs:
             context: ctx
             message: msg
 
-      - labels:
           severity:
           component:
+
+  # ============================================
+  # RELEASE - Logs
+  # ============================================
+  - job_name: app_logs_release
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: backend-release
+          log_type: application
+          __path__: /var/log/app-release/*.log
+    pipeline_stages:
+      - json:
+          expressions:
+            level: level
+            message: message
+            timestamp: timestamp
+      - labels:
+          level:
+      - timestamp:
+          source: timestamp
+          format: RFC3339
