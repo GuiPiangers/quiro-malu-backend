@@ -1,4 +1,3 @@
-import { MySqlPatientRepository } from "../../../../repositories/patient/MySqlPatientRepository";
 import { UpdatePatientUseCase } from "../../useCases/updatePatient/UpdatePatientUseCase";
 import { UpdatePatientController } from "./UpdatePatientController";
 import { KnexLocationRepository } from "../../../../repositories/location/KnexLocationRepository";
