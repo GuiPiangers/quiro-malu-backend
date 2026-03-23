@@ -1,0 +1,7 @@
+interface:
+  display_name: "Quiro Malu Backend Guides"
+  short_description: "Mapper de guias da arquitetura"
+  default_prompt: "Use $quiro-malu-backend-guides para escolher o guia certo em `docs/` e aplicar o padrão (controller/usecase/repository/entity) ao implementar a tarefa."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,8 @@
+Siga os guias em `docs/` para aplicar os padrões do projeto:
+- `docs/PROJECT_GUIDE.md` (estrutura, erros `ApiError`, datas `DateTime`, testes)
+- `docs/CONTROLLER_GUIDE.md` (controllers `handle` + `responseError`, rotas em `src/router.ts`)
+- `docs/USECASE_GUIDE.md` (use cases `execute`, DTOs, interfaces de repositório, testes)
+- `docs/ENTITY_GUIDE.md` (entidades `extends Entity` + `getDTO`)
+- `docs/REPOSITORY_GUIDE.md` (interfaces + implementações com Knex + `ETableNames`)
+
+Regra de ouro: carregue/aplique somente o(s) guia(s) necessário(s) para a tarefa (não pre-carregar tudo).

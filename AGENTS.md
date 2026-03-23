@@ -53,3 +53,4 @@ When changing database schema, ship migration plus rollback-safe code in the sam
 - READ file `docs/USECASE_GUIDE.md` to create an use case
 - READ file `docs/REPOSITORY_GUIDE.md` to create an repository
 - READ file `docs/ENTITY_GUIDE.md` to create an entity
+- For an on-demand “which guide to load” decision tree, follow `.agent/skills/quiro-malu-backend-guides/SKILL.md`.
