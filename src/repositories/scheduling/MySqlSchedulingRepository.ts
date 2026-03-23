@@ -5,12 +5,13 @@ import {
 import { SchedulingWithPatientDTO } from "../../core/scheduling/models/SchedulingWithPatient";
 import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
-import { query } from "../../database/mySqlConnection";
+import { ApiError } from "../../utils/ApiError";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
 import {
   ISchedulingRepository,
   ListBetweenDatesParams,
-} from "../scheduling/ISchedulingRepository";
+  UpdateSchedulingParams,
+} from "./ISchedulingRepository";
 
 export class MySqlSchedulingRepository implements ISchedulingRepository {
   async listBetweenDates({
@@ -50,7 +51,7 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
     createAt,
     updateAt,
     ...data
-  }: SchedulingDTO & { id: string; userId: string }): Promise<void> {
+  }: UpdateSchedulingParams): Promise<void> {
     await Knex(ETableNames.SCHEDULES).update(data).where({ id, userId });
   }
 
@@ -61,30 +62,61 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
     userId: string;
     date: string;
     config?: { limit: number; offSet: number };
-  }): Promise<(SchedulingDTO & { patient: string; phone: string })[]> {
-    const sql =
-      "SELECT s.id, s.patientId, p.name as patient, p.phone, DATE_FORMAT(s.date, '%Y-%m-%dT%H:%i') as date, s.duration, s.service, s.status, s.updated_at as updateAt, s.created_at as createAt FROM schedules as s LEFT JOIN patients as p ON s.patientId = p.id AND s.userId = p.userId WHERE s.userId = ? AND date_format(s.date, '%Y-%m-%d') = ? ORDER BY s.updated_at DESC ";
-    const errorMessage = `Não foi possível realizar a busca`;
-    const result = await query<
-      (SchedulingDTO & { patient: string; phone: string })[]
-    >(errorMessage, sql, [userId, date]);
-    return result.map((scheduling) => getValidObjectValues(scheduling));
+  }): Promise<SchedulingWithPatientDTO[]> {
+    try {
+      const result = await Knex(`${ETableNames.SCHEDULES} as s`)
+        .leftJoin(`${ETableNames.PATIENTS} as p`, function joinPatients() {
+          this.on("s.patientId", "=", "p.id").andOn(
+            "s.userId",
+            "=",
+            "p.userId",
+          );
+        })
+        .select(
+          "s.id",
+          "s.patientId",
+          Knex.raw("p.name as patient"),
+          "p.phone",
+          Knex.raw(`DATE_FORMAT(s.date, '%Y-%m-%dT%H:%i') as date`),
+          "s.duration",
+          "s.service",
+          "s.status",
+          Knex.raw("s.updated_at as updateAt"),
+          Knex.raw("s.created_at as createAt"),
+        )
+        .where("s.userId", userId)
+        .andWhereRaw("date_format(s.date, '%Y-%m-%d') = ?", [date])
+        .orderBy("s.updated_at", "desc");
+
+      return result.map((scheduling) =>
+        getValidObjectValues(scheduling as SchedulingWithPatientDTO),
+      );
+    } catch {
+      throw new ApiError("Não foi possível realizar a busca", 500);
+    }
   }
 
-  count({
+  async count({
     date,
     userId,
   }: {
     date: string;
     userId: string;
   }): Promise<[{ total: number }]> {
-    const sql =
-      "SELECT COUNT(id) AS total FROM schedules WHERE userId = ? AND date_format(date, '%Y-%m-%d') = ?";
-    const errorMessage = `Não foi possível realizar a busca`;
-    return query(errorMessage, sql, [userId, date]);
+    try {
+      const [result] = await Knex(ETableNames.SCHEDULES)
+        .count("id as total")
+        .where({ userId })
+        .andWhereRaw("date_format(date, '%Y-%m-%d') = ?", [date]);
+
+      const total = Number((result as any)?.total ?? 0);
+      return [{ total }];
+    } catch {
+      throw new ApiError("Não foi possível realizar a busca", 500);
+    }
   }
 
-  qdtSchedulesByDay({
+  async qdtSchedulesByDay({
     month,
     year,
     userId,
@@ -93,10 +125,23 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
     year: number;
     userId: string;
   }): Promise<{ formattedDate: string; qtd: number }[]> {
-    const sql =
-      "SELECT date_format(date, '%Y-%m-%d') as formattedDate, count(id) as qtd from schedules WHERE month(date) = ? AND year(date) = ? AND userId = ? group by formattedDate";
-    const errorMessage = `Não foi possível realizar a busca`;
-    return query(errorMessage, sql, [month, year, userId]);
+    try {
+      const result = await Knex(ETableNames.SCHEDULES)
+        .select(
+          Knex.raw("date_format(date, '%Y-%m-%d') as formattedDate"),
+          Knex.raw("count(id) as qtd"),
+        )
+        .where({ userId })
+        .andWhereRaw("month(date) = ? AND year(date) = ?", [month, year])
+        .groupByRaw("date_format(date, '%Y-%m-%d')");
+
+      return result.map((row: any) => ({
+        formattedDate: row.formattedDate,
+        qtd: Number(row.qtd ?? 0),
+      }));
+    } catch {
+      throw new ApiError("Não foi possível realizar a busca", 500);
+    }
   }
 
   async get({
@@ -106,18 +151,38 @@ export class MySqlSchedulingRepository implements ISchedulingRepository {
     id: string;
     userId: string;
   }): Promise<SchedulingWithPatientDTO[]> {
-    const sql =
-      "SELECT s.id, s.patientId, p.name as patient, p.phone, DATE_FORMAT(s.date, '%Y-%m-%dT%H:%i') as date, s.duration, s.service, s.status, s.updated_at as updateAt, s.created_at as createAt FROM schedules as s LEFT JOIN patients as p ON s.patientId = p.id AND s.userId = p.userId WHERE s.id = ? AND s.userId = ?";
-    const errorMessage = `Não foi possível realizar a busca`;
-    const result = await query<SchedulingWithPatientDTO[]>(errorMessage, sql, [
-      id,
-      userId,
-    ]);
-    return result.map((scheduling) => getValidObjectValues(scheduling));
+    try {
+      const result = await Knex(`${ETableNames.SCHEDULES} as s`)
+        .leftJoin(`${ETableNames.PATIENTS} as p`, function joinPatients() {
+          this.on("s.patientId", "=", "p.id").andOn(
+            "s.userId",
+            "=",
+            "p.userId",
+          );
+        })
+        .select(
+          "s.id",
+          "s.patientId",
+          Knex.raw("p.name as patient"),
+          "p.phone",
+          Knex.raw(`DATE_FORMAT(s.date, '%Y-%m-%dT%H:%i') as date`),
+          "s.duration",
+          "s.service",
+          "s.status",
+          Knex.raw("s.updated_at as updateAt"),
+          Knex.raw("s.created_at as createAt"),
+        )
+        .where({ "s.id": id, "s.userId": userId });
+
+      return result.map((scheduling) =>
+        getValidObjectValues(scheduling as SchedulingWithPatientDTO),
+      );
+    } catch {
+      throw new ApiError("Não foi possível realizar a busca", 500);
+    }
   }
 
   async delete({ id, userId }: { id: string; userId: string }): Promise<void> {
-    const sql = "DELETE FROM schedules WHERE id = ? AND userId = ?";
     await Knex(ETableNames.SCHEDULES).where({ id, userId }).del();
   }
 }
