@@ -8,6 +8,7 @@ import { factoryEventSuggestionWithStartEndDate } from "../core/scheduling/model
 import { saveEventSuggestionUseCase } from "../core/scheduling/useCases/saveEventSuggestion";
 import { appEventListener } from "../core/shared/observers/EventListener";
 import { sendMessageQueue } from "../repositories/queueProvider/sendMessageQueue";
+import { logger } from "../utils/logger";
 
 export async function start() {
   await watchMessageTriggersUseCase.execute();
@@ -83,7 +84,7 @@ export async function start() {
         data.userId,
       );
     } catch (error) {
-      console.error("Error creating block schedule:", error);
+      logger.error({ err: error, event: data }, "error creating block schedule");
     }
   });
 }
