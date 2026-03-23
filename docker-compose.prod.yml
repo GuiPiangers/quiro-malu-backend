@@ -278,6 +278,8 @@ services:
 # ================================================
 volumes:
   db:
+    external: true
+    name: quiro-malu-backend_db
   mongoDb:
   redisDb:
   loki-data:
