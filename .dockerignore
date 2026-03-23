@@ -4,3 +4,6 @@ node_modules
 readme.node_modules
 .env
 coverage
+certbot/
+.git/
+*.log
