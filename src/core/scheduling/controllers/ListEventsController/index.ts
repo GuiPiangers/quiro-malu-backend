@@ -1,9 +1,9 @@
 import { BlockScheduleRepository } from "../../../../repositories/blockScheduleRepository/BlockScheduleRepository";
-import { MySqlSchedulingRepository } from "../../../../repositories/scheduling/MySqlSchedulingRepository";
+import { KnexSchedulingRepository } from "../../../../repositories/scheduling/KnexSchedulingRepository";
 import { ListEventsUseCase } from "../../useCases/listEvents/ListEventsUseCase";
 import { ListEventsController } from "./ListEventsController";
 
-const schedulingRepository = new MySqlSchedulingRepository();
+const schedulingRepository = new KnexSchedulingRepository();
 const blockedSchedulingRepository = new BlockScheduleRepository();
 const listEventsUseCase = new ListEventsUseCase(
   schedulingRepository,

@@ -13,7 +13,7 @@ import {
   UpdateSchedulingParams,
 } from "./ISchedulingRepository";
 
-export class MySqlSchedulingRepository implements ISchedulingRepository {
+export class KnexSchedulingRepository implements ISchedulingRepository {
   async listBetweenDates({
     endDate,
     startDate,

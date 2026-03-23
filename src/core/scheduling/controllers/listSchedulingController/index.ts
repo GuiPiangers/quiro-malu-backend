@@ -1,8 +1,8 @@
-import { MySqlSchedulingRepository } from "../../../../repositories/scheduling/MySqlSchedulingRepository";
+import { KnexSchedulingRepository } from "../../../../repositories/scheduling/KnexSchedulingRepository";
 import { ListSchedulingUseCase } from "../../useCases/listScheduling/ListSchedulingUseCase";
 import { ListSchedulingController } from "./ListSchedulingController";
 
-const schedulingRepository = new MySqlSchedulingRepository();
+const schedulingRepository = new KnexSchedulingRepository();
 const listSchedulingUseCase = new ListSchedulingUseCase(schedulingRepository);
 const listSchedulingController = new ListSchedulingController(
   listSchedulingUseCase,

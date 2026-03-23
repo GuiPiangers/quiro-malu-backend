@@ -1,8 +1,8 @@
-import { MySqlSchedulingRepository } from "../../../../repositories/scheduling/MySqlSchedulingRepository";
+import { KnexSchedulingRepository } from "../../../../repositories/scheduling/KnexSchedulingRepository";
 import { UpdateSchedulingUseCase } from "../../../scheduling/useCases/updateScheduling/UpdateSchedulingUseCase";
 
 export function updateSchedulingUseCaseFactory() {
-  const schedulingRepository = new MySqlSchedulingRepository();
+  const schedulingRepository = new KnexSchedulingRepository();
   const updateSchedulingUseCase = new UpdateSchedulingUseCase(
     schedulingRepository,
   );
