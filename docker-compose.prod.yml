@@ -291,17 +291,9 @@ volumes:
   mongo-logs: # Volumes Release (externos)
 
   nginx-logs-release:
-    external: true
-    name: quiro_nginx-logs-release
   app-logs-release:
-    external: true
-    name: quiro_app-logs-release
   mysql-logs-release:
-    external: true
-    name: quiro_mysql-logs-release
   mongo-logs-release:
-    external: true
-    name: quiro_mongo-logs-release
     # ================================================
     # Networks
     # ================================================
