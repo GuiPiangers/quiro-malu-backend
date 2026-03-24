@@ -1,3 +1,4 @@
+import { AppEventListener } from "../../../../shared/observers/EventListener";
 import { createMockBeforeScheduleMessageRepository } from "../../../../../repositories/_mocks/BeforeScheduleMessageRepositoryMock";
 import { CreateBeforeScheduleMessageUseCase } from "../CreateBeforeScheduleMessageUseCase";
 
@@ -6,8 +7,12 @@ describe("CreateBeforeScheduleMessageUseCase", () => {
     const beforeScheduleMessageRepository =
       createMockBeforeScheduleMessageRepository();
 
+    const appEventListener = new AppEventListener();
+    const emitSpy = jest.spyOn(appEventListener, "emit");
+
     const useCase = new CreateBeforeScheduleMessageUseCase(
       beforeScheduleMessageRepository,
+      appEventListener,
     );
 
     const result = await useCase.execute({
@@ -27,6 +32,13 @@ describe("CreateBeforeScheduleMessageUseCase", () => {
       }),
     );
 
+    expect(emitSpy).toHaveBeenCalledWith("beforeScheduleMessageCreate", {
+      id: result.id,
+      userId: "user-1",
+      minutesBeforeSchedule: 60,
+      isActive: true,
+    });
+
     expect(result).toEqual({
       id: result.id,
       minutesBeforeSchedule: 60,
@@ -42,8 +54,12 @@ describe("CreateBeforeScheduleMessageUseCase", () => {
     const beforeScheduleMessageRepository =
       createMockBeforeScheduleMessageRepository();
 
+    const appEventListener = new AppEventListener();
+    const emitSpy = jest.spyOn(appEventListener, "emit");
+
     const useCase = new CreateBeforeScheduleMessageUseCase(
       beforeScheduleMessageRepository,
+      appEventListener,
     );
 
     const result = await useCase.execute({
@@ -59,6 +75,14 @@ describe("CreateBeforeScheduleMessageUseCase", () => {
         isActive: false,
       }),
     );
+
+    expect(emitSpy).toHaveBeenCalledWith("beforeScheduleMessageCreate", {
+      id: result.id,
+      userId: "user-2",
+      minutesBeforeSchedule: 15,
+      isActive: false,
+    });
+
     expect(result.isActive).toBe(false);
   });
 });
