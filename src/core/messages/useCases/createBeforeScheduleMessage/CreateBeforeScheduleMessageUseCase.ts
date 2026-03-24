@@ -2,6 +2,7 @@ import {
   IBeforeScheduleMessageRepository,
   SaveBeforeScheduleMessageProps,
 } from "../../../../repositories/messages/IBeforeScheduleMessageRepository";
+import { AppEventListener } from "../../../shared/observers/EventListener";
 import {
   BeforeScheduleMessage,
   BeforeScheduleMessageDTO,
@@ -20,6 +21,7 @@ export type CreateBeforeScheduleMessageDTO = {
 export class CreateBeforeScheduleMessageUseCase {
   constructor(
     private beforeScheduleMessageRepository: IBeforeScheduleMessageRepository,
+    private appEventListener: AppEventListener,
   ) {}
 
   async execute(
@@ -46,6 +48,13 @@ export class CreateBeforeScheduleMessageUseCase {
     };
 
     await this.beforeScheduleMessageRepository.save(saveData);
+
+    this.appEventListener.emit("beforeScheduleMessageCreate", {
+      id: beforeScheduleMessageDTO.id!,
+      userId: dto.userId,
+      minutesBeforeSchedule: beforeScheduleMessageDTO.minutesBeforeSchedule,
+      isActive: beforeScheduleMessageDTO.isActive,
+    });
 
     return beforeScheduleMessageDTO;
   }
