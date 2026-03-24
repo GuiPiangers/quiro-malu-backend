@@ -1,44 +1,72 @@
 import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
 import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
-import { NotificationSendMessage } from "../../../notification/models/NotificationSendMessage";
-import { sendAndSaveNotificationUseCase } from "../../../notification/useCases/sendAndSaveNotification";
-import SaveSendNotificationUseCase from "../../../notification/useCases/sendAndSaveNotification/sendAndSaveNotification";
+import { IWhatsAppProvider } from "../../../../providers/whatsapp/IWhatsAppProvider";
+import { IMessageLogRepository } from "../../../../repositories/messaging/IMessageLogRepository";
 import { PatientDTO } from "../../../patients/models/Patient";
 import { SchedulingDTO } from "../../../scheduling/models/Scheduling";
 import { DateTime } from "../../../shared/Date";
-import { Phone } from "../../../shared/Phone";
 import {
   MessageCampaign,
   MessageCampaignDTO,
 } from "../../models/MessageCampaign";
+import { MessageLogDTO, MessageOrigin } from "../../models/MessageLog";
 
 export class SendMessageUseCase {
-  private sendAndSaveNotificationUseCase: SaveSendNotificationUseCase;
-
   constructor(
     private patientRepository: IPatientRepository,
     private schedulingRepository: ISchedulingRepository,
-    sendAndSaveNotification?: SaveSendNotificationUseCase,
-  ) {
-    this.sendAndSaveNotificationUseCase =
-      sendAndSaveNotification ?? sendAndSaveNotificationUseCase;
-  }
+    private whatsAppProvider: IWhatsAppProvider,
+    private messageLogRepository: IMessageLogRepository,
+  ) {}
 
   async execute({
     userId,
     patientId,
     schedulingId,
     messageCampaign,
+    origin,
   }: {
     userId: string;
     patientId: string;
     schedulingId?: string;
     messageCampaign: MessageCampaignDTO;
+    origin: MessageOrigin;
   }) {
+    const campaignId = messageCampaign.id;
+
     try {
       const message = new MessageCampaign(messageCampaign);
 
+      if (!campaignId) {
+        await this.messageLogRepository.save({
+          patientId,
+          patientPhone: "",
+          campaignId: "",
+          origin,
+          renderedBody: message.templateMessage,
+          status: "FAILED",
+          errorMessage: "messageCampaign.id is required",
+        });
+
+        return;
+      }
+
       const [patient] = await this.patientRepository.getById(patientId, userId);
+
+      if (!patient?.phone) {
+        await this.messageLogRepository.save({
+          patientId,
+          patientPhone: patient?.phone ?? "",
+          campaignId,
+          origin,
+          schedulingId,
+          renderedBody: message.templateMessage,
+          status: "FAILED",
+          errorMessage: "Patient phone not found",
+        });
+
+        return;
+      }
 
       const [scheduling] = schedulingId
         ? await this.schedulingRepository.get({
@@ -47,22 +75,50 @@ export class SendMessageUseCase {
           })
         : [];
 
-      const notification = new NotificationSendMessage({
-        title: `Enviar mensagem para ${patient?.name}`,
-        message: `Envie uma mensagem de  de ${message.name} para o paciente ${patient?.name}`,
-        params: {
-          patientId,
-          patientPhone: new Phone(patient.phone),
-          templateMessage: this.replaceVariables(message.templateMessage, {
-            patient,
-            scheduling,
-          }),
-        },
+      const renderedBody = this.replaceVariables(message.templateMessage, {
+        patient,
+        scheduling,
       });
-      this.sendAndSaveNotificationUseCase.execute({ userId, notification });
+
+      const sendResult = await this.whatsAppProvider.sendMessage({
+        to: this.toInternationalPhone(patient.phone),
+        body: renderedBody,
+      });
+
+      const baseLog: MessageLogDTO = {
+        patientId,
+        patientPhone: patient.phone,
+        campaignId,
+        origin,
+        schedulingId,
+        renderedBody,
+        status: sendResult.success ? "SENT" : "FAILED",
+        providerMessageId: sendResult.providerMessageId,
+        errorMessage: sendResult.errorMessage,
+        ...(sendResult.success ? { sentAt: new Date() } : {}),
+      };
+
+      await this.messageLogRepository.save(baseLog);
     } catch (error: any) {
-      console.log(error.message);
+      await this.messageLogRepository.save({
+        patientId,
+        patientPhone: "",
+        campaignId: campaignId ?? "",
+        origin,
+        schedulingId,
+        renderedBody: messageCampaign.templateMessage,
+        status: "FAILED",
+        errorMessage: error?.message ?? "Unexpected error",
+      });
     }
+  }
+
+  private toInternationalPhone(phone: string) {
+    const onlyNumbers = String(phone).replace(/\D/g, "");
+
+    if (onlyNumbers.startsWith("55")) return onlyNumbers;
+
+    return `55${onlyNumbers}`;
   }
 
   private replaceVariables(

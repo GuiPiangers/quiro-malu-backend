@@ -10,4 +10,7 @@ export const createMockMessageCampaignRepository =
     listNotMessagePatients: jest.fn(),
     removeNotMessagePatients: jest.fn(),
     setNotMessagePatients: jest.fn(),
+    getById: jest.fn(),
+    update: jest.fn(),
+    listScheduledUntil: jest.fn(),
   });

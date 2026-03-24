@@ -24,4 +24,7 @@ export interface IPatientRepository {
   getByHash(hash: string, userId: string): Promise<PatientDTO | undefined>;
   getById(patientId: string, userId: string): Promise<PatientDTO[]>;
   delete(patientId: string, userId: string): Promise<void>;
+
+  getMostRecent(userId: string, limit: number): Promise<PatientDTO[]>;
+  getMostFrequent(userId: string, limit: number): Promise<PatientDTO[]>;
 }

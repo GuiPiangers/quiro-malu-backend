@@ -39,4 +39,8 @@ export interface IMessageCampaignRepository {
   listNotMessagePatients(
     data: listNotMessagePatients,
   ): Promise<Array<{ messageCampaignId: string; patientId: string }>>;
+
+  getById(id: string): Promise<MessageCampaignDTO | null>;
+  update(id: string, data: Partial<MessageCampaignDTO>): Promise<void>;
+  listScheduledUntil(date: Date): Promise<MessageCampaignDTO[]>;
 }

@@ -22,6 +22,7 @@ export class SchedulingWithPatient extends Scheduling {
       service,
       status,
       updateAt,
+      reminderSentAt,
     }: SchedulingWithPatientDTO,
     statusStrategy?: StatusStrategy,
   ) {
@@ -35,6 +36,7 @@ export class SchedulingWithPatient extends Scheduling {
         service,
         status,
         updateAt,
+        reminderSentAt,
       },
       statusStrategy,
     );

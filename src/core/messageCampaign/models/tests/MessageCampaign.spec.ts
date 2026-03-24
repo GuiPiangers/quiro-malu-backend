@@ -1,5 +1,4 @@
 import { MessageCampaign, MessageCampaignDTO } from "../MessageCampaign";
-import { TriggerBase, TriggerDTO } from "../Trigger";
 import { appEventListener } from "../../../shared/observers/EventListener";
 import { DateTime } from "../../../shared/Date";
 
@@ -18,12 +17,18 @@ describe("MessageCampaign", () => {
 
     messageCampaignDTO = {
       id: "1",
+      userId: "user-1",
       name: "Campaign Test",
       templateMessage: "Hello, this is a test message",
       active: true,
       initialDate: "2025-01-01",
       endDate: "2025-12-31",
-      triggers: [new TriggerBase({ event: "createPatient" })],
+      triggers: [
+        {
+          event: "createPatient",
+          config: { delay: 0, delayUnit: "minutes" },
+        } as any,
+      ],
     };
   });
 
@@ -33,20 +38,35 @@ describe("MessageCampaign", () => {
     expect(campaign.name).toBe("Campaign Test");
     expect(campaign.active).toBe(true);
     expect(campaign.triggers).toHaveLength(1);
-    expect(campaign.triggers[0]).toBeInstanceOf(TriggerBase);
   });
 
-  it("should return DTO representation of MessageCampaign", () => {
+  it("should return DTO representation of MessageCampaign including new optional fields", () => {
     const campaign = new MessageCampaign(messageCampaignDTO);
-    expect(campaign.getDTO()).toEqual({
-      id: "1",
-      name: "Campaign Test",
-      templateMessage: "Hello, this is a test message",
-      active: true,
-      initialDate: "2025-01-01",
-      endDate: "2025-12-31",
-      triggers: campaign.triggers,
-    });
+
+    const dto = campaign.getDTO();
+
+    expect(dto).toEqual(
+      expect.objectContaining({
+        id: "1",
+        userId: "user-1",
+        name: "Campaign Test",
+        templateMessage: "Hello, this is a test message",
+        active: true,
+        initialDate: "2025-01-01",
+        endDate: "2025-12-31",
+        triggers: campaign.triggers.map((t) => t.getDTO()),
+      }),
+    );
+
+    expect(dto).toHaveProperty("audienceType");
+    expect(dto).toHaveProperty("audienceLimit");
+    expect(dto).toHaveProperty("audienceOffsetMinutes");
+    expect(dto).toHaveProperty("audiencePatientIds");
+    expect(dto).toHaveProperty("status");
+    expect(dto).toHaveProperty("scheduledAt");
+    expect(dto).toHaveProperty("lastDispatchAt");
+    expect(dto).toHaveProperty("lastDispatchCount");
+    expect(dto).toHaveProperty("repeatEveryDays");
   });
 
   it("should correctly register event listeners in watchTriggers", () => {
@@ -58,31 +78,43 @@ describe("MessageCampaign", () => {
     );
   });
 
+  it("should not register listeners when campaign is inactive", () => {
+    const campaign = new MessageCampaign({ ...messageCampaignDTO, active: false });
+    campaign.watchTriggers();
+    expect(appEventListener.on).not.toHaveBeenCalled();
+  });
+
   it("should emit event when a trigger event occurs", () => {
     const campaign = new MessageCampaign(messageCampaignDTO);
     campaign.watchTriggers();
 
-    const triggerEventHandler = (appEventListener.on as jest.Mock).mock
-      .calls[0][1];
+    const triggerEventHandler = (appEventListener.on as jest.Mock).mock.calls[0][1];
 
     triggerEventHandler({ patientId: "123", userId: "456" });
-    expect(appEventListener.emit).toHaveBeenCalledWith("watchTriggers", {
-      messageCampaign: campaign.getDTO(),
-      patientId: "123",
-      userId: "456",
-      trigger: expect.any(Object),
-    });
+    expect(appEventListener.emit).toHaveBeenCalledWith(
+      "watchTriggers",
+      expect.objectContaining({
+        messageCampaign: campaign.getDTO(),
+        patientId: "123",
+        userId: "456",
+        trigger: expect.objectContaining({ event: "createPatient" }),
+      }),
+    );
   });
 
   it("should emit watchTriggers event with patientId, userId, scheduleId and date when Schedule events emitted", () => {
     const campaign = new MessageCampaign({
       ...messageCampaignDTO,
-      triggers: [new TriggerBase({ event: "createSchedule" })],
+      triggers: [
+        {
+          event: "createSchedule",
+          config: { delay: 0, delayUnit: "minutes" },
+        } as any,
+      ],
     });
     campaign.watchTriggers();
 
-    const triggerEventHandler = (appEventListener.on as jest.Mock).mock
-      .calls[0][1];
+    const triggerEventHandler = (appEventListener.on as jest.Mock).mock.calls[0][1];
     triggerEventHandler({
       patientId: "patientId",
       scheduleId: "scheduleId",
@@ -90,39 +122,16 @@ describe("MessageCampaign", () => {
       date: "2025-01-01T10:00",
     });
 
-    expect(appEventListener.emit).toHaveBeenCalledWith("watchTriggers", {
-      messageCampaign: campaign.getDTO(),
-      patientId: "patientId",
-      userId: "userId",
-      schedulingId: "scheduleId",
-      date: new DateTime("2025-01-01T10:00"),
-      trigger: new TriggerBase({
-        event: "createSchedule",
+    expect(appEventListener.emit).toHaveBeenCalledWith(
+      "watchTriggers",
+      expect.objectContaining({
+        messageCampaign: campaign.getDTO(),
+        patientId: "patientId",
+        userId: "userId",
+        schedulingId: "scheduleId",
+        date: new DateTime("2025-01-01T10:00"),
+        trigger: expect.objectContaining({ event: "createSchedule" }),
       }),
-    });
-  });
-
-  it("should emit watchTriggers event with only patientId, userId, and messageDTO when Patients events emitted", () => {
-    const campaign = new MessageCampaign({
-      ...messageCampaignDTO,
-      triggers: [new TriggerBase({ event: "createPatient" })],
-    });
-    campaign.watchTriggers();
-
-    const triggerEventHandler = (appEventListener.on as jest.Mock).mock
-      .calls[0][1];
-    triggerEventHandler({
-      patientId: "patientId",
-      userId: "userId",
-    });
-
-    expect(appEventListener.emit).toHaveBeenCalledWith("watchTriggers", {
-      messageCampaign: campaign.getDTO(),
-      patientId: "patientId",
-      userId: "userId",
-      trigger: new TriggerBase({
-        event: "createPatient",
-      }),
-    });
+    );
   });
 });

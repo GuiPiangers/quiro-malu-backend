@@ -7,11 +7,17 @@ import { getPatientUseCase } from "../core/patients/controllers/getPatientContro
 import { factoryEventSuggestionWithStartEndDate } from "../core/scheduling/models/EventSuggestion";
 import { saveEventSuggestionUseCase } from "../core/scheduling/useCases/saveEventSuggestion";
 import { appEventListener } from "../core/shared/observers/EventListener";
+import { birthdayQueue } from "../queues/birthday";
+import { campaignDispatchQueue } from "../queues/campaignDispatch";
 import { sendMessageQueue } from "../repositories/queueProvider/sendMessageQueue";
 import { logger } from "../utils/logger";
 
 export async function start() {
   await watchMessageTriggersUseCase.execute();
+
+  await birthdayQueue.schedule();
+
+  await Promise.all([birthdayQueue.process(), campaignDispatchQueue.process()]);
 
   appEventListener.on("createSchedule", async (data) => {
     try {
@@ -61,6 +67,15 @@ export async function start() {
       trigger,
       date,
     }) => {
+      if (messageCampaign.active === false) return;
+
+      const origin =
+        trigger?.event === "patientBirthDay"
+          ? "BIRTHDAY"
+          : schedulingId
+            ? "APPOINTMENT_REMINDER"
+            : "CAMPAIGN";
+
       await sendMessageQueue.add({
         userId,
         messageCampaign,
@@ -68,6 +83,7 @@ export async function start() {
         schedulingId,
         trigger,
         date,
+        origin,
       });
     },
   );

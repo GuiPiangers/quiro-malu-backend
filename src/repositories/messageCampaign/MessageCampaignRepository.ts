@@ -2,7 +2,6 @@ import { MessageCampaignDTO } from "../../core/messageCampaign/models/MessageCam
 import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
 import { MessageCampaignModel } from "../../database/mongoose/schemas/MessageCampaign";
-import { getValidObjectValues } from "../../utils/getValidObjectValues";
 import {
   CountMessageCampaignProps,
   GetMessageCampaignProps,
@@ -23,17 +22,12 @@ export class MessageCampaignRepository implements IMessageCampaignRepository {
     return await MessageCampaignModel.find();
   }
 
-  async list({
-    userId,
-    config,
-  }: ListMessageCampaignProps): Promise<MessageCampaignDTO[]> {
-    if (config) {
-      const result = await MessageCampaignModel.find({ userId })
-        .limit(config.limit)
-        .skip(config.offSet);
-      result as unknown as MessageCampaignDTO[];
-    }
-    return await MessageCampaignModel.find({ userId });
+  async list({ userId, config }: ListMessageCampaignProps): Promise<MessageCampaignDTO[]> {
+    const query = MessageCampaignModel.find({ userId });
+
+    if (config) query.limit(config.limit).skip(config.offSet);
+
+    return await query;
   }
 
   async create(data: SaveMessageCampaignProps): Promise<void> {
@@ -42,6 +36,21 @@ export class MessageCampaignRepository implements IMessageCampaignRepository {
 
   async get(data: GetMessageCampaignProps): Promise<MessageCampaignDTO | null> {
     return await MessageCampaignModel.findOne(data);
+  }
+
+  async getById(id: string): Promise<MessageCampaignDTO | null> {
+    return await MessageCampaignModel.findOne({ id });
+  }
+
+  async update(id: string, data: Partial<MessageCampaignDTO>): Promise<void> {
+    await MessageCampaignModel.updateOne({ id }, data);
+  }
+
+  async listScheduledUntil(date: Date): Promise<MessageCampaignDTO[]> {
+    return await MessageCampaignModel.find({
+      status: "SCHEDULED",
+      scheduledAt: { $lte: date },
+    });
   }
 
   async setNotMessagePatients(data: setNotMessagePatientsProps): Promise<void> {

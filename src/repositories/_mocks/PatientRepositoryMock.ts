@@ -12,4 +12,6 @@ export const createMockPatientRepository =
     getByHash: jest.fn(),
     saveMany: jest.fn(),
     getByDateOfBirth: jest.fn(),
+    getMostRecent: jest.fn(),
+    getMostFrequent: jest.fn(),
   });

@@ -1,50 +1,64 @@
 import { PatientDTO } from "../../../core/patients/models/Patient";
 import { IPatientRepository } from "../IPatientRepository";
 
-interface inMemoryInterface extends PatientDTO {
+type InMemoryPatient = PatientDTO & {
   userId: string;
-}
+  createdAt: number;
+};
 
 export class InMemoryPatientRepository implements IPatientRepository {
-  getByDateOfBirth(data: {
+  private dbPatients: InMemoryPatient[] = [];
+
+  async getByDateOfBirth(data: {
     dateOfBirth: string;
   }): Promise<(PatientDTO & { userId: string })[]> {
-    throw new Error("Method not implemented.");
+    return this.dbPatients.filter(
+      (patient) => patient.dateOfBirth === data.dateOfBirth,
+    );
   }
 
-  saveMany(patient: (PatientDTO & { userId: string })[]): Promise<void> {
-    throw new Error("Method not implemented.");
+  async saveMany(patient: (PatientDTO & { userId: string })[]): Promise<void> {
+    patient.forEach((p) => {
+      this.dbPatients.push({ ...p, createdAt: Date.now() });
+    });
   }
 
-  getByHash(hash: string, userId: string): Promise<PatientDTO> {
-    throw new Error("Method not implemented.");
+  async getByHash(hashData: string, userId: string): Promise<PatientDTO> {
+    return this.dbPatients.find(
+      (patient) => patient.userId === userId && patient.hashData === hashData,
+    ) as PatientDTO;
   }
-
-  private dbPatients: inMemoryInterface[] = [];
 
   async countAll(
     userId: string,
-    search?: { name?: string | undefined } | undefined,
+    search?: { name?: string },
   ): Promise<[{ total: number }]> {
     const total = this.dbPatients.filter((patient) => {
-      return (
-        patient.userId === userId && (search ? patient.name === search : true)
-      );
+      if (patient.userId !== userId) return false;
+      if (!search?.name) return true;
+      return patient.name.includes(search.name);
     }).length;
+
     return [{ total }];
   }
 
   async delete(patientId: string, userId: string): Promise<void> {
     this.dbPatients = this.dbPatients.filter(
-      (patient) => patient.id === patientId && patient.userId === userId,
+      (patient) => !(patient.id === patientId && patient.userId === userId),
     );
   }
 
-  async update(data: PatientDTO, userId: string): Promise<void> {
+  async update(data: PatientDTO, patientId: string, userId: string): Promise<void> {
     const index = this.dbPatients.findIndex((patient) => {
-      return patient.userId === userId && patient.id === data.id;
+      return patient.userId === userId && patient.id === patientId;
     });
-    this.dbPatients[index] = { ...data, userId };
+
+    if (index < 0) return;
+
+    this.dbPatients[index] = {
+      ...this.dbPatients[index],
+      ...data,
+    } as InMemoryPatient;
   }
 
   async getByCpf(cpf: string, userId: string): Promise<PatientDTO[]> {
@@ -54,16 +68,43 @@ export class InMemoryPatientRepository implements IPatientRepository {
   }
 
   async save(patient: PatientDTO, userId: string): Promise<void> {
-    this.dbPatients.push({ ...patient, userId });
+    this.dbPatients.push({ ...patient, userId, createdAt: Date.now() });
   }
 
-  async getAll(userId: string): Promise<PatientDTO[]> {
-    return this.dbPatients.filter((patient) => patient.userId === userId);
+  async getAll(
+    userId: string,
+    config: {
+      limit: number;
+      offSet: number;
+      search?: { name?: string };
+      orderBy?: { field: string; orientation: "ASC" | "DESC" }[];
+    },
+  ): Promise<PatientDTO[]> {
+    const list = this.dbPatients.filter((patient) => {
+      if (patient.userId !== userId) return false;
+      if (!config.search?.name) return true;
+      return patient.name.includes(config.search.name);
+    });
+
+    return list.slice(config.offSet, config.offSet + config.limit);
   }
 
   async getById(id: string, userId: string): Promise<PatientDTO[]> {
     return this.dbPatients.filter((patient) => {
       return patient.id === id && patient.userId === userId;
     });
+  }
+
+  async getMostRecent(userId: string, limit: number): Promise<PatientDTO[]> {
+    const safeLimit = Math.min(Math.max(limit, 0), 100);
+
+    return this.dbPatients
+      .filter((p) => p.userId === userId)
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, safeLimit);
+  }
+
+  async getMostFrequent(userId: string, limit: number): Promise<PatientDTO[]> {
+    return this.getMostRecent(userId, limit);
   }
 }

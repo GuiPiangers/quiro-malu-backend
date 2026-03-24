@@ -37,10 +37,22 @@ export interface ISchedulingRepository {
     userId: string;
   }): Promise<{ formattedDate: string; qtd: number }[]>;
 
-  get(data: {
-    id: string;
-    userId: string;
-  }): Promise<SchedulingWithPatientDTO[]>;
+  get(data: { id: string; userId: string }): Promise<SchedulingWithPatientDTO[]>;
 
   delete(data: { id: string; userId: string }): Promise<void>;
+
+  listFromNowWithinMinutes(data: {
+    userId: string;
+    offsetMinutes: number;
+  }): Promise<Scheduling[]>;
+
+  listScheduledInMinutes(data: {
+    userId: string;
+    offsetMinutes: number;
+  }): Promise<Scheduling[]>;
+
+  listUpcoming(data: {
+    userId: string;
+    windowMinutes: number;
+  }): Promise<Scheduling[]>;
 }

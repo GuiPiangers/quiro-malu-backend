@@ -17,6 +17,7 @@ export interface SchedulingDTO {
   duration?: number;
   service?: string;
   status?: SchedulingStatus;
+  reminderSentAt?: string | null;
   createAt?: string;
   updateAt?: string;
 }
@@ -28,6 +29,7 @@ export class Scheduling extends Entity {
   readonly service?: string;
   readonly createAt?: string;
   readonly updateAt?: string;
+  readonly reminderSentAt?: string | null;
   private _status?: SchedulingStatus;
   private statusStrategy?: StatusStrategy;
 
@@ -41,6 +43,7 @@ export class Scheduling extends Entity {
       createAt,
       service,
       updateAt,
+      reminderSentAt,
     }: SchedulingDTO,
     statusStrategy?: StatusStrategy,
   ) {
@@ -54,6 +57,7 @@ export class Scheduling extends Entity {
 
     this.createAt = createAt;
     this.updateAt = updateAt;
+    this.reminderSentAt = reminderSentAt;
   }
 
   get status() {
@@ -78,6 +82,7 @@ export class Scheduling extends Entity {
       duration: this.duration,
       status: this.status,
       service: this.service,
+      reminderSentAt: this.reminderSentAt,
     };
   }
 

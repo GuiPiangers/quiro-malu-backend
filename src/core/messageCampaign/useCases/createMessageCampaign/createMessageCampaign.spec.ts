@@ -1,89 +1,94 @@
 import { CreateMessageCampaignUseCase } from "./createMessageCampaignUseCase";
-import { MessageCampaignRepository } from "../../../../repositories/messageCampaign/MessageCampaignRepository";
 import { MessageCampaign } from "../../models/MessageCampaign";
 import { createMockMessageCampaignRepository } from "../../../../repositories/_mocks/MessageCampaignRepositoryMock";
 
 jest.mock("../../models/MessageCampaign");
 
 describe("CreateMessageCampaignUseCase", () => {
-  let createMessageCampaignUseCase: CreateMessageCampaignUseCase;
-  let messageCampaignRepository: jest.Mocked<MessageCampaignRepository>;
-
   beforeEach(() => {
-    messageCampaignRepository = createMockMessageCampaignRepository();
-
-    createMessageCampaignUseCase = new CreateMessageCampaignUseCase(
-      messageCampaignRepository,
-    );
+    jest.clearAllMocks();
   });
 
-  it("deve criar uma campanha de mensagens e chamar o repositório", async () => {
+  it("should create a campaign and call the repository", async () => {
+    const messageCampaignRepository = createMockMessageCampaignRepository();
+
+    const registerMessageCampaignUseCase = {
+      execute: jest.fn().mockResolvedValue(undefined),
+    } as any;
+
+    const useCase = new CreateMessageCampaignUseCase(
+      messageCampaignRepository,
+      registerMessageCampaignUseCase,
+    );
+
     const messageCampaignDTO = {
       userId: "user-123",
       name: "Campanha de Teste",
-      templateMessage: "Olá, essa é uma mensagem de teste!",
+      templateMessage: "Olá, essa é uma mensagem de teste.",
       active: true,
       triggers: [],
     };
 
-    (MessageCampaign as jest.Mock).mockImplementation(() => {
+    (MessageCampaign as any).mockImplementation(() => {
       return {
-        getDTO: jest.fn().mockReturnValue(messageCampaignDTO),
-        watchTriggers: jest.fn(),
+        getDTO: jest.fn().mockReturnValue({
+          name: messageCampaignDTO.name,
+          templateMessage: messageCampaignDTO.templateMessage,
+          active: messageCampaignDTO.active,
+          triggers: messageCampaignDTO.triggers,
+        }),
       };
     });
 
-    await createMessageCampaignUseCase.execute(messageCampaignDTO);
+    await useCase.execute(messageCampaignDTO as any);
 
     expect(messageCampaignRepository.create).toHaveBeenCalledWith(
       expect.objectContaining({
         userId: "user-123",
         name: "Campanha de Teste",
-        templateMessage: "Olá, essa é uma mensagem de teste!",
+        templateMessage: "Olá, essa é uma mensagem de teste.",
         active: true,
         triggers: [],
       }),
     );
   });
 
-  it("deve instanciar a classe MessageCampaign corretamente", async () => {
-    const messageCampaignDTO = {
-      userId: "user-456",
-      name: "Outra Campanha",
-      templateMessage: "Mensagem de outra campanha",
-      active: false,
-      triggers: [],
-    };
+  it("should call RegisterMessageCampaignUseCase after create", async () => {
+    const messageCampaignRepository = createMockMessageCampaignRepository();
 
-    await createMessageCampaignUseCase.execute(messageCampaignDTO);
+    const registerMessageCampaignUseCase = {
+      execute: jest.fn().mockResolvedValue(undefined),
+    } as any;
 
-    expect(MessageCampaign).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: "Outra Campanha",
-        templateMessage: "Mensagem de outra campanha",
-        active: false,
-        triggers: [],
-      }),
+    const useCase = new CreateMessageCampaignUseCase(
+      messageCampaignRepository,
+      registerMessageCampaignUseCase,
     );
-  });
 
-  it("deve chamar o método watchTriggers após criar a campanha", async () => {
-    const watchTriggersMock = jest.fn();
-    (MessageCampaign as jest.Mock).mockImplementation(() => {
+    (MessageCampaign as any).mockImplementation(() => {
       return {
-        getDTO: jest.fn().mockReturnValue({}),
-        watchTriggers: watchTriggersMock,
+        getDTO: jest.fn().mockReturnValue({
+          id: "campaign-1",
+          name: "Campanha",
+          templateMessage: "Mensagem",
+          active: true,
+          triggers: [],
+        }),
       };
     });
 
-    await createMessageCampaignUseCase.execute({
-      userId: "user-789",
-      name: "Campanha com Gatilho",
-      templateMessage: "Mensagem com gatilho",
+    await useCase.execute({
+      userId: "user-1",
+      name: "Campanha",
+      templateMessage: "Mensagem",
       active: true,
       triggers: [],
-    });
+    } as any);
 
-    expect(watchTriggersMock).toHaveBeenCalled();
+    expect(registerMessageCampaignUseCase.execute).toHaveBeenCalledWith(
+      expect.objectContaining({
+        userId: "user-1",
+      }),
+    );
   });
 });

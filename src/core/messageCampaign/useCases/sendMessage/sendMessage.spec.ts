@@ -1,28 +1,29 @@
+import { createMockMessageLogRepository } from "../../../../repositories/_mocks/MessageLogRepositoryMock";
 import { createMockPatientRepository } from "../../../../repositories/_mocks/PatientRepositoryMock";
 import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
-import { NotificationSendMessage } from "../../../notification/models/NotificationSendMessage";
-import SaveSendNotificationUseCase from "../../../notification/useCases/sendAndSaveNotification/sendAndSaveNotification";
+import { createMockWhatsAppProvider } from "../../../../providers/whatsapp/_mocks/WhatsAppProviderMock";
 import { SendMessageUseCase } from "./sendMessageUseCase";
 
 describe("sendMessageUseCase", () => {
   let patientRepository: ReturnType<typeof createMockPatientRepository>;
   let schedulingRepository: ReturnType<typeof createMockSchedulingRepository>;
+  let whatsAppProvider: ReturnType<typeof createMockWhatsAppProvider>;
+  let messageLogRepository: ReturnType<typeof createMockMessageLogRepository>;
   let sendMessageUseCase: SendMessageUseCase;
-  let sendAndSaveNotificationUseCase: jest.Mocked<SaveSendNotificationUseCase>;
 
   beforeEach(() => {
     jest.clearAllMocks();
 
     patientRepository = createMockPatientRepository();
     schedulingRepository = createMockSchedulingRepository();
-    sendAndSaveNotificationUseCase = {
-      execute: jest.fn(),
-    } as unknown as jest.Mocked<SaveSendNotificationUseCase>;
+    whatsAppProvider = createMockWhatsAppProvider();
+    messageLogRepository = createMockMessageLogRepository();
 
     sendMessageUseCase = new SendMessageUseCase(
       patientRepository,
       schedulingRepository,
-      sendAndSaveNotificationUseCase,
+      whatsAppProvider,
+      messageLogRepository,
     );
   });
 
@@ -31,10 +32,14 @@ describe("sendMessageUseCase", () => {
       { name: "Nome Paciente", phone: "(51) 90000 9000", id: "patient-id" },
     ]);
 
+    whatsAppProvider.sendMessage.mockResolvedValue({ success: true });
+
     await sendMessageUseCase.execute({
       userId: "user-id",
       patientId: "patient-id",
+      origin: "CAMPAIGN",
       messageCampaign: {
+        id: "campaign-id",
         active: true,
         name: "Boas vindas",
         triggers: [{ event: "createPatient" }],
@@ -50,11 +55,14 @@ describe("sendMessageUseCase", () => {
     patientRepository.getById.mockResolvedValue([
       { name: "Nome Paciente", phone: "(51) 90000 9000", id: "patient-id" },
     ]);
+    whatsAppProvider.sendMessage.mockResolvedValue({ success: true });
 
     await sendMessageUseCase.execute({
       userId: "user-id",
       patientId: "patient-id",
+      origin: "CAMPAIGN",
       messageCampaign: {
+        id: "campaign-id",
         active: true,
         name: "Boas vindas",
         triggers: [{ event: "createPatient" }],
@@ -76,18 +84,22 @@ describe("sendMessageUseCase", () => {
         phone: "(51) 90000 9000",
         id: "scheduling-id",
         patientId: "patient-id",
-      },
+      } as any,
     ]);
+
+    whatsAppProvider.sendMessage.mockResolvedValue({ success: true });
 
     await sendMessageUseCase.execute({
       userId: "user-id",
       patientId: "patient-id",
       schedulingId: "scheduling-id",
+      origin: "APPOINTMENT_REMINDER",
       messageCampaign: {
+        id: "campaign-id",
         active: true,
-        name: "Boas vindas",
-        triggers: [{ event: "createPatient" }],
-        templateMessage: "Olá, seja muito bem vindo a clinica",
+        name: "Lembrete",
+        triggers: [{ event: "createSchedule" }],
+        templateMessage: "Olá, lembrete",
       },
     });
 
@@ -98,76 +110,97 @@ describe("sendMessageUseCase", () => {
     });
   });
 
-  it("Deve chamar o metodo saveAndSendNotificationUseCase.execute com os dados corretos", async () => {
+  it("Deve chamar whatsAppProvider.sendMessage com telefone internacional e body renderizado", async () => {
     patientRepository.getById.mockResolvedValue([
       { name: "Nome Paciente", phone: "(51) 90000 9000", id: "patient-id" },
     ]);
 
-    schedulingRepository.get.mockResolvedValue([
-      {
-        patient: "Nome Paciente",
-        phone: "(51) 90000 9000",
-        id: "scheduling-id",
-        patientId: "patient-id",
-      },
-    ]);
+    whatsAppProvider.sendMessage.mockResolvedValue({ success: true });
 
     await sendMessageUseCase.execute({
       userId: "user-id",
       patientId: "patient-id",
-      schedulingId: "scheduling-id",
+      origin: "CAMPAIGN",
       messageCampaign: {
+        id: "campaign-id",
         active: true,
         name: "Boas vindas",
         triggers: [{ event: "createPatient" }],
-        templateMessage: "Olá, seja muito bem vindo a clinica",
+        templateMessage: "Olá {{nome_paciente}}",
       },
     });
 
-    expect(sendAndSaveNotificationUseCase.execute).toBeCalledTimes(1);
-    expect(sendAndSaveNotificationUseCase.execute).toHaveBeenCalledWith({
-      notification: expect.any(NotificationSendMessage),
-      userId: "user-id",
+    expect(whatsAppProvider.sendMessage).toHaveBeenCalledWith({
+      to: "5551900009000",
+      body: "Olá Nome Paciente",
     });
   });
 
-  it("Deve substituir corretamente as variáveis do templateMessage ao enviar a notificação", async () => {
+  it("Deve salvar MessageLog com status SENT quando o provider retornar success: true", async () => {
     patientRepository.getById.mockResolvedValue([
       { name: "Nome Paciente", phone: "(51) 90000 9000", id: "patient-id" },
     ]);
 
-    schedulingRepository.get.mockResolvedValue([
-      {
-        patient: "Nome Paciente",
-        phone: "(51) 90000 9000",
-        id: "scheduling-id",
-        patientId: "patient-id",
-      },
-    ]);
+    whatsAppProvider.sendMessage.mockResolvedValue({
+      success: true,
+      providerMessageId: "provider-id",
+    });
 
     await sendMessageUseCase.execute({
       userId: "user-id",
       patientId: "patient-id",
-      schedulingId: "scheduling-id",
+      origin: "CAMPAIGN",
       messageCampaign: {
+        id: "campaign-id",
         active: true,
         name: "Boas vindas",
         triggers: [{ event: "createPatient" }],
-        templateMessage:
-          "Olá {{nome_paciente}}, seja muito bem vindo a clinica. Seu telefone é {{telefone_paciente}} e seu genêro é {{genero_paciente}}",
+        templateMessage: "Olá {{nome_paciente}}",
       },
     });
 
-    expect(sendAndSaveNotificationUseCase.execute).toBeCalledTimes(1);
-    expect(sendAndSaveNotificationUseCase.execute).toHaveBeenCalledWith(
+    expect(messageLogRepository.save).toHaveBeenCalledWith(
       expect.objectContaining({
-        notification: expect.objectContaining({
-          params: expect.objectContaining({
-            templateMessage:
-              "Olá Nome Paciente, seja muito bem vindo a clinica. Seu telefone é (51) 90000 9000 e seu genêro é ",
-          }),
-        }),
-        userId: "user-id",
+        status: "SENT",
+        providerMessageId: "provider-id",
+        campaignId: "campaign-id",
+        patientId: "patient-id",
+        origin: "CAMPAIGN",
+        renderedBody: "Olá Nome Paciente",
+      }),
+    );
+  });
+
+  it("Deve salvar MessageLog com status FAILED quando o provider retornar success: false", async () => {
+    patientRepository.getById.mockResolvedValue([
+      { name: "Nome Paciente", phone: "(51) 90000 9000", id: "patient-id" },
+    ]);
+
+    whatsAppProvider.sendMessage.mockResolvedValue({
+      success: false,
+      errorMessage: "Erro no provider",
+    });
+
+    await sendMessageUseCase.execute({
+      userId: "user-id",
+      patientId: "patient-id",
+      origin: "CAMPAIGN",
+      messageCampaign: {
+        id: "campaign-id",
+        active: true,
+        name: "Boas vindas",
+        triggers: [{ event: "createPatient" }],
+        templateMessage: "Olá {{nome_paciente}}",
+      },
+    });
+
+    expect(messageLogRepository.save).toHaveBeenCalledWith(
+      expect.objectContaining({
+        status: "FAILED",
+        errorMessage: "Erro no provider",
+        campaignId: "campaign-id",
+        patientId: "patient-id",
+        origin: "CAMPAIGN",
       }),
     );
   });
@@ -176,16 +209,18 @@ describe("sendMessageUseCase", () => {
     patientRepository.getById.mockResolvedValue([
       { name: "Nome Paciente", phone: "(51) 90000 9000", id: "patient-id" },
     ]);
+
     const errorMessage = "Erro de teste";
 
-    schedulingRepository.get.mockRejectedValue(new Error(errorMessage));
+    whatsAppProvider.sendMessage.mockRejectedValue(new Error(errorMessage));
 
     await expect(
       sendMessageUseCase.execute({
         userId: "user-id",
         patientId: "patient-id",
-        schedulingId: "scheduling-id",
+        origin: "CAMPAIGN",
         messageCampaign: {
+          id: "campaign-id",
           active: true,
           name: "Boas vindas",
           triggers: [{ event: "createPatient" }],
@@ -193,5 +228,12 @@ describe("sendMessageUseCase", () => {
         },
       }),
     ).resolves.not.toThrowError();
+
+    expect(messageLogRepository.save).toHaveBeenCalledWith(
+      expect.objectContaining({
+        status: "FAILED",
+        errorMessage,
+      }),
+    );
   });
 });

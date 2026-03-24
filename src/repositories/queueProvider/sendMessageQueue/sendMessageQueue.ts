@@ -1,25 +1,33 @@
 import { MessageCampaignDTO } from "../../../core/messageCampaign/models/MessageCampaign";
-import { Trigger } from "../../../core/messageCampaign/models/Trigger";
+import {
+  Trigger,
+  TriggerWithStaticDate,
+} from "../../../core/messageCampaign/models/Trigger";
+import { MessageOrigin } from "../../../core/messageCampaign/models/MessageLog";
 import { SendMessageUseCase } from "../../../core/messageCampaign/useCases/sendMessage/sendMessageUseCase";
 import { DateTime } from "../../../core/shared/Date";
 import { IQueueProvider } from "../IQueueProvider";
 
-export type SendMessageQueuePrams = {
+export type SendMessageJob = {
   userId: string;
   patientId: string;
   schedulingId?: string;
   messageCampaign: MessageCampaignDTO;
-  trigger: Trigger;
+  origin: MessageOrigin;
+};
+
+export type SendMessageQueueParams = SendMessageJob & {
+  trigger?: Trigger;
   date?: DateTime;
 };
 
-export type deleteNotificationQueueParams = {
+export type DeleteSendMessageQueueParams = {
   id: string;
 };
 
 export class SendMessageQueue {
   constructor(
-    private queueProvider: IQueueProvider<SendMessageQueuePrams>,
+    private queueProvider: IQueueProvider<SendMessageJob>,
     private sendMessageUseCase: SendMessageUseCase,
   ) {}
 
@@ -30,22 +38,33 @@ export class SendMessageQueue {
     userId,
     schedulingId,
     date,
-  }: SendMessageQueuePrams) {
+    origin,
+  }: SendMessageQueueParams) {
+    let delay = 0;
+
+    if (trigger) {
+      const baseDate = date ?? DateTime.now();
+      delay =
+        trigger instanceof TriggerWithStaticDate
+          ? trigger.calculateDelay()
+          : trigger.calculateDelay({ date: baseDate });
+    }
+
     await this.queueProvider.add(
-      { messageCampaign, patientId, trigger, userId, schedulingId, date },
+      { messageCampaign, patientId, userId, schedulingId, origin },
       {
-        delay: date ? trigger.calculateDelay({ date }) : undefined,
+        delay,
       },
     );
   }
 
-  async delete({ id }: deleteNotificationQueueParams) {
+  async delete({ id }: DeleteSendMessageQueueParams) {
     await this.queueProvider.delete({ jobId: `a${id}` });
   }
 
   async process() {
     this.queueProvider.process(async (job) => {
-      this.sendMessageUseCase.execute(job as SendMessageQueuePrams);
+      await this.sendMessageUseCase.execute(job);
     });
   }
 }

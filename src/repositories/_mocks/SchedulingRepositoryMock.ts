@@ -10,4 +10,7 @@ export const createMockSchedulingRepository =
     save: jest.fn(),
     update: jest.fn(),
     listBetweenDates: jest.fn(),
+    listFromNowWithinMinutes: jest.fn(),
+    listScheduledInMinutes: jest.fn(),
+    listUpcoming: jest.fn(),
   });

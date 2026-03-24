@@ -1,15 +1,10 @@
 import { sendMessageUseCase } from "../../../core/messageCampaign/useCases/sendMessage";
 import { QueueProvider } from "../queueProvider";
-import { SendMessageQueue, SendMessageQueuePrams } from "./sendMessageQueue";
+import { SendMessageJob, SendMessageQueue } from "./sendMessageQueue";
 
-const queueProvider = new QueueProvider<SendMessageQueuePrams>(
-  "sendWhatsMessage",
-);
+const queueProvider = new QueueProvider<SendMessageJob>("sendWhatsMessage");
 
-const sendMessageQueue = new SendMessageQueue(
-  queueProvider,
-  sendMessageUseCase,
-);
+const sendMessageQueue = new SendMessageQueue(queueProvider, sendMessageUseCase);
 
 sendMessageQueue.process();
 
