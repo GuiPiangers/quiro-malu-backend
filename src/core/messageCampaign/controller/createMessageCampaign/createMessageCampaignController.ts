@@ -12,13 +12,25 @@ export class CreateMessageCampaignController {
   async handle(request: Request, response: Response) {
     try {
       const userId = request.user?.id;
-      const data = request.body as MessageCampaignDTO;
+      const body = request.body as any;
+      const data = body as MessageCampaignDTO;
+
+      if (typeof body.scheduledAt === "string") {
+        body.scheduledAt = new Date(body.scheduledAt);
+      }
+
+      if (
+        body.scheduledAt instanceof Date &&
+        Number.isNaN(body.scheduledAt.getTime())
+      ) {
+        throw new ApiError("scheduledAt inválido", 400);
+      }
 
       if (!userId) throw new ApiError("O id deve ser informado", 401);
 
       await this.createMessageCampaignUseCase.execute({
-        userId,
         ...data,
+        userId,
       });
 
       response.status(201).send({ message: "Criado com sucesso!" });
