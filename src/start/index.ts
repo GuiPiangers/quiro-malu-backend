@@ -1,4 +1,6 @@
 import { getExamUseCase } from "../core/exams/useCases/getExam";
+import { beforeScheduleMessageEventHandlers } from "../core/messages/observers/beforeScheduleMessage";
+import { watchBeforeScheduleMessagesUseCase } from "../core/messages/useCases/watchBeforeScheduleMessages";
 import { watchMessageTriggersUseCase } from "../core/messageCampaign/useCases/watchMessageTriggers";
 import { NotificationUndoExam } from "../core/notification/models/NotificationUndoExam";
 import { scheduleNotificationUseCase } from "../core/notification/useCases/ScheduleNotification";
@@ -8,6 +10,7 @@ import { factoryEventSuggestionWithStartEndDate } from "../core/scheduling/model
 import { saveEventSuggestionUseCase } from "../core/scheduling/useCases/saveEventSuggestion";
 import { appEventListener } from "../core/shared/observers/EventListener";
 import { birthdayQueue } from "../queues/birthday";
+import { beforeScheduleQueue } from "../queues/beforeScheduleMessage";
 import { campaignDispatchQueue } from "../queues/campaignDispatch";
 import { sendMessageQueue } from "../repositories/queueProvider/sendMessageQueue";
 import { logger } from "../utils/logger";
@@ -15,9 +18,16 @@ import { logger } from "../utils/logger";
 export async function start() {
   await watchMessageTriggersUseCase.execute();
 
+  beforeScheduleMessageEventHandlers.register();
+  await watchBeforeScheduleMessagesUseCase.execute();
+
   await birthdayQueue.schedule();
 
-  await Promise.all([birthdayQueue.process(), campaignDispatchQueue.process()]);
+  await Promise.all([
+    birthdayQueue.process(),
+    campaignDispatchQueue.process(),
+    beforeScheduleQueue.process(),
+  ]);
 
   appEventListener.on("createSchedule", async (data) => {
     try {
