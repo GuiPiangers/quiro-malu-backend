@@ -5,21 +5,25 @@ import { MessageTemplate, MessageTemplateDTO } from "./MessageTemplate";
 export type BeforeScheduleMessageDTO = {
   id?: string;
   minutesBeforeSchedule: number;
+  isActive: boolean;
   messageTemplate: MessageTemplateDTO;
 };
 
 export class BeforeScheduleMessage extends Entity {
   readonly minutesBeforeSchedule: number;
+  readonly isActive: boolean;
   readonly messageTemplate: MessageTemplate;
 
   constructor({
     id,
     messageTemplate,
     minutesBeforeSchedule,
+    isActive = true,
   }: {
     id?: string;
     minutesBeforeSchedule: number;
     messageTemplate: MessageTemplate;
+    isActive?: boolean;
   }) {
     super(id);
 
@@ -31,7 +35,12 @@ export class BeforeScheduleMessage extends Entity {
       );
     }
 
+    if (typeof isActive !== "boolean") {
+      throw new ApiError("isActive deve ser um booleano", 400, "isActive");
+    }
+
     this.minutesBeforeSchedule = minutesBeforeSchedule;
+    this.isActive = isActive;
     this.messageTemplate = messageTemplate;
   }
 
@@ -39,6 +48,7 @@ export class BeforeScheduleMessage extends Entity {
     return {
       id: this.id,
       minutesBeforeSchedule: this.minutesBeforeSchedule,
+      isActive: this.isActive,
       messageTemplate: this.messageTemplate.getDTO(),
     };
   }

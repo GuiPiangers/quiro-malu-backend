@@ -17,7 +17,20 @@ describe("BeforeScheduleMessage", () => {
 
     expect(entity.id).toBe("before-1");
     expect(entity.minutesBeforeSchedule).toBe(30);
+    expect(entity.isActive).toBe(true);
     expect(entity.messageTemplate).toBe(messageTemplate);
+  });
+
+  it("should accept isActive false", () => {
+    const messageTemplate = new MessageTemplate({ textTemplate: "x" });
+
+    const entity = new BeforeScheduleMessage({
+      minutesBeforeSchedule: 10,
+      messageTemplate,
+      isActive: false,
+    });
+
+    expect(entity.isActive).toBe(false);
   });
 
   it("should throw ApiError when minutesBeforeSchedule is zero or invalid", () => {
@@ -53,6 +66,7 @@ describe("BeforeScheduleMessage", () => {
     expect(entity.getDTO()).toEqual({
       id: "before-2",
       minutesBeforeSchedule: 45,
+      isActive: true,
       messageTemplate: {
         id: "template-2",
         textTemplate: "Lembrete para {{nome}}",

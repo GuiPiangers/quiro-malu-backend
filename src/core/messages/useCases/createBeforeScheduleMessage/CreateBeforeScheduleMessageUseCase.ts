@@ -11,6 +11,7 @@ import { MessageTemplate } from "../../models/MessageTemplate";
 export type CreateBeforeScheduleMessageDTO = {
   userId: string;
   minutesBeforeSchedule: number;
+  isActive?: boolean;
   messageTemplate: {
     textTemplate: string;
   };
@@ -31,6 +32,7 @@ export class CreateBeforeScheduleMessageUseCase {
     const beforeScheduleMessage = new BeforeScheduleMessage({
       minutesBeforeSchedule: dto.minutesBeforeSchedule,
       messageTemplate,
+      isActive: dto.isActive ?? true,
     });
 
     const beforeScheduleMessageDTO = beforeScheduleMessage.getDTO();
@@ -40,6 +42,7 @@ export class CreateBeforeScheduleMessageUseCase {
       id: beforeScheduleMessageDTO.id,
       minutesBeforeSchedule: beforeScheduleMessageDTO.minutesBeforeSchedule,
       textTemplate: beforeScheduleMessageDTO.messageTemplate.textTemplate,
+      isActive: beforeScheduleMessageDTO.isActive,
     };
 
     await this.beforeScheduleMessageRepository.save(saveData);

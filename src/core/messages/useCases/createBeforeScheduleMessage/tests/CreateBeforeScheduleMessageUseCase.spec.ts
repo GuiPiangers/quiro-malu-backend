@@ -23,16 +23,42 @@ describe("CreateBeforeScheduleMessageUseCase", () => {
         userId: "user-1",
         minutesBeforeSchedule: 60,
         textTemplate: "Oi {{nome}}, seu horario esta proximo.",
+        isActive: true,
       }),
     );
 
     expect(result).toEqual({
       id: result.id,
       minutesBeforeSchedule: 60,
+      isActive: true,
       messageTemplate: {
         id: result.messageTemplate.id,
         textTemplate: "Oi {{nome}}, seu horario esta proximo.",
       },
     });
+  });
+
+  it("should persist isActive false when provided", async () => {
+    const beforeScheduleMessageRepository =
+      createMockBeforeScheduleMessageRepository();
+
+    const useCase = new CreateBeforeScheduleMessageUseCase(
+      beforeScheduleMessageRepository,
+    );
+
+    const result = await useCase.execute({
+      userId: "user-2",
+      minutesBeforeSchedule: 15,
+      isActive: false,
+      messageTemplate: { textTemplate: "Desativada" },
+    });
+
+    expect(beforeScheduleMessageRepository.save).toHaveBeenCalledWith(
+      expect.objectContaining({
+        userId: "user-2",
+        isActive: false,
+      }),
+    );
+    expect(result.isActive).toBe(false);
   });
 });

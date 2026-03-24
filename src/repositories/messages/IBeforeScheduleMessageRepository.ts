@@ -3,6 +3,7 @@ export type SaveBeforeScheduleMessageProps = {
   userId: string;
   minutesBeforeSchedule: number;
   textTemplate: string;
+  isActive: boolean;
 };
 
 export interface IBeforeScheduleMessageRepository {
