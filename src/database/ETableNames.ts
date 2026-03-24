@@ -8,6 +8,7 @@ export enum ETableNames {
   PROGRESS = "progress",
   REFRESH_TOKEN = "refresh_token",
   SCHEDULES = "schedules",
+  BEFORE_SCHEDULE_MESSAGES = "before_schedule_messages",
   FINANCES = "finances",
   EXAMS = "exams",
   NOT_MESSAGE_PATIENTS = "notMessagePatients",
