@@ -29,20 +29,17 @@ describe("ScheduleMessageCampaignUseCase", () => {
       triggers: [],
       status: "SCHEDULED",
       scheduledAt,
-      repeatEveryDays: 7,
       audienceType: "MOST_RECENT",
     } as any);
 
     await useCase.execute({
       campaignId: "c1",
       scheduledAt,
-      repeatEveryDays: 7,
     });
 
     expect(repository.update).toHaveBeenCalledWith("c1", {
       status: "SCHEDULED",
       scheduledAt,
-      repeatEveryDays: 7,
     });
 
     expect(registerMessageCampaignUseCase.execute).toHaveBeenCalled();

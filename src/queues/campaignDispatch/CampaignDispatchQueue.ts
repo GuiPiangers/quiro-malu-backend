@@ -1,12 +1,8 @@
-import {
-  DispatchMessageCampaignMode,
-  DispatchMessageCampaignUseCase,
-} from "../../core/messageCampaign/useCases/dispatchMessageCampaign/dispatchMessageCampaignUseCase";
+import { DispatchMessageCampaignUseCase } from "../../core/messageCampaign/useCases/dispatchMessageCampaign/dispatchMessageCampaignUseCase";
 import { IQueueProvider } from "../../repositories/queueProvider/IQueueProvider";
 
 export type CampaignDispatchJob = {
   campaignId: string;
-  mode: DispatchMessageCampaignMode;
 };
 
 export class CampaignDispatchQueue {
@@ -29,7 +25,7 @@ export class CampaignDispatchQueue {
     const jobId = "campaign:" + campaignId + ":once:" + scheduledAt.getTime();
 
     await this.queueProvider.repeat(
-      { campaignId, mode: "ONCE" },
+      { campaignId },
       {
         jobId,
         cron,
@@ -37,35 +33,6 @@ export class CampaignDispatchQueue {
         limit: 1,
       },
     );
-  }
-
-  async scheduleEvery7Days({
-    campaignId,
-    startAt,
-  }: {
-    campaignId: string;
-    startAt: Date;
-  }) {
-    const minute = startAt.getMinutes();
-    const hour = startAt.getHours();
-    const dayOfWeek = startAt.getDay();
-
-    const cron = "0 " + minute + " " + hour + " * * " + dayOfWeek;
-    const jobId = "campaign:" + campaignId + ":every7days";
-
-    await this.queueProvider.repeat(
-      { campaignId, mode: "EVERY_7_DAYS" },
-      {
-        jobId,
-        cron,
-        startDate: startAt,
-      },
-    );
-  }
-
-  async unscheduleEvery7Days({ campaignId }: { campaignId: string }) {
-    const jobId = "campaign:" + campaignId + ":every7days";
-    await this.queueProvider.deleteRepeat({ jobId });
   }
 
   async process() {

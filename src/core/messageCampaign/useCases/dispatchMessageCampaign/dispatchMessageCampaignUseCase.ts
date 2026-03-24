@@ -3,8 +3,6 @@ import { MessageOrigin } from "../../models/MessageLog";
 import { IMessageCampaignRepository } from "../../../../repositories/messageCampaign/IMessageCampaignRepository";
 import { SendMessageQueue } from "../../../../repositories/queueProvider/sendMessageQueue/sendMessageQueue";
 
-export type DispatchMessageCampaignMode = "ONCE" | "EVERY_7_DAYS";
-
 export class DispatchMessageCampaignUseCase {
   constructor(
     private messageCampaignRepository: IMessageCampaignRepository,
@@ -12,13 +10,7 @@ export class DispatchMessageCampaignUseCase {
     private sendMessageQueue: SendMessageQueue,
   ) {}
 
-  async execute({
-    campaignId,
-    mode,
-  }: {
-    campaignId: string;
-    mode: DispatchMessageCampaignMode;
-  }) {
+  async execute({ campaignId }: { campaignId: string }) {
     const campaign = await this.messageCampaignRepository.getById(campaignId);
 
     if (campaign == null) return;
@@ -59,7 +51,7 @@ export class DispatchMessageCampaignUseCase {
       await this.messageCampaignRepository.update(campaign.id, {
         lastDispatchAt: new Date(),
         lastDispatchCount: patients.length,
-        status: mode === "ONCE" ? "DONE" : "SCHEDULED",
+        status: "DONE",
       });
     } catch {
       await this.messageCampaignRepository.update(campaign.id, {

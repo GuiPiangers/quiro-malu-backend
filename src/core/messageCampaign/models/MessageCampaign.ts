@@ -39,9 +39,7 @@ export type MessageCampaignDTO = {
   status?: MessageCampaignStatus;
   scheduledAt?: Date;
   lastDispatchAt?: Date;
-  lastDispatchCount?: number;
-  repeatEveryDays?: number;
-};
+  lastDispatchCount?: number;};
 
 export class MessageCampaign extends Entity {
   readonly userId?: string;
@@ -61,9 +59,6 @@ export class MessageCampaign extends Entity {
   readonly scheduledAt?: Date;
   readonly lastDispatchAt?: Date;
   readonly lastDispatchCount?: number;
-
-  readonly repeatEveryDays?: number;
-
   constructor({
     active,
     name,
@@ -80,9 +75,7 @@ export class MessageCampaign extends Entity {
     status,
     scheduledAt,
     lastDispatchAt,
-    lastDispatchCount,
-    repeatEveryDays,
-  }: MessageCampaignDTO) {
+    lastDispatchCount,  }: MessageCampaignDTO) {
     super(id);
 
     this.userId = userId;
@@ -101,9 +94,7 @@ export class MessageCampaign extends Entity {
     this.status = status;
     this.scheduledAt = scheduledAt;
     this.lastDispatchAt = lastDispatchAt;
-    this.lastDispatchCount = lastDispatchCount;
-    this.repeatEveryDays = repeatEveryDays;
-  }
+    this.lastDispatchCount = lastDispatchCount;  }
 
   watchTriggers() {
     if (this.active === false) return;
@@ -152,9 +143,7 @@ export class MessageCampaign extends Entity {
       status: this.status,
       scheduledAt: this.scheduledAt,
       lastDispatchAt: this.lastDispatchAt,
-      lastDispatchCount: this.lastDispatchCount,
-      repeatEveryDays: this.repeatEveryDays,
-    };
+      lastDispatchCount: this.lastDispatchCount,    };
   }
 
   private isPatientTrigger(

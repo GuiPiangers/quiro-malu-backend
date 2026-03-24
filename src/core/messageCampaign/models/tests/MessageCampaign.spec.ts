@@ -65,9 +65,7 @@ describe("MessageCampaign", () => {
     expect(dto).toHaveProperty("status");
     expect(dto).toHaveProperty("scheduledAt");
     expect(dto).toHaveProperty("lastDispatchAt");
-    expect(dto).toHaveProperty("lastDispatchCount");
-    expect(dto).toHaveProperty("repeatEveryDays");
-  });
+    expect(dto).toHaveProperty("lastDispatchCount");  });
 
   it("should correctly register event listeners in watchTriggers", () => {
     const campaign = new MessageCampaign(messageCampaignDTO);

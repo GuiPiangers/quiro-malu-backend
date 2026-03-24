@@ -11,16 +11,13 @@ export class ScheduleMessageCampaignUseCase {
   async execute({
     campaignId,
     scheduledAt,
-    repeatEveryDays,
   }: {
     campaignId: string;
     scheduledAt: Date;
-    repeatEveryDays?: number;
   }) {
     await this.messageCampaignRepository.update(campaignId, {
       status: "SCHEDULED",
       scheduledAt,
-      repeatEveryDays,
     });
 
     const updated = await this.messageCampaignRepository.getById(campaignId);

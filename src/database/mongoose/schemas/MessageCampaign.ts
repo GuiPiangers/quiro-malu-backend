@@ -24,7 +24,6 @@ const messageCampaignSchema = new mongoose.Schema({
   scheduledAt: { type: Date, index: true },
   lastDispatchAt: { type: Date },
   lastDispatchCount: { type: Number },
-  repeatEveryDays: { type: Number },
 });
 
 export const MessageCampaignModel = mongoose.model(
