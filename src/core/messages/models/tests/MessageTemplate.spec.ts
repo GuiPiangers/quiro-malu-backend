@@ -1,4 +1,4 @@
-import { MessageTemplate, MessageTemplateDTO } from "./MessageTemplate";
+import { MessageTemplate, MessageTemplateDTO } from "../MessageTemplate";
 
 describe("MessageTemplate", () => {
   it("should initialize textTemplate and optional id", () => {

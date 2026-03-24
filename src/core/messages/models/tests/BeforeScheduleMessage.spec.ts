@@ -1,6 +1,6 @@
-import { ApiError } from "../../../utils/ApiError";
-import { BeforeScheduleMessage } from "./BeforeScheduleMessage";
-import { MessageTemplate } from "./MessageTemplate";
+import { ApiError } from "../../../../utils/ApiError";
+import { BeforeScheduleMessage } from "../BeforeScheduleMessage";
+import { MessageTemplate } from "../MessageTemplate";
 
 describe("BeforeScheduleMessage", () => {
   it("should create entity with minutes and message template", () => {
