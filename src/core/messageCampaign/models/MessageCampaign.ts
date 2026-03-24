@@ -10,8 +10,6 @@ import { triggerFactory } from "./TriggerFactor";
 export type CampaignAudienceType =
   | "MOST_RECENT"
   | "MOST_FREQUENT"
-  | "AFTER_APPOINTMENT"
-  | "BEFORE_APPOINTMENT"
   | "SPECIFIC_PATIENTS";
 
 export type MessageCampaignStatus =

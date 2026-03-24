@@ -4,19 +4,13 @@ import { MessageCampaignRepository } from "../../repositories/messageCampaign/Me
 import { KnexPatientRepository } from "../../repositories/patient/KnexPatientRepository";
 import { QueueProvider } from "../../repositories/queueProvider/queueProvider";
 import { sendMessageQueue } from "../../repositories/queueProvider/sendMessageQueue";
-import { KnexSchedulingRepository } from "../../repositories/scheduling/KnexSchedulingRepository";
 import { CampaignDispatchJob, CampaignDispatchQueue } from "./CampaignDispatchQueue";
 
 const queueProvider = new QueueProvider<CampaignDispatchJob>("campaignDispatchQueue");
 const messageCampaignRepository = new MessageCampaignRepository();
 
 const patientRepository = new KnexPatientRepository();
-const schedulingRepository = new KnexSchedulingRepository();
-
-const audienceResolverFactory = new AudienceResolverFactory(
-  patientRepository,
-  schedulingRepository,
-);
+const audienceResolverFactory = new AudienceResolverFactory(patientRepository);
 
 const dispatchMessageCampaignUseCase = new DispatchMessageCampaignUseCase(
   messageCampaignRepository,
