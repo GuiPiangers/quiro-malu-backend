@@ -1,7 +1,7 @@
 import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
 import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
 import { IWhatsAppProvider } from "../../../../providers/whatsapp/IWhatsAppProvider";
-import { IMessageLogRepository } from "../../../../repositories/messaging/IMessageLogRepository";
+import { IMessageLogRepository } from "../../../../repositories/messageCampaign/IMessageLogRepository";
 import { PatientDTO } from "../../../patients/models/Patient";
 import { SchedulingDTO } from "../../../scheduling/models/Scheduling";
 import { DateTime } from "../../../shared/Date";

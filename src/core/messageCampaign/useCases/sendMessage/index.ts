@@ -1,6 +1,6 @@
 import { EvolutionWhatsAppProvider } from "../../../../providers/whatsapp/EvolutionWhatsAppProvider";
 import { KnexPatientRepository } from "../../../../repositories/patient/KnexPatientRepository";
-import { MessageLogRepository } from "../../../../repositories/messaging/MessageLogRepository";
+import { MessageLogRepository } from "../../../../repositories/messageCampaign/MessageLogRepository";
 import { KnexSchedulingRepository } from "../../../../repositories/scheduling/KnexSchedulingRepository";
 import { SendMessageUseCase } from "./sendMessageUseCase";
 

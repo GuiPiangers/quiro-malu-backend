@@ -1,4 +1,4 @@
-import { IBirthdayMessageConfigRepository } from "../messaging/IBirthdayMessageConfigRepository";
+import { IBirthdayMessageConfigRepository } from "../messageCampaign/IBirthdayMessageConfigRepository";
 
 export const createMockBirthdayMessageConfigRepository =
   (): jest.Mocked<IBirthdayMessageConfigRepository> => ({

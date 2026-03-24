@@ -1,6 +1,6 @@
 import { KnexPatientRepository } from "../../repositories/patient/KnexPatientRepository";
 import { MessageCampaignRepository } from "../../repositories/messageCampaign/MessageCampaignRepository";
-import { BirthdayMessageConfigRepository } from "../../repositories/messaging/BirthdayMessageConfigRepository";
+import { BirthdayMessageConfigRepository } from "../../repositories/messageCampaign/BirthdayMessageConfigRepository";
 import { QueueProvider } from "../../repositories/queueProvider/queueProvider";
 import { sendMessageQueue } from "../../repositories/queueProvider/sendMessageQueue";
 import { BirthdayQueue } from "./BirthdayQueue";

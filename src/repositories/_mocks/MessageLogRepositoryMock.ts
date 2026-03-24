@@ -1,4 +1,4 @@
-import { IMessageLogRepository } from "../messaging/IMessageLogRepository";
+import { IMessageLogRepository } from "../messageCampaign/IMessageLogRepository";
 
 export const createMockMessageLogRepository =
   (): jest.Mocked<IMessageLogRepository> => ({

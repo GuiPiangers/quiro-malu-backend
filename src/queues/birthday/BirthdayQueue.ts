@@ -2,7 +2,7 @@ import { DateTime } from "../../core/shared/Date";
 import { MessageOrigin } from "../../core/messageCampaign/models/MessageLog";
 import { IPatientRepository } from "../../repositories/patient/IPatientRepository";
 import { IMessageCampaignRepository } from "../../repositories/messageCampaign/IMessageCampaignRepository";
-import { IBirthdayMessageConfigRepository } from "../../repositories/messaging/IBirthdayMessageConfigRepository";
+import { IBirthdayMessageConfigRepository } from "../../repositories/messageCampaign/IBirthdayMessageConfigRepository";
 import { SendMessageQueue } from "../../repositories/queueProvider/sendMessageQueue/sendMessageQueue";
 import { IQueueProvider } from "../../repositories/queueProvider/IQueueProvider";
 
