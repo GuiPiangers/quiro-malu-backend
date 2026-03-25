@@ -5,6 +5,7 @@ import {
   BeforeScheduleMessageConfigDTO,
   GetBeforeScheduleMessageByIdProps,
   IBeforeScheduleMessageRepository,
+  ListBeforeScheduleMessagesByUserIdProps,
   SaveBeforeScheduleMessageProps,
 } from "./IBeforeScheduleMessageRepository";
 
@@ -28,6 +29,22 @@ export class BeforeScheduleMessageRepository
         "textTemplate",
         "isActive",
       );
+
+      return rows as BeforeScheduleMessageConfigDTO[];
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
+  }
+
+  async listByUserId(
+    data: ListBeforeScheduleMessagesByUserIdProps,
+  ): Promise<BeforeScheduleMessageConfigDTO[]> {
+    try {
+      const rows = await Knex(ETableNames.BEFORE_SCHEDULE_MESSAGES)
+        .select("id", "userId", "minutesBeforeSchedule", "textTemplate", "isActive")
+        .where({
+          userId: data.userId,
+        });
 
       return rows as BeforeScheduleMessageConfigDTO[];
     } catch (error: any) {

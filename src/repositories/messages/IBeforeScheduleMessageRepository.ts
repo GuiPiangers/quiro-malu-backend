@@ -19,10 +19,18 @@ export type GetBeforeScheduleMessageByIdProps = {
   userId: string;
 };
 
+export type ListBeforeScheduleMessagesByUserIdProps = {
+  userId: string;
+};
+
 export interface IBeforeScheduleMessageRepository {
   save(data: SaveBeforeScheduleMessageProps): Promise<void>;
 
   listAll(): Promise<BeforeScheduleMessageConfigDTO[]>;
+
+  listByUserId(
+    data: ListBeforeScheduleMessagesByUserIdProps,
+  ): Promise<BeforeScheduleMessageConfigDTO[]>;
 
   getById(
     data: GetBeforeScheduleMessageByIdProps,
