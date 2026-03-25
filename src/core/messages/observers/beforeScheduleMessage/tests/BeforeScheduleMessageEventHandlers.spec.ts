@@ -56,7 +56,7 @@ describe("BeforeScheduleMessageEventHandlers", () => {
     await flushPromises();
 
     expect(beforeScheduleQueue.upsert).toHaveBeenCalledWith(
-      "before-schedule:user-1:schedule-1:cfg-1",
+      "before-schedule_user-1_schedule-1_cfg-1",
       {
         userId: "user-1",
         patientId: "patient-1",
@@ -149,7 +149,7 @@ describe("BeforeScheduleMessageEventHandlers", () => {
     await flushPromises();
 
     expect(beforeScheduleQueue.remove).toHaveBeenCalledWith(
-      "before-schedule:user-1:schedule-1:cfg-1",
+      "before-schedule_user-1_schedule-1_cfg-1",
     );
   });
 
@@ -190,11 +190,11 @@ describe("BeforeScheduleMessageEventHandlers", () => {
     await flushPromises();
 
     expect(beforeScheduleQueue.remove).toHaveBeenCalledWith(
-      "before-schedule:user-1:schedule-1:cfg-1",
+      "before-schedule_user-1_schedule-1_cfg-1",
     );
 
     expect(beforeScheduleQueue.remove).toHaveBeenCalledWith(
-      "before-schedule:user-1:schedule-1:cfg-2",
+      "before-schedule_user-1_schedule-1_cfg-2",
     );
   });
 });

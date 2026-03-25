@@ -156,7 +156,7 @@ export class BeforeScheduleMessageEventHandlers {
     beforeScheduleMessageId: string;
   }) {
     const raw =
-      "before-schedule:" + userId + ":" + scheduleId + ":" + beforeScheduleMessageId;
+      "before-schedule_" + userId + "_" + scheduleId + "_" + beforeScheduleMessageId;
 
     return raw.substring(0, 250);
   }
