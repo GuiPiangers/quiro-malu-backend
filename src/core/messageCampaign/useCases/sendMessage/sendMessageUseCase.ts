@@ -17,6 +17,7 @@ export class SendMessageUseCase {
     private schedulingRepository: ISchedulingRepository,
     private whatsAppProvider: IWhatsAppProvider,
     private messageLogRepository: IMessageLogRepository,
+    private instanceName: string,
   ) {}
 
   async execute({
@@ -83,6 +84,7 @@ export class SendMessageUseCase {
       const sendResult = await this.whatsAppProvider.sendMessage({
         to: this.toInternationalPhone(patient.phone),
         body: renderedBody,
+        instanceName: this.instanceName,
       });
 
       const baseLog: MessageLogDTO = {

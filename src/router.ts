@@ -68,6 +68,10 @@ import { listEventSuggestionsController } from "./core/scheduling/controllers/li
 import { saveCalendarConfigurationController } from "./core/calendarConfiguration/controllers/SaveCalendarConfigurationController";
 import { getCalendarConfigurationController } from "./core/calendarConfiguration/controllers/GetCalendarConfigurationController";
 import { createTranscriptionController } from "./core/transcriptions/controllers/createTranscriptionController";
+import { registerWhatsAppController } from "./core/whatsapp/controllers/registerWhatsAppController";
+import { getWhatsAppQrCodeController } from "./core/whatsapp/controllers/getWhatsAppQrCodeController";
+import { getWhatsAppStatusController } from "./core/whatsapp/controllers/getWhatsAppStatusController";
+import { disconnectWhatsAppController } from "./core/whatsapp/controllers/disconnectWhatsAppController";
 
 const router = Router();
 const multerConfig = multer({
@@ -387,6 +391,22 @@ router.post("/messageCampaigns", authMiddleware, async (request, response) => {
 
 router.get("/messageCampaigns", authMiddleware, async (request, response) => {
   return await listMessageCampaignController.handle(request, response);
+});
+
+router.post("/whatsapp/register", authMiddleware, async (request, response) => {
+  return await registerWhatsAppController.handle(request, response);
+});
+
+router.get("/whatsapp/qrcode", authMiddleware, async (request, response) => {
+  return await getWhatsAppQrCodeController.handle(request, response);
+});
+
+router.get("/whatsapp/status", authMiddleware, async (request, response) => {
+  return await getWhatsAppStatusController.handle(request, response);
+});
+
+router.delete("/whatsapp/disconnect", authMiddleware, async (request, response) => {
+  return await disconnectWhatsAppController.handle(request, response);
 });
 
 export { router };

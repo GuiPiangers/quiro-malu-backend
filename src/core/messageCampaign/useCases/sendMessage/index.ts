@@ -11,7 +11,6 @@ const messageLogRepository = new MessageLogRepository();
 const whatsAppProvider = new EvolutionWhatsAppProvider(
   process.env.EVOLUTION_API_BASE_URL ?? "",
   process.env.EVOLUTION_API_KEY ?? "",
-  process.env.EVOLUTION_API_INSTANCE ?? "",
 );
 
 const sendMessageUseCase = new SendMessageUseCase(
@@ -19,6 +18,7 @@ const sendMessageUseCase = new SendMessageUseCase(
   schedulingRepository,
   whatsAppProvider,
   messageLogRepository,
+  process.env.EVOLUTION_API_INSTANCE ?? "",
 );
 
 export { sendMessageUseCase };

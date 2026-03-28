@@ -24,6 +24,7 @@ describe("sendMessageUseCase", () => {
       schedulingRepository,
       whatsAppProvider,
       messageLogRepository,
+      "clinic-test",
     );
   });
 
@@ -133,6 +134,7 @@ describe("sendMessageUseCase", () => {
     expect(whatsAppProvider.sendMessage).toHaveBeenCalledWith({
       to: "5551900009000",
       body: "Olá Nome Paciente",
+      instanceName: "clinic-test",
     });
   });
 
