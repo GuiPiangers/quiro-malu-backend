@@ -95,13 +95,14 @@ services:
     networks:
       - minha_rede
 
+
 volumes:
   db:
   mongoDb:
   loki_data:
   redisDb:
   mongoConfig:
+
 networks:
   minha_rede:
     driver: bridge
-
