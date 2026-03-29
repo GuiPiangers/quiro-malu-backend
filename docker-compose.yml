@@ -11,8 +11,10 @@ services:
       - "8000:8000"
     depends_on: 
       - "mysql-db"
+      - "mongo"
     networks:
       - minha_rede
+      - quiro-shared-net
 
   mysql-db:
     image: mysql:8.0
@@ -106,3 +108,5 @@ volumes:
 networks:
   minha_rede:
     driver: bridge
+  quiro-shared-net:
+    external: true 

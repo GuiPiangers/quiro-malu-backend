@@ -60,6 +60,7 @@ services:
       - evolution-redis
     networks:
       - evolution-net
+      - quiro-shared-net
 
 volumes:
   evolution_redis:
@@ -69,3 +70,5 @@ volumes:
 networks:
   evolution-net:
     driver: bridge
+  quiro-shared-net:
+    external: true 
