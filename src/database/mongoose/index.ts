@@ -6,10 +6,12 @@ dotenv.config();
 const isProduction = process.env.NODE_ENV === "production";
 const MONGO_DATABASE = process.env.MONGO_INITDB_DATABASE;
 
+const mongoHost = process.env.DB_MONGO_HOST ?? "localhost";
+
 const MONGO_URI =
   isProduction && process.env.MONGO_ATLAS_URI
     ? process.env.MONGO_ATLAS_URI
-    : `mongodb://localhost:27017/${MONGO_DATABASE}`;
+    : `mongodb://${mongoHost}:27017/${MONGO_DATABASE}`;
 
 export const mongoConnect = async () => {
   try {
