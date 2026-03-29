@@ -30,7 +30,10 @@ export class BeforeScheduleMessageRepository
         "isActive",
       );
 
-      return rows as BeforeScheduleMessageConfigDTO[];
+      return rows.map((row: BeforeScheduleMessageConfigDTO) => ({
+        ...row,
+        isActive: !!row.isActive,
+      })) as BeforeScheduleMessageConfigDTO[];
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }
@@ -46,7 +49,10 @@ export class BeforeScheduleMessageRepository
           userId: data.userId,
         });
 
-      return rows as BeforeScheduleMessageConfigDTO[];
+      return rows.map((row: any) => ({
+        ...row,
+        isActive: !!row.isActive,
+      })) as BeforeScheduleMessageConfigDTO[];
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }
@@ -72,7 +78,10 @@ export class BeforeScheduleMessageRepository
 
       if (!row) return null;
 
-      return row as BeforeScheduleMessageConfigDTO;
+      return {
+        ...row,
+        isActive: !!row.isActive,
+      } as BeforeScheduleMessageConfigDTO;
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }
