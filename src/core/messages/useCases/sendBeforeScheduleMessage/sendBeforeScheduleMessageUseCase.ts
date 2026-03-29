@@ -4,8 +4,8 @@ import { IPatientRepository } from "../../../../repositories/patient/IPatientRep
 import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
 import { IWhatsAppInstanceRepository } from "../../../../repositories/whatsapp/IWhatsAppInstanceRepository";
 import { ApiError } from "../../../../utils/ApiError";
-import { DateTime } from "../../../shared/Date";
 import { WhatsAppInstance } from "../../../whatsapp/models/WhatsAppInstance";
+import { BeforeScheduleMessage } from "../../models/BeforeScheduleMessage";
 import { MessageTemplate } from "../../models/MessageTemplate";
 
 export type SendBeforeScheduleMessageJob = {
@@ -62,10 +62,14 @@ export class SendBeforeScheduleMessageUseCase {
       userId: job.userId,
     });
 
-    const template = new MessageTemplate({ textTemplate: config.textTemplate });
-    const renderedBody = template.replaceVariables(
-      this.buildTemplateVariables({ patient, scheduling }),
-    );
+    const beforeScheduleMessage = new BeforeScheduleMessage({
+      id: config.id,
+      minutesBeforeSchedule: config.minutesBeforeSchedule,
+      messageTemplate: new MessageTemplate({ textTemplate: config.textTemplate }),
+      isActive: config.isActive,
+    });
+
+    const renderedBody = beforeScheduleMessage.render({ patient, scheduling });
 
     await this.whatsAppProvider.sendMessage({
       to: this.toInternationalPhone(patient.phone),
@@ -78,29 +82,5 @@ export class SendBeforeScheduleMessageUseCase {
     const onlyNumbers = String(phone).replace(/\D/g, "");
     if (onlyNumbers.startsWith("55")) return onlyNumbers;
     return `55${onlyNumbers}`;
-  }
-
-  private buildTemplateVariables({
-    patient,
-    scheduling,
-  }: {
-    patient: { name: string; phone: string; gender?: string | undefined };
-    scheduling?: { date?: string; service?: string; status?: string };
-  }): Record<string, string> {
-    const dateTime =
-      scheduling?.date != null
-        ? new DateTime(scheduling.date).date +
-          " às " +
-          new DateTime(scheduling.date).time
-        : "";
-
-    return {
-      nome_paciente: patient.name,
-      telefone_paciente: patient.phone,
-      genero_paciente: patient.gender ?? "",
-      data_consulta: dateTime,
-      servico_consulta: scheduling?.service ?? "",
-      status_consulta: scheduling?.status ?? "",
-    };
   }
 }

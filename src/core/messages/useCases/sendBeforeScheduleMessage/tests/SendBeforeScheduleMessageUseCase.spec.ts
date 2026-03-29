@@ -27,7 +27,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       id: "cfg-1",
       userId: "user-1",
       minutesBeforeSchedule: 60,
-      textTemplate: "Olá {{nome_paciente}}, sua consulta é {{data_consulta}}.",
+      textTemplate: "Olá {{nome_paciente}}, consulta em {{data_consulta}} às {{horario_consulta}}.",
       isActive: true,
     });
 
@@ -68,7 +68,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     expect(whatsAppProvider.getConnectionState).toHaveBeenCalledWith(instanceName);
     expect(whatsAppProvider.sendMessage).toHaveBeenCalledWith({
       to: "5551999999999",
-      body: "Olá Maria, sua consulta é 2025-01-01 às 10:00.",
+      body: "Olá Maria, consulta em 01/01/2025 às 10:00.",
       instanceName,
     });
   });

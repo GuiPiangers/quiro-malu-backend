@@ -51,6 +51,39 @@ describe("BeforeScheduleMessage", () => {
     }).toThrow(ApiError);
   });
 
+  it("should render message with data_consulta in dd/mm/yyyy and horario_consulta in HH:MM", () => {
+    const entity = new BeforeScheduleMessage({
+      minutesBeforeSchedule: 60,
+      messageTemplate: new MessageTemplate({
+        textTemplate:
+          "Olá {{nome_paciente}}, consulta em {{data_consulta}} às {{horario_consulta}}.",
+      }),
+    });
+
+    const rendered = entity.render({
+      patient: { name: "Maria", phone: "51999999999" },
+      scheduling: { date: "2025-06-15T14:30", service: "Consulta" },
+    });
+
+    expect(rendered).toBe("Olá Maria, consulta em 15/06/2025 às 14:30.");
+  });
+
+  it("should render message with empty date fields when scheduling has no date", () => {
+    const entity = new BeforeScheduleMessage({
+      minutesBeforeSchedule: 60,
+      messageTemplate: new MessageTemplate({
+        textTemplate: "{{data_consulta}} {{horario_consulta}}",
+      }),
+    });
+
+    const rendered = entity.render({
+      patient: { name: "João", phone: "51988888888" },
+      scheduling: undefined,
+    });
+
+    expect(rendered).toBe(" ");
+  });
+
   it("should return DTO including nested messageTemplate", () => {
     const messageTemplate = new MessageTemplate({
       id: "template-2",
