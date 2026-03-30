@@ -3,6 +3,7 @@ import { IBeforeScheduleMessageRepository } from "../messages/IBeforeScheduleMes
 export const createMockBeforeScheduleMessageRepository =
   (): jest.Mocked<IBeforeScheduleMessageRepository> => ({
     save: jest.fn(),
+    update: jest.fn(),
     listAll: jest.fn(),
     listByUserId: jest.fn(),
     getById: jest.fn(),

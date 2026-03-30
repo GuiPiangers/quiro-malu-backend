@@ -7,6 +7,7 @@ import {
   IBeforeScheduleMessageRepository,
   ListBeforeScheduleMessagesByUserIdProps,
   SaveBeforeScheduleMessageProps,
+  UpdateBeforeScheduleMessageProps,
 } from "./IBeforeScheduleMessageRepository";
 
 export class BeforeScheduleMessageRepository
@@ -15,6 +16,25 @@ export class BeforeScheduleMessageRepository
   async save(data: SaveBeforeScheduleMessageProps): Promise<void> {
     try {
       await Knex(ETableNames.BEFORE_SCHEDULE_MESSAGES).insert(data);
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
+  }
+
+  async update(data: UpdateBeforeScheduleMessageProps): Promise<void> {
+    try {
+      const updateData: Record<string, unknown> = {};
+
+      if (data.minutesBeforeSchedule !== undefined)
+        updateData.minutesBeforeSchedule = data.minutesBeforeSchedule;
+      if (data.textTemplate !== undefined)
+        updateData.textTemplate = data.textTemplate;
+      if (data.isActive !== undefined)
+        updateData.isActive = data.isActive;
+
+      await Knex(ETableNames.BEFORE_SCHEDULE_MESSAGES)
+        .where({ id: data.id, userId: data.userId })
+        .update(updateData);
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }

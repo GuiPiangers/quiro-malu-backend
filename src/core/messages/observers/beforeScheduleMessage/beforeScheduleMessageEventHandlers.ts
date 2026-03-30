@@ -25,6 +25,10 @@ export class BeforeScheduleMessageEventHandlers {
       this.configsById.set(config.id, config);
     });
 
+    this.appEventListener.on("beforeScheduleMessageUpdate", async (config) => {
+      this.configsById.set(config.id, config);
+    });
+
     this.appEventListener.on("createSchedule", async (data) => {
       await this.handleCreateOrUpdateSchedule({
         type: "create",
