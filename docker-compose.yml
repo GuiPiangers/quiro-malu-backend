@@ -15,6 +15,10 @@ services:
     networks:
       - minha_rede
       - quiro-shared-net
+    develop:
+      watch:
+        - action: rebuild
+          path: .
 
   mysql-db:
     image: mysql:8.0
