@@ -38,6 +38,7 @@ describe("BeforeScheduleMessageEventHandlers", () => {
     appEventListener.emit("beforeScheduleMessageCreate", {
       id: "cfg-1",
       userId: "user-1",
+      name: "cfg-1",
       minutesBeforeSchedule: 60,
       isActive: true,
     });
@@ -89,6 +90,7 @@ describe("BeforeScheduleMessageEventHandlers", () => {
     appEventListener.emit("beforeScheduleMessageCreate", {
       id: "cfg-1",
       userId: "user-1",
+      name: "cfg-1",
       minutesBeforeSchedule: 60,
       isActive: false,
     });
@@ -131,6 +133,7 @@ describe("BeforeScheduleMessageEventHandlers", () => {
     appEventListener.emit("beforeScheduleMessageCreate", {
       id: "cfg-1",
       userId: "user-1",
+      name: "cfg-1",
       minutesBeforeSchedule: 60,
       isActive: true,
     });
@@ -171,6 +174,7 @@ describe("BeforeScheduleMessageEventHandlers", () => {
     appEventListener.emit("beforeScheduleMessageCreate", {
       id: "cfg-1",
       userId: "user-1",
+      name: "cfg-1",
       minutesBeforeSchedule: 60,
       isActive: true,
     });
@@ -178,6 +182,7 @@ describe("BeforeScheduleMessageEventHandlers", () => {
     appEventListener.emit("beforeScheduleMessageCreate", {
       id: "cfg-2",
       userId: "user-1",
+      name: "cfg-2",
       minutesBeforeSchedule: 15,
       isActive: false,
     });

@@ -1,6 +1,7 @@
 export type SaveBeforeScheduleMessageProps = {
   id?: string;
   userId: string;
+  name: string;
   minutesBeforeSchedule: number;
   textTemplate: string;
   isActive: boolean;
@@ -9,6 +10,7 @@ export type SaveBeforeScheduleMessageProps = {
 export type BeforeScheduleMessageConfigDTO = {
   id: string;
   userId: string;
+  name: string;
   minutesBeforeSchedule: number;
   textTemplate: string;
   isActive: boolean;
@@ -22,6 +24,7 @@ export type GetBeforeScheduleMessageByIdProps = {
 export type UpdateBeforeScheduleMessageProps = {
   id: string;
   userId: string;
+  name?: string;
   minutesBeforeSchedule?: number;
   textTemplate?: string;
   isActive?: boolean;

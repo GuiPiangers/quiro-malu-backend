@@ -24,6 +24,7 @@ export class ListBeforeScheduleMessagesUseCase {
 
       const beforeScheduleMessage = new BeforeScheduleMessage({
         id: config.id,
+        name: config.name,
         minutesBeforeSchedule: config.minutesBeforeSchedule,
         isActive: config.isActive,
         messageTemplate,

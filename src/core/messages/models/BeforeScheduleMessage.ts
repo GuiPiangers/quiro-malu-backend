@@ -5,28 +5,36 @@ import { MessageTemplate, MessageTemplateDTO } from "./MessageTemplate";
 
 export type BeforeScheduleMessageDTO = {
   id?: string;
+  name: string;
   minutesBeforeSchedule: number;
   isActive: boolean;
   messageTemplate: MessageTemplateDTO;
 };
 
 export class BeforeScheduleMessage extends Entity {
+  readonly name: string;
   readonly minutesBeforeSchedule: number;
   readonly isActive: boolean;
   readonly messageTemplate: MessageTemplate;
 
   constructor({
     id,
+    name,
     messageTemplate,
     minutesBeforeSchedule,
     isActive = true,
   }: {
     id?: string;
+    name: string;
     minutesBeforeSchedule: number;
     messageTemplate: MessageTemplate;
     isActive?: boolean;
   }) {
     super(id);
+
+    if (typeof name !== "string") {
+      throw new ApiError("name deve ser uma string", 400, "name");
+    }
 
     if (!Number.isInteger(minutesBeforeSchedule) || minutesBeforeSchedule <= 0) {
       throw new ApiError(
@@ -40,6 +48,7 @@ export class BeforeScheduleMessage extends Entity {
       throw new ApiError("isActive deve ser um booleano", 400, "isActive");
     }
 
+    this.name = name.trim();
     this.minutesBeforeSchedule = minutesBeforeSchedule;
     this.isActive = isActive;
     this.messageTemplate = messageTemplate;
@@ -81,6 +90,7 @@ export class BeforeScheduleMessage extends Entity {
   getDTO(): BeforeScheduleMessageDTO {
     return {
       id: this.id,
+      name: this.name,
       minutesBeforeSchedule: this.minutesBeforeSchedule,
       isActive: this.isActive,
       messageTemplate: this.messageTemplate.getDTO(),

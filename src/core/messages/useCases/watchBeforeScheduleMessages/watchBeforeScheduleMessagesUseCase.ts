@@ -18,6 +18,7 @@ export class WatchBeforeScheduleMessagesUseCase {
       this.appEventListener.emit("beforeScheduleMessageCreate", {
         id: config.id,
         userId: config.userId,
+        name: config.name,
         minutesBeforeSchedule: config.minutesBeforeSchedule,
         isActive: config.isActive,
       });

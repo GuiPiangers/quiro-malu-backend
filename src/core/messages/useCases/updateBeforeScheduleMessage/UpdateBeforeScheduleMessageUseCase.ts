@@ -10,6 +10,7 @@ import { MessageTemplate } from "../../models/MessageTemplate";
 export type UpdateBeforeScheduleMessageDTO = {
   id: string;
   userId: string;
+  name?: string;
   minutesBeforeSchedule?: number;
   isActive?: boolean;
   messageTemplate?: {
@@ -35,6 +36,11 @@ export class UpdateBeforeScheduleMessageUseCase {
       throw new ApiError("Mensagem agendada não encontrada", 404);
     }
 
+    if (dto.name !== undefined && !dto.name.trim()) {
+      throw new ApiError("name não pode ser vazio", 400, "name");
+    }
+
+    const name = dto.name !== undefined ? dto.name.trim() : existing.name;
     const minutesBeforeSchedule =
       dto.minutesBeforeSchedule ?? existing.minutesBeforeSchedule;
     const isActive = dto.isActive ?? existing.isActive;
@@ -44,6 +50,7 @@ export class UpdateBeforeScheduleMessageUseCase {
     const messageTemplate = new MessageTemplate({ textTemplate });
     const beforeScheduleMessage = new BeforeScheduleMessage({
       id: existing.id,
+      name,
       minutesBeforeSchedule,
       messageTemplate,
       isActive,
@@ -52,6 +59,7 @@ export class UpdateBeforeScheduleMessageUseCase {
     await this.beforeScheduleMessageRepository.update({
       id: dto.id,
       userId: dto.userId,
+      name: dto.name !== undefined ? dto.name.trim() : undefined,
       minutesBeforeSchedule: dto.minutesBeforeSchedule,
       textTemplate: dto.messageTemplate?.textTemplate,
       isActive: dto.isActive,
@@ -62,6 +70,7 @@ export class UpdateBeforeScheduleMessageUseCase {
     this.appEventListener.emit("beforeScheduleMessageUpdate", {
       id: updatedDTO.id!,
       userId: dto.userId,
+      name: updatedDTO.name,
       minutesBeforeSchedule: updatedDTO.minutesBeforeSchedule,
       isActive: updatedDTO.isActive,
     });

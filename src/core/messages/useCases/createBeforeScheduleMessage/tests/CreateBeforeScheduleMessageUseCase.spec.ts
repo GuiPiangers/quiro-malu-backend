@@ -17,6 +17,7 @@ describe("CreateBeforeScheduleMessageUseCase", () => {
 
     const result = await useCase.execute({
       userId: "user-1",
+      name: "Lembrete padrão",
       minutesBeforeSchedule: 60,
       messageTemplate: {
         textTemplate: "Oi {{nome}}, seu horario esta proximo.",
@@ -26,6 +27,7 @@ describe("CreateBeforeScheduleMessageUseCase", () => {
     expect(beforeScheduleMessageRepository.save).toHaveBeenCalledWith(
       expect.objectContaining({
         userId: "user-1",
+        name: "Lembrete padrão",
         minutesBeforeSchedule: 60,
         textTemplate: "Oi {{nome}}, seu horario esta proximo.",
         isActive: true,
@@ -35,12 +37,14 @@ describe("CreateBeforeScheduleMessageUseCase", () => {
     expect(emitSpy).toHaveBeenCalledWith("beforeScheduleMessageCreate", {
       id: result.id,
       userId: "user-1",
+      name: "Lembrete padrão",
       minutesBeforeSchedule: 60,
       isActive: true,
     });
 
     expect(result).toEqual({
       id: result.id,
+      name: "Lembrete padrão",
       minutesBeforeSchedule: 60,
       isActive: true,
       messageTemplate: {
@@ -64,6 +68,7 @@ describe("CreateBeforeScheduleMessageUseCase", () => {
 
     const result = await useCase.execute({
       userId: "user-2",
+      name: "Desativada label",
       minutesBeforeSchedule: 15,
       isActive: false,
       messageTemplate: { textTemplate: "Desativada" },
@@ -72,6 +77,7 @@ describe("CreateBeforeScheduleMessageUseCase", () => {
     expect(beforeScheduleMessageRepository.save).toHaveBeenCalledWith(
       expect.objectContaining({
         userId: "user-2",
+        name: "Desativada label",
         isActive: false,
       }),
     );
@@ -79,6 +85,7 @@ describe("CreateBeforeScheduleMessageUseCase", () => {
     expect(emitSpy).toHaveBeenCalledWith("beforeScheduleMessageCreate", {
       id: result.id,
       userId: "user-2",
+      name: "Desativada label",
       minutesBeforeSchedule: 15,
       isActive: false,
     });

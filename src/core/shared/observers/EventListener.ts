@@ -31,6 +31,7 @@ type AppEvents = {
   beforeScheduleMessageCreate: {
     id: string;
     userId: string;
+    name: string;
     minutesBeforeSchedule: number;
     isActive: boolean;
   };
@@ -38,6 +39,7 @@ type AppEvents = {
   beforeScheduleMessageUpdate: {
     id: string;
     userId: string;
+    name: string;
     minutesBeforeSchedule: number;
     isActive: boolean;
   };

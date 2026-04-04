@@ -26,6 +26,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     beforeScheduleMessageRepository.getById.mockResolvedValue({
       id: "cfg-1",
       userId: "user-1",
+      name: "Envio",
       minutesBeforeSchedule: 60,
       textTemplate: "Olá {{nome_paciente}}, consulta em {{data_consulta}} às {{horario_consulta}}.",
       isActive: true,
@@ -84,6 +85,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     beforeScheduleMessageRepository.getById.mockResolvedValue({
       id: "cfg-1",
       userId: "user-1",
+      name: "Inativa",
       minutesBeforeSchedule: 60,
       textTemplate: "x",
       isActive: false,
@@ -147,6 +149,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     beforeScheduleMessageRepository.getById.mockResolvedValue({
       id: "cfg-1",
       userId: "user-1",
+      name: "x",
       minutesBeforeSchedule: 60,
       textTemplate: "x",
       isActive: true,
@@ -185,6 +188,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     beforeScheduleMessageRepository.getById.mockResolvedValue({
       id: "cfg-1",
       userId: "user-1",
+      name: "x",
       minutesBeforeSchedule: 60,
       textTemplate: "x",
       isActive: true,

@@ -11,11 +11,13 @@ describe("BeforeScheduleMessage", () => {
 
     const entity = new BeforeScheduleMessage({
       id: "before-1",
+      name: "Lembrete 30min",
       minutesBeforeSchedule: 30,
       messageTemplate,
     });
 
     expect(entity.id).toBe("before-1");
+    expect(entity.name).toBe("Lembrete 30min");
     expect(entity.minutesBeforeSchedule).toBe(30);
     expect(entity.isActive).toBe(true);
     expect(entity.messageTemplate).toBe(messageTemplate);
@@ -25,6 +27,7 @@ describe("BeforeScheduleMessage", () => {
     const messageTemplate = new MessageTemplate({ textTemplate: "x" });
 
     const entity = new BeforeScheduleMessage({
+      name: "Inativa",
       minutesBeforeSchedule: 10,
       messageTemplate,
       isActive: false,
@@ -38,6 +41,7 @@ describe("BeforeScheduleMessage", () => {
 
     expect(() => {
       new BeforeScheduleMessage({
+        name: "x",
         minutesBeforeSchedule: 0,
         messageTemplate,
       });
@@ -45,6 +49,7 @@ describe("BeforeScheduleMessage", () => {
 
     expect(() => {
       new BeforeScheduleMessage({
+        name: "x",
         minutesBeforeSchedule: 2.5,
         messageTemplate,
       });
@@ -53,6 +58,7 @@ describe("BeforeScheduleMessage", () => {
 
   it("should render message with data_consulta in dd/mm/yyyy and horario_consulta in HH:MM", () => {
     const entity = new BeforeScheduleMessage({
+      name: "Consulta",
       minutesBeforeSchedule: 60,
       messageTemplate: new MessageTemplate({
         textTemplate:
@@ -70,6 +76,7 @@ describe("BeforeScheduleMessage", () => {
 
   it("should render message with empty date fields when scheduling has no date", () => {
     const entity = new BeforeScheduleMessage({
+      name: "Sem data",
       minutesBeforeSchedule: 60,
       messageTemplate: new MessageTemplate({
         textTemplate: "{{data_consulta}} {{horario_consulta}}",
@@ -92,12 +99,14 @@ describe("BeforeScheduleMessage", () => {
 
     const entity = new BeforeScheduleMessage({
       id: "before-2",
+      name: "DTO test",
       minutesBeforeSchedule: 45,
       messageTemplate,
     });
 
     expect(entity.getDTO()).toEqual({
       id: "before-2",
+      name: "DTO test",
       minutesBeforeSchedule: 45,
       isActive: true,
       messageTemplate: {

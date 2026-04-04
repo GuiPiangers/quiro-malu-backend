@@ -5,6 +5,7 @@ import { AppEventListener } from "../../../shared/observers/EventListener";
 export type BeforeScheduleMessageListenerConfig = {
   id: string;
   userId: string;
+  name: string;
   minutesBeforeSchedule: number;
   isActive: boolean;
 };

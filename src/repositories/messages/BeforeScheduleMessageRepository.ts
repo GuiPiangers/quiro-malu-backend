@@ -25,6 +25,7 @@ export class BeforeScheduleMessageRepository
     try {
       const updateData: Record<string, unknown> = {};
 
+      if (data.name !== undefined) updateData.name = data.name;
       if (data.minutesBeforeSchedule !== undefined)
         updateData.minutesBeforeSchedule = data.minutesBeforeSchedule;
       if (data.textTemplate !== undefined)
@@ -45,6 +46,7 @@ export class BeforeScheduleMessageRepository
       const rows = await Knex(ETableNames.BEFORE_SCHEDULE_MESSAGES).select(
         "id",
         "userId",
+        "name",
         "minutesBeforeSchedule",
         "textTemplate",
         "isActive",
@@ -64,7 +66,14 @@ export class BeforeScheduleMessageRepository
   ): Promise<BeforeScheduleMessageConfigDTO[]> {
     try {
       const rows = await Knex(ETableNames.BEFORE_SCHEDULE_MESSAGES)
-        .select("id", "userId", "minutesBeforeSchedule", "textTemplate", "isActive")
+        .select(
+          "id",
+          "userId",
+          "name",
+          "minutesBeforeSchedule",
+          "textTemplate",
+          "isActive",
+        )
         .where({
           userId: data.userId,
         });
@@ -86,6 +95,7 @@ export class BeforeScheduleMessageRepository
         .select(
           "id",
           "userId",
+          "name",
           "minutesBeforeSchedule",
           "textTemplate",
           "isActive",

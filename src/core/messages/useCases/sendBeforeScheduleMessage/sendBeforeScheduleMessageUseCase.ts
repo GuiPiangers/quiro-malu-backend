@@ -64,6 +64,7 @@ export class SendBeforeScheduleMessageUseCase {
 
     const beforeScheduleMessage = new BeforeScheduleMessage({
       id: config.id,
+      name: config.name,
       minutesBeforeSchedule: config.minutesBeforeSchedule,
       messageTemplate: new MessageTemplate({ textTemplate: config.textTemplate }),
       isActive: config.isActive,

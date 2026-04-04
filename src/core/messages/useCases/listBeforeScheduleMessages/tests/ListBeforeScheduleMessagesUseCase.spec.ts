@@ -10,6 +10,7 @@ describe("ListBeforeScheduleMessagesUseCase", () => {
       {
         id: "cfg-1",
         userId: "user-1",
+        name: "Lista",
         minutesBeforeSchedule: 30,
         textTemplate: "Olá {{nome}}",
         isActive: true,
@@ -29,6 +30,7 @@ describe("ListBeforeScheduleMessagesUseCase", () => {
     expect(result).toEqual([
       {
         id: "cfg-1",
+        name: "Lista",
         minutesBeforeSchedule: 30,
         isActive: true,
         messageTemplate: {

@@ -7,6 +7,7 @@ const makeAppEventListener = () => ({ emit: jest.fn(), on: jest.fn() } as any);
 const existingConfig = {
   id: "msg-1",
   userId: "user-1",
+  name: "Lembrete manhã",
   minutesBeforeSchedule: 60,
   textTemplate: "Olá {{nome_paciente}}",
   isActive: true,
@@ -84,7 +85,12 @@ describe("UpdateBeforeScheduleMessageUseCase", () => {
 
     expect(appEventListener.emit).toHaveBeenCalledWith(
       "beforeScheduleMessageUpdate",
-      expect.objectContaining({ id: "msg-1", userId: "user-1", isActive: false }),
+      expect.objectContaining({
+        id: "msg-1",
+        userId: "user-1",
+        name: "Lembrete manhã",
+        isActive: false,
+      }),
     );
   });
 

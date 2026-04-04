@@ -18,6 +18,7 @@ describe("GetBeforeScheduleMessageUseCase", () => {
     repository.getById.mockResolvedValue({
       id,
       userId,
+      name: "Busca",
       minutesBeforeSchedule: 60,
       textTemplate: "Olá {{nome_paciente}}",
       isActive: true,
@@ -28,6 +29,7 @@ describe("GetBeforeScheduleMessageUseCase", () => {
     expect(repository.getById).toHaveBeenCalledWith({ id, userId });
     expect(result).toMatchObject({
       id,
+      name: "Busca",
       minutesBeforeSchedule: 60,
       isActive: true,
       messageTemplate: { textTemplate: "Olá {{nome_paciente}}" },

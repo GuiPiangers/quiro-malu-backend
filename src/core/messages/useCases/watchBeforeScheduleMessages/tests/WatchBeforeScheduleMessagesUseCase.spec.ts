@@ -12,6 +12,7 @@ describe("WatchBeforeScheduleMessagesUseCase", () => {
       {
         id: "cfg-1",
         userId: "user-1",
+        name: "a",
         minutesBeforeSchedule: 30,
         textTemplate: "x",
         isActive: true,
@@ -19,6 +20,7 @@ describe("WatchBeforeScheduleMessagesUseCase", () => {
       {
         id: "cfg-2",
         userId: "user-2",
+        name: "b",
         minutesBeforeSchedule: 60,
         textTemplate: "y",
         isActive: false,
@@ -38,6 +40,7 @@ describe("WatchBeforeScheduleMessagesUseCase", () => {
     expect(emitSpy).toHaveBeenCalledWith("beforeScheduleMessageCreate", {
       id: "cfg-1",
       userId: "user-1",
+      name: "a",
       minutesBeforeSchedule: 30,
       isActive: true,
     });
@@ -45,6 +48,7 @@ describe("WatchBeforeScheduleMessagesUseCase", () => {
     expect(emitSpy).toHaveBeenCalledWith("beforeScheduleMessageCreate", {
       id: "cfg-2",
       userId: "user-2",
+      name: "b",
       minutesBeforeSchedule: 60,
       isActive: false,
     });
@@ -58,6 +62,7 @@ describe("WatchBeforeScheduleMessagesUseCase", () => {
       {
         id: undefined as any,
         userId: "user-1",
+        name: "x",
         minutesBeforeSchedule: 30,
         textTemplate: "x",
         isActive: true,
