@@ -89,6 +89,18 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
     return list.slice(data.config.offSet, data.config.offSet + data.config.limit);
   }
 
+  async listIdsByUserId({ userId }: { userId: string }): Promise<string[]> {
+    const now = Date.now();
+    return this.dbSchedules
+      .filter((s) => {
+        if (s.userId !== userId || !s.date) return false;
+        const t = new Date(s.date).getTime();
+        return !Number.isNaN(t) && t > now;
+      })
+      .map((s) => s.id!)
+      .filter(Boolean);
+  }
+
   async get(data: {
     id: string;
     userId: string;
