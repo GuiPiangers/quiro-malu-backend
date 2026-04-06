@@ -56,6 +56,7 @@ import { createBeforeScheduleMessageController } from "./core/messages/controlle
 import { listBeforeScheduleMessagesController } from "./core/messages/controllers/listBeforeScheduleMessagesController";
 import { getBeforeScheduleMessageController } from "./core/messages/controllers/getBeforeScheduleMessageController";
 import { updateBeforeScheduleMessageController } from "./core/messages/controllers/updateBeforeScheduleMessageController";
+import { deleteBeforeScheduleMessageController } from "./core/messages/controllers/deleteBeforeScheduleMessageController";
 import { NotificationSendMessage } from "./core/notification/models/NotificationSendMessage";
 import { Phone } from "./core/shared/Phone";
 import { setReadNotificationsController } from "./core/notification/controllers/setReadNotifications";
@@ -393,6 +394,10 @@ router.get("/beforeScheduleMessages/:id", authMiddleware, async (request, respon
 
 router.patch("/beforeScheduleMessages/:id", authMiddleware, async (request, response) => {
   return await updateBeforeScheduleMessageController.handle(request, response);
+});
+
+router.delete("/beforeScheduleMessages/:id", authMiddleware, async (request, response) => {
+  return await deleteBeforeScheduleMessageController.handle(request, response);
 });
 
 router.post("/messageCampaigns", authMiddleware, async (request, response) => {
