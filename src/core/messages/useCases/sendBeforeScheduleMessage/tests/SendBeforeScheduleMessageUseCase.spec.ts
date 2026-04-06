@@ -74,6 +74,58 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     });
   });
 
+  it("não deve enviar quando o agendamento está cancelado", async () => {
+    const beforeScheduleMessageRepository =
+      createMockBeforeScheduleMessageRepository();
+    const patientRepository = createMockPatientRepository();
+    const schedulingRepository = createMockSchedulingRepository();
+    const whatsAppProvider = createMockWhatsAppProvider();
+    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
+
+    beforeScheduleMessageRepository.getById.mockResolvedValue({
+      id: "cfg-1",
+      userId: "user-1",
+      name: "Envio",
+      minutesBeforeSchedule: 60,
+      textTemplate: "x",
+      isActive: true,
+    });
+
+    whatsAppInstanceRepository.getByUserId.mockResolvedValue(registeredInstance);
+    whatsAppProvider.getConnectionState.mockResolvedValue("open");
+
+    patientRepository.getById.mockResolvedValue([
+      { id: "patient-1", name: "Maria", phone: "(51) 99999 9999" } as any,
+    ]);
+
+    schedulingRepository.get.mockResolvedValue([
+      {
+        id: "schedule-1",
+        patientId: "patient-1",
+        date: "2025-01-01T10:00",
+        service: "Consulta",
+        status: "Cancelado",
+      } as any,
+    ]);
+
+    const useCase = new SendBeforeScheduleMessageUseCase(
+      beforeScheduleMessageRepository,
+      patientRepository,
+      schedulingRepository,
+      whatsAppProvider,
+      whatsAppInstanceRepository,
+    );
+
+    await useCase.execute({
+      userId: "user-1",
+      patientId: "patient-1",
+      schedulingId: "schedule-1",
+      beforeScheduleMessageId: "cfg-1",
+    });
+
+    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled();
+  });
+
   it("não deve enviar quando config está inativa", async () => {
     const beforeScheduleMessageRepository =
       createMockBeforeScheduleMessageRepository();

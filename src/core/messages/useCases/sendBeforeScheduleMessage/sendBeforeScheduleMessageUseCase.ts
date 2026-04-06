@@ -62,6 +62,10 @@ export class SendBeforeScheduleMessageUseCase {
       userId: job.userId,
     });
 
+    if (scheduling?.status === "Cancelado") {
+      return;
+    }
+
     const beforeScheduleMessage = new BeforeScheduleMessage({
       id: config.id,
       name: config.name,
