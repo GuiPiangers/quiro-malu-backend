@@ -150,6 +150,15 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     }
   }
 
+  async listIdsByUserId({ userId }: { userId: string }): Promise<string[]> {
+    const rows = await Knex(ETableNames.SCHEDULES)
+      .select("id")
+      .where({ userId })
+      .andWhereRaw("date > NOW()");
+
+    return rows.map((row: { id: string }) => row.id);
+  }
+
   async get({
     id,
     userId,
