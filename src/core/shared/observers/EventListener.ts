@@ -44,6 +44,10 @@ type AppEvents = {
     isActive: boolean;
   };
 
+  beforeScheduleMessageDelete: {
+    id: string;
+  };
+
   createExam: Omit<ExamDTO, "id"> & { userId: string; examId: string };
   updateExam: Partial<Omit<ExamDTO, "id">> & { userId: string; examId: string };
   deleteExam: { userId: string; examId: string; patientId: string };

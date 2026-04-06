@@ -1,4 +1,5 @@
 import { BeforeScheduleQueue } from "../../../../queues/beforeScheduleMessage/BeforeScheduleQueue";
+import { buildBeforeScheduleMessageJobId } from "../../utils/buildBeforeScheduleMessageJobId";
 import { DateTime } from "../../../shared/Date";
 import { AppEventListener } from "../../../shared/observers/EventListener";
 
@@ -57,6 +58,10 @@ export class BeforeScheduleMessageEventHandlers {
       });
     });
 
+    this.appEventListener.on("beforeScheduleMessageDelete", async (data) => {
+      this.configsById.delete(data.id);
+    });
+
     this.isRegistered = true;
   }
 
@@ -77,7 +82,7 @@ export class BeforeScheduleMessageEventHandlers {
 
     await Promise.all(
       configs.map(async (config) => {
-        const jobId = this.buildJobId({
+        const jobId = buildBeforeScheduleMessageJobId({
           userId,
           scheduleId,
           beforeScheduleMessageId: config.id,
@@ -115,7 +120,7 @@ export class BeforeScheduleMessageEventHandlers {
 
     await Promise.all(
       configs.map(async (config) => {
-        const jobId = this.buildJobId({
+        const jobId = buildBeforeScheduleMessageJobId({
           userId,
           scheduleId,
           beforeScheduleMessageId: config.id,
@@ -149,20 +154,5 @@ export class BeforeScheduleMessageEventHandlers {
     const delay = targetDate.toMillis() - now.toMillis();
 
     return delay > 0 ? delay : 0;
-  }
-
-  private buildJobId({
-    userId,
-    scheduleId,
-    beforeScheduleMessageId,
-  }: {
-    userId: string;
-    scheduleId: string;
-    beforeScheduleMessageId: string;
-  }) {
-    const raw =
-      "before-schedule_" + userId + "_" + scheduleId + "_" + beforeScheduleMessageId;
-
-    return raw.substring(0, 250);
   }
 }
