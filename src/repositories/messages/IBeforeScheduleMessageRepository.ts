@@ -34,9 +34,16 @@ export type ListBeforeScheduleMessagesByUserIdProps = {
   userId: string;
 };
 
+export type DeleteBeforeScheduleMessageProps = {
+  id: string;
+  userId: string;
+};
+
 export interface IBeforeScheduleMessageRepository {
   save(data: SaveBeforeScheduleMessageProps): Promise<void>;
   update(data: UpdateBeforeScheduleMessageProps): Promise<void>;
+
+  delete(data: DeleteBeforeScheduleMessageProps): Promise<void>;
 
   listAll(): Promise<BeforeScheduleMessageConfigDTO[]>;
 
