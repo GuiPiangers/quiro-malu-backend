@@ -17,7 +17,7 @@ export class DeleteBeforeScheduleMessageController {
         userId: userId!,
       });
 
-      return response.status(204).send();
+      return response.status(200).send({ message: "Before schedule message deleted successfully" });
     } catch (err: any) {
       return responseError(response, err);
     }
