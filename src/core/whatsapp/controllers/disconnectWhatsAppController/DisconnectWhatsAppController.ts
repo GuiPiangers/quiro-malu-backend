@@ -16,7 +16,7 @@ export class DisconnectWhatsAppController {
 
       await this.disconnectWhatsAppUseCase.execute({ userId });
 
-      return response.status(204).send();
+      return response.status(200).json({ message: "WhatsApp desconectado com sucesso" });
     } catch (err: any) {
       return responseError(response, err);
     }
