@@ -27,7 +27,7 @@ export class MessageCampaignRepository implements IMessageCampaignRepository {
 
     if (config) query.limit(config.limit).skip(config.offSet);
 
-    return await query;
+    return await query as MessageCampaignDTO[];
   }
 
   async create(data: SaveMessageCampaignProps): Promise<void> {
