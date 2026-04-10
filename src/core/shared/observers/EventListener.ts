@@ -1,10 +1,7 @@
 import { ExamDTO } from "../../exams/models/Exam";
-import { MessageCampaignDTO } from "../../messageCampaign/models/MessageCampaign";
-import { TriggerBase } from "../../messageCampaign/models/Trigger";
 import { PatientDTO } from "../../patients/models/Patient";
 import { BlockScheduleDto } from "../../scheduling/models/dtos/BlockSchedule.dto";
 import { SchedulingDTO } from "../../scheduling/models/Scheduling";
-import { DateTime } from "../Date";
 
 type AppEvents = {
   createPatient: Omit<PatientDTO, "id"> & { userId: string; patientId: string };
@@ -51,15 +48,6 @@ type AppEvents = {
   createExam: Omit<ExamDTO, "id"> & { userId: string; examId: string };
   updateExam: Partial<Omit<ExamDTO, "id">> & { userId: string; examId: string };
   deleteExam: { userId: string; examId: string; patientId: string };
-
-  watchTriggers: {
-    userId: string;
-    patientId: string;
-    schedulingId?: string;
-    messageCampaign: MessageCampaignDTO;
-    trigger: TriggerBase;
-    date?: DateTime;
-  };
 
   createBlockSchedule: BlockScheduleDto & { userId: string };
 };

@@ -50,8 +50,6 @@ import { sendNotificationController } from "./core/notification/controllers/send
 import { listNotificationsController } from "./core/notification/controllers/listNotification";
 import { sendAndSaveNotificationUseCase } from "./core/notification/useCases/sendAndSaveNotification";
 import { PushNotification } from "./core/notification/models/PushNotification";
-import { createMessageCampaignController } from "./core/messageCampaign/controller/createMessageCampaign";
-import { listMessageCampaignController } from "./core/messageCampaign/controller/listMessageCampaign";
 import { createBeforeScheduleMessageController } from "./core/messages/controllers/createBeforeScheduleMessageController";
 import { listBeforeScheduleMessagesController } from "./core/messages/controllers/listBeforeScheduleMessagesController";
 import { getBeforeScheduleMessageController } from "./core/messages/controllers/getBeforeScheduleMessageController";
@@ -398,14 +396,6 @@ router.patch("/beforeScheduleMessages/:id", authMiddleware, async (request, resp
 
 router.delete("/beforeScheduleMessages/:id", authMiddleware, async (request, response) => {
   return await deleteBeforeScheduleMessageController.handle(request, response);
-});
-
-router.post("/messageCampaigns", authMiddleware, async (request, response) => {
-  return await createMessageCampaignController.handle(request, response);
-});
-
-router.get("/messageCampaigns", authMiddleware, async (request, response) => {
-  return await listMessageCampaignController.handle(request, response);
 });
 
 router.post("/whatsapp/register", authMiddleware, async (request, response) => {

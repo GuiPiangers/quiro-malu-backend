@@ -1,7 +1,6 @@
 import { getExamUseCase } from "../core/exams/useCases/getExam";
 import { beforeScheduleMessageEventHandlers } from "../core/messages/observers/beforeScheduleMessage";
 import { watchBeforeScheduleMessagesUseCase } from "../core/messages/useCases/watchBeforeScheduleMessages";
-import { watchMessageTriggersUseCase } from "../core/messageCampaign/useCases/watchMessageTriggers";
 import { NotificationUndoExam } from "../core/notification/models/NotificationUndoExam";
 import { scheduleNotificationUseCase } from "../core/notification/useCases/ScheduleNotification";
 import { sendAndSaveNotificationUseCase } from "../core/notification/useCases/sendAndSaveNotification";
@@ -9,25 +8,14 @@ import { getPatientUseCase } from "../core/patients/controllers/getPatientContro
 import { factoryEventSuggestionWithStartEndDate } from "../core/scheduling/models/EventSuggestion";
 import { saveEventSuggestionUseCase } from "../core/scheduling/useCases/saveEventSuggestion";
 import { appEventListener } from "../core/shared/observers/EventListener";
-import { birthdayQueue } from "../queues/birthday";
 import { beforeScheduleQueue } from "../queues/beforeScheduleMessage";
-import { campaignDispatchQueue } from "../queues/campaignDispatch";
-import { sendMessageQueue } from "../repositories/queueProvider/sendMessageQueue";
 import { logger } from "../utils/logger";
 
 export async function start() {
-  await watchMessageTriggersUseCase.execute();
-
   beforeScheduleMessageEventHandlers.register();
   await watchBeforeScheduleMessagesUseCase.execute();
 
-  await birthdayQueue.schedule();
-
-  await Promise.all([
-    birthdayQueue.process(),
-    campaignDispatchQueue.process(),
-    beforeScheduleQueue.process(),
-  ]);
+  await beforeScheduleQueue.process();
 
   appEventListener.on("createSchedule", async (data) => {
     try {
@@ -66,37 +54,6 @@ export async function start() {
       sendAndSaveNotificationUseCase.execute({ userId, notification });
     } catch (error) {}
   });
-
-  appEventListener.on(
-    "watchTriggers",
-    async ({
-      userId,
-      patientId,
-      schedulingId,
-      messageCampaign,
-      trigger,
-      date,
-    }) => {
-      if (messageCampaign.active === false) return;
-
-      const origin =
-        trigger?.event === "patientBirthDay"
-          ? "BIRTHDAY"
-          : schedulingId
-            ? "APPOINTMENT_REMINDER"
-            : "CAMPAIGN";
-
-      await sendMessageQueue.add({
-        userId,
-        messageCampaign,
-        patientId,
-        schedulingId,
-        trigger,
-        date,
-        origin,
-      });
-    },
-  );
 
   appEventListener.on("createBlockSchedule", async (data) => {
     try {
