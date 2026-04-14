@@ -73,6 +73,7 @@ import { registerWhatsAppController } from "./core/whatsapp/controllers/register
 import { getWhatsAppQrCodeController } from "./core/whatsapp/controllers/getWhatsAppQrCodeController";
 import { getWhatsAppStatusController } from "./core/whatsapp/controllers/getWhatsAppStatusController";
 import { disconnectWhatsAppController } from "./core/whatsapp/controllers/disconnectWhatsAppController";
+import { whatsAppWebhookController } from "./core/whatsapp/controllers/whatsappWebhookController";
 
 const router = Router();
 const multerConfig = multer({
@@ -412,6 +413,10 @@ router.get("/whatsapp/status", authMiddleware, async (request, response) => {
 
 router.delete("/whatsapp/disconnect", authMiddleware, async (request, response) => {
   return await disconnectWhatsAppController.handle(request, response);
+});
+
+router.post("/webhooks/whatsapp", async (request, response) => {
+  return await whatsAppWebhookController.handle(request, response);
 });
 
 export { router };

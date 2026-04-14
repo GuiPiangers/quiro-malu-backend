@@ -3,7 +3,9 @@ import { IBeforeScheduleMessageRepository } from "../../../../repositories/messa
 import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
 import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
 import { IWhatsAppInstanceRepository } from "../../../../repositories/whatsapp/IWhatsAppInstanceRepository";
+import { IWhatsAppMessageLogRepository } from "../../../../repositories/whatsapp/IWhatsAppMessageLogRepository";
 import { ApiError } from "../../../../utils/ApiError";
+import { Id } from "../../../shared/Id";
 import { WhatsAppInstance } from "../../../whatsapp/models/WhatsAppInstance";
 import { BeforeScheduleMessage } from "../../models/BeforeScheduleMessage";
 import { MessageTemplate } from "../../models/MessageTemplate";
@@ -22,6 +24,7 @@ export class SendBeforeScheduleMessageUseCase {
     private schedulingRepository: ISchedulingRepository,
     private whatsAppProvider: IWhatsAppProvider,
     private whatsAppInstanceRepository: IWhatsAppInstanceRepository,
+    private whatsAppMessageLogRepository: IWhatsAppMessageLogRepository,
   ) {}
 
   async execute(job: SendBeforeScheduleMessageJob): Promise<void> {
@@ -75,12 +78,42 @@ export class SendBeforeScheduleMessageUseCase {
     });
 
     const renderedBody = beforeScheduleMessage.render({ patient, scheduling });
+    const toPhone = this.toInternationalPhone(patient.phone);
 
-    await this.whatsAppProvider.sendMessage({
-      to: this.toInternationalPhone(patient.phone),
+    const sendResult = await this.whatsAppProvider.sendMessage({
+      to: toPhone,
       body: renderedBody,
       instanceName: instance.instanceName,
     });
+
+    if (sendResult.success) {
+      await this.whatsAppMessageLogRepository.save({
+        id: new Id().value,
+        userId: job.userId,
+        patientId: job.patientId,
+        schedulingId: job.schedulingId,
+        beforeScheduleMessageId: job.beforeScheduleMessageId,
+        message: renderedBody,
+        toPhone,
+        instanceName: instance.instanceName,
+        status: "PENDING",
+        providerMessageId: sendResult.providerMessageId ?? null,
+      });
+    } else {
+      await this.whatsAppMessageLogRepository.save({
+        id: new Id().value,
+        userId: job.userId,
+        patientId: job.patientId,
+        schedulingId: job.schedulingId,
+        beforeScheduleMessageId: job.beforeScheduleMessageId,
+        message: renderedBody,
+        toPhone,
+        instanceName: instance.instanceName,
+        status: "FAILED",
+        providerMessageId: null,
+        errorMessage: sendResult.errorMessage ?? "Falha no envio",
+      });
+    }
   }
 
   private toInternationalPhone(phone: string) {

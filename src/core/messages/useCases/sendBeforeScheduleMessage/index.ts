@@ -3,12 +3,14 @@ import { BeforeScheduleMessageRepository } from "../../../../repositories/messag
 import { KnexPatientRepository } from "../../../../repositories/patient/KnexPatientRepository";
 import { KnexSchedulingRepository } from "../../../../repositories/scheduling/KnexSchedulingRepository";
 import { KnexWhatsAppInstanceRepository } from "../../../../repositories/whatsapp/KnexWhatsAppInstanceRepository";
+import { KnexWhatsAppMessageLogRepository } from "../../../../repositories/whatsapp/KnexWhatsAppMessageLogRepository";
 import { SendBeforeScheduleMessageUseCase } from "./sendBeforeScheduleMessageUseCase";
 
 const beforeScheduleMessageRepository = new BeforeScheduleMessageRepository();
 const patientRepository = new KnexPatientRepository();
 const schedulingRepository = new KnexSchedulingRepository();
 const whatsAppInstanceRepository = new KnexWhatsAppInstanceRepository();
+const whatsAppMessageLogRepository = new KnexWhatsAppMessageLogRepository();
 
 const whatsAppProvider = new EvolutionWhatsAppProvider(
   process.env.EVOLUTION_API_BASE_URL ?? "",
@@ -21,6 +23,7 @@ const sendBeforeScheduleMessageUseCase = new SendBeforeScheduleMessageUseCase(
   schedulingRepository,
   whatsAppProvider,
   whatsAppInstanceRepository,
+  whatsAppMessageLogRepository,
 );
 
 export { sendBeforeScheduleMessageUseCase };

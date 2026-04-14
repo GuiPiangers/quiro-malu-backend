@@ -16,4 +16,5 @@ export enum ETableNames {
   EVENT_SUGGESTIONS = "event_suggestions",
   PAIN_SCALES = "pain_scales",
   WHATSAPP_INSTANCES = "whatsapp_instances",
+  WHATSAPP_MESSAGE_LOGS = "whatsapp_message_logs",
 }
