@@ -55,6 +55,9 @@ import { listBeforeScheduleMessagesController } from "./core/messages/controller
 import { getBeforeScheduleMessageController } from "./core/messages/controllers/getBeforeScheduleMessageController";
 import { updateBeforeScheduleMessageController } from "./core/messages/controllers/updateBeforeScheduleMessageController";
 import { deleteBeforeScheduleMessageController } from "./core/messages/controllers/deleteBeforeScheduleMessageController";
+import { listWhatsAppMessageLogsController } from "./core/messages/controllers/listWhatsAppMessageLogsController";
+import { listWhatsAppMessageLogsByPatientController } from "./core/messages/controllers/listWhatsAppMessageLogsByPatientController";
+import { getWhatsAppMessageLogsSummaryController } from "./core/messages/controllers/getWhatsAppMessageLogsSummaryController";
 import { NotificationSendMessage } from "./core/notification/models/NotificationSendMessage";
 import { Phone } from "./core/shared/Phone";
 import { setReadNotificationsController } from "./core/notification/controllers/setReadNotifications";
@@ -397,6 +400,25 @@ router.patch("/beforeScheduleMessages/:id", authMiddleware, async (request, resp
 
 router.delete("/beforeScheduleMessages/:id", authMiddleware, async (request, response) => {
   return await deleteBeforeScheduleMessageController.handle(request, response);
+});
+
+router.get("/messages/logs/summary", authMiddleware, async (request, response) => {
+  return await getWhatsAppMessageLogsSummaryController.handle(request, response);
+});
+
+router.get(
+  "/messages/logs/patient/:patientId",
+  authMiddleware,
+  async (request, response) => {
+    return await listWhatsAppMessageLogsByPatientController.handle(
+      request,
+      response,
+    );
+  },
+);
+
+router.get("/messages/logs", authMiddleware, async (request, response) => {
+  return await listWhatsAppMessageLogsController.handle(request, response);
 });
 
 router.post("/whatsapp/register", authMiddleware, async (request, response) => {
