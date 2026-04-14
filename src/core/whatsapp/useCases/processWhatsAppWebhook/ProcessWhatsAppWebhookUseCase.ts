@@ -1,5 +1,6 @@
 import {
   IWhatsAppMessageLogRepository,
+  UpdateWhatsAppMessageLogByProviderIdProps,
   WhatsAppMessageLogStatus,
 } from "../../../../repositories/whatsapp/IWhatsAppMessageLogRepository";
 import {
@@ -37,12 +38,27 @@ export class ProcessWhatsAppWebhookUseCase {
       const status = mapEvolutionStatusToLogStatus(u.evolutionStatus);
       if (!status) continue;
 
-      await this.whatsAppMessageLogRepository.updateByProviderMessageId({
+      const nowIso = new Date().toISOString();
+
+      const patch: UpdateWhatsAppMessageLogByProviderIdProps = {
         providerMessageId: u.providerMessageId,
         status,
-        errorMessage:
-          status === "FAILED" ? u.evolutionStatus : null,
-      });
+      };
+
+      if (status === "FAILED") {
+        patch.errorMessage = u.errorDetail ?? u.evolutionStatus;
+      } else {
+        patch.errorMessage = null;
+      }
+
+      if (status === "DELIVERED") {
+        patch.deliveredAt = nowIso;
+      }
+      if (status === "READ") {
+        patch.readAt = nowIso;
+      }
+
+      await this.whatsAppMessageLogRepository.updateByProviderMessageId(patch);
     }
   }
 }
