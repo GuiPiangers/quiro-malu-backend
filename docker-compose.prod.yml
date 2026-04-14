@@ -76,6 +76,7 @@ services:
       - mysql-db
     networks:
       - minha_rede
+      - quiro-shared-net
     labels:
       logging: "promtail"
       logging_jobname: "backend"
@@ -300,3 +301,5 @@ volumes:
 networks:
   minha_rede:
     driver: bridge
+  quiro-shared-net:
+    external: true 
