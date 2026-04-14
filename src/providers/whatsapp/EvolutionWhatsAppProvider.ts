@@ -54,11 +54,34 @@ export class EvolutionWhatsAppProvider implements IWhatsAppProvider {
   }
 
   async createInstance(instanceName: string): Promise<void> {
-    await axios.post(
-      `${this.url}/instance/create`,
-      { instanceName, qrcode: true, integration: "WHATSAPP-BAILEYS" },
-      { headers: this.headers },
-    );
+    const appUrl = process.env.APP_URL?.replace(/\/$/, "");
+    const body: Record<string, unknown> = {
+      instanceName,
+      qrcode: true,
+      integration: "WHATSAPP-BAILEYS",
+    };
+
+    if (appUrl) {
+      const webhookUrl = `${appUrl}/webhooks/whatsapp`;
+      const secret = process.env.WHATSAPP_WEBHOOK_SECRET;
+      body.webhook = {
+        url: webhookUrl,
+        byEvents: false,
+        base64: false,
+        events: ["MESSAGES_UPDATE", "SEND_MESSAGE"],
+        ...(secret
+          ? {
+              headers: {
+                "x-webhook-secret": secret,
+              },
+            }
+          : {}),
+      };
+    }
+
+    await axios.post(`${this.url}/instance/create`, body, {
+      headers: this.headers,
+    });
   }
 
   async getQrCode(instanceName: string): Promise<string | null> {
