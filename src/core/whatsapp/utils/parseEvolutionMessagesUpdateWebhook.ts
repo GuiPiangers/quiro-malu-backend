@@ -1,10 +1,8 @@
-/**
- * Extrai atualizações de status de mensagens do payload de webhook da Evolution API.
- * Formatos variam entre versões; este parser cobre o caso comum `data.key.id` + `data.update.status`.
- */
 export type EvolutionMessageStatusUpdate = {
   providerMessageId: string;
   evolutionStatus: string;
+  /** Texto de erro quando a Evolution envia detalhe além do status */
+  errorDetail?: string;
 };
 
 export function extractMessagesUpdatesFromEvolutionWebhook(body: Record<string, unknown>): {
@@ -31,12 +29,39 @@ export function extractMessagesUpdatesFromEvolutionWebhook(body: Record<string, 
   for (const item of items) {
     if (item == null || typeof item !== "object") continue;
     const o = item as Record<string, unknown>;
+
     const key = o.key as Record<string, unknown> | undefined;
-    const id = key?.id;
+    const nestedId = key?.id;
     const update = o.update as Record<string, unknown> | undefined;
-    const status = update?.status;
-    if (typeof id === "string" && typeof status === "string") {
-      updates.push({ providerMessageId: id, evolutionStatus: status });
+    const nestedStatus = update?.status;
+
+    if (typeof nestedId === "string" && typeof nestedStatus === "string") {
+      const msg = update?.message;
+      const err = update?.error;
+      let errorDetail: string | undefined;
+      if (typeof msg === "string" && msg.trim()) errorDetail = msg;
+      else if (typeof err === "string" && err.trim()) errorDetail = err;
+      updates.push({
+        providerMessageId: nestedId,
+        evolutionStatus: nestedStatus,
+        ...(errorDetail ? { errorDetail } : {}),
+      });
+      continue;
+    }
+
+    const keyId = o.keyId;
+    const flatStatus = o.status;
+    if (typeof keyId === "string" && typeof flatStatus === "string") {
+      const msg = o.message;
+      const err = o.error;
+      let errorDetail: string | undefined;
+      if (typeof msg === "string" && msg.trim()) errorDetail = msg;
+      else if (typeof err === "string" && err.trim()) errorDetail = err;
+      updates.push({
+        providerMessageId: keyId,
+        evolutionStatus: flatStatus,
+        ...(errorDetail ? { errorDetail } : {}),
+      });
     }
   }
 
