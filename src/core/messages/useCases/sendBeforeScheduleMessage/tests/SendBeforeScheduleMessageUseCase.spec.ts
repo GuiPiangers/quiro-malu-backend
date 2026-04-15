@@ -4,6 +4,7 @@ import { createMockPatientRepository } from "../../../../../repositories/_mocks/
 import { createMockSchedulingRepository } from "../../../../../repositories/_mocks/SchedulingRepositoryMock";
 import { createMockWhatsAppInstanceRepository } from "../../../../../repositories/_mocks/WhatsAppInstanceRepositoryMock";
 import { createMockWhatsAppMessageLogRepository } from "../../../../../repositories/_mocks/WhatsAppMessageLogRepositoryMock";
+import { IAppEventListener } from "../../../../shared/observers/EventListener";
 import { SendBeforeScheduleMessageUseCase } from "../sendBeforeScheduleMessageUseCase";
 import { ApiError } from "../../../../../utils/ApiError";
 
@@ -15,6 +16,10 @@ const registeredInstance = {
   instanceName,
 };
 
+function createAppEventListenerMock(): IAppEventListener {
+  return { emit: jest.fn() };
+}
+
 describe("SendBeforeScheduleMessageUseCase", () => {
   it("deve enviar mensagem renderizada quando config está ativa e provider está conectado", async () => {
     const beforeScheduleMessageRepository =
@@ -24,6 +29,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     const whatsAppProvider = createMockWhatsAppProvider();
     const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
     const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
+    const appEventListener = createAppEventListenerMock();
 
     beforeScheduleMessageRepository.getById.mockResolvedValue({
       id: "cfg-1",
@@ -63,6 +69,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppProvider,
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
+      appEventListener,
     );
 
     await useCase.execute({
@@ -92,6 +99,19 @@ describe("SendBeforeScheduleMessageUseCase", () => {
         providerMessageId: "wa-msg-1",
       }),
     );
+
+    expect(appEventListener.emit).toHaveBeenCalledWith(
+      "beforeScheduleMessageSend",
+      expect.objectContaining({
+        userId: "user-1",
+        patientId: "patient-1",
+        schedulingId: "schedule-1",
+        beforeScheduleMessageId: "cfg-1",
+        instanceName,
+        toPhone: "5551999999999",
+        providerMessageId: "wa-msg-1",
+      }),
+    );
   });
 
   it("deve persistir log PENDING sem providerMessageId quando a API não retorna id", async () => {
@@ -102,6 +122,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     const whatsAppProvider = createMockWhatsAppProvider();
     const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
     const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
+    const appEventListener = createAppEventListenerMock();
 
     beforeScheduleMessageRepository.getById.mockResolvedValue({
       id: "cfg-1",
@@ -133,6 +154,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppProvider,
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
+      appEventListener,
     );
 
     await useCase.execute({
@@ -149,6 +171,13 @@ describe("SendBeforeScheduleMessageUseCase", () => {
         message: "Oi João",
       }),
     );
+
+    expect(appEventListener.emit).toHaveBeenCalledWith(
+      "beforeScheduleMessageSend",
+      expect.objectContaining({
+        providerMessageId: null,
+      }),
+    );
   });
 
   it("deve persistir log FAILED quando o provider retorna falha", async () => {
@@ -159,6 +188,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     const whatsAppProvider = createMockWhatsAppProvider();
     const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
     const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
+    const appEventListener = createAppEventListenerMock();
 
     beforeScheduleMessageRepository.getById.mockResolvedValue({
       id: "cfg-1",
@@ -188,6 +218,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppProvider,
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
+      appEventListener,
     );
 
     await useCase.execute({
@@ -214,6 +245,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     const whatsAppProvider = createMockWhatsAppProvider();
     const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
     const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
+    const appEventListener = createAppEventListenerMock();
 
     beforeScheduleMessageRepository.getById.mockResolvedValue({
       id: "cfg-1",
@@ -248,6 +280,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppProvider,
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
+      appEventListener,
     );
 
     await useCase.execute({
@@ -269,6 +302,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     const whatsAppProvider = createMockWhatsAppProvider();
     const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
     const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
+    const appEventListener = createAppEventListenerMock();
 
     beforeScheduleMessageRepository.getById.mockResolvedValue({
       id: "cfg-1",
@@ -286,6 +320,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppProvider,
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
+      appEventListener,
     );
 
     await useCase.execute({
@@ -308,6 +343,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     const whatsAppProvider = createMockWhatsAppProvider();
     const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
     const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
+    const appEventListener = createAppEventListenerMock();
 
     beforeScheduleMessageRepository.getById.mockResolvedValue(null);
 
@@ -318,6 +354,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppProvider,
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
+      appEventListener,
     );
 
     await useCase.execute({
@@ -339,6 +376,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     const whatsAppProvider = createMockWhatsAppProvider();
     const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
     const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
+    const appEventListener = createAppEventListenerMock();
 
     beforeScheduleMessageRepository.getById.mockResolvedValue({
       id: "cfg-1",
@@ -357,6 +395,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppProvider,
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
+      appEventListener,
     );
 
     await expect(
@@ -381,6 +420,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     const whatsAppProvider = createMockWhatsAppProvider();
     const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
     const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
+    const appEventListener = createAppEventListenerMock();
 
     beforeScheduleMessageRepository.getById.mockResolvedValue({
       id: "cfg-1",
@@ -400,6 +440,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppProvider,
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
+      appEventListener,
     );
 
     await expect(

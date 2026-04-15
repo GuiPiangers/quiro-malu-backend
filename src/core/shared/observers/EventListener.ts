@@ -45,6 +45,18 @@ type AppEvents = {
     id: string;
   };
 
+  /** Disparado após envio WhatsApp bem-sucedido e gravação do log (debug/produção). */
+  beforeScheduleMessageSend: {
+    userId: string;
+    patientId: string;
+    schedulingId: string;
+    beforeScheduleMessageId: string;
+    instanceName: string;
+    toPhone: string;
+    providerMessageId: string | null;
+    messageLogId: string;
+  };
+
   createExam: Omit<ExamDTO, "id"> & { userId: string; examId: string };
   updateExam: Partial<Omit<ExamDTO, "id">> & { userId: string; examId: string };
   deleteExam: { userId: string; examId: string; patientId: string };
@@ -78,5 +90,8 @@ class AppEventListener {
 }
 
 const appEventListener = new AppEventListener();
+
+/** Contrato mínimo para DI (ex.: use cases que só emitem eventos). */
+export type IAppEventListener = Pick<typeof appEventListener, "emit">;
 
 export { appEventListener, AppEventListener };

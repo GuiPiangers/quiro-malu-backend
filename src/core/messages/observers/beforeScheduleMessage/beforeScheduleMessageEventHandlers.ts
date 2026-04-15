@@ -1,4 +1,5 @@
 import { BeforeScheduleQueue } from "../../../../queues/beforeScheduleMessage/BeforeScheduleQueue";
+import { logger } from "../../../../utils/logger";
 import { buildBeforeScheduleMessageJobId } from "../../utils/buildBeforeScheduleMessageJobId";
 import { DateTime } from "../../../shared/Date";
 import { AppEventListener } from "../../../shared/observers/EventListener";
@@ -60,6 +61,23 @@ export class BeforeScheduleMessageEventHandlers {
 
     this.appEventListener.on("beforeScheduleMessageDelete", async (data) => {
       this.configsById.delete(data.id);
+    });
+
+    this.appEventListener.on("beforeScheduleMessageSend", async (data) => {
+      logger.info(
+        {
+          appEvent: "BeforeScheduleMessageSend",
+          userId: data.userId,
+          patientId: data.patientId,
+          schedulingId: data.schedulingId,
+          beforeScheduleMessageId: data.beforeScheduleMessageId,
+          instanceName: data.instanceName,
+          toPhone: data.toPhone,
+          providerMessageId: data.providerMessageId,
+          messageLogId: data.messageLogId,
+        },
+        "before schedule WhatsApp message sent successfully",
+      );
     });
 
     this.isRegistered = true;

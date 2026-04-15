@@ -1,4 +1,5 @@
 import { DateTime as Luxon } from "luxon";
+import { logger } from "../../../../../utils/logger";
 import { AppEventListener } from "../../../../shared/observers/EventListener";
 import { BeforeScheduleMessageEventHandlers } from "../beforeScheduleMessageEventHandlers";
 
@@ -201,5 +202,47 @@ describe("BeforeScheduleMessageEventHandlers", () => {
     expect(beforeScheduleQueue.remove).toHaveBeenCalledWith(
       "before-schedule_user-1_schedule-1_cfg-2",
     );
+  });
+
+  it("should log on beforeScheduleMessageSend", async () => {
+    const infoSpy = jest.spyOn(logger, "info").mockImplementation(() => logger as any);
+
+    const beforeScheduleQueue = {
+      upsert: jest.fn(),
+      remove: jest.fn(),
+    };
+
+    const appEventListener = new AppEventListener();
+    const handlers = new BeforeScheduleMessageEventHandlers(
+      beforeScheduleQueue as any,
+      appEventListener,
+    );
+
+    handlers.register();
+
+    appEventListener.emit("beforeScheduleMessageSend", {
+      userId: "user-1",
+      patientId: "patient-1",
+      schedulingId: "schedule-1",
+      beforeScheduleMessageId: "cfg-1",
+      instanceName: "clinic-user-1",
+      toPhone: "5551999999999",
+      providerMessageId: "wa-1",
+      messageLogId: "log-1",
+    });
+
+    await flushPromises();
+
+    expect(infoSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        appEvent: "BeforeScheduleMessageSend",
+        userId: "user-1",
+        messageLogId: "log-1",
+        providerMessageId: "wa-1",
+      }),
+      "before schedule WhatsApp message sent successfully",
+    );
+
+    infoSpy.mockRestore();
   });
 });

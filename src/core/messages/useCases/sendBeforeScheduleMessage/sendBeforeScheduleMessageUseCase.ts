@@ -5,6 +5,7 @@ import { ISchedulingRepository } from "../../../../repositories/scheduling/ISche
 import { IWhatsAppInstanceRepository } from "../../../../repositories/whatsapp/IWhatsAppInstanceRepository";
 import { IWhatsAppMessageLogRepository } from "../../../../repositories/whatsapp/IWhatsAppMessageLogRepository";
 import { ApiError } from "../../../../utils/ApiError";
+import { IAppEventListener } from "../../../shared/observers/EventListener";
 import { Id } from "../../../shared/Id";
 import { WhatsAppInstance } from "../../../whatsapp/models/WhatsAppInstance";
 import { BeforeScheduleMessage } from "../../models/BeforeScheduleMessage";
@@ -25,6 +26,7 @@ export class SendBeforeScheduleMessageUseCase {
     private whatsAppProvider: IWhatsAppProvider,
     private whatsAppInstanceRepository: IWhatsAppInstanceRepository,
     private whatsAppMessageLogRepository: IWhatsAppMessageLogRepository,
+    private appEventListener: IAppEventListener,
   ) {}
 
   async execute(job: SendBeforeScheduleMessageJob): Promise<void> {
@@ -87,8 +89,9 @@ export class SendBeforeScheduleMessageUseCase {
     });
 
     if (sendResult.success) {
+      const messageLogId = new Id().value;
       await this.whatsAppMessageLogRepository.save({
-        id: new Id().value,
+        id: messageLogId,
         userId: job.userId,
         patientId: job.patientId,
         schedulingId: job.schedulingId,
@@ -98,6 +101,17 @@ export class SendBeforeScheduleMessageUseCase {
         instanceName: instance.instanceName,
         status: "PENDING",
         providerMessageId: sendResult.providerMessageId ?? null,
+      });
+
+      this.appEventListener.emit("beforeScheduleMessageSend", {
+        userId: job.userId,
+        patientId: job.patientId,
+        schedulingId: job.schedulingId,
+        beforeScheduleMessageId: job.beforeScheduleMessageId,
+        instanceName: instance.instanceName,
+        toPhone,
+        providerMessageId: sendResult.providerMessageId ?? null,
+        messageLogId,
       });
     } else {
       await this.whatsAppMessageLogRepository.save({

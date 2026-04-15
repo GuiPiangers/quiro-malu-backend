@@ -4,6 +4,7 @@ import { KnexPatientRepository } from "../../../../repositories/patient/KnexPati
 import { KnexSchedulingRepository } from "../../../../repositories/scheduling/KnexSchedulingRepository";
 import { KnexWhatsAppInstanceRepository } from "../../../../repositories/whatsapp/KnexWhatsAppInstanceRepository";
 import { KnexWhatsAppMessageLogRepository } from "../../../../repositories/whatsapp/KnexWhatsAppMessageLogRepository";
+import { appEventListener } from "../../../shared/observers/EventListener";
 import { SendBeforeScheduleMessageUseCase } from "./sendBeforeScheduleMessageUseCase";
 
 const beforeScheduleMessageRepository = new BeforeScheduleMessageRepository();
@@ -24,6 +25,7 @@ const sendBeforeScheduleMessageUseCase = new SendBeforeScheduleMessageUseCase(
   whatsAppProvider,
   whatsAppInstanceRepository,
   whatsAppMessageLogRepository,
+  appEventListener,
 );
 
 export { sendBeforeScheduleMessageUseCase };
