@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
-import { DeleteBeforeScheduleMessageUseCase } from "../../useCases/deleteBeforeScheduleMessage/DeleteBeforeScheduleMessageUseCase";
+import { DeleteBeforeScheduleMessageUseCase } from "../../useCases/beforeScheduleMessage/deleteBeforeScheduleMessage/DeleteBeforeScheduleMessageUseCase";
 
 export class DeleteBeforeScheduleMessageController {
   constructor(

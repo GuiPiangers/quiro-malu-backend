@@ -1,6 +1,6 @@
-import { sendBeforeScheduleMessageUseCase } from "../../core/messages/useCases/sendBeforeScheduleMessage";
+import { sendBeforeScheduleMessageUseCase } from "../../core/messages/useCases/beforeScheduleMessage/sendBeforeScheduleMessage";
 import { QueueProvider } from "../../repositories/queueProvider/queueProvider";
-import { SendBeforeScheduleMessageJob } from "../../core/messages/useCases/sendBeforeScheduleMessage/sendBeforeScheduleMessageUseCase";
+import { SendBeforeScheduleMessageJob } from "../../core/messages/useCases/beforeScheduleMessage/sendBeforeScheduleMessage/sendBeforeScheduleMessageUseCase";
 import { BeforeScheduleQueue } from "./BeforeScheduleQueue";
 
 const queueProvider = new QueueProvider<SendBeforeScheduleMessageJob>(

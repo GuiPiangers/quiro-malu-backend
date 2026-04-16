@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
-import { ListBeforeScheduleMessagesUseCase } from "../../useCases/listBeforeScheduleMessages/ListBeforeScheduleMessagesUseCase";
+import { ListBeforeScheduleMessagesUseCase } from "../../useCases/beforeScheduleMessage/listBeforeScheduleMessages/ListBeforeScheduleMessagesUseCase";
 
 export class ListBeforeScheduleMessagesController {
   constructor(private listBeforeScheduleMessagesUseCase: ListBeforeScheduleMessagesUseCase) {}

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
-import { GetBeforeScheduleMessageUseCase } from "../../useCases/getBeforeScheduleMessage/GetBeforeScheduleMessageUseCase";
+import { GetBeforeScheduleMessageUseCase } from "../../useCases/beforeScheduleMessage/getBeforeScheduleMessage/GetBeforeScheduleMessageUseCase";
 
 export class GetBeforeScheduleMessageController {
   constructor(private getBeforeScheduleMessageUseCase: GetBeforeScheduleMessageUseCase) {}

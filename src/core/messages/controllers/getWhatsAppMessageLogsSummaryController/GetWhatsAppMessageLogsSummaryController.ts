@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
-import { GetWhatsAppMessageLogsSummaryUseCase } from "../../useCases/getWhatsAppMessageLogsSummary/GetWhatsAppMessageLogsSummaryUseCase";
+import { GetWhatsAppMessageLogsSummaryUseCase } from "../../useCases/beforeScheduleMessage/getWhatsAppMessageLogsSummary/GetWhatsAppMessageLogsSummaryUseCase";
 
 export class GetWhatsAppMessageLogsSummaryController {
   constructor(

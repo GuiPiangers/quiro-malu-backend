@@ -1,4 +1,4 @@
-import { deleteBeforeScheduleMessageUseCase } from "../../useCases/deleteBeforeScheduleMessage";
+import { deleteBeforeScheduleMessageUseCase } from "../../useCases/beforeScheduleMessage/deleteBeforeScheduleMessage";
 import { DeleteBeforeScheduleMessageController } from "./DeleteBeforeScheduleMessageController";
 
 const deleteBeforeScheduleMessageController = new DeleteBeforeScheduleMessageController(

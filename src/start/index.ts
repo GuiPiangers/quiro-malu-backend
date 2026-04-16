@@ -1,6 +1,6 @@
 import { getExamUseCase } from "../core/exams/useCases/getExam";
 import { beforeScheduleMessageEventHandlers } from "../core/messages/observers/beforeScheduleMessage";
-import { watchBeforeScheduleMessagesUseCase } from "../core/messages/useCases/watchBeforeScheduleMessages";
+import { watchBeforeScheduleMessagesUseCase } from "../core/messages/useCases/beforeScheduleMessage/watchBeforeScheduleMessages";
 import { NotificationUndoExam } from "../core/notification/models/NotificationUndoExam";
 import { scheduleNotificationUseCase } from "../core/notification/useCases/ScheduleNotification";
 import { sendAndSaveNotificationUseCase } from "../core/notification/useCases/sendAndSaveNotification";

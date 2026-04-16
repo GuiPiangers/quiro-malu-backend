@@ -3,7 +3,7 @@ import { responseError } from "../../../../utils/ResponseError";
 import {
   CreateBeforeScheduleMessageDTO,
   CreateBeforeScheduleMessageUseCase,
-} from "../../useCases/createBeforeScheduleMessage/CreateBeforeScheduleMessageUseCase";
+} from "../../useCases/beforeScheduleMessage/createBeforeScheduleMessage/CreateBeforeScheduleMessageUseCase";
 
 export class CreateBeforeScheduleMessageController {
   constructor(private createBeforeScheduleMessageUseCase: CreateBeforeScheduleMessageUseCase) {}

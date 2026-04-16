@@ -1,5 +1,5 @@
 import { BeforeScheduleMessageRepository } from "../../../../repositories/messages/BeforeScheduleMessageRepository";
-import { ListBeforeScheduleMessagesUseCase } from "../../useCases/listBeforeScheduleMessages/ListBeforeScheduleMessagesUseCase";
+import { ListBeforeScheduleMessagesUseCase } from "../../useCases/beforeScheduleMessage/listBeforeScheduleMessages/ListBeforeScheduleMessagesUseCase";
 import { ListBeforeScheduleMessagesController } from "./ListBeforeScheduleMessagesController";
 
 const beforeScheduleMessageRepository = new BeforeScheduleMessageRepository();

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
-import { ListWhatsAppMessageLogsUseCase } from "../../useCases/listWhatsAppMessageLogs/ListWhatsAppMessageLogsUseCase";
+import { ListWhatsAppMessageLogsUseCase } from "../../useCases/beforeScheduleMessage/listWhatsAppMessageLogs/ListWhatsAppMessageLogsUseCase";
 
 export class ListWhatsAppMessageLogsController {
   constructor(

@@ -2,7 +2,7 @@ import { IQueueProvider } from "../../repositories/queueProvider/IQueueProvider"
 import {
   SendBeforeScheduleMessageJob,
   SendBeforeScheduleMessageUseCase,
-} from "../../core/messages/useCases/sendBeforeScheduleMessage/sendBeforeScheduleMessageUseCase";
+} from "../../core/messages/useCases/beforeScheduleMessage/sendBeforeScheduleMessage/sendBeforeScheduleMessageUseCase";
 
 export class BeforeScheduleQueue {
   constructor(
