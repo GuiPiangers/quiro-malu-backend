@@ -67,7 +67,7 @@ export class SendBeforeScheduleMessageUseCase {
       userId: job.userId,
     });
 
-    if (scheduling?.status === "Cancelado") {
+    if (scheduling?.status === "Cancelado" || scheduling?.status === "Atendido") {
       return;
     }
 
