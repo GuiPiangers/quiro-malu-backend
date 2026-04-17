@@ -1,7 +1,7 @@
 import { BeforeScheduleQueue } from "../../../../queues/beforeScheduleMessage/BeforeScheduleQueue";
 import { logger } from "../../../../utils/logger";
 import { buildBeforeScheduleMessageJobId } from "../../utils/buildBeforeScheduleMessageJobId";
-import { DateTime } from "../../../shared/Date";
+import { calculateScheduleMessageDelay } from "../../utils/calculateScheduleMessageDelay";
 import { AppEventListener } from "../../../shared/observers/EventListener";
 
 export type BeforeScheduleMessageListenerConfig = {
@@ -106,7 +106,10 @@ export class BeforeScheduleMessageEventHandlers {
           beforeScheduleMessageId: config.id,
         });
 
-        const delay = this.calculateDelay(scheduleDate, config.minutesBeforeSchedule);
+        const delay = this.calculateDelay(
+          scheduleDate,
+          config.minutesBeforeSchedule,
+        );
 
         if (delay <= 0) {
           if (type === "update") await this.beforeScheduleQueue.remove(jobId);
@@ -163,14 +166,10 @@ export class BeforeScheduleMessageEventHandlers {
     scheduleDate: string | undefined,
     minutesBefore: number,
   ): number {
-    if (!scheduleDate) return 0;
-
-    const schedule = new DateTime(scheduleDate).value;
-    const targetDate = schedule.minus({ minutes: minutesBefore });
-
-    const now = DateTime.now().value;
-    const delay = targetDate.toMillis() - now.toMillis();
-
-    return delay > 0 ? delay : 0;
+    return calculateScheduleMessageDelay({
+      scheduleDate,
+      minutesOffset: minutesBefore,
+      direction: "before",
+    });
   }
 }
