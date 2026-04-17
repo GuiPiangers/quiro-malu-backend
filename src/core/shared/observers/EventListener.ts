@@ -45,12 +45,44 @@ type AppEvents = {
     id: string;
   };
 
-  /** Disparado após envio WhatsApp bem-sucedido e gravação do log (debug/produção). */
+  // Fired after successful WhatsApp send and log persistence.
   beforeScheduleMessageSend: {
     userId: string;
     patientId: string;
     schedulingId: string;
     beforeScheduleMessageId: string;
+    instanceName: string;
+    toPhone: string;
+    providerMessageId: string | null;
+    messageLogId: string;
+  };
+
+  afterScheduleMessageCreate: {
+    id: string;
+    userId: string;
+    name: string;
+    minutesAfterSchedule: number;
+    isActive: boolean;
+  };
+
+  afterScheduleMessageUpdate: {
+    id: string;
+    userId: string;
+    name: string;
+    minutesAfterSchedule: number;
+    isActive: boolean;
+  };
+
+  afterScheduleMessageDelete: {
+    id: string;
+  };
+
+  // Fired after successful WhatsApp send and log persistence.
+  afterScheduleMessageSend: {
+    userId: string;
+    patientId: string;
+    schedulingId: string;
+    afterScheduleMessageId: string;
     instanceName: string;
     toPhone: string;
     providerMessageId: string | null;
@@ -91,7 +123,7 @@ class AppEventListener {
 
 const appEventListener = new AppEventListener();
 
-/** Contrato mínimo para DI (ex.: use cases que só emitem eventos). */
+// Minimum contract for DI.
 export type IAppEventListener = Pick<typeof appEventListener, "emit">;
 
 export { appEventListener, AppEventListener };
