@@ -6,7 +6,9 @@ import {
   DeleteAfterScheduleMessageProps,
   GetAfterScheduleMessageByIdProps,
   IAfterScheduleMessageRepository,
+  ListAfterScheduleMessagesByUserIdPagedProps,
   ListAfterScheduleMessagesByUserIdProps,
+  ListAfterScheduleMessagesPagedResult,
   SaveAfterScheduleMessageProps,
   UpdateAfterScheduleMessageProps,
 } from "./IAfterScheduleMessageRepository";
@@ -91,6 +93,43 @@ export class AfterScheduleMessageRepository
         ...row,
         isActive: !!row.isActive,
       })) as AfterScheduleMessageConfigDTO[];
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
+  }
+
+  async listByUserIdPaged(
+    data: ListAfterScheduleMessagesByUserIdPagedProps,
+  ): Promise<ListAfterScheduleMessagesPagedResult> {
+    try {
+      const base = () =>
+        Knex(ETableNames.AFTER_SCHEDULE_MESSAGES).where({ userId: data.userId });
+
+      const countRows = await base().clone().count("* as total");
+      const total = Number(
+        (Array.isArray(countRows) ? countRows[0] : countRows)?.total ?? 0,
+      );
+
+      const rows = await base()
+        .clone()
+        .select(
+          "id",
+          "userId",
+          "name",
+          "minutesAfterSchedule",
+          "textTemplate",
+          "isActive",
+        )
+        .orderBy("updated_at", "desc")
+        .limit(data.limit)
+        .offset(data.offset);
+
+      const items = rows.map((row: any) => ({
+        ...row,
+        isActive: !!row.isActive,
+      })) as AfterScheduleMessageConfigDTO[];
+
+      return { items, total };
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }

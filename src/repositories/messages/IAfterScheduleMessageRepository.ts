@@ -34,6 +34,17 @@ export type ListAfterScheduleMessagesByUserIdProps = {
   userId: string;
 };
 
+export type ListAfterScheduleMessagesByUserIdPagedProps = {
+  userId: string;
+  limit: number;
+  offset: number;
+};
+
+export type ListAfterScheduleMessagesPagedResult = {
+  items: AfterScheduleMessageConfigDTO[];
+  total: number;
+};
+
 export type DeleteAfterScheduleMessageProps = {
   id: string;
   userId: string;
@@ -50,6 +61,10 @@ export interface IAfterScheduleMessageRepository {
   listByUserId(
     data: ListAfterScheduleMessagesByUserIdProps,
   ): Promise<AfterScheduleMessageConfigDTO[]>;
+
+  listByUserIdPaged(
+    data: ListAfterScheduleMessagesByUserIdPagedProps,
+  ): Promise<ListAfterScheduleMessagesPagedResult>;
 
   getById(
     data: GetAfterScheduleMessageByIdProps,
