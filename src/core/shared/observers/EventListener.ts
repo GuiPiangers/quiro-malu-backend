@@ -85,6 +85,14 @@ type AppEvents = {
     sendTime: string;
   };
 
+  birthdayMessageUpdate: {
+    id: string;
+    userId: string;
+    name: string;
+    isActive: boolean;
+    sendTime: string;
+  };
+
   birthdayMessageSend: {
     userId: string;
     patientId: string;

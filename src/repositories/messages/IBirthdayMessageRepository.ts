@@ -29,9 +29,26 @@ export type ListBirthdayMessagesResult = {
   total: number;
 };
 
+export type GetBirthdayMessageByIdProps = {
+  id: string;
+  userId: string;
+};
+
+export type UpdateBirthdayMessageProps = {
+  id: string;
+  userId: string;
+  name?: string;
+  textTemplate?: string;
+  isActive?: boolean;
+  /** MySQL TIME (ex.: "09:30:00"). */
+  sendTime?: string;
+};
+
 export interface IBirthdayMessageRepository {
   save(data: SaveBirthdayMessageProps): Promise<void>;
   findActiveByUserId(userId: string): Promise<BirthdayMessageCampaignDTO | null>;
+  getById(data: GetBirthdayMessageByIdProps): Promise<BirthdayMessageCampaignDTO | null>;
+  update(data: UpdateBirthdayMessageProps): Promise<void>;
   listByUserIdPaged(
     data: ListBirthdayMessagesByUserIdProps,
   ): Promise<ListBirthdayMessagesResult>;
