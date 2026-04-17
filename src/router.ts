@@ -55,6 +55,11 @@ import { listBeforeScheduleMessagesController } from "./core/messages/controller
 import { getBeforeScheduleMessageController } from "./core/messages/controllers/getBeforeScheduleMessageController";
 import { updateBeforeScheduleMessageController } from "./core/messages/controllers/updateBeforeScheduleMessageController";
 import { deleteBeforeScheduleMessageController } from "./core/messages/controllers/deleteBeforeScheduleMessageController";
+import { createAfterScheduleMessageController } from "./core/messages/controllers/createAfterScheduleMessageController";
+import { listAfterScheduleMessagesController } from "./core/messages/controllers/listAfterScheduleMessagesController";
+import { getAfterScheduleMessageController } from "./core/messages/controllers/getAfterScheduleMessageController";
+import { updateAfterScheduleMessageController } from "./core/messages/controllers/updateAfterScheduleMessageController";
+import { deleteAfterScheduleMessageController } from "./core/messages/controllers/deleteAfterScheduleMessageController";
 import { listWhatsAppMessageLogsController } from "./core/messages/controllers/listWhatsAppMessageLogsController";
 import { listWhatsAppMessageLogsByPatientController } from "./core/messages/controllers/listWhatsAppMessageLogsByPatientController";
 import { getWhatsAppMessageLogsSummaryController } from "./core/messages/controllers/getWhatsAppMessageLogsSummaryController";
@@ -400,6 +405,26 @@ router.patch("/beforeScheduleMessages/:id", authMiddleware, async (request, resp
 
 router.delete("/beforeScheduleMessages/:id", authMiddleware, async (request, response) => {
   return await deleteBeforeScheduleMessageController.handle(request, response);
+});
+
+router.post("/afterScheduleMessages", authMiddleware, async (request, response) => {
+  return await createAfterScheduleMessageController.handle(request, response);
+});
+
+router.get("/afterScheduleMessages", authMiddleware, async (request, response) => {
+  return await listAfterScheduleMessagesController.handle(request, response);
+});
+
+router.get("/afterScheduleMessages/:id", authMiddleware, async (request, response) => {
+  return await getAfterScheduleMessageController.handle(request, response);
+});
+
+router.patch("/afterScheduleMessages/:id", authMiddleware, async (request, response) => {
+  return await updateAfterScheduleMessageController.handle(request, response);
+});
+
+router.delete("/afterScheduleMessages/:id", authMiddleware, async (request, response) => {
+  return await deleteAfterScheduleMessageController.handle(request, response);
 });
 
 router.get("/messages/logs/summary", authMiddleware, async (request, response) => {
