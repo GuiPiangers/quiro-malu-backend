@@ -9,6 +9,7 @@ export enum ETableNames {
   REFRESH_TOKEN = "refresh_token",
   SCHEDULES = "schedules",
   BEFORE_SCHEDULE_MESSAGES = "before_schedule_messages",
+  AFTER_SCHEDULE_MESSAGES = "after_schedule_messages",
   FINANCES = "finances",
   EXAMS = "exams",
   NOT_MESSAGE_PATIENTS = "notMessagePatients",
