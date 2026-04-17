@@ -82,6 +82,30 @@ describe("BirthdayMessage", () => {
         patient: { name: "A", phone: "1", birthDate: "invalid" },
       }),
     ).toBe("");
+
+    expect(
+      entity.render({
+        patient: { name: "A", phone: "1", birthDate: undefined },
+      }),
+    ).toBe("");
+  });
+
+  it("should render dia_aniversario quando birthDate é Date (ex.: retorno Knex)", () => {
+    const entity = new BirthdayMessage({
+      name: "x",
+      sendTime: defaultSend,
+      messageTemplate: new MessageTemplate({
+        textTemplate: "{{dia_aniversario}}",
+      }),
+    });
+
+    const birthDate = new Date(Date.UTC(1990, 2, 5, 12, 0, 0));
+
+    expect(
+      entity.render({
+        patient: { name: "A", phone: "1", birthDate },
+      }),
+    ).toBe("05 de março");
   });
 
   it("should throw ApiError when name is not a string", () => {

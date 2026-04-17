@@ -60,7 +60,11 @@ export class BirthdayMessage extends Entity {
   render({
     patient,
   }: {
-    patient: { name: string; phone: string; birthDate: string };
+    patient: {
+      name: string;
+      phone: string;
+      birthDate: string | Date | null | undefined;
+    };
   }): string {
     return this.messageTemplate.replaceVariables(
       this.buildTemplateVariables(patient),
@@ -70,7 +74,7 @@ export class BirthdayMessage extends Entity {
   private buildTemplateVariables(patient: {
     name: string;
     phone: string;
-    birthDate: string;
+    birthDate: string | Date | null | undefined;
   }): Record<string, string> {
     return {
       nome_paciente: patient.name,
@@ -90,8 +94,20 @@ export class BirthdayMessage extends Entity {
     return `${String(h).padStart(2, "0")}:${String(min).padStart(2, "0")}`;
   }
 
-  private static formatBirthDateAsDayMonthPt(birthDate: string): string {
-    const trimmed = birthDate.trim();
+  private static formatBirthDateAsDayMonthPt(
+    birthDate: string | Date | null | undefined,
+  ): string {
+    if (birthDate == null) return "";
+
+    if (birthDate instanceof Date) {
+      const dt = Luxon.fromJSDate(birthDate, {
+        zone: "America/Sao_Paulo",
+      }).setLocale("pt-BR");
+      if (!dt.isValid) return "";
+      return dt.toFormat("dd 'de' MMMM");
+    }
+
+    const trimmed = String(birthDate).trim();
     if (!trimmed) return "";
 
     const iso = trimmed.includes("T") ? trimmed : `${trimmed}T12:00:00`;
