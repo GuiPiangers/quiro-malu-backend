@@ -6,6 +6,7 @@ import {
   ListWhatsAppMessageLogsFilter,
   ListWhatsAppMessageLogsResult,
   SaveWhatsAppMessageLogProps,
+  ScheduleMessageType,
   UpdateWhatsAppMessageLogByProviderIdProps,
   WhatsAppMessageLogDTO,
   WhatsAppMessageLogStatus,
@@ -17,7 +18,8 @@ type MessageLogRow = {
   userId: string;
   patientId: string;
   schedulingId: string;
-  beforeScheduleMessageId: string;
+  scheduleMessageType: ScheduleMessageType;
+  scheduleMessageConfigId: string;
   message: string;
   toPhone: string;
   instanceName: string;
@@ -50,7 +52,8 @@ function rowToDto(row: MessageLogRow): WhatsAppMessageLogDTO {
     userId: row.userId,
     patientId: row.patientId,
     schedulingId: row.schedulingId,
-    beforeScheduleMessageId: row.beforeScheduleMessageId,
+    scheduleMessageType: row.scheduleMessageType,
+    scheduleMessageConfigId: row.scheduleMessageConfigId,
     message: row.message,
     toPhone: row.toPhone,
     instanceName: row.instanceName,
@@ -75,7 +78,8 @@ export class KnexWhatsAppMessageLogRepository
         userId: data.userId,
         patientId: data.patientId,
         schedulingId: data.schedulingId,
-        beforeScheduleMessageId: data.beforeScheduleMessageId,
+        scheduleMessageType: data.scheduleMessageType,
+        scheduleMessageConfigId: data.scheduleMessageConfigId,
         message: data.message,
         toPhone: data.toPhone,
         instanceName: data.instanceName,
@@ -120,17 +124,25 @@ export class KnexWhatsAppMessageLogRepository
         let q = Knex(ETableNames.WHATSAPP_MESSAGE_LOGS).where({
           userId: filter.userId,
         });
+
         if (filter.patientId) {
           q = q.andWhere({ patientId: filter.patientId });
         }
-        if (filter.beforeScheduleMessageId) {
+
+        if (filter.scheduleMessageType) {
+          q = q.andWhere({ scheduleMessageType: filter.scheduleMessageType });
+        }
+
+        if (filter.scheduleMessageConfigId) {
           q = q.andWhere({
-            beforeScheduleMessageId: filter.beforeScheduleMessageId,
+            scheduleMessageConfigId: filter.scheduleMessageConfigId,
           });
         }
+
         if (filter.status) {
           q = q.andWhere({ status: filter.status });
         }
+
         return q;
       };
 
@@ -154,16 +166,24 @@ export class KnexWhatsAppMessageLogRepository
 
   async summaryByUserId(
     userId: string,
-    filter?: { patientId?: string; beforeScheduleMessageId?: string },
+    filter?: {
+      patientId?: string;
+      scheduleMessageType?: ScheduleMessageType;
+      scheduleMessageConfigId?: string;
+    },
   ): Promise<WhatsAppMessageLogsSummaryDTO> {
     try {
       let base = Knex(ETableNames.WHATSAPP_MESSAGE_LOGS).where({ userId });
+
       if (filter?.patientId) {
         base = base.andWhere({ patientId: filter.patientId });
       }
-      if (filter?.beforeScheduleMessageId) {
+      if (filter?.scheduleMessageType) {
+        base = base.andWhere({ scheduleMessageType: filter.scheduleMessageType });
+      }
+      if (filter?.scheduleMessageConfigId) {
         base = base.andWhere({
-          beforeScheduleMessageId: filter.beforeScheduleMessageId,
+          scheduleMessageConfigId: filter.scheduleMessageConfigId,
         });
       }
 
@@ -205,8 +225,7 @@ export class KnexWhatsAppMessageLogRepository
         denomDelivery > 0 ? deliveredOrRead / denomDelivery : null;
 
       const denomRead = byStatus.DELIVERED + byStatus.READ;
-      const readRate =
-        denomRead > 0 ? byStatus.READ / denomRead : null;
+      const readRate = denomRead > 0 ? byStatus.READ / denomRead : null;
 
       return { total, byStatus, deliveryRate, readRate };
     } catch (error: any) {
