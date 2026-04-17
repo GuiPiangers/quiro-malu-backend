@@ -34,6 +34,17 @@ export type ListBeforeScheduleMessagesByUserIdProps = {
   userId: string;
 };
 
+export type ListBeforeScheduleMessagesByUserIdPagedProps = {
+  userId: string;
+  limit: number;
+  offset: number;
+};
+
+export type ListBeforeScheduleMessagesPagedResult = {
+  items: BeforeScheduleMessageConfigDTO[];
+  total: number;
+};
+
 export type DeleteBeforeScheduleMessageProps = {
   id: string;
   userId: string;
@@ -50,6 +61,10 @@ export interface IBeforeScheduleMessageRepository {
   listByUserId(
     data: ListBeforeScheduleMessagesByUserIdProps,
   ): Promise<BeforeScheduleMessageConfigDTO[]>;
+
+  listByUserIdPaged(
+    data: ListBeforeScheduleMessagesByUserIdPagedProps,
+  ): Promise<ListBeforeScheduleMessagesPagedResult>;
 
   getById(
     data: GetBeforeScheduleMessageByIdProps,

@@ -5,6 +5,15 @@ import { MessageTemplate } from "../../../models/MessageTemplate";
 
 export type ListBeforeScheduleMessagesDTO = {
   userId: string;
+  page?: number;
+  limit?: number;
+};
+
+export type ListBeforeScheduleMessagesOutput = {
+  items: BeforeScheduleMessageDTO[];
+  total: number;
+  page: number;
+  limit: number;
 };
 
 export class ListBeforeScheduleMessagesUseCase {
@@ -12,12 +21,22 @@ export class ListBeforeScheduleMessagesUseCase {
     private beforeScheduleMessageRepository: IBeforeScheduleMessageRepository,
   ) {}
 
-  async execute(dto: ListBeforeScheduleMessagesDTO): Promise<BeforeScheduleMessageDTO[]> {
-    const configs = await this.beforeScheduleMessageRepository.listByUserId({
-      userId: dto.userId,
-    });
+  async execute(
+    dto: ListBeforeScheduleMessagesDTO,
+  ): Promise<ListBeforeScheduleMessagesOutput> {
+    const page = Math.max(1, Number(dto.page) || 1);
+    const rawLimit = Number(dto.limit) || 20;
+    const limit = Math.min(100, Math.max(1, rawLimit));
+    const offset = (page - 1) * limit;
 
-    return configs.map((config) => {
+    const { items: configs, total } =
+      await this.beforeScheduleMessageRepository.listByUserIdPaged({
+        userId: dto.userId,
+        limit,
+        offset,
+      });
+
+    const items = configs.map((config) => {
       const messageTemplate = new MessageTemplate({
         textTemplate: config.textTemplate,
       });
@@ -32,5 +51,7 @@ export class ListBeforeScheduleMessagesUseCase {
 
       return beforeScheduleMessage.getDTO();
     });
+
+    return { items, total, page, limit };
   }
 }

@@ -6,7 +6,9 @@ import {
   DeleteBeforeScheduleMessageProps,
   GetBeforeScheduleMessageByIdProps,
   IBeforeScheduleMessageRepository,
+  ListBeforeScheduleMessagesByUserIdPagedProps,
   ListBeforeScheduleMessagesByUserIdProps,
+  ListBeforeScheduleMessagesPagedResult,
   SaveBeforeScheduleMessageProps,
   UpdateBeforeScheduleMessageProps,
 } from "./IBeforeScheduleMessageRepository";
@@ -93,6 +95,45 @@ export class BeforeScheduleMessageRepository
         ...row,
         isActive: !!row.isActive,
       })) as BeforeScheduleMessageConfigDTO[];
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
+  }
+
+  async listByUserIdPaged(
+    data: ListBeforeScheduleMessagesByUserIdPagedProps,
+  ): Promise<ListBeforeScheduleMessagesPagedResult> {
+    try {
+      const base = () =>
+        Knex(ETableNames.BEFORE_SCHEDULE_MESSAGES).where({
+          userId: data.userId,
+        });
+
+      const countRows = await base().clone().count("* as total");
+      const total = Number(
+        (Array.isArray(countRows) ? countRows[0] : countRows)?.total ?? 0,
+      );
+
+      const rows = await base()
+        .clone()
+        .select(
+          "id",
+          "userId",
+          "name",
+          "minutesBeforeSchedule",
+          "textTemplate",
+          "isActive",
+        )
+        .orderBy("updated_at", "desc")
+        .limit(data.limit)
+        .offset(data.offset);
+
+      const items = rows.map((row: any) => ({
+        ...row,
+        isActive: !!row.isActive,
+      })) as BeforeScheduleMessageConfigDTO[];
+
+      return { items, total };
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }

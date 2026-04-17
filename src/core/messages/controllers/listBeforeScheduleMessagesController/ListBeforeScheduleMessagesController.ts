@@ -8,9 +8,12 @@ export class ListBeforeScheduleMessagesController {
   async handle(request: Request, response: Response) {
     try {
       const userId = request.user.id;
+      const { page, limit } = request.query;
 
       const res = await this.listBeforeScheduleMessagesUseCase.execute({
         userId: userId!,
+        page: page != null ? Number(page) : undefined,
+        limit: limit != null ? Number(limit) : undefined,
       });
 
       return response.status(200).json(res);

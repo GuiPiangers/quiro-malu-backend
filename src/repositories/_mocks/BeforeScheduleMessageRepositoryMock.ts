@@ -7,5 +7,6 @@ export const createMockBeforeScheduleMessageRepository =
     delete: jest.fn(),
     listAll: jest.fn(),
     listByUserId: jest.fn(),
+    listByUserIdPaged: jest.fn(),
     getById: jest.fn(),
   });
