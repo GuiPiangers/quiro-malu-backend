@@ -79,7 +79,7 @@ export class BirthdayMessage extends Entity {
     return {
       nome_paciente: patient.name,
       telefone_paciente: patient.phone,
-      dia_aniversario: BirthdayMessage.formatBirthDateAsDayMonthPt(
+      data_aniversario: BirthdayMessage.formatBirthDateAsDayMonthPt(
         patient.birthDate,
       ),
     };
