@@ -4,6 +4,8 @@ import { ApiError } from "../../utils/ApiError";
 import {
   BirthdayMessageCampaignDTO,
   IBirthdayMessageRepository,
+  ListBirthdayMessagesByUserIdProps,
+  ListBirthdayMessagesResult,
   SaveBirthdayMessageProps,
 } from "./IBirthdayMessageRepository";
 
@@ -46,6 +48,42 @@ export class BirthdayMessageRepository implements IBirthdayMessageRepository {
         isActive: !!row.isActive,
         sendTime: mapSendTimeToHhMm(row.sendTime),
       };
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
+  }
+
+  async listByUserIdPaged(
+    data: ListBirthdayMessagesByUserIdProps,
+  ): Promise<ListBirthdayMessagesResult> {
+    try {
+      const base = () =>
+        Knex(ETableNames.BIRTHDAY_MESSAGES).where({ userId: data.userId });
+
+      const countRows = await base().clone().count<{ total: string | number }>(
+        "* as total",
+      );
+      const total = Number(
+        (Array.isArray(countRows) ? countRows[0] : countRows)?.total ?? 0,
+      );
+
+      const rows = await base()
+        .clone()
+        .select("id", "userId", "name", "textTemplate", "isActive", "sendTime")
+        .orderBy("updated_at", "desc")
+        .limit(data.limit)
+        .offset(data.offset);
+
+      const items: BirthdayMessageCampaignDTO[] = rows.map((row) => ({
+        id: row.id,
+        userId: row.userId,
+        name: row.name,
+        textTemplate: row.textTemplate,
+        isActive: !!row.isActive,
+        sendTime: mapSendTimeToHhMm(row.sendTime),
+      }));
+
+      return { items, total };
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }

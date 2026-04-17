@@ -18,7 +18,21 @@ export type BirthdayMessageCampaignDTO = {
   sendTime: string;
 };
 
+export type ListBirthdayMessagesByUserIdProps = {
+  userId: string;
+  limit: number;
+  offset: number;
+};
+
+export type ListBirthdayMessagesResult = {
+  items: BirthdayMessageCampaignDTO[];
+  total: number;
+};
+
 export interface IBirthdayMessageRepository {
   save(data: SaveBirthdayMessageProps): Promise<void>;
   findActiveByUserId(userId: string): Promise<BirthdayMessageCampaignDTO | null>;
+  listByUserIdPaged(
+    data: ListBirthdayMessagesByUserIdProps,
+  ): Promise<ListBirthdayMessagesResult>;
 }
