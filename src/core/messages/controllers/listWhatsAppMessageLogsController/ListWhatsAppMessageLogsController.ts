@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
-import { ListWhatsAppMessageLogsUseCase } from "../../useCases/beforeScheduleMessage/listWhatsAppMessageLogs/ListWhatsAppMessageLogsUseCase";
+import { ListWhatsAppMessageLogsUseCase } from "../../useCases/whatsAppMessageLogs/listWhatsAppMessageLogs/ListWhatsAppMessageLogsUseCase";
 
 export class ListWhatsAppMessageLogsController {
   constructor(
@@ -15,7 +15,8 @@ export class ListWhatsAppMessageLogsController {
         page,
         limit,
         patientId,
-        beforeScheduleMessageId,
+        scheduleMessageType,
+        scheduleMessageConfigId,
         status,
       } = request.query;
 
@@ -27,13 +28,16 @@ export class ListWhatsAppMessageLogsController {
           typeof patientId === "string" && patientId.trim()
             ? patientId
             : undefined,
-        beforeScheduleMessageId:
-          typeof beforeScheduleMessageId === "string" &&
-          beforeScheduleMessageId.trim()
-            ? beforeScheduleMessageId
+        scheduleMessageType:
+          typeof scheduleMessageType === "string" && scheduleMessageType.trim()
+            ? scheduleMessageType
             : undefined,
-        status:
-          typeof status === "string" && status.trim() ? status : undefined,
+        scheduleMessageConfigId:
+          typeof scheduleMessageConfigId === "string" &&
+          scheduleMessageConfigId.trim()
+            ? scheduleMessageConfigId
+            : undefined,
+        status: typeof status === "string" && status.trim() ? status : undefined,
       });
 
       return response.status(200).json(res);
