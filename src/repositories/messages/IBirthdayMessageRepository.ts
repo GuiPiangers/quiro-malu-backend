@@ -44,11 +44,17 @@ export type UpdateBirthdayMessageProps = {
   sendTime?: string;
 };
 
+export type DeleteBirthdayMessageProps = {
+  id: string;
+  userId: string;
+};
+
 export interface IBirthdayMessageRepository {
   save(data: SaveBirthdayMessageProps): Promise<void>;
   findActiveByUserId(userId: string): Promise<BirthdayMessageCampaignDTO | null>;
   getById(data: GetBirthdayMessageByIdProps): Promise<BirthdayMessageCampaignDTO | null>;
   update(data: UpdateBirthdayMessageProps): Promise<void>;
+  delete(data: DeleteBirthdayMessageProps): Promise<void>;
   listByUserIdPaged(
     data: ListBirthdayMessagesByUserIdProps,
   ): Promise<ListBirthdayMessagesResult>;

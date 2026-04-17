@@ -6,5 +6,6 @@ export const createMockBirthdayMessageRepository =
     findActiveByUserId: jest.fn(),
     getById: jest.fn(),
     update: jest.fn(),
+    delete: jest.fn(),
     listByUserIdPaged: jest.fn(),
   });

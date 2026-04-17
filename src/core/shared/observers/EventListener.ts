@@ -93,6 +93,10 @@ type AppEvents = {
     sendTime: string;
   };
 
+  birthdayMessageDelete: {
+    id: string;
+  };
+
   birthdayMessageSend: {
     userId: string;
     patientId: string;

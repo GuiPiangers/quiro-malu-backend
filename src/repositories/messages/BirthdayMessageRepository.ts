@@ -8,6 +8,7 @@ import {
   ListBirthdayMessagesByUserIdProps,
   ListBirthdayMessagesResult,
   SaveBirthdayMessageProps,
+  DeleteBirthdayMessageProps,
   UpdateBirthdayMessageProps,
 } from "./IBirthdayMessageRepository";
 
@@ -71,6 +72,16 @@ export class BirthdayMessageRepository implements IBirthdayMessageRepository {
       await Knex(ETableNames.BIRTHDAY_MESSAGES)
         .where({ id: data.id, userId: data.userId })
         .update(updateData);
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
+  }
+
+  async delete(data: DeleteBirthdayMessageProps): Promise<void> {
+    try {
+      await Knex(ETableNames.BIRTHDAY_MESSAGES)
+        .where({ id: data.id, userId: data.userId })
+        .del();
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }
