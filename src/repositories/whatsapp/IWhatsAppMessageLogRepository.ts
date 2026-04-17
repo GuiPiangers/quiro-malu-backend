@@ -5,7 +5,10 @@ export type WhatsAppMessageLogStatus =
   | "READ"
   | "FAILED";
 
-export type ScheduleMessageType = "beforeSchedule" | "afterSchedule";
+export type ScheduleMessageType =
+  | "beforeSchedule"
+  | "afterSchedule"
+  | "birthday";
 
 export type SaveWhatsAppMessageLogProps = {
   id: string;

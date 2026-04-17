@@ -1,10 +1,3 @@
-export type BirthdayMessageCampaignJobData = {
-  userId: string;
-  patientId: string;
-  patientName: string;
-  patientPhone: string;
-  patientDateOfBirth: string;
-  campaignId: string;
-  campaignName: string;
-  textTemplate: string;
-};
+export type {
+  SendBirthdayMessageJob as BirthdayMessageCampaignJobData,
+} from "../../core/messages/useCases/birthdayMessage/sendBirthdayMessage/sendBirthdayMessageUseCase";

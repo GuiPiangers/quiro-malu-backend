@@ -1,3 +1,4 @@
+import { sendBirthdayMessageUseCase } from "../../core/messages/useCases/birthdayMessage/sendBirthdayMessage";
 import { IQueueProvider } from "../../repositories/queueProvider/IQueueProvider";
 import { BirthdayMessageCampaignJobData } from "./birthdayMessageCampaignJobData";
 
@@ -28,7 +29,7 @@ export class BirthdayMessageCampaignQueue {
 
   async process(): Promise<void> {
     await this.queueProvider.process(async (job) => {
-      console.log("[birthdayMessageCampaign]", JSON.stringify(job));
+      await sendBirthdayMessageUseCase.execute(job);
     });
   }
 }

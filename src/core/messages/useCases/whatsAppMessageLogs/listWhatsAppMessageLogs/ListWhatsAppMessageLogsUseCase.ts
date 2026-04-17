@@ -17,6 +17,7 @@ const STATUSES: WhatsAppMessageLogStatus[] = [
 const SCHEDULE_MESSAGE_TYPES: ScheduleMessageType[] = [
   "beforeSchedule",
   "afterSchedule",
+  "birthday",
 ];
 
 export type ListWhatsAppMessageLogsInput = {

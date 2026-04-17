@@ -85,7 +85,16 @@ type AppEvents = {
     sendTime: string;
   };
 
-  // Fired after successful WhatsApp send and log persistence.
+  birthdayMessageSend: {
+    userId: string;
+    patientId: string;
+    birthdayMessageId: string;
+    instanceName: string;
+    toPhone: string;
+    providerMessageId: string | null;
+    messageLogId: string;
+  };
+
   afterScheduleMessageSend: {
     userId: string;
     patientId: string;
