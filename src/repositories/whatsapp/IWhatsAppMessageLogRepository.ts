@@ -5,12 +5,15 @@ export type WhatsAppMessageLogStatus =
   | "READ"
   | "FAILED";
 
+export type ScheduleMessageType = "beforeSchedule" | "afterSchedule";
+
 export type SaveWhatsAppMessageLogProps = {
   id: string;
   userId: string;
   patientId: string;
   schedulingId: string;
-  beforeScheduleMessageId: string;
+  scheduleMessageType: ScheduleMessageType;
+  scheduleMessageConfigId: string;
   message: string;
   toPhone: string;
   instanceName: string;
@@ -32,7 +35,8 @@ export type WhatsAppMessageLogDTO = {
   userId: string;
   patientId: string;
   schedulingId: string;
-  beforeScheduleMessageId: string;
+  scheduleMessageType: ScheduleMessageType;
+  scheduleMessageConfigId: string;
   message: string;
   toPhone: string;
   instanceName: string;
@@ -49,7 +53,9 @@ export type WhatsAppMessageLogDTO = {
 export type ListWhatsAppMessageLogsFilter = {
   userId: string;
   patientId?: string;
-  beforeScheduleMessageId?: string;
+  scheduleMessageType?: ScheduleMessageType;
+  scheduleMessageConfigId?: string;
+
   status?: WhatsAppMessageLogStatus;
   limit: number;
   offset: number;
@@ -77,6 +83,10 @@ export interface IWhatsAppMessageLogRepository {
   ): Promise<ListWhatsAppMessageLogsResult>;
   summaryByUserId(
     userId: string,
-    filter?: { patientId?: string; beforeScheduleMessageId?: string },
+    filter?: {
+      patientId?: string;
+      scheduleMessageType?: ScheduleMessageType;
+      scheduleMessageConfigId?: string;
+    },
   ): Promise<WhatsAppMessageLogsSummaryDTO>;
 }
