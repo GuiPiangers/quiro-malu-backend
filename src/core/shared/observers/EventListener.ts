@@ -77,6 +77,13 @@ type AppEvents = {
     id: string;
   };
 
+  birthdayMessageCreate: {
+    id: string;
+    userId: string;
+    name: string;
+    isActive: boolean;
+  };
+
   // Fired after successful WhatsApp send and log persistence.
   afterScheduleMessageSend: {
     userId: string;

@@ -10,6 +10,7 @@ export enum ETableNames {
   SCHEDULES = "schedules",
   BEFORE_SCHEDULE_MESSAGES = "before_schedule_messages",
   AFTER_SCHEDULE_MESSAGES = "after_schedule_messages",
+  BIRTHDAY_MESSAGES = "birthday_messages",
   FINANCES = "finances",
   EXAMS = "exams",
   NOT_MESSAGE_PATIENTS = "notMessagePatients",
