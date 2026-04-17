@@ -1,7 +1,7 @@
 import { KnexPatientRepository } from "../../../../repositories/patient/KnexPatientRepository";
 import { KnexWhatsAppMessageLogRepository } from "../../../../repositories/whatsapp/KnexWhatsAppMessageLogRepository";
-import { ListWhatsAppMessageLogsUseCase } from "../../useCases/beforeScheduleMessage/listWhatsAppMessageLogs/ListWhatsAppMessageLogsUseCase";
-import { ListWhatsAppMessageLogsByPatientUseCase } from "../../useCases/beforeScheduleMessage/listWhatsAppMessageLogsByPatient/ListWhatsAppMessageLogsByPatientUseCase";
+import { ListWhatsAppMessageLogsUseCase } from "../../useCases/whatsAppMessageLogs/listWhatsAppMessageLogs/ListWhatsAppMessageLogsUseCase";
+import { ListWhatsAppMessageLogsByPatientUseCase } from "../../useCases/whatsAppMessageLogs/listWhatsAppMessageLogsByPatient/ListWhatsAppMessageLogsByPatientUseCase";
 import { ListWhatsAppMessageLogsByPatientController } from "./ListWhatsAppMessageLogsByPatientController";
 
 const patientRepository = new KnexPatientRepository();
