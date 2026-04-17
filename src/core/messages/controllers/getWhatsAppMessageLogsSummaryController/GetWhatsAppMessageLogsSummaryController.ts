@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
-import { GetWhatsAppMessageLogsSummaryUseCase } from "../../useCases/beforeScheduleMessage/getWhatsAppMessageLogsSummary/GetWhatsAppMessageLogsSummaryUseCase";
+import { GetWhatsAppMessageLogsSummaryUseCase } from "../../useCases/whatsAppMessageLogs/getWhatsAppMessageLogsSummary/GetWhatsAppMessageLogsSummaryUseCase";
 
 export class GetWhatsAppMessageLogsSummaryController {
   constructor(
@@ -10,7 +10,8 @@ export class GetWhatsAppMessageLogsSummaryController {
   async handle(request: Request, response: Response) {
     try {
       const userId = request.user.id!;
-      const { patientId, beforeScheduleMessageId } = request.query;
+      const { patientId, scheduleMessageType, scheduleMessageConfigId } =
+        request.query;
 
       const res = await this.getWhatsAppMessageLogsSummaryUseCase.execute({
         userId,
@@ -18,10 +19,14 @@ export class GetWhatsAppMessageLogsSummaryController {
           typeof patientId === "string" && patientId.trim()
             ? patientId
             : undefined,
-        beforeScheduleMessageId:
-          typeof beforeScheduleMessageId === "string" &&
-          beforeScheduleMessageId.trim()
-            ? beforeScheduleMessageId
+        scheduleMessageType:
+          typeof scheduleMessageType === "string" && scheduleMessageType.trim()
+            ? (scheduleMessageType.trim() as any)
+            : undefined,
+        scheduleMessageConfigId:
+          typeof scheduleMessageConfigId === "string" &&
+          scheduleMessageConfigId.trim()
+            ? scheduleMessageConfigId
             : undefined,
       });
 
