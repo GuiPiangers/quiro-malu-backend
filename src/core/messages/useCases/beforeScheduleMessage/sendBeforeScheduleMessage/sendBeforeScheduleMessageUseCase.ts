@@ -4,12 +4,12 @@ import { IPatientRepository } from "../../../../../repositories/patient/IPatient
 import { ISchedulingRepository } from "../../../../../repositories/scheduling/ISchedulingRepository";
 import { IWhatsAppInstanceRepository } from "../../../../../repositories/whatsapp/IWhatsAppInstanceRepository";
 import { IWhatsAppMessageLogRepository } from "../../../../../repositories/whatsapp/IWhatsAppMessageLogRepository";
-import { ApiError } from "../../../../../utils/ApiError";
 import { IAppEventListener } from "../../../../shared/observers/EventListener";
 import { Id } from "../../../../shared/Id";
-import { WhatsAppInstance } from "../../../../whatsapp/models/WhatsAppInstance";
 import { BeforeScheduleMessage } from "../../../models/BeforeScheduleMessage";
 import { MessageTemplate } from "../../../models/MessageTemplate";
+import { getConnectedWhatsAppInstance } from "../../../utils/getConnectedWhatsAppInstance";
+import { toInternationalPhone } from "../../../utils/toInternationalPhone";
 
 export type SendBeforeScheduleMessageJob = {
   userId: string;
@@ -37,23 +37,11 @@ export class SendBeforeScheduleMessageUseCase {
 
     if (!config?.isActive) return;
 
-    const instanceDTO = await this.whatsAppInstanceRepository.getByUserId(
-      job.userId,
-    );
-
-    if (!instanceDTO) {
-      throw new ApiError("WhatsApp não conectado para esta clínica", 422);
-    }
-
-    const instance = new WhatsAppInstance(instanceDTO);
-
-    const connectionState = await this.whatsAppProvider.getConnectionState(
-      instance.instanceName,
-    );
-
-    if (connectionState !== "open") {
-      throw new ApiError("WhatsApp não conectado para esta clínica", 422);
-    }
+    const instance = await getConnectedWhatsAppInstance({
+      userId: job.userId,
+      whatsAppInstanceRepository: this.whatsAppInstanceRepository,
+      whatsAppProvider: this.whatsAppProvider,
+    });
 
     const [patient] = await this.patientRepository.getById(
       job.patientId,
@@ -80,7 +68,7 @@ export class SendBeforeScheduleMessageUseCase {
     });
 
     const renderedBody = beforeScheduleMessage.render({ patient, scheduling });
-    const toPhone = this.toInternationalPhone(patient.phone);
+    const toPhone = toInternationalPhone(patient.phone);
 
     const sendResult = await this.whatsAppProvider.sendMessage({
       to: toPhone,
@@ -95,7 +83,8 @@ export class SendBeforeScheduleMessageUseCase {
         userId: job.userId,
         patientId: job.patientId,
         schedulingId: job.schedulingId,
-        beforeScheduleMessageId: job.beforeScheduleMessageId,
+        scheduleMessageType: "beforeSchedule",
+        scheduleMessageConfigId: job.beforeScheduleMessageId,
         message: renderedBody,
         toPhone,
         instanceName: instance.instanceName,
@@ -119,7 +108,8 @@ export class SendBeforeScheduleMessageUseCase {
         userId: job.userId,
         patientId: job.patientId,
         schedulingId: job.schedulingId,
-        beforeScheduleMessageId: job.beforeScheduleMessageId,
+        scheduleMessageType: "beforeSchedule",
+        scheduleMessageConfigId: job.beforeScheduleMessageId,
         message: renderedBody,
         toPhone,
         instanceName: instance.instanceName,
@@ -128,11 +118,5 @@ export class SendBeforeScheduleMessageUseCase {
         errorMessage: sendResult.errorMessage ?? "Falha no envio",
       });
     }
-  }
-
-  private toInternationalPhone(phone: string) {
-    const onlyNumbers = String(phone).replace(/\D/g, "");
-    if (onlyNumbers.startsWith("55")) return onlyNumbers;
-    return `55${onlyNumbers}`;
   }
 }
