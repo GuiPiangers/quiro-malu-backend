@@ -60,6 +60,7 @@ import { listAfterScheduleMessagesController } from "./core/messages/controllers
 import { getAfterScheduleMessageController } from "./core/messages/controllers/getAfterScheduleMessageController";
 import { updateAfterScheduleMessageController } from "./core/messages/controllers/updateAfterScheduleMessageController";
 import { deleteAfterScheduleMessageController } from "./core/messages/controllers/deleteAfterScheduleMessageController";
+import { createBirthdayMessageController } from "./core/messages/controllers/createBirthdayMessageController";
 import { listWhatsAppMessageLogsController } from "./core/messages/controllers/listWhatsAppMessageLogsController";
 import { listWhatsAppMessageLogsByPatientController } from "./core/messages/controllers/listWhatsAppMessageLogsByPatientController";
 import { getWhatsAppMessageLogsSummaryController } from "./core/messages/controllers/getWhatsAppMessageLogsSummaryController";
@@ -425,6 +426,10 @@ router.patch("/afterScheduleMessages/:id", authMiddleware, async (request, respo
 
 router.delete("/afterScheduleMessages/:id", authMiddleware, async (request, response) => {
   return await deleteAfterScheduleMessageController.handle(request, response);
+});
+
+router.post("/birthdayMessages", authMiddleware, async (request, response) => {
+  return await createBirthdayMessageController.handle(request, response);
 });
 
 router.get("/messages/logs/summary", authMiddleware, async (request, response) => {
