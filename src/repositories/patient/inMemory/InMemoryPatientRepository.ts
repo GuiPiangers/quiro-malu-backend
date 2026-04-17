@@ -9,12 +9,20 @@ type InMemoryPatient = PatientDTO & {
 export class InMemoryPatientRepository implements IPatientRepository {
   private dbPatients: InMemoryPatient[] = [];
 
-  async getByDateOfBirth(data: {
-    dateOfBirth: string;
+  async getByBirthMonthAndDay(data: {
+    birthMonth: number;
+    birthDay: number;
+    userId?: string;
   }): Promise<(PatientDTO & { userId: string })[]> {
-    return this.dbPatients.filter(
-      (patient) => patient.dateOfBirth === data.dateOfBirth,
-    );
+    return this.dbPatients.filter((patient) => {
+      if (data.userId && patient.userId !== data.userId) return false;
+      if (!patient.dateOfBirth) return false;
+      const m = `${patient.dateOfBirth}`.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (!m) return false;
+      return (
+        Number(m[2]) === data.birthMonth && Number(m[3]) === data.birthDay
+      );
+    });
   }
 
   async saveMany(patient: (PatientDTO & { userId: string })[]): Promise<void> {

@@ -14,6 +14,8 @@ export type CreateBirthdayMessageDTO = {
   userId: string;
   name: string;
   isActive?: boolean;
+  /** Horário de envio no dia do aniversário (HH:mm). Padrão: 09:00. */
+  sendTime?: string;
   messageTemplate: {
     textTemplate: string;
   };
@@ -35,9 +37,15 @@ export class CreateBirthdayMessageUseCase {
       textTemplate: dto.messageTemplate.textTemplate,
     });
 
+    const sendTimeRaw =
+      typeof dto.sendTime === "string" && dto.sendTime.trim()
+        ? dto.sendTime.trim()
+        : "09:00";
+
     const birthdayMessage = new BirthdayMessage({
       name,
       messageTemplate,
+      sendTime: sendTimeRaw,
       isActive: dto.isActive ?? true,
     });
 
@@ -49,6 +57,7 @@ export class CreateBirthdayMessageUseCase {
       name: birthdayMessageDTO.name,
       textTemplate: birthdayMessageDTO.messageTemplate.textTemplate,
       isActive: birthdayMessageDTO.isActive,
+      sendTime: `${birthdayMessageDTO.sendTime}:00`,
     };
 
     await this.birthdayMessageRepository.save(saveData);
@@ -58,6 +67,7 @@ export class CreateBirthdayMessageUseCase {
       userId: dto.userId,
       name: birthdayMessageDTO.name,
       isActive: birthdayMessageDTO.isActive,
+      sendTime: birthdayMessageDTO.sendTime,
     });
 
     return birthdayMessageDTO;

@@ -12,14 +12,42 @@ function normalizeOrientation(orientation: string) {
 }
 
 export class KnexPatientRepository implements IPatientRepository {
-  async getByDateOfBirth({ dateOfBirth }: { dateOfBirth: string }) {
-    try {
-      const result = await Knex(ETableNames.PATIENTS)
-        .select("*")
-        .where({ dateOfBirth });
+  async getByBirthMonthAndDay({
+    birthMonth,
+    birthDay,
+    userId,
+  }: {
+    birthMonth: number;
+    birthDay: number;
+    userId?: string;
+  }) {
+    if (
+      !Number.isInteger(birthMonth) ||
+      birthMonth < 1 ||
+      birthMonth > 12 ||
+      !Number.isInteger(birthDay) ||
+      birthDay < 1 ||
+      birthDay > 31
+    ) {
+      throw new ApiError("birthMonth e birthDay inválidos", 400, "birthMonth");
+    }
 
-      return result;
+    try {
+      let q = Knex(ETableNames.PATIENTS)
+        .select("*")
+        .whereNotNull("dateOfBirth")
+        .whereRaw("MONTH(dateOfBirth) = ? AND DAY(dateOfBirth) = ?", [
+          birthMonth,
+          birthDay,
+        ]);
+
+      if (userId) {
+        q = q.andWhere({ userId });
+      }
+
+      return await q;
     } catch (error: any) {
+      if (error instanceof ApiError) throw error;
       throw new ApiError(error.message, 500);
     }
   }

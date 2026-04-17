@@ -4,16 +4,18 @@ export class GetPatientsByBirthDayUseCase {
   constructor(private patientRepository: IPatientRepository) {}
 
   async execute({
-    dateOfBirth,
+    birthMonth,
+    birthDay,
     userId,
   }: {
-    dateOfBirth: string;
-    userId: string;
+    birthMonth: number;
+    birthDay: number;
+    userId?: string;
   }) {
-    const patients = await this.patientRepository.getByDateOfBirth({
-      dateOfBirth,
+    return this.patientRepository.getByBirthMonthAndDay({
+      birthMonth,
+      birthDay,
+      userId,
     });
-
-    return patients;
   }
 }

@@ -7,23 +7,28 @@ export type BirthdayMessageDTO = {
   id?: string;
   name: string;
   isActive: boolean;
+  /** Horário de envio no dia do aniversário (HH:mm, fuso America/Sao_Paulo na fila). */
+  sendTime: string;
   messageTemplate: MessageTemplateDTO;
 };
 
 export class BirthdayMessage extends Entity {
   readonly name: string;
   readonly isActive: boolean;
+  readonly sendTime: string;
   readonly messageTemplate: MessageTemplate;
 
   constructor({
     id,
     name,
     messageTemplate,
+    sendTime,
     isActive = true,
   }: {
     id?: string;
     name: string;
     messageTemplate: MessageTemplate;
+    sendTime: string;
     isActive?: boolean;
   }) {
     super(id);
@@ -36,11 +41,21 @@ export class BirthdayMessage extends Entity {
       throw new ApiError("isActive deve ser um booleano", 400, "isActive");
     }
 
+    const st = typeof sendTime === "string" ? sendTime.trim() : "";
+    const normalized = BirthdayMessage.normalizeSendTime(st);
+    if (!normalized) {
+      throw new ApiError(
+        "sendTime deve estar no formato HH:mm (00:00 a 23:59)",
+        400,
+        "sendTime",
+      );
+    }
+
     this.name = name.trim();
     this.isActive = isActive;
+    this.sendTime = normalized;
     this.messageTemplate = messageTemplate;
   }
-
 
   render({
     patient,
@@ -66,6 +81,15 @@ export class BirthdayMessage extends Entity {
     };
   }
 
+  static normalizeSendTime(raw: string): string | null {
+    const m = raw.trim().match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+    if (!m) return null;
+    const h = Number(m[1]);
+    const min = Number(m[2]);
+    if (h < 0 || h > 23 || min < 0 || min > 59) return null;
+    return `${String(h).padStart(2, "0")}:${String(min).padStart(2, "0")}`;
+  }
+
   private static formatBirthDateAsDayMonthPt(birthDate: string): string {
     const trimmed = birthDate.trim();
     if (!trimmed) return "";
@@ -85,6 +109,7 @@ export class BirthdayMessage extends Entity {
       id: this.id,
       name: this.name,
       isActive: this.isActive,
+      sendTime: this.sendTime,
       messageTemplate: this.messageTemplate.getDTO(),
     };
   }

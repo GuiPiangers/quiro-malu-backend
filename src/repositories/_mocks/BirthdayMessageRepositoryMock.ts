@@ -3,4 +3,5 @@ import { IBirthdayMessageRepository } from "../messages/IBirthdayMessageReposito
 export const createMockBirthdayMessageRepository =
   (): jest.Mocked<IBirthdayMessageRepository> => ({
     save: jest.fn(),
+    findActiveByUserId: jest.fn(),
   });

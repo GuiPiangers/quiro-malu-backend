@@ -82,6 +82,7 @@ type AppEvents = {
     userId: string;
     name: string;
     isActive: boolean;
+    sendTime: string;
   };
 
   // Fired after successful WhatsApp send and log persistence.

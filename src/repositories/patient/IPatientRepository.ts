@@ -18,8 +18,11 @@ export interface IPatientRepository {
     search?: { name?: string },
   ): Promise<[{ total: number }]>;
   getByCpf(cpf: string, userId: string): Promise<PatientDTO[]>;
-  getByDateOfBirth(data: {
-    dateOfBirth: string;
+  /** Mês (1–12) e dia do mês (1–31) do aniversário, alinhado a `MONTH`/`DAY` em `dateOfBirth`. */
+  getByBirthMonthAndDay(data: {
+    birthMonth: number;
+    birthDay: number;
+    userId?: string;
   }): Promise<(PatientDTO & { userId: string })[]>;
   getByHash(hash: string, userId: string): Promise<PatientDTO | undefined>;
   getById(patientId: string, userId: string): Promise<PatientDTO[]>;

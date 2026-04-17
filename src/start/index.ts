@@ -12,11 +12,24 @@ import { saveEventSuggestionUseCase } from "../core/scheduling/useCases/saveEven
 import { appEventListener } from "../core/shared/observers/EventListener";
 import { beforeScheduleQueue } from "../queues/beforeScheduleMessage";
 import { afterScheduleQueue } from "../queues/afterScheduleMessage";
+import {
+  birthdayMessageCampaignQueue,
+  patientsBirthDayQueue,
+} from "../repositories/queueProvider/patientBirthDay";
 import { logger } from "../utils/logger";
 
 export async function start() {
   beforeScheduleMessageEventHandlers.register();
   afterScheduleMessageEventHandlers.register();
+
+  await birthdayMessageCampaignQueue.process();
+  await patientsBirthDayQueue.process();
+  try {
+    await patientsBirthDayQueue.registerPatientBirthdayScheduler();
+  } catch (err) {
+    logger.error({ err }, "patientsBirthDayQueue.registerPatientBirthdayScheduler failed");
+  }
+
   await watchBeforeScheduleMessagesUseCase.execute();
   await watchAfterScheduleMessagesUseCase.execute();
 

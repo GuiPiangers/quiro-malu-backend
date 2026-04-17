@@ -1,6 +1,7 @@
-import { Queue, Worker } from "bullmq";
+import { Queue, Worker, type RepeatOptions } from "bullmq";
 import { IQueueProvider } from "./IQueueProvider";
 import { redis } from "../../database/redis";
+import { logger } from "../../utils/logger";
 
 const connection = redis;
 
@@ -15,34 +16,48 @@ export class QueueProvider<T> implements IQueueProvider<T> {
     });
   }
 
-  async repeat(
+  async deleteRepeat({ jobId }: { jobId: string }) {
+    await this.queue.removeJobScheduler(jobId);
+  }
+
+  async removeAllRepeatableJobs(): Promise<void> {
+    const entries = await this.queue.getRepeatableJobs(0, -1);
+    for (const entry of entries) {
+      await this.queue.removeRepeatableByKey(entry.key);
+    }
+  }
+
+  async addRepeatableEvery(jobTemplate: T, everyMs: number): Promise<void> {
+    await this.queue.add(this.queueName, jobTemplate, {
+      repeat: { every: everyMs },
+      removeOnComplete: true,
+      removeOnFail: true,
+    });
+  }
+
+  async addRepeatableCron(
     jobTemplate: T,
-    {
-      cron,
-      endDate,
-      jobId,
-      limit,
-      startDate,
-    }: {
-      jobId: string;
+    options: {
+      pattern: string;
+      tz?: string;
+      immediately?: boolean;
       startDate?: Date;
       endDate?: Date;
       limit?: number;
-      cron: string;
     },
   ): Promise<void> {
-    await this.queue.upsertJobScheduler(
-      jobId,
-      { pattern: cron, limit, startDate, endDate },
-      {
-        data: jobTemplate,
-        opts: { removeOnComplete: true, removeOnFail: true },
-      },
-    );
-  }
+    const repeat: RepeatOptions = { pattern: options.pattern };
+    if (options.tz !== undefined) repeat.tz = options.tz;
+    if (options.immediately !== undefined) repeat.immediately = options.immediately;
+    if (options.startDate !== undefined) repeat.startDate = options.startDate;
+    if (options.endDate !== undefined) repeat.endDate = options.endDate;
+    if (options.limit !== undefined) repeat.limit = options.limit;
 
-  async deleteRepeat({ jobId }: { jobId: string }) {
-    await this.queue.removeJobScheduler(jobId);
+    await this.queue.add(this.queueName, jobTemplate, {
+      repeat,
+      removeOnComplete: true,
+      removeOnFail: true,
+    });
   }
 
   async add(jobTemplate: T, options?: { jobId?: string; delay?: number }) {
@@ -67,6 +82,19 @@ export class QueueProvider<T> implements IQueueProvider<T> {
       { connection, autorun: true },
     );
 
-    worker.on("error", (error) => console.log(error));
+    worker.on("error", (error) => {
+      logger.error({ err: error, queue: this.queueName }, "QueueProvider worker error");
+    });
+    worker.on("failed", (job, error) => {
+      logger.error(
+        {
+          err: error,
+          queue: this.queueName,
+          jobId: job?.id,
+          jobName: job?.name,
+        },
+        "QueueProvider job failed",
+      );
+    });
   }
 }
