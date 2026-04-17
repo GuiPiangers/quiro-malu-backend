@@ -1,6 +1,8 @@
 import { getExamUseCase } from "../core/exams/useCases/getExam";
 import { beforeScheduleMessageEventHandlers } from "../core/messages/observers/beforeScheduleMessage";
+import { afterScheduleMessageEventHandlers } from "../core/messages/observers/afterScheduleMessage";
 import { watchBeforeScheduleMessagesUseCase } from "../core/messages/useCases/beforeScheduleMessage/watchBeforeScheduleMessages";
+import { watchAfterScheduleMessagesUseCase } from "../core/messages/useCases/afterScheduleMessage/watchAfterScheduleMessages";
 import { NotificationUndoExam } from "../core/notification/models/NotificationUndoExam";
 import { scheduleNotificationUseCase } from "../core/notification/useCases/ScheduleNotification";
 import { sendAndSaveNotificationUseCase } from "../core/notification/useCases/sendAndSaveNotification";
@@ -9,13 +11,17 @@ import { factoryEventSuggestionWithStartEndDate } from "../core/scheduling/model
 import { saveEventSuggestionUseCase } from "../core/scheduling/useCases/saveEventSuggestion";
 import { appEventListener } from "../core/shared/observers/EventListener";
 import { beforeScheduleQueue } from "../queues/beforeScheduleMessage";
+import { afterScheduleQueue } from "../queues/afterScheduleMessage";
 import { logger } from "../utils/logger";
 
 export async function start() {
   beforeScheduleMessageEventHandlers.register();
+  afterScheduleMessageEventHandlers.register();
   await watchBeforeScheduleMessagesUseCase.execute();
+  await watchAfterScheduleMessagesUseCase.execute();
 
   await beforeScheduleQueue.process();
+  await afterScheduleQueue.process();
 
   appEventListener.on("createSchedule", async (data) => {
     try {
