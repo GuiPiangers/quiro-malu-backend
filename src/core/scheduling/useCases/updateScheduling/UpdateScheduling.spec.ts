@@ -3,6 +3,17 @@ import { ApiError } from "../../../../utils/ApiError";
 import { SchedulingDTO } from "../../models/Scheduling";
 import { UpdateSchedulingUseCase } from "./UpdateSchedulingUseCase";
 
+const defaultExistingSchedule = {
+  id: "test-Scheduling-id",
+  patientId: "test-patient-id",
+  date: "2025-01-10T00:00",
+  duration: 3600,
+  status: "Agendado" as const,
+  service: "Quiropraxia",
+  patient: "Paciente",
+  phone: "(11) 91111-1111",
+};
+
 describe("updateSchedulingUseCase", () => {
   let updateSchedulingUseCase: UpdateSchedulingUseCase;
   const mockSchedulingRepository = createMockSchedulingRepository();
@@ -19,6 +30,9 @@ describe("updateSchedulingUseCase", () => {
       updateSchedulingUseCase = new UpdateSchedulingUseCase(
         mockSchedulingRepository,
       );
+      mockSchedulingRepository.get.mockResolvedValue([
+        { ...defaultExistingSchedule } as any,
+      ]);
     });
 
     it("should call the repository update method with the correct Data", async () => {
@@ -38,9 +52,21 @@ describe("updateSchedulingUseCase", () => {
 
       await updateSchedulingUseCase.execute(schedulingData);
 
+      expect(mockSchedulingRepository.get).toHaveBeenCalledWith({
+        id: "test-Scheduling-id",
+        userId: "test-user-id",
+      });
       expect(mockSchedulingRepository.update).toHaveBeenCalledTimes(1);
       expect(mockSchedulingRepository.update).toHaveBeenCalledWith(
-        schedulingData,
+        expect.objectContaining({
+          userId: schedulingData.userId,
+          id: schedulingData.id,
+          patientId: schedulingData.patientId,
+          date: schedulingData.date,
+          duration: schedulingData.duration,
+          status: schedulingData.status,
+          service: schedulingData.service,
+        }),
       );
     });
 
@@ -57,6 +83,9 @@ describe("updateSchedulingUseCase", () => {
         service: "Quiropraxia",
       };
 
+      mockSchedulingRepository.get.mockResolvedValue([
+        { ...defaultExistingSchedule, date: "2025-01-11T00:00" } as any,
+      ]);
       mockSchedulingRepository.list.mockResolvedValue([]);
 
       await updateSchedulingUseCase.execute(schedulingData);
@@ -70,10 +99,12 @@ describe("updateSchedulingUseCase", () => {
       });
 
       expect(mockSchedulingRepository.update).toHaveBeenCalled();
-      expect(mockSchedulingRepository.update).toHaveBeenCalledWith({
-        ...schedulingData,
-        status: "Agendado",
-      });
+      expect(mockSchedulingRepository.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          ...schedulingData,
+          status: "Agendado",
+        }),
+      );
     });
 
     it("should call the repository update method with status param equal Agendado if date is in the past and status is Agendado, Atrasado or undefined", async () => {
@@ -88,6 +119,9 @@ describe("updateSchedulingUseCase", () => {
         status: "Agendado",
       };
 
+      mockSchedulingRepository.get.mockResolvedValue([
+        { ...defaultExistingSchedule, date: "2025-01-09T00:00" } as any,
+      ]);
       mockSchedulingRepository.list.mockResolvedValue([]);
 
       await updateSchedulingUseCase.execute(schedulingData);
@@ -101,10 +135,12 @@ describe("updateSchedulingUseCase", () => {
       });
 
       expect(mockSchedulingRepository.update).toHaveBeenCalled();
-      expect(mockSchedulingRepository.update).toHaveBeenCalledWith({
-        ...schedulingData,
-        status: "Agendado",
-      });
+      expect(mockSchedulingRepository.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          ...schedulingData,
+          status: "Agendado",
+        }),
+      );
     });
 
     it("should throw an ApiError if scheduling is not available", async () => {
@@ -119,6 +155,14 @@ describe("updateSchedulingUseCase", () => {
         status: "Atendido",
         service: "Quiropraxia",
       };
+
+      mockSchedulingRepository.get.mockResolvedValue([
+        {
+          ...defaultExistingSchedule,
+          date: "2025-01-10T14:00",
+          status: "Atendido",
+        } as any,
+      ]);
 
       mockSchedulingRepository.list.mockResolvedValue([
         {
@@ -149,6 +193,18 @@ describe("updateSchedulingUseCase", () => {
         service: "Quiropraxia",
       };
 
+      mockSchedulingRepository.get.mockResolvedValue([
+        {
+          id: "test-Scheduling-id",
+          patientId,
+          duration: 3600,
+          status: "Agendado",
+          service: "Quiropraxia",
+          patient: "Paciente",
+          phone: "(11) 91111-1111",
+        } as any,
+      ]);
+
       await updateSchedulingUseCase.execute(schedulingData);
 
       expect(mockSchedulingRepository.list).not.toHaveBeenCalled();
@@ -170,6 +226,29 @@ describe("updateSchedulingUseCase", () => {
       await expect(
         updateSchedulingUseCase.execute(schedulingData),
       ).rejects.toThrow(ApiError);
+
+      expect(mockSchedulingRepository.get).not.toHaveBeenCalled();
+    });
+
+    it("should throw ApiError Agendamento não encontrado when scheduling does not exist", async () => {
+      mockSchedulingRepository.get.mockResolvedValue([]);
+
+      await expect(
+        updateSchedulingUseCase.execute({
+          userId: "test-user-id",
+          id: "non-existent-scheduling-id",
+          patientId: "test-patient-id",
+          date: "2025-01-10T00:00",
+          duration: 3600,
+          status: "Agendado",
+          service: "Quiropraxia",
+        }),
+      ).rejects.toMatchObject({
+        message: "Agendamento não encontrado",
+        statusCode: 404,
+      });
+
+      expect(mockSchedulingRepository.update).not.toHaveBeenCalled();
     });
 
     it("should propagate an error if the repository update method throws", async () => {
