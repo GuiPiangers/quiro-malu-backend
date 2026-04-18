@@ -1,0 +1,15 @@
+/**
+ * Tipos de estratégia persistidos em `message_send_strategies.kind`.
+ * Task 01 implementa apenas `send_most_recent_patients`; demais entram em tasks futuras.
+ */
+export const SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS =
+  "send_most_recent_patients" as const;
+
+export const SEND_STRATEGY_KINDS = [
+  SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+  "send_most_frequency_patients",
+  "send_selected_list",
+  "exclude_patients_list",
+] as const;
+
+export type SendStrategyKind = (typeof SEND_STRATEGY_KINDS)[number];

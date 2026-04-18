@@ -19,4 +19,6 @@ export enum ETableNames {
   PAIN_SCALES = "pain_scales",
   WHATSAPP_INSTANCES = "whatsapp_instances",
   WHATSAPP_MESSAGE_LOGS = "whatsapp_message_logs",
+  MESSAGE_SEND_STRATEGIES = "message_send_strategies",
+  USER_MESSAGE_SEND_STRATEGY = "user_message_send_strategy",
 }
