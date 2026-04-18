@@ -69,6 +69,11 @@ export type ListWhatsAppMessageLogsResult = {
   total: number;
 };
 
+export type GetBySchedulingAndCampaignIdProps = {
+  schedulingId: string;
+  campaignId: string;
+};
+
 export type WhatsAppMessageLogsSummaryDTO = {
   total: number;
   byStatus: Record<WhatsAppMessageLogStatus, number>;
@@ -78,6 +83,7 @@ export type WhatsAppMessageLogsSummaryDTO = {
 
 export interface IWhatsAppMessageLogRepository {
   save(data: SaveWhatsAppMessageLogProps): Promise<void>;
+  getBySchedulingAndCampaignId(props: GetBySchedulingAndCampaignIdProps): Promise<WhatsAppMessageLogDTO | null>;
   updateByProviderMessageId(
     data: UpdateWhatsAppMessageLogByProviderIdProps,
   ): Promise<void>;

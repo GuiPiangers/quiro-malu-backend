@@ -2,6 +2,7 @@ import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
 import { ApiError } from "../../utils/ApiError";
 import {
+  GetBySchedulingAndCampaignIdProps,
   IWhatsAppMessageLogRepository,
   ListWhatsAppMessageLogsFilter,
   ListWhatsAppMessageLogsResult,
@@ -71,6 +72,20 @@ function rowToDto(row: MessageLogRow): WhatsAppMessageLogDTO {
 export class KnexWhatsAppMessageLogRepository
   implements IWhatsAppMessageLogRepository
 {
+  async getBySchedulingAndCampaignId(props: GetBySchedulingAndCampaignIdProps): Promise<WhatsAppMessageLogDTO | null> {
+    try {
+      const row = await Knex(ETableNames.WHATSAPP_MESSAGE_LOGS)
+        .where({
+          schedulingId: props.schedulingId,
+          scheduleMessageConfigId: props.campaignId,
+        })
+        .first();
+      return row ? rowToDto(row) : null;
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
+  }
+
   async save(data: SaveWhatsAppMessageLogProps): Promise<void> {
     try {
       await Knex(ETableNames.WHATSAPP_MESSAGE_LOGS).insert({

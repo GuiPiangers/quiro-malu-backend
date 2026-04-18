@@ -6,4 +6,5 @@ export const createMockWhatsAppMessageLogRepository =
     updateByProviderMessageId: jest.fn(),
     listByUserId: jest.fn(),
     summaryByUserId: jest.fn(),
+    getBySchedulingAndCampaignId: jest.fn(),
   });
