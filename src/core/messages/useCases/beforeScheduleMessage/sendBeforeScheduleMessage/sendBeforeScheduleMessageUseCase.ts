@@ -32,6 +32,14 @@ export class SendBeforeScheduleMessageUseCase {
   ) {}
 
   async execute(job: SendBeforeScheduleMessageJob): Promise<void> {
+    const messageAlreadySent = await this.whatsAppMessageLogRepository.getBySchedulingAndCampaignId({
+      schedulingId: job.schedulingId,
+      campaignId: job.beforeScheduleMessageId,
+    });
+
+    if (messageAlreadySent) {
+      return;
+    }
     const [scheduling] = await this.schedulingRepository.get({
       id: job.schedulingId,
       userId: job.userId,
