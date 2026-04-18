@@ -76,12 +76,12 @@ export class BirthdayMessage extends Entity {
     phone: string;
     birthDate: string | Date | null | undefined;
   }): Record<string, string> {
+    const dia = BirthdayMessage.formatBirthDateAsDayMonthPt(patient.birthDate);
     return {
       nome_paciente: patient.name,
       telefone_paciente: patient.phone,
-      data_aniversario: BirthdayMessage.formatBirthDateAsDayMonthPt(
-        patient.birthDate,
-      ),
+      dia_aniversario: dia,
+      data_aniversario: dia,
     };
   }
 
