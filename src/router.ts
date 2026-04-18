@@ -65,6 +65,10 @@ import { listBirthdayMessagesController } from "./core/messages/controllers/list
 import { updateBirthdayMessageController } from "./core/messages/controllers/updateBirthdayMessageController";
 import { getBirthdayMessageController } from "./core/messages/controllers/getBirthdayMessageController";
 import { deleteBirthdayMessageController } from "./core/messages/controllers/deleteBirthdayMessageController";
+import { createMessageSendStrategyController } from "./core/messages/controllers/createMessageSendStrategyController";
+import { listMessageSendStrategyController } from "./core/messages/controllers/listMessageSendStrategyController";
+import { bindMessageSendStrategyCampaignsController } from "./core/messages/controllers/bindMessageSendStrategyCampaignsController";
+import { deleteMessageSendStrategyController } from "./core/messages/controllers/deleteMessageSendStrategyController";
 import { listWhatsAppMessageLogsController } from "./core/messages/controllers/listWhatsAppMessageLogsController";
 import { listWhatsAppMessageLogsByPatientController } from "./core/messages/controllers/listWhatsAppMessageLogsByPatientController";
 import { getWhatsAppMessageLogsSummaryController } from "./core/messages/controllers/getWhatsAppMessageLogsSummaryController";
@@ -450,6 +454,22 @@ router.patch("/birthdayMessages/:id", authMiddleware, async (request, response) 
 
 router.delete("/birthdayMessages/:id", authMiddleware, async (request, response) => {
   return await deleteBirthdayMessageController.handle(request, response);
+});
+
+router.get("/messageSendStrategies", authMiddleware, async (request, response) => {
+  return await listMessageSendStrategyController.handle(request, response);
+});
+
+router.post("/messageSendStrategies", authMiddleware, async (request, response) => {
+  return await createMessageSendStrategyController.handle(request, response);
+});
+
+router.put("/messageSendStrategies/:id/campaigns", authMiddleware, async (request, response) => {
+  return await bindMessageSendStrategyCampaignsController.handle(request, response);
+});
+
+router.delete("/messageSendStrategies/:id", authMiddleware, async (request, response) => {
+  return await deleteMessageSendStrategyController.handle(request, response);
 });
 
 router.get("/messages/logs/summary", authMiddleware, async (request, response) => {
