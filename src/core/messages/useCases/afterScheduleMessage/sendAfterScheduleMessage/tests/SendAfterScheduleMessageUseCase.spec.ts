@@ -19,6 +19,10 @@ function createAppEventListenerMock(): IAppEventListener {
   return { emit: jest.fn() };
 }
 
+function createMessageSendStrategyEnforcerMock() {
+  return { isSendAllowed: jest.fn().mockResolvedValue(true) };
+}
+
 describe("SendAfterScheduleMessageUseCase", () => {
   it("deve enviar mensagem quando status é Atendido", async () => {
     const afterScheduleMessageRepository = createMockAfterScheduleMessageRepository();
@@ -68,6 +72,7 @@ describe("SendAfterScheduleMessageUseCase", () => {
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
       appEventListener,
+      createMessageSendStrategyEnforcerMock() as any,
     );
 
     await useCase.execute({
@@ -143,6 +148,7 @@ describe("SendAfterScheduleMessageUseCase", () => {
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
       appEventListener,
+      createMessageSendStrategyEnforcerMock() as any,
     );
 
     await useCase.execute({

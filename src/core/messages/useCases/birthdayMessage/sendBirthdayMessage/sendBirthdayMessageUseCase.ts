@@ -1,6 +1,7 @@
 import { IWhatsAppProvider } from "../../../../../providers/whatsapp/IWhatsAppProvider";
 import { IBirthdayMessageRepository } from "../../../../../repositories/messages/IBirthdayMessageRepository";
 import { IPatientRepository } from "../../../../../repositories/patient/IPatientRepository";
+import { MessageSendStrategyEnforcer } from "../../../sendStrategy/messageSendStrategyEnforcer";
 import { IWhatsAppInstanceRepository } from "../../../../../repositories/whatsapp/IWhatsAppInstanceRepository";
 import { IWhatsAppMessageLogRepository } from "../../../../../repositories/whatsapp/IWhatsAppMessageLogRepository";
 import { IAppEventListener } from "../../../../shared/observers/EventListener";
@@ -31,6 +32,7 @@ export class SendBirthdayMessageUseCase {
     private whatsAppInstanceRepository: IWhatsAppInstanceRepository,
     private whatsAppMessageLogRepository: IWhatsAppMessageLogRepository,
     private appEventListener: IAppEventListener,
+    private messageSendStrategyEnforcer: MessageSendStrategyEnforcer,
   ) {}
 
   async execute(job: SendBirthdayMessageJob): Promise<void> {
@@ -54,6 +56,15 @@ export class SendBirthdayMessageUseCase {
     );
 
     if (!patient?.phone?.trim()) {
+      return;
+    }
+
+    const allowed = await this.messageSendStrategyEnforcer.isSendAllowed(
+      job.userId,
+      job.campaignId,
+      job.patientId,
+    );
+    if (!allowed) {
       return;
     }
 

@@ -20,6 +20,10 @@ function createAppEventListenerMock(): IAppEventListener {
   return { emit: jest.fn() };
 }
 
+function createMessageSendStrategyEnforcerMock() {
+  return { isSendAllowed: jest.fn().mockResolvedValue(true) };
+}
+
 describe("SendBeforeScheduleMessageUseCase", () => {
   it("deve enviar mensagem renderizada quando config está ativa e provider está conectado", async () => {
     const beforeScheduleMessageRepository =
@@ -70,6 +74,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
       appEventListener,
+      createMessageSendStrategyEnforcerMock() as any,
     );
 
     await useCase.execute({
@@ -156,6 +161,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
       appEventListener,
+      createMessageSendStrategyEnforcerMock() as any,
     );
 
     await useCase.execute({
@@ -220,6 +226,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
       appEventListener,
+      createMessageSendStrategyEnforcerMock() as any,
     );
 
     await useCase.execute({
@@ -282,6 +289,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
       appEventListener,
+      createMessageSendStrategyEnforcerMock() as any,
     );
 
     await useCase.execute({
@@ -322,6 +330,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
       appEventListener,
+      createMessageSendStrategyEnforcerMock() as any,
     );
 
     await useCase.execute({
@@ -356,6 +365,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
       appEventListener,
+      createMessageSendStrategyEnforcerMock() as any,
     );
 
     await useCase.execute({
@@ -397,6 +407,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
       appEventListener,
+      createMessageSendStrategyEnforcerMock() as any,
     );
 
     await expect(
@@ -442,6 +453,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
       appEventListener,
+      createMessageSendStrategyEnforcerMock() as any,
     );
 
     await expect(

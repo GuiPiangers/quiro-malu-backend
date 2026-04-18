@@ -18,6 +18,10 @@ function createAppEventListenerMock(): IAppEventListener {
   return { emit: jest.fn() };
 }
 
+function createMessageSendStrategyEnforcerMock() {
+  return { isSendAllowed: jest.fn().mockResolvedValue(true) };
+}
+
 const baseJob = {
   userId: "user-1",
   patientId: "patient-1",
@@ -71,6 +75,7 @@ describe("SendBirthdayMessageUseCase", () => {
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
       appEventListener,
+      createMessageSendStrategyEnforcerMock() as any,
     );
 
     await useCase.execute(baseJob);
@@ -124,6 +129,7 @@ describe("SendBirthdayMessageUseCase", () => {
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
       appEventListener,
+      createMessageSendStrategyEnforcerMock() as any,
     );
 
     await useCase.execute(baseJob);
@@ -168,6 +174,7 @@ describe("SendBirthdayMessageUseCase", () => {
       whatsAppInstanceRepository,
       whatsAppMessageLogRepository,
       appEventListener,
+      createMessageSendStrategyEnforcerMock() as any,
     );
 
     await useCase.execute(baseJob);
@@ -181,5 +188,57 @@ describe("SendBirthdayMessageUseCase", () => {
     );
 
     expect(appEventListener.emit).not.toHaveBeenCalled();
+  });
+
+  it("não deve enviar quando estratégia de envio bloquear o paciente", async () => {
+    const birthdayMessageRepository = createMockBirthdayMessageRepository();
+    const patientRepository = createMockPatientRepository();
+    const whatsAppProvider = createMockWhatsAppProvider();
+    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
+    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
+    const appEventListener = createAppEventListenerMock();
+    const messageSendStrategyEnforcer = createMessageSendStrategyEnforcerMock();
+    messageSendStrategyEnforcer.isSendAllowed.mockResolvedValue(false);
+
+    birthdayMessageRepository.findActiveByUserId.mockResolvedValue({
+      id: "camp-1",
+      userId: "user-1",
+      name: "Aniversário",
+      textTemplate: "Parabéns {{nome_paciente}}!",
+      isActive: true,
+      sendTime: "09:00",
+    });
+
+    whatsAppInstanceRepository.getByUserId.mockResolvedValue(registeredInstance);
+    whatsAppProvider.getConnectionState.mockResolvedValue("open");
+
+    patientRepository.getById.mockResolvedValue([
+      {
+        id: "patient-1",
+        name: "Maria",
+        phone: "(51) 99999 9999",
+        dateOfBirth: "1990-03-05",
+      } as any,
+    ]);
+
+    const useCase = new SendBirthdayMessageUseCase(
+      birthdayMessageRepository,
+      patientRepository,
+      whatsAppProvider,
+      whatsAppInstanceRepository,
+      whatsAppMessageLogRepository,
+      appEventListener,
+      messageSendStrategyEnforcer as any,
+    );
+
+    await useCase.execute(baseJob);
+
+    expect(messageSendStrategyEnforcer.isSendAllowed).toHaveBeenCalledWith(
+      "user-1",
+      "camp-1",
+      "patient-1",
+    );
+    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled();
+    expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled();
   });
 });

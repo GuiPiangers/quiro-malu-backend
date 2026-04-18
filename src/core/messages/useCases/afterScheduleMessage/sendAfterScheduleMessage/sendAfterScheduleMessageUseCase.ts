@@ -1,6 +1,7 @@
 import { IWhatsAppProvider } from "../../../../../providers/whatsapp/IWhatsAppProvider";
 import { IAfterScheduleMessageRepository } from "../../../../../repositories/messages/IAfterScheduleMessageRepository";
 import { IPatientRepository } from "../../../../../repositories/patient/IPatientRepository";
+import { MessageSendStrategyEnforcer } from "../../../sendStrategy/messageSendStrategyEnforcer";
 import { ISchedulingRepository } from "../../../../../repositories/scheduling/ISchedulingRepository";
 import { IWhatsAppInstanceRepository } from "../../../../../repositories/whatsapp/IWhatsAppInstanceRepository";
 import { IWhatsAppMessageLogRepository } from "../../../../../repositories/whatsapp/IWhatsAppMessageLogRepository";
@@ -27,9 +28,19 @@ export class SendAfterScheduleMessageUseCase {
     private whatsAppInstanceRepository: IWhatsAppInstanceRepository,
     private whatsAppMessageLogRepository: IWhatsAppMessageLogRepository,
     private appEventListener: IAppEventListener,
+    private messageSendStrategyEnforcer: MessageSendStrategyEnforcer,
   ) {}
 
   async execute(job: SendAfterScheduleMessageJob): Promise<void> {
+    const [scheduling] = await this.schedulingRepository.get({
+      id: job.schedulingId,
+      userId: job.userId,
+    });
+
+    if (scheduling?.status !== "Atendido") {
+      return;
+    }
+
     const config = await this.afterScheduleMessageRepository.getById({
       id: job.afterScheduleMessageId,
       userId: job.userId,
@@ -44,18 +55,18 @@ export class SendAfterScheduleMessageUseCase {
     });
 
     const [patient] = await this.patientRepository.getById(
-      job.patientId,
+      scheduling.patientId,
       job.userId,
     );
 
     if (!patient?.phone) return;
 
-    const [scheduling] = await this.schedulingRepository.get({
-      id: job.schedulingId,
-      userId: job.userId,
-    });
-
-    if (scheduling?.status !== "Atendido") {
+    const allowed = await this.messageSendStrategyEnforcer.isSendAllowed(
+      job.userId,
+      job.afterScheduleMessageId,
+      scheduling.patientId,
+    );
+    if (!allowed) {
       return;
     }
 
@@ -81,7 +92,7 @@ export class SendAfterScheduleMessageUseCase {
       await this.whatsAppMessageLogRepository.save({
         id: messageLogId,
         userId: job.userId,
-        patientId: job.patientId,
+        patientId: scheduling.patientId,
         schedulingId: job.schedulingId,
         scheduleMessageType: "afterSchedule",
         scheduleMessageConfigId: job.afterScheduleMessageId,
@@ -94,7 +105,7 @@ export class SendAfterScheduleMessageUseCase {
 
       this.appEventListener.emit("afterScheduleMessageSend", {
         userId: job.userId,
-        patientId: job.patientId,
+        patientId: scheduling.patientId,
         schedulingId: job.schedulingId,
         afterScheduleMessageId: job.afterScheduleMessageId,
         instanceName: instance.instanceName,
