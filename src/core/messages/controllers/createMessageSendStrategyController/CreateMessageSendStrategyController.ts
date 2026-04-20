@@ -20,6 +20,7 @@ export class CreateMessageSendStrategyController {
       const res = await this.createMessageSendStrategyUseCase.execute({
         userId,
         kind: body.kind ?? SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+        name: body.name ?? "",
         params: body.params ?? {},
       } as CreateMessageSendStrategyDTO);
 

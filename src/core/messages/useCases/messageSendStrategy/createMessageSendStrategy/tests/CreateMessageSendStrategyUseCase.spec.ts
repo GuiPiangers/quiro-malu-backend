@@ -1,6 +1,10 @@
 import { createMockMessageSendStrategyRepository } from "../../../../../../repositories/_mocks/MessageSendStrategyRepositoryMock";
 import { ApiError } from "../../../../../../utils/ApiError";
-import { CreateMessageSendStrategyUseCase } from "../CreateMessageSendStrategyUseCase";
+import { SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS } from "../../../../sendStrategy/sendStrategyKind";
+import {
+  type CreateMessageSendStrategyDTO,
+  CreateMessageSendStrategyUseCase,
+} from "../CreateMessageSendStrategyUseCase";
 
 describe("CreateMessageSendStrategyUseCase", () => {
   it("deve persistir estratégia send_most_recent_patients com amount válido", async () => {
@@ -9,8 +13,11 @@ describe("CreateMessageSendStrategyUseCase", () => {
 
     const result = await sut.execute({
       userId: "user-1",
+      kind: SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
       name: "  Últimos pacientes  ",
-      amount: 20,
+      params: {
+        amount: 20,
+      },
     });
 
     expect(repo.save).toHaveBeenCalledWith(
@@ -32,7 +39,12 @@ describe("CreateMessageSendStrategyUseCase", () => {
     const sut = new CreateMessageSendStrategyUseCase(repo);
 
     await expect(
-      sut.execute({ userId: "user-1", name: "   ", amount: 10 }),
+      sut.execute({
+        userId: "user-1",
+        kind: SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+        name: "   ",
+        params: { amount: 10 },
+      }),
     ).rejects.toThrow(ApiError);
     expect(repo.save).not.toHaveBeenCalled();
   });
@@ -42,11 +54,37 @@ describe("CreateMessageSendStrategyUseCase", () => {
     const sut = new CreateMessageSendStrategyUseCase(repo);
 
     await expect(
-      sut.execute({ userId: "user-1", name: "Estratégia", amount: 0 }),
+      sut.execute({
+        userId: "user-1",
+        kind: SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+        name: "Estratégia",
+        params: { amount: 0 },
+      }),
     ).rejects.toThrow(ApiError);
     await expect(
-      sut.execute({ userId: "user-1", name: "Estratégia", amount: 51 }),
+      sut.execute({
+        userId: "user-1",
+        kind: SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+        name: "Estratégia",
+        params: { amount: 51 },
+      }),
     ).rejects.toThrow(ApiError);
+    expect(repo.save).not.toHaveBeenCalled();
+  });
+
+  it("deve retornar 501 para kinds ainda não implementados", async () => {
+    const repo = createMockMessageSendStrategyRepository();
+    const sut = new CreateMessageSendStrategyUseCase(repo);
+
+    await expect(
+      sut.execute({
+        userId: "user-1",
+        kind: "send_selected_list",
+        name: "Qualquer",
+        params: {},
+      } as CreateMessageSendStrategyDTO),
+    ).rejects.toMatchObject({ statusCode: 501 });
+
     expect(repo.save).not.toHaveBeenCalled();
   });
 });

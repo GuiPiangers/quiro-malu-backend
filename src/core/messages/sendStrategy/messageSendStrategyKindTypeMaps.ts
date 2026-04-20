@@ -9,7 +9,7 @@ export type MessageSendStrategyParamsByKind = {
 
 export type MessageSendStrategyCreateParamsByKind = {
   [K in SendStrategyKind]: K extends typeof SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS
-    ? { name: string; amount: number }
+    ? { amount: number }
     : Record<string, never>;
 };
 
@@ -17,12 +17,14 @@ export type CreateMessageSendStrategyDTO = {
   [K in SendStrategyKind]: {
     userId: string;
     kind: K;
+    name: string;
     params: MessageSendStrategyCreateParamsByKind[K];
   };
 }[SendStrategyKind];
 
 export type CreateMessageSendStrategyHttpBody = {
   kind?: SendStrategyKind;
+  name?: string;
   params?: MessageSendStrategyCreateParamsByKind[SendStrategyKind];
 };
 

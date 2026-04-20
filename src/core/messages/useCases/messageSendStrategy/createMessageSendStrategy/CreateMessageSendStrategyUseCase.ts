@@ -25,8 +25,8 @@ export class CreateMessageSendStrategyUseCase {
     switch (dto.kind) {
       case SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS: {
         const id = new Id().value;
-        const { name, amount } = dto.params;
-        const displayName = new MessageSendStrategyDisplayName(name);
+        const { amount } = dto.params;
+        const displayName = new MessageSendStrategyDisplayName(dto.name);
         const entity = new SendMostRecentPatientsMessageSendStrategy({
           id,
           displayName,
