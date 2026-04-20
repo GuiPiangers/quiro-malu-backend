@@ -69,6 +69,7 @@ import { createMessageSendStrategyController } from "./core/messages/controllers
 import { listMessageSendStrategyController } from "./core/messages/controllers/listMessageSendStrategyController";
 import { bindMessageSendStrategyCampaignsController } from "./core/messages/controllers/bindMessageSendStrategyCampaignsController";
 import { deleteMessageSendStrategyController } from "./core/messages/controllers/deleteMessageSendStrategyController";
+import { getMessageSendStrategyController } from "./core/messages/controllers/getMessageSendStrategyController";
 import { listWhatsAppMessageLogsController } from "./core/messages/controllers/listWhatsAppMessageLogsController";
 import { listWhatsAppMessageLogsByPatientController } from "./core/messages/controllers/listWhatsAppMessageLogsByPatientController";
 import { getWhatsAppMessageLogsSummaryController } from "./core/messages/controllers/getWhatsAppMessageLogsSummaryController";
@@ -458,6 +459,10 @@ router.delete("/birthdayMessages/:id", authMiddleware, async (request, response)
 
 router.get("/messageSendStrategies", authMiddleware, async (request, response) => {
   return await listMessageSendStrategyController.handle(request, response);
+});
+
+router.get("/messageSendStrategies/:id", authMiddleware, async (request, response) => {
+  return await getMessageSendStrategyController.handle(request, response);
 });
 
 router.post("/messageSendStrategies", authMiddleware, async (request, response) => {
