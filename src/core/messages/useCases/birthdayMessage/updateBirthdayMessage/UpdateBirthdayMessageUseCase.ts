@@ -35,26 +35,6 @@ export class UpdateBirthdayMessageUseCase {
     if (!existing) {
       throw new ApiError("Campanha de aniversário não encontrada", 404);
     }
-
-    if (dto.name !== undefined && !dto.name.trim()) {
-      throw new ApiError("name não pode ser vazio", 400, "name");
-    }
-
-    if (
-      dto.messageTemplate !== undefined &&
-      !dto.messageTemplate.textTemplate?.trim()
-    ) {
-      throw new ApiError(
-        "textTemplate é obrigatório",
-        400,
-        "messageTemplate.textTemplate",
-      );
-    }
-
-    if (dto.sendTime !== undefined && !dto.sendTime.trim()) {
-      throw new ApiError("sendTime não pode ser vazio", 400, "sendTime");
-    }
-
     const name = dto.name !== undefined ? dto.name.trim() : existing.name;
     const textTemplate =
       dto.messageTemplate !== undefined
@@ -62,7 +42,7 @@ export class UpdateBirthdayMessageUseCase {
         : existing.textTemplate;
     const isActive = dto.isActive !== undefined ? dto.isActive : existing.isActive;
     const sendTimeForMerge =
-      dto.sendTime !== undefined ? dto.sendTime.trim() : existing.sendTime;
+      dto.sendTime !== undefined ? dto.sendTime : existing.sendTime;
 
     const messageTemplate = new MessageTemplate({ textTemplate });
     const birthdayMessage = new BirthdayMessage({

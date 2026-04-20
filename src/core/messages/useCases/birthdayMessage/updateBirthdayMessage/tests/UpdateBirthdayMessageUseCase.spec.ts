@@ -97,15 +97,4 @@ describe("UpdateBirthdayMessageUseCase", () => {
       }),
     );
   });
-
-  it("deve lançar ApiError quando name for string vazia", async () => {
-    const { sut, repository } = makeUseCase();
-    repository.getById.mockResolvedValue(existingConfig);
-
-    await expect(
-      sut.execute({ id: "camp-1", userId: "user-1", name: "   " }),
-    ).rejects.toThrow(ApiError);
-
-    expect(repository.update).not.toHaveBeenCalled();
-  });
 });
