@@ -205,8 +205,12 @@ export class KnexMessageSendStrategyRepository
       if (patch.name !== undefined) {
         row.name = patch.name;
       }
+      if (patch.kind !== undefined) {
+        row.kind = patch.kind;
+      }
       if (patch.params !== undefined) {
-        row.params = patch.params;
+        // Avoid Knex flattening `{ params: { amount } }` into a bogus `amount` column.
+        row.params = JSON.stringify(patch.params);
       }
 
       if (Object.keys(row).length === 0) {

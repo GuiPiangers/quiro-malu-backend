@@ -28,6 +28,7 @@ export type ListMessageSendStrategiesByUserIdResult = {
 
 export type UpdateMessageSendStrategyPatch = {
   name?: string;
+  kind?: string;
   params?: Record<string, unknown>;
 };
 

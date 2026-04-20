@@ -15,7 +15,7 @@ export class UpdateMessageSendStrategyController {
       const { id } = request.params;
       const body = request.body as Pick<
         UpdateMessageSendStrategyDTO,
-        "name" | "amount"
+        "name" | "kind" | "params"
       >;
       const userId = request.user.id!;
 

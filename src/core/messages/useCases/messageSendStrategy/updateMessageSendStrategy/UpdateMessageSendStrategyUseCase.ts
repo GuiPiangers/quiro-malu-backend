@@ -1,16 +1,35 @@
-import { IMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
+import {
+  IMessageSendStrategyRepository,
+  type UpdateMessageSendStrategyPatch,
+} from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
 import { ApiError } from "../../../../../utils/ApiError";
-import { SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS } from "../../../sendStrategy/sendStrategyKind";
+import { MessageSendStrategyDisplayName } from "../../../models/MessageSendStrategyDisplayName";
+import { SendMostRecentPatientsMessageSendStrategy } from "../../../models/SendMostRecentPatientsMessageSendStrategy";
+import type { MessageSendStrategyCreateParamsByKind } from "../../../sendStrategy/messageSendStrategyKindTypeMaps";
+import {
+  SEND_STRATEGY_KINDS,
+  SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+  type SendStrategyKind,
+} from "../../../sendStrategy/sendStrategyKind";
 import type { ListedMessageSendStrategyDTO } from "../listMessageSendStrategy/ListMessageSendStrategyUseCase";
-
-const NAME_MAX_LENGTH = 255;
 
 export type UpdateMessageSendStrategyDTO = {
   userId: string;
   strategyId: string;
   name?: string;
-  amount?: number;
+  kind?: SendStrategyKind;
+  params?: MessageSendStrategyCreateParamsByKind[SendStrategyKind];
 };
+
+function assertSendStrategyKind(value: unknown): SendStrategyKind {
+  if (
+    typeof value !== "string" ||
+    !(SEND_STRATEGY_KINDS as readonly string[]).includes(value)
+  ) {
+    throw new ApiError("kind inválido", 400, "kind");
+  }
+  return value as SendStrategyKind;
+}
 
 function toListedDTO(row: {
   id: string;
@@ -47,54 +66,51 @@ export class UpdateMessageSendStrategyUseCase {
       throw new ApiError("Estratégia de envio não encontrada", 404);
     }
 
-    const hasName = dto.name !== undefined;
-    const hasAmount = dto.amount !== undefined;
+    const hasKind = dto.kind !== undefined;
+    const hasParams = dto.params !== undefined;
+    if (hasKind !== hasParams) {
+      throw new ApiError(
+        "kind e params devem ser informados juntos para alterar o tipo ou os parâmetros da estratégia",
+        400,
+        "kind",
+      );
+    }
 
-    if (!hasName && !hasAmount) {
+    const patch: UpdateMessageSendStrategyPatch = {};
+
+    if (hasKind && hasParams) {
+      const kind = assertSendStrategyKind(dto.kind);
+      switch (kind) {
+        case SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS: {
+          const params =
+            dto.params as MessageSendStrategyCreateParamsByKind[typeof SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS];
+          const displayName = new MessageSendStrategyDisplayName(
+            typeof dto.name === "string" ? dto.name : "",
+          );
+          const entity = new SendMostRecentPatientsMessageSendStrategy({
+            id: existing.id,
+            displayName,
+            amount: params.amount,
+          });
+          patch.kind = entity.kind;
+          patch.name = entity.displayName.value;
+          patch.params = { amount: entity.amount };
+          break;
+        }
+        default:
+          throw new ApiError("Tipo de estratégia ainda não suportado", 501, "kind");
+      }
+    }
+
+    if (dto.name !== undefined && !hasKind) {
+      const displayName = new MessageSendStrategyDisplayName(
+        typeof dto.name === "string" ? dto.name : "",
+      );
+      patch.name = displayName.value;
+    }
+
+    if (Object.keys(patch).length === 0) {
       return toListedDTO(existing);
-    }
-
-    if (hasName) {
-      const name = typeof dto.name === "string" ? dto.name.trim() : "";
-      if (!name) {
-        throw new ApiError("name não pode ser vazio", 400, "name");
-      }
-      if (name.length > NAME_MAX_LENGTH) {
-        throw new ApiError(
-          `name deve ter no máximo ${NAME_MAX_LENGTH} caracteres`,
-          400,
-          "name",
-        );
-      }
-    }
-
-    if (hasAmount) {
-      if (existing.kind !== SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS) {
-        throw new ApiError(
-          "amount só pode ser alterado neste tipo de estratégia",
-          400,
-          "amount",
-        );
-      }
-      const amount = Number(dto.amount);
-      if (!Number.isInteger(amount) || amount < 1 || amount > 50) {
-        throw new ApiError("amount deve ser inteiro entre 1 e 50", 400, "amount");
-      }
-    }
-
-    const patch: {
-      name?: string;
-      params?: Record<string, unknown>;
-    } = {};
-
-    if (hasName) {
-      patch.name = (dto.name as string).trim();
-    }
-    if (hasAmount) {
-      patch.params = {
-        ...existing.params,
-        amount: Number(dto.amount),
-      };
     }
 
     await this.messageSendStrategyRepository.updateByIdAndUserId(
