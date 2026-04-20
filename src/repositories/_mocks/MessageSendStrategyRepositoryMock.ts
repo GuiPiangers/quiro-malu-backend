@@ -3,7 +3,7 @@ import { IMessageSendStrategyRepository } from "../messageSendStrategy/IMessageS
 export const createMockMessageSendStrategyRepository =
   (): jest.Mocked<IMessageSendStrategyRepository> => ({
     save: jest.fn(),
-    listByUserId: jest.fn(),
+    listByUserIdPaged: jest.fn(),
     findByIdAndUserId: jest.fn(),
     findActiveStrategyByUserAndCampaign: jest.fn(),
     upsertCampaignBinding: jest.fn(),

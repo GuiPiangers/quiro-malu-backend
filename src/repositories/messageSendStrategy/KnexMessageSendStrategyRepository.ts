@@ -3,6 +3,8 @@ import { ETableNames } from "../../database/ETableNames";
 import { ApiError } from "../../utils/ApiError";
 import {
   IMessageSendStrategyRepository,
+  ListMessageSendStrategiesByUserIdProps,
+  ListMessageSendStrategiesByUserIdResult,
   MessageSendStrategyRow,
   SaveMessageSendStrategyProps,
 } from "./IMessageSendStrategyRepository";
@@ -25,19 +27,34 @@ function parseParams(raw: unknown): Record<string, unknown> {
 export class KnexMessageSendStrategyRepository
   implements IMessageSendStrategyRepository
 {
-  async listByUserId(userId: string): Promise<MessageSendStrategyRow[]> {
+  async listByUserIdPaged(
+    data: ListMessageSendStrategiesByUserIdProps,
+  ): Promise<ListMessageSendStrategiesByUserIdResult> {
     try {
-      const rows = await Knex(ETableNames.MESSAGE_SEND_STRATEGIES)
-        .select("id", "userId", "kind", "params")
-        .where({ userId })
-        .orderBy("created_at", "desc");
+      const base = () =>
+        Knex(ETableNames.MESSAGE_SEND_STRATEGIES).where({ userId: data.userId });
 
-      return rows.map((row) => ({
+      const countRows = await base().clone().count<{ total: string | number }>(
+        "* as total",
+      );
+      const total = Number(
+        (Array.isArray(countRows) ? countRows[0] : countRows)?.total ?? 0,
+      );
+
+      const rows = await base()
+        .clone()
+        .select("id", "kind", "params")
+        .orderBy("created_at", "desc")
+        .limit(data.limit)
+        .offset(data.offset);
+
+      const items: MessageSendStrategyRow[] = rows.map((row) => ({
         id: row.id,
-        userId: row.userId,
         kind: row.kind,
         params: parseParams(row.params),
       }));
+
+      return { items, total };
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }

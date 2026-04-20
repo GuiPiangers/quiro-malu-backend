@@ -12,9 +12,22 @@ export type SaveMessageSendStrategyProps = {
   params: Record<string, unknown>;
 };
 
+export type ListMessageSendStrategiesByUserIdProps = {
+  userId: string;
+  limit: number;
+  offset: number;
+};
+
+export type ListMessageSendStrategiesByUserIdResult = {
+  items: MessageSendStrategyRow[];
+  total: number;
+};
+
 export interface IMessageSendStrategyRepository {
   save(data: SaveMessageSendStrategyProps): Promise<void>;
-  listByUserId(userId: string): Promise<MessageSendStrategyRow[]>;
+  listByUserIdPaged(
+    data: ListMessageSendStrategiesByUserIdProps,
+  ): Promise<ListMessageSendStrategiesByUserIdResult>;
   findByIdAndUserId(
     id: string,
     userId: string,
