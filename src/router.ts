@@ -70,6 +70,7 @@ import { listMessageSendStrategyController } from "./core/messages/controllers/l
 import { bindMessageSendStrategyCampaignsController } from "./core/messages/controllers/bindMessageSendStrategyCampaignsController";
 import { deleteMessageSendStrategyController } from "./core/messages/controllers/deleteMessageSendStrategyController";
 import { getMessageSendStrategyController } from "./core/messages/controllers/getMessageSendStrategyController";
+import { getMessageSendStrategyByCampaignIdController } from "./core/messages/controllers/getMessageSendStrategyByCampaignIdController";
 import { updateMessageSendStrategyController } from "./core/messages/controllers/updateMessageSendStrategyController";
 import { listWhatsAppMessageLogsController } from "./core/messages/controllers/listWhatsAppMessageLogsController";
 import { listWhatsAppMessageLogsByPatientController } from "./core/messages/controllers/listWhatsAppMessageLogsByPatientController";
@@ -461,6 +462,17 @@ router.delete("/birthdayMessages/:id", authMiddleware, async (request, response)
 router.get("/messageSendStrategies", authMiddleware, async (request, response) => {
   return await listMessageSendStrategyController.handle(request, response);
 });
+
+router.get(
+  "/messageSendStrategies/by-campaign/:campaignId",
+  authMiddleware,
+  async (request, response) => {
+    return await getMessageSendStrategyByCampaignIdController.handle(
+      request,
+      response,
+    );
+  },
+);
 
 router.get("/messageSendStrategies/:id", authMiddleware, async (request, response) => {
   return await getMessageSendStrategyController.handle(request, response);
