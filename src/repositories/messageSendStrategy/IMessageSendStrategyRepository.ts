@@ -26,6 +26,11 @@ export type ListMessageSendStrategiesByUserIdResult = {
   total: number;
 };
 
+export type UpdateMessageSendStrategyPatch = {
+  name?: string;
+  params?: Record<string, unknown>;
+};
+
 export interface IMessageSendStrategyRepository {
   save(data: SaveMessageSendStrategyProps): Promise<void>;
   listByUserIdPaged(
@@ -43,6 +48,11 @@ export interface IMessageSendStrategyRepository {
     userId: string,
     campaignId: string,
     strategyId: string,
+  ): Promise<void>;
+  updateByIdAndUserId(
+    id: string,
+    userId: string,
+    patch: UpdateMessageSendStrategyPatch,
   ): Promise<void>;
   deleteByIdAndUserId(id: string, userId: string): Promise<void>;
 }

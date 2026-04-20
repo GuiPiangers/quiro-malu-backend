@@ -70,6 +70,7 @@ import { listMessageSendStrategyController } from "./core/messages/controllers/l
 import { bindMessageSendStrategyCampaignsController } from "./core/messages/controllers/bindMessageSendStrategyCampaignsController";
 import { deleteMessageSendStrategyController } from "./core/messages/controllers/deleteMessageSendStrategyController";
 import { getMessageSendStrategyController } from "./core/messages/controllers/getMessageSendStrategyController";
+import { updateMessageSendStrategyController } from "./core/messages/controllers/updateMessageSendStrategyController";
 import { listWhatsAppMessageLogsController } from "./core/messages/controllers/listWhatsAppMessageLogsController";
 import { listWhatsAppMessageLogsByPatientController } from "./core/messages/controllers/listWhatsAppMessageLogsByPatientController";
 import { getWhatsAppMessageLogsSummaryController } from "./core/messages/controllers/getWhatsAppMessageLogsSummaryController";
@@ -463,6 +464,10 @@ router.get("/messageSendStrategies", authMiddleware, async (request, response) =
 
 router.get("/messageSendStrategies/:id", authMiddleware, async (request, response) => {
   return await getMessageSendStrategyController.handle(request, response);
+});
+
+router.patch("/messageSendStrategies/:id", authMiddleware, async (request, response) => {
+  return await updateMessageSendStrategyController.handle(request, response);
 });
 
 router.post("/messageSendStrategies", authMiddleware, async (request, response) => {

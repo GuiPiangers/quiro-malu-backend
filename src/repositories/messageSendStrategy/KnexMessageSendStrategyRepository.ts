@@ -7,6 +7,7 @@ import {
   ListMessageSendStrategiesByUserIdResult,
   MessageSendStrategyRow,
   SaveMessageSendStrategyProps,
+  UpdateMessageSendStrategyPatch,
 } from "./IMessageSendStrategyRepository";
 
 function parseParams(raw: unknown): Record<string, unknown> {
@@ -190,6 +191,37 @@ export class KnexMessageSendStrategyRepository
         });
       });
     } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
+  }
+
+  async updateByIdAndUserId(
+    id: string,
+    userId: string,
+    patch: UpdateMessageSendStrategyPatch,
+  ): Promise<void> {
+    try {
+      const row: Record<string, unknown> = {};
+      if (patch.name !== undefined) {
+        row.name = patch.name;
+      }
+      if (patch.params !== undefined) {
+        row.params = patch.params;
+      }
+
+      if (Object.keys(row).length === 0) {
+        return;
+      }
+
+      const updated = await Knex(ETableNames.MESSAGE_SEND_STRATEGIES)
+        .where({ id, userId })
+        .update(row);
+
+      if (updated === 0) {
+        throw new ApiError("Estratégia não encontrada", 404);
+      }
+    } catch (error: any) {
+      if (error instanceof ApiError) throw error;
       throw new ApiError(error.message, 500);
     }
   }
