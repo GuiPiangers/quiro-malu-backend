@@ -9,14 +9,18 @@ describe("ListMessageSendStrategyUseCase", () => {
         {
           id: "s-2",
           userId: "user-1",
+          name: "Campanha A",
           kind: "send_most_recent_patients",
           params: { amount: 5 },
+          campaignBindingsCount: 2,
         },
         {
           id: "s-1",
           userId: "user-1",
+          name: "Campanha B",
           kind: "send_most_recent_patients",
           params: { amount: 10 },
+          campaignBindingsCount: 0,
         },
       ],
       total: 12,
@@ -32,8 +36,18 @@ describe("ListMessageSendStrategyUseCase", () => {
     });
     expect(result).toEqual({
       items: [
-        expect.objectContaining({ id: "s-2", params: { amount: 5 } }),
-        expect.objectContaining({ id: "s-1", params: { amount: 10 } }),
+        expect.objectContaining({
+          id: "s-2",
+          name: "Campanha A",
+          params: { amount: 5 },
+          campaignBindingsCount: 2,
+        }),
+        expect.objectContaining({
+          id: "s-1",
+          name: "Campanha B",
+          params: { amount: 10 },
+          campaignBindingsCount: 0,
+        }),
       ],
       total: 12,
       page: 1,

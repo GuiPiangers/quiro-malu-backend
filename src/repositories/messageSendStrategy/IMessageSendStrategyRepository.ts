@@ -1,13 +1,16 @@
 export type MessageSendStrategyRow = {
   id: string;
   userId: string;
+  name: string;
   kind: string;
   params: Record<string, unknown>;
+  campaignBindingsCount: number;
 };
 
 export type SaveMessageSendStrategyProps = {
   id: string;
   userId: string;
+  name: string;
   kind: string;
   params: Record<string, unknown>;
 };

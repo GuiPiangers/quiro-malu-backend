@@ -24,6 +24,23 @@ function parseParams(raw: unknown): Record<string, unknown> {
   return {};
 }
 
+function parseCampaignBindingsCount(value: unknown): number {
+  const n = Number(value);
+  return Number.isFinite(n) ? Math.max(0, Math.trunc(n)) : 0;
+}
+
+function rowBindingsCount(row: Record<string, unknown>): number {
+  const raw =
+    row.campaignBindingsCount ?? row.campaignbindingscount;
+  return parseCampaignBindingsCount(raw);
+}
+
+function bindingsCountSubquery(strategyTableRef: string) {
+  return Knex.raw(
+    `(SELECT COUNT(*) FROM \`${ETableNames.USER_MESSAGE_SEND_STRATEGY}\` u WHERE u.strategyId = ${strategyTableRef}) AS campaignBindingsCount`,
+  );
+}
+
 export class KnexMessageSendStrategyRepository
   implements IMessageSendStrategyRepository
 {
@@ -41,17 +58,28 @@ export class KnexMessageSendStrategyRepository
         (Array.isArray(countRows) ? countRows[0] : countRows)?.total ?? 0,
       );
 
+      const strategyTable = `\`${ETableNames.MESSAGE_SEND_STRATEGIES}\`.id`;
       const rows = await base()
         .clone()
-        .select("id", "kind", "params")
+        .select(
+          "id",
+          "userId",
+          "name",
+          "kind",
+          "params",
+          bindingsCountSubquery(strategyTable),
+        )
         .orderBy("created_at", "desc")
         .limit(data.limit)
         .offset(data.offset);
 
       const items: MessageSendStrategyRow[] = rows.map((row) => ({
         id: row.id,
+        userId: row.userId,
+        name: row.name ?? "",
         kind: row.kind,
         params: parseParams(row.params),
+        campaignBindingsCount: rowBindingsCount(row as Record<string, unknown>),
       }));
 
       return { items, total };
@@ -65,6 +93,7 @@ export class KnexMessageSendStrategyRepository
       await Knex(ETableNames.MESSAGE_SEND_STRATEGIES).insert({
         id: data.id,
         userId: data.userId,
+        name: data.name,
         kind: data.kind,
         params: data.params,
       });
@@ -78,8 +107,16 @@ export class KnexMessageSendStrategyRepository
     userId: string,
   ): Promise<MessageSendStrategyRow | null> {
     try {
+      const strategyTable = `\`${ETableNames.MESSAGE_SEND_STRATEGIES}\`.id`;
       const row = await Knex(ETableNames.MESSAGE_SEND_STRATEGIES)
-        .select("id", "userId", "kind", "params")
+        .select(
+          "id",
+          "userId",
+          "name",
+          "kind",
+          "params",
+          bindingsCountSubquery(strategyTable),
+        )
         .where({ id, userId })
         .first();
 
@@ -88,8 +125,10 @@ export class KnexMessageSendStrategyRepository
       return {
         id: row.id,
         userId: row.userId,
+        name: row.name ?? "",
         kind: row.kind,
         params: parseParams(row.params),
+        campaignBindingsCount: rowBindingsCount(row as Record<string, unknown>),
       };
     } catch (error: any) {
       throw new ApiError(error.message, 500);
@@ -107,7 +146,14 @@ export class KnexMessageSendStrategyRepository
           "u.strategyId",
           "s.id",
         )
-        .select("s.id", "s.userId", "s.kind", "s.params")
+        .select(
+          "s.id",
+          "s.userId",
+          "s.name",
+          "s.kind",
+          "s.params",
+          bindingsCountSubquery("s.id"),
+        )
         .where("u.userId", userId)
         .andWhere("u.campaignId", campaignId)
         .first();
@@ -117,8 +163,10 @@ export class KnexMessageSendStrategyRepository
       return {
         id: row.id,
         userId: row.userId,
+        name: row.name ?? "",
         kind: row.kind,
         params: parseParams(row.params),
+        campaignBindingsCount: rowBindingsCount(row as Record<string, unknown>),
       };
     } catch (error: any) {
       throw new ApiError(error.message, 500);

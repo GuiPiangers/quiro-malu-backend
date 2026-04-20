@@ -8,8 +8,10 @@ describe("BindMessageSendStrategyCampaignsUseCase", () => {
     repo.findByIdAndUserId.mockResolvedValue({
       id: "s-1",
       userId: "user-1",
+      name: "Estratégia 1",
       kind: "send_most_recent_patients",
       params: { amount: 10 },
+      campaignBindingsCount: 3,
     });
 
     const sut = new BindMessageSendStrategyCampaignsUseCase(repo);

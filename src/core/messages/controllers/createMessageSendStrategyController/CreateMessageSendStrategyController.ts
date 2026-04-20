@@ -12,11 +12,15 @@ export class CreateMessageSendStrategyController {
 
   async handle(request: Request, response: Response) {
     try {
-      const body = request.body as Pick<CreateMessageSendStrategyDTO, "amount">;
+      const body = request.body as Pick<
+        CreateMessageSendStrategyDTO,
+        "amount" | "name"
+      >;
       const userId = request.user.id!;
 
       const res = await this.createMessageSendStrategyUseCase.execute({
         userId,
+        name: body.name,
         amount: body.amount,
       });
 

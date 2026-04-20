@@ -9,8 +9,10 @@ export type ListMessageSendStrategyDTO = {
 export type ListedMessageSendStrategyDTO = {
   id: string;
   userId: string;
+  name: string;
   kind: string;
   params: Record<string, unknown>;
+  campaignBindingsCount: number;
 };
 
 export type ListMessageSendStrategyOutput = {
@@ -43,8 +45,10 @@ export class ListMessageSendStrategyUseCase {
     const items = rows.map((row) => ({
       id: row.id,
       userId: row.userId,
+      name: row.name,
       kind: row.kind,
       params: row.params,
+      campaignBindingsCount: row.campaignBindingsCount,
     }));
 
     return { items, total, page, limit };
