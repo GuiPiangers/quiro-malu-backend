@@ -30,9 +30,6 @@ export class CreateBeforeScheduleMessageUseCase {
     dto: CreateBeforeScheduleMessageDTO,
   ): Promise<BeforeScheduleMessageDTO> {
     const name = typeof dto.name === "string" ? dto.name.trim() : "";
-    if (!name) {
-      throw new ApiError("name é obrigatório", 400, "name");
-    }
 
     const messageTemplate = new MessageTemplate({
       textTemplate: dto.messageTemplate.textTemplate,

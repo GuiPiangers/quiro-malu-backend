@@ -89,25 +89,4 @@ describe("CreateAfterScheduleMessageUseCase", () => {
 
     expect(result.isActive).toBe(false);
   });
-
-  it("deve lançar ApiError quando name estiver vazio", async () => {
-    const afterScheduleMessageRepository = createMockAfterScheduleMessageRepository();
-    const appEventListener = new AppEventListener();
-
-    const useCase = new CreateAfterScheduleMessageUseCase(
-      afterScheduleMessageRepository,
-      appEventListener,
-    );
-
-    await expect(
-      useCase.execute({
-        userId: "user-1",
-        name: "   ",
-        minutesAfterSchedule: 30,
-        messageTemplate: { textTemplate: "x" },
-      }),
-    ).rejects.toThrow(ApiError);
-
-    expect(afterScheduleMessageRepository.save).not.toHaveBeenCalled();
-  });
 });

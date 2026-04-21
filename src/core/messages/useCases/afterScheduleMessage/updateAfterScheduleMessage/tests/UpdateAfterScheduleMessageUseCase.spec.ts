@@ -89,17 +89,6 @@ describe("UpdateAfterScheduleMessageUseCase", () => {
     );
   });
 
-  it("deve lançar ApiError quando name for string vazia", async () => {
-    const { sut, repository } = makeUseCase();
-    repository.getById.mockResolvedValue(existingConfig);
-
-    await expect(
-      sut.execute({ id: "msg-1", userId: "user-1", name: "   " }),
-    ).rejects.toThrow(ApiError);
-
-    expect(repository.update).not.toHaveBeenCalled();
-  });
-
   it("deve lançar ApiError quando minutesAfterSchedule for inválido", async () => {
     const { sut, repository } = makeUseCase();
     repository.getById.mockResolvedValue(existingConfig);

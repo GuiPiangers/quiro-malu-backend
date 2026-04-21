@@ -1,23 +1,11 @@
 import { ApiError } from "../../../../../utils/ApiError";
 import { IMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
 
-const MAX_CAMPAIGN_ID_LENGTH = 100;
-
 export type BindMessageSendStrategyCampaignsDTO = {
   userId: string;
   strategyId: string;
   campaignIds: string[];
 };
-
-function normalizeCampaignId(raw: string): string | null {
-  const id = raw.trim();
-  if (!id) return null;
-  if (id.length > MAX_CAMPAIGN_ID_LENGTH) {
-    return null;
-  }
-  return id;
-}
-
 export class BindMessageSendStrategyCampaignsUseCase {
   constructor(
     private readonly messageSendStrategyRepository: IMessageSendStrategyRepository,
@@ -42,15 +30,7 @@ export class BindMessageSendStrategyCampaignsUseCase {
     }
 
     const seen = new Set<string>();
-    for (const raw of dto.campaignIds) {
-      const campaignId = normalizeCampaignId(String(raw));
-      if (!campaignId) {
-        throw new ApiError(
-          `campaignId inválido ou muito longo (máx. ${MAX_CAMPAIGN_ID_LENGTH})`,
-          400,
-          "campaignIds",
-        );
-      }
+    for (const campaignId of dto.campaignIds) {
       if (seen.has(campaignId)) {
         continue;
       }

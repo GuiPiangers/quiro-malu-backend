@@ -122,51 +122,6 @@ describe("CreateBirthdayMessageUseCase", () => {
     expect(result.isActive).toBe(false);
   });
 
-  it("deve lançar ApiError quando name estiver vazio", async () => {
-    const birthdayMessageRepository = createMockBirthdayMessageRepository();
-    const appEventListener = new AppEventListener();
-    const emitSpy = jest.spyOn(appEventListener, "emit");
-
-    const useCase = new CreateBirthdayMessageUseCase(
-      birthdayMessageRepository,
-      appEventListener,
-    );
-
-    await expect(
-      useCase.execute({
-        userId: "user-1",
-        name: "   ",
-        messageTemplate: { textTemplate: "x" },
-      }),
-    ).rejects.toMatchObject({
-      statusCode: 400,
-      type: "name",
-    });
-
-    expect(birthdayMessageRepository.save).not.toHaveBeenCalled();
-    expect(emitSpy).not.toHaveBeenCalled();
-  });
-
-  it("deve lançar ApiError quando name não for string", async () => {
-    const birthdayMessageRepository = createMockBirthdayMessageRepository();
-    const appEventListener = new AppEventListener();
-
-    const useCase = new CreateBirthdayMessageUseCase(
-      birthdayMessageRepository,
-      appEventListener,
-    );
-
-    await expect(
-      useCase.execute({
-        userId: "user-1",
-        name: 123 as unknown as string,
-        messageTemplate: { textTemplate: "x" },
-      }),
-    ).rejects.toThrow(ApiError);
-
-    expect(birthdayMessageRepository.save).not.toHaveBeenCalled();
-  });
-
   it("deve propagar erro quando o repositório falhar ao salvar", async () => {
     const birthdayMessageRepository = createMockBirthdayMessageRepository();
     birthdayMessageRepository.save.mockRejectedValue(

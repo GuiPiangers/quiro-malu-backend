@@ -34,11 +34,7 @@ export class UpdateAfterScheduleMessageUseCase {
       throw new ApiError("Mensagem agendada não encontrada", 404);
     }
 
-    if (dto.name !== undefined && !dto.name.trim()) {
-      throw new ApiError("name não pode ser vazio", 400, "name");
-    }
-
-    const name = dto.name !== undefined ? dto.name.trim() : existing.name;
+    const name = dto.name ?? existing.name;
     const minutesAfterSchedule =
       dto.minutesAfterSchedule ?? existing.minutesAfterSchedule;
     const isActive = dto.isActive ?? existing.isActive;
@@ -54,13 +50,15 @@ export class UpdateAfterScheduleMessageUseCase {
       isActive,
     });
 
+    const updateDTO = afterScheduleMessage.getDTO();
+
     await this.afterScheduleMessageRepository.update({
       id: dto.id,
       userId: dto.userId,
-      name: dto.name !== undefined ? dto.name.trim() : undefined,
-      minutesAfterSchedule: dto.minutesAfterSchedule,
-      textTemplate: dto.messageTemplate?.textTemplate,
-      isActive: dto.isActive,
+      name: updateDTO.name ?? undefined,
+      minutesAfterSchedule: updateDTO.minutesAfterSchedule,
+      textTemplate: updateDTO.messageTemplate?.textTemplate,
+      isActive: updateDTO.isActive,
     });
 
     const updatedDTO = afterScheduleMessage.getDTO();

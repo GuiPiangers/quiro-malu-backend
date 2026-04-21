@@ -36,11 +36,7 @@ export class UpdateBeforeScheduleMessageUseCase {
       throw new ApiError("Mensagem agendada não encontrada", 404);
     }
 
-    if (dto.name !== undefined && !dto.name.trim()) {
-      throw new ApiError("name não pode ser vazio", 400, "name");
-    }
-
-    const name = dto.name !== undefined ? dto.name.trim() : existing.name;
+    const name = dto.name ?? existing.name;
     const minutesBeforeSchedule =
       dto.minutesBeforeSchedule ?? existing.minutesBeforeSchedule;
     const isActive = dto.isActive ?? existing.isActive;
@@ -56,25 +52,25 @@ export class UpdateBeforeScheduleMessageUseCase {
       isActive,
     });
 
+    const updateDTO = beforeScheduleMessage.getDTO();
+
     await this.beforeScheduleMessageRepository.update({
       id: dto.id,
       userId: dto.userId,
-      name: dto.name !== undefined ? dto.name.trim() : undefined,
-      minutesBeforeSchedule: dto.minutesBeforeSchedule,
-      textTemplate: dto.messageTemplate?.textTemplate,
-      isActive: dto.isActive,
+      name: updateDTO.name ?? undefined,
+      minutesBeforeSchedule: updateDTO.minutesBeforeSchedule,
+      textTemplate: updateDTO.messageTemplate?.textTemplate,
+      isActive: updateDTO.isActive,
     });
-
-    const updatedDTO = beforeScheduleMessage.getDTO();
 
     this.appEventListener.emit("beforeScheduleMessageUpdate", {
-      id: updatedDTO.id!,
+      id: updateDTO.id!,
       userId: dto.userId,
-      name: updatedDTO.name,
-      minutesBeforeSchedule: updatedDTO.minutesBeforeSchedule,
-      isActive: updatedDTO.isActive,
+      name: updateDTO.name,
+      minutesBeforeSchedule: updateDTO.minutesBeforeSchedule,
+      isActive: updateDTO.isActive,
     });
 
-    return updatedDTO;
+    return updateDTO;
   }
 }
