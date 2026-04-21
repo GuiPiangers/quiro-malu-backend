@@ -68,6 +68,7 @@ import { deleteBirthdayMessageController } from "./core/messages/controllers/del
 import { createMessageSendStrategyController } from "./core/messages/controllers/createMessageSendStrategyController";
 import { listMessageSendStrategyController } from "./core/messages/controllers/listMessageSendStrategyController";
 import { bindMessageSendStrategyCampaignsController } from "./core/messages/controllers/bindMessageSendStrategyCampaignsController";
+import { unbindMessageSendStrategyCampaignController } from "./core/messages/controllers/unbindMessageSendStrategyCampaignController";
 import { deleteMessageSendStrategyController } from "./core/messages/controllers/deleteMessageSendStrategyController";
 import { getMessageSendStrategyController } from "./core/messages/controllers/getMessageSendStrategyController";
 import { getMessageSendStrategyByCampaignIdController } from "./core/messages/controllers/getMessageSendStrategyByCampaignIdController";
@@ -468,6 +469,17 @@ router.get(
   authMiddleware,
   async (request, response) => {
     return await getMessageSendStrategyByCampaignIdController.handle(
+      request,
+      response,
+    );
+  },
+);
+
+router.delete(
+  "/messageSendStrategies/campaigns/:campaignId",
+  authMiddleware,
+  async (request, response) => {
+    return await unbindMessageSendStrategyCampaignController.handle(
       request,
       response,
     );

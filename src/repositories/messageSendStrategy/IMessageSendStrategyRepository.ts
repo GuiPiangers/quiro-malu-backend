@@ -50,6 +50,7 @@ export interface IMessageSendStrategyRepository {
     campaignId: string,
     strategyId: string,
   ): Promise<void>;
+  deleteCampaignBinding(userId: string, campaignId: string): Promise<void>;
   updateByIdAndUserId(
     id: string,
     userId: string,

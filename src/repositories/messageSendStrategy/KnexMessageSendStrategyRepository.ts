@@ -195,6 +195,19 @@ export class KnexMessageSendStrategyRepository
     }
   }
 
+  async deleteCampaignBinding(
+    userId: string,
+    campaignId: string,
+  ): Promise<void> {
+    try {
+      await Knex(ETableNames.USER_MESSAGE_SEND_STRATEGY)
+        .where({ userId, campaignId })
+        .del();
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
+  }
+
   async updateByIdAndUserId(
     id: string,
     userId: string,

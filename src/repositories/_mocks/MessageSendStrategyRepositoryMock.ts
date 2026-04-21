@@ -7,6 +7,7 @@ export const createMockMessageSendStrategyRepository =
     findByIdAndUserId: jest.fn(),
     findActiveStrategyByUserAndCampaign: jest.fn(),
     upsertCampaignBinding: jest.fn(),
+    deleteCampaignBinding: jest.fn(),
     updateByIdAndUserId: jest.fn(),
     deleteByIdAndUserId: jest.fn(),
   });
