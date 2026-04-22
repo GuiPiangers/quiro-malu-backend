@@ -4,10 +4,11 @@ import {
 } from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
 import { ApiError } from "../../../../../utils/ApiError";
 import { MessageSendStrategyDisplayName } from "../../../models/MessageSendStrategyDisplayName";
+import { SendMostFrequencyPatientsMessageSendStrategy } from "../../../models/SendMostFrequencyPatientsMessageSendStrategy";
 import { SendMostRecentPatientsMessageSendStrategy } from "../../../models/SendMostRecentPatientsMessageSendStrategy";
 import type { MessageSendStrategyCreateParamsByKind } from "../../../sendStrategy/messageSendStrategyKindTypeMaps";
 import {
-  SEND_STRATEGY_KINDS,
+  SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
   type SendStrategyKind,
 } from "../../../sendStrategy/sendStrategyKind";
@@ -20,16 +21,6 @@ export type UpdateMessageSendStrategyDTO = {
   kind?: SendStrategyKind;
   params?: MessageSendStrategyCreateParamsByKind[SendStrategyKind];
 };
-
-function assertSendStrategyKind(value: unknown): SendStrategyKind {
-  if (
-    typeof value !== "string" ||
-    !(SEND_STRATEGY_KINDS as readonly string[]).includes(value)
-  ) {
-    throw new ApiError("kind inválido", 400, "kind");
-  }
-  return value as SendStrategyKind;
-}
 
 function toListedDTO(row: {
   id: string;
@@ -79,7 +70,7 @@ export class UpdateMessageSendStrategyUseCase {
     const patch: UpdateMessageSendStrategyPatch = {};
 
     if (hasKind && hasParams) {
-      const kind = assertSendStrategyKind(dto.kind);
+      const kind = dto.kind as SendStrategyKind;
       switch (kind) {
         case SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS: {
           const params =
@@ -88,6 +79,22 @@ export class UpdateMessageSendStrategyUseCase {
             typeof dto.name === "string" ? dto.name : "",
           );
           const entity = new SendMostRecentPatientsMessageSendStrategy({
+            id: existing.id,
+            displayName,
+            amount: params.amount,
+          });
+          patch.kind = entity.kind;
+          patch.name = entity.displayName.value;
+          patch.params = { amount: entity.amount };
+          break;
+        }
+        case SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS: {
+          const params =
+            dto.params as MessageSendStrategyCreateParamsByKind[typeof SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS];
+          const displayName = new MessageSendStrategyDisplayName(
+            typeof dto.name === "string" ? dto.name : "",
+          );
+          const entity = new SendMostFrequencyPatientsMessageSendStrategy({
             id: existing.id,
             displayName,
             amount: params.amount,

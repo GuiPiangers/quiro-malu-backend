@@ -1,22 +1,59 @@
 import { ApiError } from "../../../utils/ApiError";
 import { IPatientRepository } from "../../../repositories/patient/IPatientRepository";
+import { ISchedulingRepository } from "../../../repositories/scheduling/ISchedulingRepository";
 import { MessageSendStrategyRow } from "../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
-import { IMessageSendStrategy } from "./IMessageSendStrategy";
-import { SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS } from "./sendStrategyKind";
 import { SendMostRecentPatientsMessageSendStrategy } from "../models/SendMostRecentPatientsMessageSendStrategy";
+import { IMessageSendStrategy } from "./IMessageSendStrategy";
+import { SendMostFrequencyPatientsStrategy } from "./strategies/sendMostFrequencyPatientsStrategy";
 import { SendMostRecentPatientsStrategy } from "./strategies/sendMostRecentPatientsStrategy";
+import {
+  SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
+  SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+} from "./sendStrategyKind";
+
+export type MessageSendStrategyFactoryDeps = {
+  patientRepository: IPatientRepository;
+  schedulingRepository: ISchedulingRepository;
+};
+
+function persistedAmountOrThrow(
+  kind: string,
+  params: Record<string, unknown>,
+): number {
+  const raw = params.amount;
+  const n = typeof raw === "number" ? raw : Number(raw);
+  if (!Number.isInteger(n) || n < 1 || n > 50) {
+    throw new ApiError(
+      `params.amount inválido na estratégia persistida (${kind})`,
+      500,
+      "params.amount",
+    );
+  }
+  return n;
+}
 
 export class MessageSendStrategyFactory {
   create(
     row: MessageSendStrategyRow,
-    patientRepository: IPatientRepository,
+    deps: MessageSendStrategyFactoryDeps,
   ): IMessageSendStrategy {
     if (row.kind === SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS) {
       const amount =
         SendMostRecentPatientsMessageSendStrategy.amountFromPersistedParams(
           row.params,
         );
-      return new SendMostRecentPatientsStrategy(amount, patientRepository);
+      return new SendMostRecentPatientsStrategy(
+        amount,
+        deps.patientRepository,
+      );
+    }
+
+    if (row.kind === SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS) {
+      const amount = persistedAmountOrThrow(row.kind, row.params);
+      return new SendMostFrequencyPatientsStrategy(
+        amount,
+        deps.schedulingRepository,
+      );
     }
 
     throw new ApiError(`Tipo de estratégia não suportado: ${row.kind}`, 501);

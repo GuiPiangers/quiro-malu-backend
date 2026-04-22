@@ -2,8 +2,12 @@ import { Id } from "../../../../shared/Id";
 import { ApiError } from "../../../../../utils/ApiError";
 import { IMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
 import { MessageSendStrategyDisplayName } from "../../../models/MessageSendStrategyDisplayName";
+import { SendMostFrequencyPatientsMessageSendStrategy } from "../../../models/SendMostFrequencyPatientsMessageSendStrategy";
 import { SendMostRecentPatientsMessageSendStrategy } from "../../../models/SendMostRecentPatientsMessageSendStrategy";
-import { SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS } from "../../../sendStrategy/sendStrategyKind";
+import {
+  SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
+  SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+} from "../../../sendStrategy/sendStrategyKind";
 import type {
   CreateMessageSendStrategyDTO,
   CreateMessageSendStrategyHttpBody,
@@ -28,6 +32,26 @@ export class CreateMessageSendStrategyUseCase {
         const { amount } = dto.params;
         const displayName = new MessageSendStrategyDisplayName(dto.name);
         const entity = new SendMostRecentPatientsMessageSendStrategy({
+          id,
+          displayName,
+          amount,
+        });
+
+        await this.messageSendStrategyRepository.save({
+          id: entity.id,
+          userId: dto.userId,
+          name: entity.displayName.value,
+          kind: entity.kind,
+          params: { amount: entity.amount },
+        });
+
+        return entity.getApiDTO(dto.userId, 0);
+      }
+      case SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS: {
+        const id = new Id().value;
+        const { amount } = dto.params;
+        const displayName = new MessageSendStrategyDisplayName(dto.name);
+        const entity = new SendMostFrequencyPatientsMessageSendStrategy({
           id,
           displayName,
           amount,

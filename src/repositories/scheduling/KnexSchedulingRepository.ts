@@ -159,6 +159,32 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     return rows.map((row: { id: string }) => row.id);
   }
 
+  async listPatientIdsByUserIdOrderBySchedulingCountDesc(
+    userId: string,
+    limit: number,
+  ): Promise<string[]> {
+    try {
+      const rows = await Knex(`${ETableNames.SCHEDULES} as s`)
+        .join(`${ETableNames.PATIENTS} as p`, (join) => {
+          join
+            .on("p.id", "=", "s.patientId")
+            .andOn("p.userId", "=", "s.userId");
+        })
+        .where("s.userId", userId)
+        .where((b) => {
+          b.whereNull("s.status").orWhere("s.status", "<>", "Cancelado");
+        })
+        .groupBy("s.patientId")
+        .select("s.patientId as patientId")
+        .orderByRaw("COUNT(*) DESC, MAX(p.created_at) DESC")
+        .limit(limit);
+
+      return rows.map((row: { patientId: string }) => String(row.patientId));
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
+  }
+
   async get({
     id,
     userId,

@@ -12,14 +12,15 @@ import { SendAfterScheduleMessageUseCase } from "./sendAfterScheduleMessageUseCa
 
 const afterScheduleMessageRepository = new AfterScheduleMessageRepository();
 const patientRepository = new KnexPatientRepository();
+const schedulingRepository = new KnexSchedulingRepository();
 const messageSendStrategyRepository = new KnexMessageSendStrategyRepository();
 const messageSendStrategyFactory = new MessageSendStrategyFactory();
 const messageSendStrategyEnforcer = new MessageSendStrategyEnforcer(
   messageSendStrategyRepository,
   messageSendStrategyFactory,
   patientRepository,
+  schedulingRepository,
 );
-const schedulingRepository = new KnexSchedulingRepository();
 const whatsAppInstanceRepository = new KnexWhatsAppInstanceRepository();
 const whatsAppMessageLogRepository = new KnexWhatsAppMessageLogRepository();
 

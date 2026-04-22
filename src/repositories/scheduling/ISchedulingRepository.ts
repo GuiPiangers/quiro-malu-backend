@@ -41,6 +41,11 @@ export interface ISchedulingRepository {
 
   listIdsByUserId(data: { userId: string }): Promise<string[]>;
 
+  listPatientIdsByUserIdOrderBySchedulingCountDesc(
+    userId: string,
+    limit: number,
+  ): Promise<string[]>;
+
   delete(data: { id: string; userId: string }): Promise<void>;
 
   listFromNowWithinMinutes(data: {

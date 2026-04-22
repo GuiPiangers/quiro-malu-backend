@@ -1,6 +1,9 @@
 import { createMockMessageSendStrategyRepository } from "../../../../../../repositories/_mocks/MessageSendStrategyRepositoryMock";
 import { ApiError } from "../../../../../../utils/ApiError";
-import { SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS } from "../../../../sendStrategy/sendStrategyKind";
+import {
+  SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
+  SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+} from "../../../../sendStrategy/sendStrategyKind";
 import { UpdateMessageSendStrategyUseCase } from "../UpdateMessageSendStrategyUseCase";
 
 const existingRow = {
@@ -57,6 +60,35 @@ describe("UpdateMessageSendStrategyUseCase", () => {
       name: "Tesserfsed",
       params: { amount: 30 },
     });
+  });
+
+  it("deve atualizar para send_most_frequency_patients quando kind e params forem enviados juntos", async () => {
+    const repo = createMockMessageSendStrategyRepository();
+    repo.findByIdAndUserId
+      .mockResolvedValueOnce({ ...existingRow })
+      .mockResolvedValueOnce({
+        ...existingRow,
+        kind: SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
+        name: "Por volume",
+        params: { amount: 12 },
+      });
+
+    const sut = new UpdateMessageSendStrategyUseCase(repo);
+    const result = await sut.execute({
+      userId: "user-1",
+      strategyId: "s-1",
+      kind: SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
+      name: "Por volume",
+      params: { amount: 12 },
+    });
+
+    expect(repo.updateByIdAndUserId).toHaveBeenCalledWith("s-1", "user-1", {
+      kind: SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
+      name: "Por volume",
+      params: { amount: 12 },
+    });
+    expect(result.kind).toBe(SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS);
+    expect(result.params).toEqual({ amount: 12 });
   });
 
   it("deve substituir kind, name e params quando kind e params forem enviados juntos", async () => {

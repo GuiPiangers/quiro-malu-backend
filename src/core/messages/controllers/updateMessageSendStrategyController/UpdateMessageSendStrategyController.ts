@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
+import { buildValidatedUpdateMessageSendStrategyBody } from "../../http/validateMessageSendStrategyUpdateHttpInput";
 import {
   UpdateMessageSendStrategyDTO,
   UpdateMessageSendStrategyUseCase,
@@ -13,11 +14,13 @@ export class UpdateMessageSendStrategyController {
   async handle(request: Request, response: Response) {
     try {
       const { id } = request.params;
-      const body = request.body as Pick<
+      const rawBody = request.body as Pick<
         UpdateMessageSendStrategyDTO,
         "name" | "kind" | "params"
       >;
       const userId = request.user.id!;
+
+      const body = buildValidatedUpdateMessageSendStrategyBody(rawBody);
 
       const res = await this.updateMessageSendStrategyUseCase.execute({
         userId,

@@ -6,6 +6,7 @@ export const createMockSchedulingRepository =
     delete: jest.fn(),
     get: jest.fn(),
     listIdsByUserId: jest.fn(),
+    listPatientIdsByUserIdOrderBySchedulingCountDesc: jest.fn(),
     list: jest.fn(),
     qdtSchedulesByDay: jest.fn(),
     save: jest.fn(),

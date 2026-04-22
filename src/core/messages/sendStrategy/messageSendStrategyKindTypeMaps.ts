@@ -1,14 +1,21 @@
 import type { SendStrategyKind } from "./sendStrategyKind";
-import { SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS } from "./sendStrategyKind";
+import {
+  SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
+  SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+} from "./sendStrategyKind";
+
+type MessageSendStrategyAmountParamKinds =
+  | typeof SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS
+  | typeof SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS;
 
 export type MessageSendStrategyParamsByKind = {
-  [K in SendStrategyKind]: K extends typeof SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS
+  [K in SendStrategyKind]: K extends MessageSendStrategyAmountParamKinds
     ? { amount: number }
     : Record<string, unknown>;
 };
 
 export type MessageSendStrategyCreateParamsByKind = {
-  [K in SendStrategyKind]: K extends typeof SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS
+  [K in SendStrategyKind]: K extends MessageSendStrategyAmountParamKinds
     ? { amount: number }
     : Record<string, never>;
 };
