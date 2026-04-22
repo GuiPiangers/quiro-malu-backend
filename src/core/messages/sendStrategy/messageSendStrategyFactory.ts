@@ -9,7 +9,9 @@ import { SendMostRecentPatientsStrategy } from "./strategies/sendMostRecentPatie
 import {
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+  SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
 } from "./sendStrategyKind";
+import { SendSelectedListStrategy } from "./strategies/sendSelectedListStrategy";
 
 function persistedAmountOrThrow(
   kind: string,
@@ -51,6 +53,11 @@ export class MessageSendStrategyFactory {
         amount,
         this.schedulingRepository,
       );
+    }
+
+    if (row.kind === SEND_STRATEGY_KIND_SEND_SELECTED_LIST) {
+      const { patientIdList } = row.params as { patientIdList: string[] };
+      return new SendSelectedListStrategy(patientIdList);
     }
 
     throw new ApiError(`Tipo de estratégia não suportado: ${row.kind}`, 501);

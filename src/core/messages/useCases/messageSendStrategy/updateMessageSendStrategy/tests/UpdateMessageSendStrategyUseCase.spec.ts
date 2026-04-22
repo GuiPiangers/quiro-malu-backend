@@ -1,10 +1,18 @@
 import { createMockMessageSendStrategyRepository } from "../../../../../../repositories/_mocks/MessageSendStrategyRepositoryMock";
+import { createMockPatientRepository } from "../../../../../../repositories/_mocks/PatientRepositoryMock";
 import { ApiError } from "../../../../../../utils/ApiError";
 import {
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+  SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
 } from "../../../../sendStrategy/sendStrategyKind";
 import { UpdateMessageSendStrategyUseCase } from "../UpdateMessageSendStrategyUseCase";
+
+function createSut(repo: ReturnType<typeof createMockMessageSendStrategyRepository>) {
+  const patientRepo = createMockPatientRepository();
+  const sut = new UpdateMessageSendStrategyUseCase(repo, patientRepo);
+  return { sut, patientRepo };
+}
 
 const existingRow = {
   id: "s-1",
@@ -22,7 +30,7 @@ describe("UpdateMessageSendStrategyUseCase", () => {
       .mockResolvedValueOnce({ ...existingRow })
       .mockResolvedValueOnce({ ...existingRow, name: "Novo nome" });
 
-    const sut = new UpdateMessageSendStrategyUseCase(repo);
+    const { sut } = createSut(repo);
     const result = await sut.execute({
       userId: "user-1",
       strategyId: "s-1",
@@ -46,7 +54,7 @@ describe("UpdateMessageSendStrategyUseCase", () => {
         params: { amount: 30 },
       });
 
-    const sut = new UpdateMessageSendStrategyUseCase(repo);
+    const { sut } = createSut(repo);
     await sut.execute({
       userId: "user-1",
       strategyId: "s-1",
@@ -73,7 +81,7 @@ describe("UpdateMessageSendStrategyUseCase", () => {
         params: { amount: 12 },
       });
 
-    const sut = new UpdateMessageSendStrategyUseCase(repo);
+    const { sut } = createSut(repo);
     const result = await sut.execute({
       userId: "user-1",
       strategyId: "s-1",
@@ -91,6 +99,55 @@ describe("UpdateMessageSendStrategyUseCase", () => {
     expect(result.params).toEqual({ amount: 12 });
   });
 
+  it("deve atualizar para send_selected_list quando kind, name e params forem enviados juntos", async () => {
+    const repo = createMockMessageSendStrategyRepository();
+    repo.findByIdAndUserId
+      .mockResolvedValueOnce({ ...existingRow })
+      .mockResolvedValueOnce({
+        ...existingRow,
+        kind: SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
+        name: "Lista curada",
+        params: { patientIdList: ["a", "b"] },
+      });
+
+    const { sut, patientRepo } = createSut(repo);
+    patientRepo.countPatientsOwnedByUser.mockResolvedValue(2);
+
+    const result = await sut.execute({
+      userId: "user-1",
+      strategyId: "s-1",
+      kind: SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
+      name: "Lista curada",
+      params: { patientIdList: ["a", "b"] },
+    });
+
+    expect(repo.updateByIdAndUserId).toHaveBeenCalledWith("s-1", "user-1", {
+      kind: SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
+      name: "Lista curada",
+      params: { patientIdList: ["a", "b"] },
+    });
+    expect(result.kind).toBe(SEND_STRATEGY_KIND_SEND_SELECTED_LIST);
+    expect(result.params).toEqual({ patientIdList: ["a", "b"] });
+  });
+
+  it("deve rejeitar send_selected_list no update quando posse dos pacientes falhar", async () => {
+    const repo = createMockMessageSendStrategyRepository();
+    repo.findByIdAndUserId.mockResolvedValue({ ...existingRow });
+    const { sut, patientRepo } = createSut(repo);
+    patientRepo.countPatientsOwnedByUser.mockResolvedValue(0);
+
+    await expect(
+      sut.execute({
+        userId: "user-1",
+        strategyId: "s-1",
+        kind: SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
+        name: "Lista",
+        params: { patientIdList: ["x"] },
+      }),
+    ).rejects.toThrow(ApiError);
+    expect(repo.updateByIdAndUserId).not.toHaveBeenCalled();
+  });
+
   it("deve substituir kind, name e params quando kind e params forem enviados juntos", async () => {
     const repo = createMockMessageSendStrategyRepository();
     repo.findByIdAndUserId
@@ -101,7 +158,7 @@ describe("UpdateMessageSendStrategyUseCase", () => {
         params: { amount: 25 },
       });
 
-    const sut = new UpdateMessageSendStrategyUseCase(repo);
+    const { sut } = createSut(repo);
     const result = await sut.execute({
       userId: "user-1",
       strategyId: "s-1",
@@ -131,7 +188,7 @@ describe("UpdateMessageSendStrategyUseCase", () => {
         params: { amount: 20 },
       });
 
-    const sut = new UpdateMessageSendStrategyUseCase(repo);
+    const { sut } = createSut(repo);
     await sut.execute({
       userId: "user-1",
       strategyId: "s-1",
@@ -151,7 +208,7 @@ describe("UpdateMessageSendStrategyUseCase", () => {
     const repo = createMockMessageSendStrategyRepository();
     repo.findByIdAndUserId.mockResolvedValue({ ...existingRow });
 
-    const sut = new UpdateMessageSendStrategyUseCase(repo);
+    const { sut } = createSut(repo);
 
     await expect(
       sut.execute({
@@ -167,7 +224,7 @@ describe("UpdateMessageSendStrategyUseCase", () => {
     const repo = createMockMessageSendStrategyRepository();
     repo.findByIdAndUserId.mockResolvedValue({ ...existingRow });
 
-    const sut = new UpdateMessageSendStrategyUseCase(repo);
+    const { sut } = createSut(repo);
 
     await expect(
       sut.execute({
@@ -183,7 +240,7 @@ describe("UpdateMessageSendStrategyUseCase", () => {
     const repo = createMockMessageSendStrategyRepository();
     repo.findByIdAndUserId.mockResolvedValue({ ...existingRow });
 
-    const sut = new UpdateMessageSendStrategyUseCase(repo);
+    const { sut } = createSut(repo);
     const result = await sut.execute({ userId: "user-1", strategyId: "s-1" });
 
     expect(repo.updateByIdAndUserId).not.toHaveBeenCalled();
@@ -201,7 +258,7 @@ describe("UpdateMessageSendStrategyUseCase", () => {
     const repo = createMockMessageSendStrategyRepository();
     repo.findByIdAndUserId.mockResolvedValue(null);
 
-    const sut = new UpdateMessageSendStrategyUseCase(repo);
+    const { sut } = createSut(repo);
 
     await expect(
       sut.execute({ userId: "user-1", strategyId: "s-x", name: "X" }),
@@ -213,7 +270,7 @@ describe("UpdateMessageSendStrategyUseCase", () => {
     const repo = createMockMessageSendStrategyRepository();
     repo.findByIdAndUserId.mockResolvedValue({ ...existingRow });
 
-    const sut = new UpdateMessageSendStrategyUseCase(repo);
+    const { sut } = createSut(repo);
 
     await expect(
       sut.execute({ userId: "user-1", strategyId: "s-1", name: "   " }),
@@ -225,7 +282,7 @@ describe("UpdateMessageSendStrategyUseCase", () => {
     const repo = createMockMessageSendStrategyRepository();
     repo.findByIdAndUserId.mockResolvedValue({ ...existingRow });
 
-    const sut = new UpdateMessageSendStrategyUseCase(repo);
+    const { sut } = createSut(repo);
 
     await expect(
       sut.execute({
@@ -242,7 +299,7 @@ describe("UpdateMessageSendStrategyUseCase", () => {
     const repo = createMockMessageSendStrategyRepository();
     repo.findByIdAndUserId.mockResolvedValue({ ...existingRow });
 
-    const sut = new UpdateMessageSendStrategyUseCase(repo);
+    const { sut } = createSut(repo);
 
     await expect(
       sut.execute({

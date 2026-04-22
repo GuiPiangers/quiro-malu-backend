@@ -115,4 +115,22 @@ export class InMemoryPatientRepository implements IPatientRepository {
   async getMostFrequent(userId: string, limit: number): Promise<PatientDTO[]> {
     return this.getMostRecent(userId, limit);
   }
+
+  async countPatientsOwnedByUser(data: {
+    userId: string;
+    patientIds: string[];
+  }): Promise<number> {
+    if (data.patientIds.length === 0) {
+      return 0;
+    }
+    const unique = [...new Set(data.patientIds)];
+    let n = 0;
+    for (const id of unique) {
+      const found = this.dbPatients.some(
+        (p) => p.userId === data.userId && p.id === id,
+      );
+      if (found) n += 1;
+    }
+    return n;
+  }
 }

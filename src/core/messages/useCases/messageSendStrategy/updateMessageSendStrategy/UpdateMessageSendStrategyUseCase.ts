@@ -2,14 +2,17 @@ import {
   IMessageSendStrategyRepository,
   type UpdateMessageSendStrategyPatch,
 } from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
+import { IPatientRepository } from "../../../../../repositories/patient/IPatientRepository";
 import { ApiError } from "../../../../../utils/ApiError";
 import { MessageSendStrategyDisplayName } from "../../../models/MessageSendStrategyDisplayName";
 import { SendMostFrequencyPatientsMessageSendStrategy } from "../../../models/SendMostFrequencyPatientsMessageSendStrategy";
 import { SendMostRecentPatientsMessageSendStrategy } from "../../../models/SendMostRecentPatientsMessageSendStrategy";
+import { SendSelectedListMessageSendStrategy } from "../../../models/SendSelectedListMessageSendStrategy";
 import type { MessageSendStrategyCreateParamsByKind } from "../../../sendStrategy/messageSendStrategyKindTypeMaps";
 import {
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+  SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
   type SendStrategyKind,
 } from "../../../sendStrategy/sendStrategyKind";
 import type { ListedMessageSendStrategyDTO } from "../listMessageSendStrategy/ListMessageSendStrategyUseCase";
@@ -43,7 +46,25 @@ function toListedDTO(row: {
 export class UpdateMessageSendStrategyUseCase {
   constructor(
     private readonly messageSendStrategyRepository: IMessageSendStrategyRepository,
+    private readonly patientRepository: IPatientRepository,
   ) {}
+
+  private async assertAllPatientsOwnedByUser(
+    userId: string,
+    patientIdList: readonly string[],
+  ): Promise<void> {
+    const owned = await this.patientRepository.countPatientsOwnedByUser({
+      userId,
+      patientIds: [...patientIdList],
+    });
+    if (owned !== patientIdList.length) {
+      throw new ApiError(
+        "Um ou mais pacientes não existem ou não pertencem ao usuário",
+        400,
+        "params.patientIdList",
+      );
+    }
+  }
 
   async execute(
     dto: UpdateMessageSendStrategyDTO,
@@ -102,6 +123,23 @@ export class UpdateMessageSendStrategyUseCase {
           patch.kind = entity.kind;
           patch.name = entity.displayName.value;
           patch.params = { amount: entity.amount };
+          break;
+        }
+        case SEND_STRATEGY_KIND_SEND_SELECTED_LIST: {
+          const params =
+            dto.params as MessageSendStrategyCreateParamsByKind[typeof SEND_STRATEGY_KIND_SEND_SELECTED_LIST];
+          const displayName = new MessageSendStrategyDisplayName(
+            typeof dto.name === "string" ? dto.name : "",
+          );
+          await this.assertAllPatientsOwnedByUser(dto.userId, params.patientIdList);
+          const entity = new SendSelectedListMessageSendStrategy({
+            id: existing.id,
+            displayName,
+            patientIdList: params.patientIdList,
+          });
+          patch.kind = entity.kind;
+          patch.name = entity.displayName.value;
+          patch.params = { patientIdList: [...entity.patientIdList] };
           break;
         }
         default:

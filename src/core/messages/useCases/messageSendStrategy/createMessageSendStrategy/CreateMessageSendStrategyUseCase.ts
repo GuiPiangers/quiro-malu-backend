@@ -1,12 +1,15 @@
 import { Id } from "../../../../shared/Id";
 import { ApiError } from "../../../../../utils/ApiError";
 import { IMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
+import { IPatientRepository } from "../../../../../repositories/patient/IPatientRepository";
 import { MessageSendStrategyDisplayName } from "../../../models/MessageSendStrategyDisplayName";
 import { SendMostFrequencyPatientsMessageSendStrategy } from "../../../models/SendMostFrequencyPatientsMessageSendStrategy";
 import { SendMostRecentPatientsMessageSendStrategy } from "../../../models/SendMostRecentPatientsMessageSendStrategy";
+import { SendSelectedListMessageSendStrategy } from "../../../models/SendSelectedListMessageSendStrategy";
 import {
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+  SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
 } from "../../../sendStrategy/sendStrategyKind";
 import type {
   CreateMessageSendStrategyDTO,
@@ -23,7 +26,25 @@ export type {
 export class CreateMessageSendStrategyUseCase {
   constructor(
     private readonly messageSendStrategyRepository: IMessageSendStrategyRepository,
+    private readonly patientRepository: IPatientRepository,
   ) {}
+
+  private async assertAllPatientsOwnedByUser(
+    userId: string,
+    patientIdList: readonly string[],
+  ): Promise<void> {
+    const owned = await this.patientRepository.countPatientsOwnedByUser({
+      userId,
+      patientIds: [...patientIdList],
+    });
+    if (owned !== patientIdList.length) {
+      throw new ApiError(
+        "Um ou mais pacientes não existem ou não pertencem ao usuário",
+        400,
+        "params.patientIdList",
+      );
+    }
+  }
 
   async execute(dto: CreateMessageSendStrategyDTO): Promise<MessageSendStrategyDTO> {
     switch (dto.kind) {
@@ -63,6 +84,25 @@ export class CreateMessageSendStrategyUseCase {
           name: entity.displayName.value,
           kind: entity.kind,
           params: { amount: entity.amount },
+        });
+
+        return entity.getApiDTO(dto.userId, 0);
+      }
+      case SEND_STRATEGY_KIND_SEND_SELECTED_LIST: {
+        const { patientIdList } = dto.params;
+        const displayName = new MessageSendStrategyDisplayName(dto.name);
+        await this.assertAllPatientsOwnedByUser(dto.userId, patientIdList);
+        const entity = new SendSelectedListMessageSendStrategy({
+          displayName,
+          patientIdList,
+        });
+
+        await this.messageSendStrategyRepository.save({
+          id: entity.id,
+          userId: dto.userId,
+          name: entity.displayName.value,
+          kind: entity.kind,
+          params: { patientIdList: [...entity.patientIdList] },
         });
 
         return entity.getApiDTO(dto.userId, 0);

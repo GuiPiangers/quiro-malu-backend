@@ -1,9 +1,11 @@
 import { ApiError } from "../../../utils/ApiError";
 import { MessageSendStrategyDisplayName } from "../models/MessageSendStrategyDisplayName";
 import type { UpdateMessageSendStrategyDTO } from "../useCases/messageSendStrategy/updateMessageSendStrategy/UpdateMessageSendStrategyUseCase";
+import { parseHttpPatientIdList } from "./messageSendStrategyPatientListHttp";
 import {
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+  SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
   SEND_STRATEGY_KINDS,
   type SendStrategyKind,
 } from "../sendStrategy/sendStrategyKind";
@@ -44,6 +46,10 @@ function isAmountStrategyKind(kind: SendStrategyKind): boolean {
   );
 }
 
+function isSelectedListStrategyKind(kind: SendStrategyKind): boolean {
+  return kind === SEND_STRATEGY_KIND_SEND_SELECTED_LIST;
+}
+
 export function buildValidatedUpdateMessageSendStrategyBody(
   body: Pick<UpdateMessageSendStrategyDTO, "name" | "kind" | "params">,
 ): Pick<UpdateMessageSendStrategyDTO, "name" | "kind" | "params"> {
@@ -59,10 +65,22 @@ export function buildValidatedUpdateMessageSendStrategyBody(
 
   if (hasKind && hasParams) {
     const kind = assertSendStrategyKind(body.kind);
+    if (isSelectedListStrategyKind(kind)) {
+      const paramsBody = body.params as { patientIdList?: unknown } | undefined;
+      const patientIdList = parseHttpPatientIdList(paramsBody?.patientIdList);
+      const nameRaw = typeof body.name === "string" ? body.name : "";
+      const displayName = new MessageSendStrategyDisplayName(nameRaw);
+      return {
+        kind: SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
+        params: { patientIdList },
+        name: displayName.value,
+      };
+    }
     if (!isAmountStrategyKind(kind)) {
       throw new ApiError("Tipo de estratégia ainda não suportado", 501, "kind");
     }
-    const amount = parseHttpAmount(body.params?.amount);
+    const amountParams = body.params as { amount?: unknown } | undefined;
+    const amount = parseHttpAmount(amountParams?.amount);
     const nameRaw = typeof body.name === "string" ? body.name : "";
     const displayName = new MessageSendStrategyDisplayName(nameRaw);
     return {

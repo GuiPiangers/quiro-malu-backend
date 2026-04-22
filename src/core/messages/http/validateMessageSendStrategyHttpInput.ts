@@ -4,9 +4,11 @@ import type {
   CreateMessageSendStrategyDTO,
   CreateMessageSendStrategyHttpBody,
 } from "../sendStrategy/messageSendStrategyKindTypeMaps";
+import { parseHttpPatientIdList } from "./messageSendStrategyPatientListHttp";
 import {
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+  SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
   type SendStrategyKind,
 } from "../sendStrategy/sendStrategyKind";
 
@@ -36,19 +38,37 @@ function isAmountStrategyKind(kind: SendStrategyKind): boolean {
   );
 }
 
+function isSelectedListStrategyKind(kind: SendStrategyKind): boolean {
+  return kind === SEND_STRATEGY_KIND_SEND_SELECTED_LIST;
+}
+
 export function buildValidatedCreateMessageSendStrategyDTO(
   userId: string,
   body: CreateMessageSendStrategyHttpBody,
 ): CreateMessageSendStrategyDTO {
   const kind = body.kind ?? SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS;
   const nameRaw = typeof body.name === "string" ? body.name : "";
+
+  if (isSelectedListStrategyKind(kind)) {
+    const displayName = new MessageSendStrategyDisplayName(nameRaw);
+    const paramsBody = body.params as { patientIdList?: unknown } | undefined;
+    const patientIdList = parseHttpPatientIdList(paramsBody?.patientIdList);
+    return {
+      userId,
+      kind: SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
+      name: displayName.value,
+      params: { patientIdList },
+    };
+  }
+
   const displayName = new MessageSendStrategyDisplayName(nameRaw);
 
   if (!isAmountStrategyKind(kind)) {
     throw new ApiError("Tipo de estratégia ainda não suportado", 501, "kind");
   }
 
-  const amount = parseHttpAmount(body.params?.amount);
+  const amountParams = body.params as { amount?: unknown } | undefined;
+  const amount = parseHttpAmount(amountParams?.amount);
   const params = { amount };
 
   if (kind === SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS) {

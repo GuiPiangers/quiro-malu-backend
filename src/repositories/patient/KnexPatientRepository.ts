@@ -198,6 +198,27 @@ export class KnexPatientRepository implements IPatientRepository {
       .limit(safeLimit);
   }
 
+  async countPatientsOwnedByUser(data: {
+    userId: string;
+    patientIds: string[];
+  }): Promise<number> {
+    if (data.patientIds.length === 0) {
+      return 0;
+    }
+
+    try {
+      const [row] = await Knex(ETableNames.PATIENTS)
+        .where({ userId: data.userId })
+        .whereIn("id", data.patientIds)
+        .count("id as total");
+
+      const n = Number((row as { total?: number | string })?.total ?? 0);
+      return Number.isFinite(n) ? n : 0;
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
+  }
+
   async getById(patientId: string, userId: string): Promise<PatientDTO[]> {
     const result: PatientDTO = await Knex(ETableNames.PATIENTS)
       .first("*", "created_at AS createAt")

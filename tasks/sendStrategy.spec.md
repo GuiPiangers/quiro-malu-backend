@@ -71,7 +71,7 @@ Ou seja: **campanhas diferentes** → regras **podem** ser diferentes. Já **doi
 |--------|-----------|
 | `send_most_recent_patients` | `amount` inteiro 1–50 |
 | `send_most_frequency_patients` | `amount` inteiro 1–50 |
-| `send_selected_list` | `patientIdList` array; tamanho máximo definir (sugestão: **500** ids por requisição; documentar). Todos os ids devem existir e `patient.userId === strategy.userId`. |
+| `send_selected_list` | `patientIdList` array; tamanho máximo **50** ids. Todos os ids devem existir e `patient.userId === strategy.userId`. |
 | `exclude_patients_list` | Idem validação de posse e limite |
 
 ## Onde aplicar a estratégia no código (decisão: um único ponto)

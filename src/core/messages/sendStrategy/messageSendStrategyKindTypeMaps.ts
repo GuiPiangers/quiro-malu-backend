@@ -2,22 +2,30 @@ import type { SendStrategyKind } from "./sendStrategyKind";
 import {
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+  SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
 } from "./sendStrategyKind";
 
 type MessageSendStrategyAmountParamKinds =
   | typeof SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS
   | typeof SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS;
 
+type MessageSendStrategySelectedListParamKinds =
+  typeof SEND_STRATEGY_KIND_SEND_SELECTED_LIST;
+
 export type MessageSendStrategyParamsByKind = {
   [K in SendStrategyKind]: K extends MessageSendStrategyAmountParamKinds
     ? { amount: number }
-    : Record<string, unknown>;
+    : K extends MessageSendStrategySelectedListParamKinds
+      ? { patientIdList: string[] }
+      : Record<string, unknown>;
 };
 
 export type MessageSendStrategyCreateParamsByKind = {
   [K in SendStrategyKind]: K extends MessageSendStrategyAmountParamKinds
     ? { amount: number }
-    : Record<string, never>;
+    : K extends MessageSendStrategySelectedListParamKinds
+      ? { patientIdList: string[] }
+      : Record<string, never>;
 };
 
 export type CreateMessageSendStrategyDTO = {

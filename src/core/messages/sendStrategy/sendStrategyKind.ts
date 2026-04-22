@@ -4,10 +4,13 @@ export const SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS =
 export const SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS =
   "send_most_frequency_patients" as const;
 
+export const SEND_STRATEGY_KIND_SEND_SELECTED_LIST =
+  "send_selected_list" as const;
+
 export const SEND_STRATEGY_KINDS = [
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
-  "send_selected_list",
+  SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
   "exclude_patients_list",
 ] as const;
 
