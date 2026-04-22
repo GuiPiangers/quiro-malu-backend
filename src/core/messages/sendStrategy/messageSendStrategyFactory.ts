@@ -11,11 +11,6 @@ import {
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
 } from "./sendStrategyKind";
 
-export type MessageSendStrategyFactoryDeps = {
-  patientRepository: IPatientRepository;
-  schedulingRepository: ISchedulingRepository;
-};
-
 function persistedAmountOrThrow(
   kind: string,
   params: Record<string, unknown>,
@@ -33,10 +28,12 @@ function persistedAmountOrThrow(
 }
 
 export class MessageSendStrategyFactory {
-  create(
-    row: MessageSendStrategyRow,
-    deps: MessageSendStrategyFactoryDeps,
-  ): IMessageSendStrategy {
+  constructor(
+    private readonly patientRepository: IPatientRepository,
+    private readonly schedulingRepository: ISchedulingRepository,
+  ) {}
+
+  create(row: MessageSendStrategyRow): IMessageSendStrategy {
     if (row.kind === SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS) {
       const amount =
         SendMostRecentPatientsMessageSendStrategy.amountFromPersistedParams(
@@ -44,7 +41,7 @@ export class MessageSendStrategyFactory {
         );
       return new SendMostRecentPatientsStrategy(
         amount,
-        deps.patientRepository,
+        this.patientRepository,
       );
     }
 
@@ -52,7 +49,7 @@ export class MessageSendStrategyFactory {
       const amount = persistedAmountOrThrow(row.kind, row.params);
       return new SendMostFrequencyPatientsStrategy(
         amount,
-        deps.schedulingRepository,
+        this.schedulingRepository,
       );
     }
 
