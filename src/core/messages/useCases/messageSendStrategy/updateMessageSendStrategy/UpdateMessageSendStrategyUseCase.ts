@@ -97,7 +97,7 @@ export class UpdateMessageSendStrategyUseCase {
           const params =
             dto.params as MessageSendStrategyCreateParamsByKind[typeof SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS];
           const displayName = new MessageSendStrategyDisplayName(
-            typeof dto.name === "string" ? dto.name : "",
+            dto.name ?? "",
           );
           const entity = new SendMostRecentPatientsMessageSendStrategy({
             id: existing.id,
@@ -113,7 +113,7 @@ export class UpdateMessageSendStrategyUseCase {
           const params =
             dto.params as MessageSendStrategyCreateParamsByKind[typeof SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS];
           const displayName = new MessageSendStrategyDisplayName(
-            typeof dto.name === "string" ? dto.name : "",
+            dto.name ?? "",
           );
           const entity = new SendMostFrequencyPatientsMessageSendStrategy({
             id: existing.id,
@@ -129,17 +129,17 @@ export class UpdateMessageSendStrategyUseCase {
           const params =
             dto.params as MessageSendStrategyCreateParamsByKind[typeof SEND_STRATEGY_KIND_SEND_SELECTED_LIST];
           const displayName = new MessageSendStrategyDisplayName(
-            typeof dto.name === "string" ? dto.name : "",
+            dto.name ?? "",
           );
-          await this.assertAllPatientsOwnedByUser(dto.userId, params.patientIdList);
           const entity = new SendSelectedListMessageSendStrategy({
             id: existing.id,
             displayName,
             patientIdList: params.patientIdList,
           });
+          await this.assertAllPatientsOwnedByUser(dto.userId, entity.patientIdList);
           patch.kind = entity.kind;
           patch.name = entity.displayName.value;
-          patch.params = { patientIdList: [...entity.patientIdList] };
+          patch.params = { patientIdList: entity.patientIdList };
           break;
         }
         default:
@@ -149,7 +149,7 @@ export class UpdateMessageSendStrategyUseCase {
 
     if (dto.name !== undefined && !hasKind) {
       const displayName = new MessageSendStrategyDisplayName(
-        typeof dto.name === "string" ? dto.name : "",
+        dto.name ?? "",
       );
       patch.name = displayName.value;
     }

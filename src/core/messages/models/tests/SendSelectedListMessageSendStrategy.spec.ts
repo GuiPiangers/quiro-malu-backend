@@ -43,4 +43,12 @@ describe("SendSelectedListMessageSendStrategy", () => {
         }),
     ).toThrow(ApiError);
   });
+
+  it("remove ids duplicados preservando a ordem da primeira ocorrência", () => {
+    const entity = new SendSelectedListMessageSendStrategy({
+      displayName,
+      patientIdList: ["p-1", "p-2", "p-1", "p-3", "p-2"],
+    });
+    expect([...entity.patientIdList]).toEqual(["p-1", "p-2", "p-3"]);
+  });
 });

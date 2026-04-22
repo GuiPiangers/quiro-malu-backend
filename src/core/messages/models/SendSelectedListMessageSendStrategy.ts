@@ -19,8 +19,9 @@ export class SendSelectedListMessageSendStrategy extends Entity {
   constructor(dto: SendSelectedListMessageSendStrategyDTO) {
     super(dto.id);
     this.displayName = dto.displayName;
-    SendSelectedListMessageSendStrategy.assertPatientIdListBounds(dto.patientIdList);
-    this.patientIdList = dto.patientIdList;
+    const uniqueIds = [...new Set(dto.patientIdList)];
+    SendSelectedListMessageSendStrategy.assertPatientIdListBounds(uniqueIds);
+    this.patientIdList = uniqueIds;
   }
 
   private static assertPatientIdListBounds(list: readonly string[]): void {

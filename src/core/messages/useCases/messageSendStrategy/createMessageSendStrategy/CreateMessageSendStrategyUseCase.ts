@@ -49,11 +49,9 @@ export class CreateMessageSendStrategyUseCase {
   async execute(dto: CreateMessageSendStrategyDTO): Promise<MessageSendStrategyDTO> {
     switch (dto.kind) {
       case SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS: {
-        const id = new Id().value;
         const { amount } = dto.params;
         const displayName = new MessageSendStrategyDisplayName(dto.name);
         const entity = new SendMostRecentPatientsMessageSendStrategy({
-          id,
           displayName,
           amount,
         });
@@ -69,11 +67,9 @@ export class CreateMessageSendStrategyUseCase {
         return entity.getApiDTO(dto.userId, 0);
       }
       case SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS: {
-        const id = new Id().value;
         const { amount } = dto.params;
         const displayName = new MessageSendStrategyDisplayName(dto.name);
         const entity = new SendMostFrequencyPatientsMessageSendStrategy({
-          id,
           displayName,
           amount,
         });
@@ -91,11 +87,11 @@ export class CreateMessageSendStrategyUseCase {
       case SEND_STRATEGY_KIND_SEND_SELECTED_LIST: {
         const { patientIdList } = dto.params;
         const displayName = new MessageSendStrategyDisplayName(dto.name);
-        await this.assertAllPatientsOwnedByUser(dto.userId, patientIdList);
         const entity = new SendSelectedListMessageSendStrategy({
           displayName,
           patientIdList,
         });
+        await this.assertAllPatientsOwnedByUser(dto.userId, entity.patientIdList);
 
         await this.messageSendStrategyRepository.save({
           id: entity.id,
