@@ -20,13 +20,7 @@ export type MessageSendStrategyParamsByKind = {
       : Record<string, unknown>;
 };
 
-export type MessageSendStrategyCreateParamsByKind = {
-  [K in SendStrategyKind]: K extends MessageSendStrategyAmountParamKinds
-    ? { amount: number }
-    : K extends MessageSendStrategySelectedListParamKinds
-      ? { patientIdList: string[] }
-      : Record<string, never>;
-};
+export type MessageSendStrategyCreateParamsByKind = MessageSendStrategyParamsByKind
 
 export type CreateMessageSendStrategyDTO = {
   [K in SendStrategyKind]: {
