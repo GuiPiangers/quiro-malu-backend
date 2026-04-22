@@ -13,22 +13,6 @@ import {
 } from "./sendStrategyKind";
 import { SendSelectedListStrategy } from "./strategies/sendSelectedListStrategy";
 
-function persistedAmountOrThrow(
-  kind: string,
-  params: Record<string, unknown>,
-): number {
-  const raw = params.amount;
-  const n = typeof raw === "number" ? raw : Number(raw);
-  if (!Number.isInteger(n) || n < 1 || n > 50) {
-    throw new ApiError(
-      `params.amount inválido na estratégia persistida (${kind})`,
-      500,
-      "params.amount",
-    );
-  }
-  return n;
-}
-
 export class MessageSendStrategyFactory {
   constructor(
     private readonly patientRepository: IPatientRepository,
@@ -48,7 +32,7 @@ export class MessageSendStrategyFactory {
     }
 
     if (row.kind === SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS) {
-      const amount = persistedAmountOrThrow(row.kind, row.params);
+      const amount = row.params.amount as number;
       return new SendMostFrequencyPatientsStrategy(
         amount,
         this.schedulingRepository,
