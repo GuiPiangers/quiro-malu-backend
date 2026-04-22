@@ -18,6 +18,10 @@
   - Enviar a response como um Objeto JSON.
   - Utilizar a função `responseError` de `src/utils/ResponseError.ts` para enviar uma resposta de erro padrão no catch do `try/catch`
 
+### Validação de entrada (contrato com use cases e entidades)
+- O **controller** é responsável por garantir que o payload e os parâmetros de rota estão **completos e coerentes** antes de chamar o caso de uso: campos obrigatórios, tipos aceitáveis para a API, normalização (ex.: `trim`), e rejeição com `400` quando faltar algo essencial.
+- O caso de uso e a entidade **presumem** esse contrato e não devem duplicar essa validação “de formulário”.
+
 **Exemplo de controller**
 ```ts
 export class CreatePatientController {

@@ -77,16 +77,18 @@ Controller:
 - Keep `handle(req, res)` thin: parse input, call `useCase.execute`, return JSON.
 - Wrap with `try/catch` and always use `responseError(res, err)`.
 - Wire route in `src/router.ts` (REST naming) and add `authMiddleware` when required.
+- **Validate/normalize HTTP input here** (required fields, acceptable types); use cases and entities presume the DTO is already contract-correct.
 
 UseCase:
 - Constructor receives repository interfaces (`I*Repository`), not concrete classes.
 - `execute(dto, userId?)` returns output DTO (or entity DTO) consistently.
-- Use entities + TinyTypes for validation; throw `ApiError` for invalid inputs.
+- **Do not** redundantly re-check DTO field presence/types “because HTTP”; apply **business rules** only (duplicates, illegal state, etc.) and use entities/tiny types for **domain** invariants.
 - Tests colocated under `src/core/<module>/useCases/<foo>/tests/*.spec.ts`; reuse mocks from `src/repositories/_mocks`.
 
 Entity:
 - `extends Entity` (`src/core/shared/Entity.ts`), ctor receives a DTO-like object.
 - Expose `getDTO()`; keep domain logic here when appropriate.
+- **Assume** ctor input was validated at the controller; avoid defensive HTTP-shape checks; domain rules (via tiny types / entity logic) stay here.
 
 Repository:
 - Interface first (prefer one-parameter object when it improves evolvability).
