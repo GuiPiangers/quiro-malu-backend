@@ -30,6 +30,10 @@ export interface IPatientRepository {
 
   getMostRecent(userId: string, limit: number): Promise<PatientDTO[]>;
   getMostFrequent(userId: string, limit: number): Promise<PatientDTO[]>;
+  listPatientsById(data: {
+    userId: string;
+    patientIds: string[];
+  }): Promise<PatientDTO[]>;
 
   countPatientsOwnedByUser(data: {
     userId: string;

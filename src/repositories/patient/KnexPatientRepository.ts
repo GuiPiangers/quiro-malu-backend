@@ -198,6 +198,30 @@ export class KnexPatientRepository implements IPatientRepository {
       .limit(safeLimit);
   }
 
+  async listPatientsById(data: {
+    userId: string;
+    patientIds: string[];
+  }): Promise<PatientDTO[]> {
+    if (data.patientIds.length === 0) {
+      return [];
+    }
+
+    const rows = await Knex(ETableNames.PATIENTS)
+      .select("*")
+      .where({ userId: data.userId })
+      .whereIn("id", data.patientIds);
+
+    const orderIndex = new Map(
+      data.patientIds.map((id, index) => [id, index]),
+    );
+
+    return (rows as PatientDTO[]).sort((a, b) => {
+      const ia = a.id !== undefined ? orderIndex.get(a.id) ?? 0 : 0;
+      const ib = b.id !== undefined ? orderIndex.get(b.id) ?? 0 : 0;
+      return ia - ib;
+    });
+  }
+
   async countPatientsOwnedByUser(data: {
     userId: string;
     patientIds: string[];

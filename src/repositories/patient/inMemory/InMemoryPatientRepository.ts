@@ -116,6 +116,30 @@ export class InMemoryPatientRepository implements IPatientRepository {
     return this.getMostRecent(userId, limit);
   }
 
+  async listPatientsById(data: {
+    userId: string;
+    patientIds: string[];
+  }): Promise<PatientDTO[]> {
+    if (data.patientIds.length === 0) {
+      return [];
+    }
+
+    const byId = new Map(
+      this.dbPatients
+        .filter(
+          (p) =>
+            p.userId === data.userId &&
+            p.id !== undefined &&
+            data.patientIds.includes(p.id),
+        )
+        .map((p) => [p.id as string, p] as const),
+    );
+
+    return data.patientIds
+      .map((id) => byId.get(id))
+      .filter((p): p is InMemoryPatient => p !== undefined);
+  }
+
   async countPatientsOwnedByUser(data: {
     userId: string;
     patientIds: string[];
