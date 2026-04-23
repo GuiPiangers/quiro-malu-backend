@@ -29,7 +29,6 @@ export interface IPatientRepository {
   delete(patientId: string, userId: string): Promise<void>;
 
   getMostRecent(userId: string, limit: number): Promise<PatientDTO[]>;
-  getMostFrequent(userId: string, limit: number): Promise<PatientDTO[]>;
   listPatientsById(data: {
     userId: string;
     patientIds: string[];

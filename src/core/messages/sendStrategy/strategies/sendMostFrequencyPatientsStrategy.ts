@@ -16,6 +16,7 @@ export class SendMostFrequencyPatientsStrategy implements IMessageSendStrategy {
         ctx.userId,
         this.amount,
       );
+
     const set = new Set(ids);
     return set.has(ctx.patientId);
   }

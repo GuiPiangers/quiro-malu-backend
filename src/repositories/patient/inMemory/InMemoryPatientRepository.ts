@@ -112,10 +112,6 @@ export class InMemoryPatientRepository implements IPatientRepository {
       .slice(0, safeLimit);
   }
 
-  async getMostFrequent(userId: string, limit: number): Promise<PatientDTO[]> {
-    return this.getMostRecent(userId, limit);
-  }
-
   async listPatientsById(data: {
     userId: string;
     patientIds: string[];

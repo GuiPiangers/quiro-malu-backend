@@ -13,7 +13,6 @@ export const createMockPatientRepository =
     saveMany: jest.fn(),
     getByBirthMonthAndDay: jest.fn(),
     getMostRecent: jest.fn(),
-    getMostFrequent: jest.fn(),
     listPatientsById: jest.fn(),
     countPatientsOwnedByUser: jest.fn(),
   });

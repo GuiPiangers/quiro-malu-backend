@@ -1,5 +1,6 @@
 import { IMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
 import { IPatientRepository } from "../../../../../repositories/patient/IPatientRepository";
+import { ISchedulingRepository } from "../../../../../repositories/scheduling/ISchedulingRepository";
 import { ApiError } from "../../../../../utils/ApiError";
 import type { PatientDTO } from "../../../../patients/models/Patient";
 import {
@@ -40,6 +41,7 @@ export class GetMessageSendStrategyUseCase {
   constructor(
     private readonly messageSendStrategyRepository: IMessageSendStrategyRepository,
     private readonly patientRepository: IPatientRepository,
+    private readonly schedulingRepository: ISchedulingRepository,
   ) {}
 
   async execute(dto: GetMessageSendStrategyDTO): Promise<GetMessageSendStrategyOutput> {
@@ -71,10 +73,18 @@ export class GetMessageSendStrategyUseCase {
         return list.map(patientToView);
       }
       case SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS: {
-        const list = await this.patientRepository.getMostFrequent(
+        const patientIds =
+          await this.schedulingRepository.listPatientIdsByUserIdOrderBySchedulingCountDesc(
+            userId,
+            strategy.params.amount,
+          );
+        if (patientIds.length === 0) {
+          return [];
+        }
+        const list = await this.patientRepository.listPatientsById({
           userId,
-          strategy.params.amount,
-        );
+          patientIds,
+        });
         return list.map(patientToView);
       }
       case SEND_STRATEGY_KIND_SEND_SELECTED_LIST:

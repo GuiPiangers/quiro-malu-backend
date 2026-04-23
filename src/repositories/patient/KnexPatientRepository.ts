@@ -180,24 +180,6 @@ export class KnexPatientRepository implements IPatientRepository {
       .limit(safeLimit);
   }
 
-  async getMostFrequent(userId: string, limit: number): Promise<PatientDTO[]> {
-    const safeLimit = Math.min(Math.max(limit, 0), 100);
-
-    const schedulesCountSubquery = Knex(ETableNames.SCHEDULES)
-      .select("patientId")
-      .count("id as qtd")
-      .where({ userId })
-      .groupBy("patientId")
-      .as("s_count");
-
-    return await Knex(`${ETableNames.PATIENTS} as p`)
-      .join(schedulesCountSubquery, "p.id", "s_count.patientId")
-      .select("p.*")
-      .where("p.userId", userId)
-      .orderBy("s_count.qtd", "desc")
-      .limit(safeLimit);
-  }
-
   async listPatientsById(data: {
     userId: string;
     patientIds: string[];
