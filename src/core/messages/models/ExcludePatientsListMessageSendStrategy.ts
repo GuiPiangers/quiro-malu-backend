@@ -37,19 +37,7 @@ export class ExcludePatientsListMessageSendStrategy extends Entity {
     return SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST;
   }
 
-  getApiDTO(
-    userId: string,
-    campaignBindingsCount: number,
-  ): MessageSendStrategyDTOForKind<
-    typeof SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST
-  > {
-    return {
-      id: this.id,
-      userId,
-      name: this.displayName.value,
-      kind: SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
-      params: { patientIdList: [...this.patientIdList] },
-      campaignBindingsCount,
-    };
+  getDTO() {
+    return { id: this.id, name: this.displayName.value, kind: this.kind, params: { patientIdList: [...this.patientIdList] } };
   }
 }

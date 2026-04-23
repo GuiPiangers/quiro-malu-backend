@@ -51,7 +51,7 @@ Seguir `docs/CONTROLLER_GUIDE.md`, `docs/USECASE_GUIDE.md`, `docs/ENTITY_GUIDE.m
 
 2.1. Criar **`ExcludePatientsListMessageSendStrategy`** (ou nome alinhado ao padrão do módulo) em `src/core/messages/models/`:
 
-- Espelho estrutural de **`SendSelectedListMessageSendStrategy`** (`displayName`, `patientIdList`, `get kind`, `getApiDTO`).
+- Espelho estrutural de **`SendSelectedListMessageSendStrategy`** (`displayName`, `patientIdList`, `get kind`, `getDTO`).
 - `get kind` → `SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST`.
 
 2.2. Reaproveitar invariantes comuns (dedupe, limites) **só onde já existir padrão** para lista selecionada — evitar três cópias divergentes da mesma regra.

@@ -23,17 +23,7 @@ export class SendMostFrequencyPatientsMessageSendStrategy extends Entity {
     return SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS;
   }
 
-  getApiDTO(
-    userId: string,
-    campaignBindingsCount: number,
-  ): MessageSendStrategyDTOForKind<typeof SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS> {
-    return {
-      id: this.id,
-      userId,
-      name: this.displayName.value,
-      kind: SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
-      params: { amount: this.amount },
-      campaignBindingsCount,
-    };
+  getDTO() {
+    return { id: this.id, name: this.displayName.value, kind: this.kind, params: { amount: this.amount } };
   }
 }

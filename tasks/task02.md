@@ -42,7 +42,7 @@ Seguir `docs/CONTROLLER_GUIDE.md`, `docs/USECASE_GUIDE.md` e `docs/ENTITY_GUIDE.
 - `extends Entity`, campos `displayName: MessageSendStrategyDisplayName`, `amount: number`.
 - Construtor recebe DTO interno com `id?`, `displayName`, `amount` (**`number`**, sem `parseAmount(unknown)`).
 - `get kind` retornando `SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS`.
-- `getApiDTO(userId, campaignBindingsCount)` retornando o tipo discriminado correto em `MessageSendStrategyDTOForKind<...>`.
+- `getDTO(userId, campaignBindingsCount)` retornando o tipo discriminado correto em `MessageSendStrategyDTOForKind<...>`.
 
 2.2. **Não** adicionar validação de intervalo 1–50 na entidade nesta task (fica no controller). Se precisar de helper para **ler** `params` já persistidos no factory, preferir leitura mínima (`Number(row.params.amount)`) no **factory** ou no use case de leitura — não como “validação de request”.
 

@@ -69,7 +69,7 @@ export class CreateMessageSendStrategyUseCase {
           params: { amount: entity.amount },
         });
 
-        return entity.getApiDTO(dto.userId, 0);
+        return {...entity.getDTO(), userId: dto.userId, campaignBindingsCount: 0 };
       }
       case SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS: {
         const { amount } = dto.params;
@@ -87,7 +87,7 @@ export class CreateMessageSendStrategyUseCase {
           params: { amount: entity.amount },
         });
 
-        return entity.getApiDTO(dto.userId, 0);
+        return {...entity.getDTO(), userId: dto.userId, campaignBindingsCount: 0 };
       }
       case SEND_STRATEGY_KIND_SEND_SELECTED_LIST: {
         const { patientIdList } = dto.params;
@@ -106,7 +106,7 @@ export class CreateMessageSendStrategyUseCase {
           params: { patientIdList: [...entity.patientIdList] },
         });
 
-        return entity.getApiDTO(dto.userId, 0);
+        return {...entity.getDTO(), userId: dto.userId, campaignBindingsCount: 0 };
       }
       case SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST: {
         const { patientIdList } = dto.params;
@@ -125,7 +125,7 @@ export class CreateMessageSendStrategyUseCase {
           params: { patientIdList: [...entity.patientIdList] },
         });
 
-        return entity.getApiDTO(dto.userId, 0);
+        return {...entity.getDTO(), userId: dto.userId, campaignBindingsCount: 0 };
       }
       default:
         throw new ApiError("Tipo de estratégia ainda não suportado", 501, "kind");

@@ -1,6 +1,6 @@
 # Task 03 — Estratégia `send_selected_list`
 
-**Referência:** `tasks/sendStrategy.spec.md` (tipos de estratégia, tabela **Validação de `params`**, fluxo `allowsSend`, factory) e **exemplo estrutural** `src/core/messages/models/SendMostRecentPatientsMessageSendStrategy.ts` (entidade `extends Entity`, `displayName`, `get kind`, `getApiDTO`).
+**Referência:** `tasks/sendStrategy.spec.md` (tipos de estratégia, tabela **Validação de `params`**, fluxo `allowsSend`, factory) e **exemplo estrutural** `src/core/messages/models/SendMostRecentPatientsMessageSendStrategy.ts` (entidade `extends Entity`, `displayName`, `get kind`, `getDTO`).
 
 **Objetivo desta tarefa:** permitir criar, atualizar, persistir e aplicar em runtime a estratégia **`send_selected_list`** com parâmetro **`patientIdList: string[]`**, de forma consistente com as estratégias já existentes (CRUD + factory + enforcer nos três `Send*MessageUseCase`).
 
@@ -43,7 +43,7 @@ Seguir `docs/CONTROLLER_GUIDE.md`, `docs/USECASE_GUIDE.md`, `docs/ENTITY_GUIDE.m
 - Campos: `displayName: MessageSendStrategyDisplayName`, `patientIdList: readonly string[]` (ou `string[]` alinhado ao restante do módulo).
 - DTO interno do construtor: `id?`, `displayName`, `patientIdList` — **atribuição direta** da lista (sem validar tamanho nem conteúdo no model).
 - `get kind` retornando `SEND_STRATEGY_KIND_SEND_SELECTED_LIST`.
-- `getApiDTO(userId, campaignBindingsCount)` retornando `MessageSendStrategyDTOForKind<typeof SEND_STRATEGY_KIND_SEND_SELECTED_LIST>` com `params: { patientIdList: [...] }`.
+- `getDTO(userId, campaignBindingsCount)` retornando `MessageSendStrategyDTOForKind<typeof SEND_STRATEGY_KIND_SEND_SELECTED_LIST>` com `params: { patientIdList: [...] }`.
 
 2.2. **Não** adicionar no model: `Array.isArray` defensivo, limite de tamanho, verificação de ids duplicados ou existência em banco.
 
