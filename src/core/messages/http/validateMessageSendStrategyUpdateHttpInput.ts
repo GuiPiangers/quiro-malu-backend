@@ -3,6 +3,7 @@ import { MessageSendStrategyDisplayName } from "../models/MessageSendStrategyDis
 import type { UpdateMessageSendStrategyDTO } from "../useCases/messageSendStrategy/updateMessageSendStrategy/UpdateMessageSendStrategyUseCase";
 import { parseHttpPatientIdList } from "./messageSendStrategyPatientListHttp";
 import {
+  SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
   SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
@@ -46,8 +47,11 @@ function isAmountStrategyKind(kind: SendStrategyKind): boolean {
   );
 }
 
-function isSelectedListStrategyKind(kind: SendStrategyKind): boolean {
-  return kind === SEND_STRATEGY_KIND_SEND_SELECTED_LIST;
+function isPatientListStrategyKind(kind: SendStrategyKind): boolean {
+  return (
+    kind === SEND_STRATEGY_KIND_SEND_SELECTED_LIST ||
+    kind === SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST
+  );
 }
 
 export function buildValidatedUpdateMessageSendStrategyBody(
@@ -65,13 +69,23 @@ export function buildValidatedUpdateMessageSendStrategyBody(
 
   if (hasKind && hasParams) {
     const kind = assertSendStrategyKind(body.kind);
-    if (isSelectedListStrategyKind(kind)) {
+    if (isPatientListStrategyKind(kind)) {
       const paramsBody = body.params as { patientIdList?: unknown } | undefined;
-      const patientIdList = parseHttpPatientIdList(paramsBody?.patientIdList);
       const nameRaw = typeof body.name === "string" ? body.name : "";
       const displayName = new MessageSendStrategyDisplayName(nameRaw);
+      if (kind === SEND_STRATEGY_KIND_SEND_SELECTED_LIST) {
+        const patientIdList = parseHttpPatientIdList(paramsBody?.patientIdList);
+        return {
+          kind: SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
+          params: { patientIdList },
+          name: displayName.value,
+        };
+      }
+      const patientIdList = parseHttpPatientIdList(paramsBody?.patientIdList, {
+        allowEmpty: true,
+      });
       return {
-        kind: SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
+        kind: SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
         params: { patientIdList },
         name: displayName.value,
       };

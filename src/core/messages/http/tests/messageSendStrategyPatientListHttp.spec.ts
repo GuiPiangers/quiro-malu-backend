@@ -12,6 +12,10 @@ describe("parseHttpPatientIdList", () => {
     expect(() => parseHttpPatientIdList(["", "  "])).toThrow(ApiError);
   });
 
+  it("permite array vazio após deduplicação quando allowEmpty", () => {
+    expect(parseHttpPatientIdList(["", "  "], { allowEmpty: true })).toEqual([]);
+  });
+
   it("permite lista bruta maior que o máximo se após deduplicação couber na entidade", () => {
     const list = Array.from({ length: MESSAGE_SEND_STRATEGY_SELECTED_LIST_MAX_IDS + 5 }, () => "same-id");
     const ids = parseHttpPatientIdList(list);

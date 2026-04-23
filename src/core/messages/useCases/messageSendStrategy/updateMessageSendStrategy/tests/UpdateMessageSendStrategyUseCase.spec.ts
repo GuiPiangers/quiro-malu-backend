@@ -2,6 +2,7 @@ import { createMockMessageSendStrategyRepository } from "../../../../../../repos
 import { createMockPatientRepository } from "../../../../../../repositories/_mocks/PatientRepositoryMock";
 import { ApiError } from "../../../../../../utils/ApiError";
 import {
+  SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
   SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
@@ -128,6 +129,85 @@ describe("UpdateMessageSendStrategyUseCase", () => {
     });
     expect(result.kind).toBe(SEND_STRATEGY_KIND_SEND_SELECTED_LIST);
     expect(result.params).toEqual({ patientIdList: ["a", "b"] });
+  });
+
+  it("deve atualizar para exclude_patients_list com lista vazia sem checar posse", async () => {
+    const repo = createMockMessageSendStrategyRepository();
+    repo.findByIdAndUserId
+      .mockResolvedValueOnce({ ...existingRow })
+      .mockResolvedValueOnce({
+        ...existingRow,
+        kind: SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
+        name: "Sem exclusões",
+        params: { patientIdList: [] },
+      });
+
+    const { sut, patientRepo } = createSut(repo);
+    const result = await sut.execute({
+      userId: "user-1",
+      strategyId: "s-1",
+      kind: SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
+      name: "Sem exclusões",
+      params: { patientIdList: [] },
+    });
+
+    expect(patientRepo.countPatientsOwnedByUser).not.toHaveBeenCalled();
+    expect(repo.updateByIdAndUserId).toHaveBeenCalledWith("s-1", "user-1", {
+      kind: SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
+      name: "Sem exclusões",
+      params: { patientIdList: [] },
+    });
+    expect(result.kind).toBe(SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST);
+    expect(result.params).toEqual({ patientIdList: [] });
+  });
+
+  it("deve atualizar para exclude_patients_list quando kind, name e params forem enviados juntos", async () => {
+    const repo = createMockMessageSendStrategyRepository();
+    repo.findByIdAndUserId
+      .mockResolvedValueOnce({ ...existingRow })
+      .mockResolvedValueOnce({
+        ...existingRow,
+        kind: SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
+        name: "Exceto estes",
+        params: { patientIdList: ["a", "b"] },
+      });
+
+    const { sut, patientRepo } = createSut(repo);
+    patientRepo.countPatientsOwnedByUser.mockResolvedValue(2);
+
+    const result = await sut.execute({
+      userId: "user-1",
+      strategyId: "s-1",
+      kind: SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
+      name: "Exceto estes",
+      params: { patientIdList: ["a", "b"] },
+    });
+
+    expect(repo.updateByIdAndUserId).toHaveBeenCalledWith("s-1", "user-1", {
+      kind: SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
+      name: "Exceto estes",
+      params: { patientIdList: ["a", "b"] },
+    });
+    expect(result.kind).toBe(SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST);
+    expect(result.params).toEqual({ patientIdList: ["a", "b"] });
+  });
+
+  it("deve rejeitar exclude_patients_list no update quando posse dos pacientes falhar", async () => {
+    const repo = createMockMessageSendStrategyRepository();
+    repo.findByIdAndUserId.mockResolvedValue({ ...existingRow });
+    const { sut, patientRepo } = createSut(repo);
+    patientRepo.countPatientsOwnedByUser.mockResolvedValue(0);
+
+    await expect(
+      sut.execute({
+        userId: "user-1",
+        strategyId: "s-1",
+        kind: SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
+        name: "Lista",
+        params: { patientIdList: ["x"] },
+      }),
+    ).rejects.toThrow(ApiError);
+    expect(repo.updateByIdAndUserId).not.toHaveBeenCalled();
   });
 
   it("deve rejeitar send_selected_list no update quando posse dos pacientes falhar", async () => {

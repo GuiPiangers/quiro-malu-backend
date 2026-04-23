@@ -5,8 +5,10 @@ import { IPatientRepository } from "../../../../../repositories/patient/IPatient
 import { MessageSendStrategyDisplayName } from "../../../models/MessageSendStrategyDisplayName";
 import { SendMostFrequencyPatientsMessageSendStrategy } from "../../../models/SendMostFrequencyPatientsMessageSendStrategy";
 import { SendMostRecentPatientsMessageSendStrategy } from "../../../models/SendMostRecentPatientsMessageSendStrategy";
+import { ExcludePatientsListMessageSendStrategy } from "../../../models/ExcludePatientsListMessageSendStrategy";
 import { SendSelectedListMessageSendStrategy } from "../../../models/SendSelectedListMessageSendStrategy";
 import {
+  SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
   SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
@@ -33,6 +35,9 @@ export class CreateMessageSendStrategyUseCase {
     userId: string,
     patientIdList: readonly string[],
   ): Promise<void> {
+    if (patientIdList.length === 0) {
+      return;
+    }
     const owned = await this.patientRepository.countPatientsOwnedByUser({
       userId,
       patientIds: [...patientIdList],
@@ -88,6 +93,25 @@ export class CreateMessageSendStrategyUseCase {
         const { patientIdList } = dto.params;
         const displayName = new MessageSendStrategyDisplayName(dto.name);
         const entity = new SendSelectedListMessageSendStrategy({
+          displayName,
+          patientIdList,
+        });
+        await this.assertAllPatientsOwnedByUser(dto.userId, entity.patientIdList);
+
+        await this.messageSendStrategyRepository.save({
+          id: entity.id,
+          userId: dto.userId,
+          name: entity.displayName.value,
+          kind: entity.kind,
+          params: { patientIdList: [...entity.patientIdList] },
+        });
+
+        return entity.getApiDTO(dto.userId, 0);
+      }
+      case SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST: {
+        const { patientIdList } = dto.params;
+        const displayName = new MessageSendStrategyDisplayName(dto.name);
+        const entity = new ExcludePatientsListMessageSendStrategy({
           displayName,
           patientIdList,
         });

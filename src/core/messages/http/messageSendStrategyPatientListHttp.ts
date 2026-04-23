@@ -1,6 +1,13 @@
 import { ApiError } from "../../../utils/ApiError";
 
-export function parseHttpPatientIdList(raw: unknown): string[] {
+export type ParseHttpPatientIdListOptions = {
+  allowEmpty?: boolean;
+};
+
+export function parseHttpPatientIdList(
+  raw: unknown,
+  options?: ParseHttpPatientIdListOptions,
+): string[] {
   if (!Array.isArray(raw)) {
     throw new ApiError("patientIdList deve ser um array", 400, "params.patientIdList");
   }
@@ -19,6 +26,9 @@ export function parseHttpPatientIdList(raw: unknown): string[] {
     }
     const id = item.trim();
     if (!id) {
+      if (options?.allowEmpty) {
+        continue;
+      }
       throw new ApiError(
         "cada id em patientIdList deve ser string não vazia",
         400,
@@ -31,7 +41,7 @@ export function parseHttpPatientIdList(raw: unknown): string[] {
     }
   }
 
-  if (out.length === 0) {
+  if (out.length === 0 && !options?.allowEmpty) {
     throw new ApiError(
       "patientIdList deve conter ao menos um id válido",
       400,

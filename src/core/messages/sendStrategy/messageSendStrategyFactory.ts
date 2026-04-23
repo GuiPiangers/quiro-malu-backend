@@ -7,10 +7,12 @@ import { IMessageSendStrategy } from "./IMessageSendStrategy";
 import { SendMostFrequencyPatientsStrategy } from "./strategies/sendMostFrequencyPatientsStrategy";
 import { SendMostRecentPatientsStrategy } from "./strategies/sendMostRecentPatientsStrategy";
 import {
+  SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
   SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
 } from "./sendStrategyKind";
+import { ExcludePatientsListStrategy } from "./strategies/excludePatientsListStrategy";
 import { SendSelectedListStrategy } from "./strategies/sendSelectedListStrategy";
 
 export class MessageSendStrategyFactory {
@@ -42,6 +44,11 @@ export class MessageSendStrategyFactory {
     if (row.kind === SEND_STRATEGY_KIND_SEND_SELECTED_LIST) {
       const { patientIdList } = row.params as { patientIdList: string[] };
       return new SendSelectedListStrategy(patientIdList);
+    }
+
+    if (row.kind === SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST) {
+      const { patientIdList } = row.params as { patientIdList: string[] };
+      return new ExcludePatientsListStrategy(patientIdList);
     }
 
     throw new ApiError(`Tipo de estratégia não suportado: ${row.kind}`, 501);

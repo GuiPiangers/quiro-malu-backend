@@ -1,5 +1,6 @@
 import type { SendStrategyKind } from "./sendStrategyKind";
 import {
+  SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
   SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
@@ -9,13 +10,14 @@ type MessageSendStrategyAmountParamKinds =
   | typeof SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS
   | typeof SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS;
 
-type MessageSendStrategySelectedListParamKinds =
-  typeof SEND_STRATEGY_KIND_SEND_SELECTED_LIST;
+type MessageSendStrategyPatientListParamKinds =
+  | typeof SEND_STRATEGY_KIND_SEND_SELECTED_LIST
+  | typeof SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST;
 
 export type MessageSendStrategyParamsByKind = {
   [K in SendStrategyKind]: K extends MessageSendStrategyAmountParamKinds
     ? { amount: number }
-    : K extends MessageSendStrategySelectedListParamKinds
+    : K extends MessageSendStrategyPatientListParamKinds
       ? { patientIdList: string[] }
       : Record<string, unknown>;
 };

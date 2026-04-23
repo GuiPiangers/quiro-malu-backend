@@ -8,9 +8,11 @@ import { ApiError } from "../../../../../utils/ApiError";
 import { MessageSendStrategyDisplayName } from "../../../models/MessageSendStrategyDisplayName";
 import { SendMostFrequencyPatientsMessageSendStrategy } from "../../../models/SendMostFrequencyPatientsMessageSendStrategy";
 import { SendMostRecentPatientsMessageSendStrategy } from "../../../models/SendMostRecentPatientsMessageSendStrategy";
+import { ExcludePatientsListMessageSendStrategy } from "../../../models/ExcludePatientsListMessageSendStrategy";
 import { SendSelectedListMessageSendStrategy } from "../../../models/SendSelectedListMessageSendStrategy";
 import type { MessageSendStrategyCreateParamsByKind } from "../../../sendStrategy/messageSendStrategyKindTypeMaps";
 import {
+  SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
   SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
@@ -54,6 +56,9 @@ export class UpdateMessageSendStrategyUseCase {
     userId: string,
     patientIdList: readonly string[],
   ): Promise<void> {
+    if (patientIdList.length === 0) {
+      return;
+    }
     const owned = await this.patientRepository.countPatientsOwnedByUser({
       userId,
       patientIds: [...patientIdList],
@@ -125,6 +130,26 @@ export class UpdateMessageSendStrategyUseCase {
     };
   }
 
+  private async buildExcludePatientsListFullReplacePatch(
+    dto: UpdateMessageSendStrategyDTO,
+    strategyId: string,
+  ): Promise<UpdateMessageSendStrategyPatch> {
+    const params =
+      dto.params as MessageSendStrategyCreateParamsByKind[typeof SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST];
+    const displayName = new MessageSendStrategyDisplayName(dto.name ?? "");
+    const entity = new ExcludePatientsListMessageSendStrategy({
+      id: strategyId,
+      displayName,
+      patientIdList: params.patientIdList,
+    });
+    await this.assertAllPatientsOwnedByUser(dto.userId, entity.patientIdList);
+    return {
+      kind: entity.kind,
+      name: entity.displayName.value,
+      params: { patientIdList: [...entity.patientIdList] },
+    };
+  }
+
   private async resolveFullReplacePatch(
     dto: UpdateMessageSendStrategyDTO,
     existing: MessageSendStrategyRow,
@@ -137,6 +162,8 @@ export class UpdateMessageSendStrategyUseCase {
         return this.buildFrequencyFullReplacePatch(dto, existing.id);
       case SEND_STRATEGY_KIND_SEND_SELECTED_LIST:
         return await this.buildSelectedListFullReplacePatch(dto, existing.id);
+      case SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST:
+        return await this.buildExcludePatientsListFullReplacePatch(dto, existing.id);
       default:
         throw new ApiError("Tipo de estratégia ainda não suportado", 501, "kind");
     }
