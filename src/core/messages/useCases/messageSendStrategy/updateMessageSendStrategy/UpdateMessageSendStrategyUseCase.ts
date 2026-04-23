@@ -10,7 +10,10 @@ import { SendMostFrequencyPatientsMessageSendStrategy } from "../../../models/Se
 import { SendMostRecentPatientsMessageSendStrategy } from "../../../models/SendMostRecentPatientsMessageSendStrategy";
 import { ExcludePatientsListMessageSendStrategy } from "../../../models/ExcludePatientsListMessageSendStrategy";
 import { SendSelectedListMessageSendStrategy } from "../../../models/SendSelectedListMessageSendStrategy";
-import type { MessageSendStrategyCreateParamsByKind } from "../../../sendStrategy/messageSendStrategyKindTypeMaps";
+import {
+  toMessageSendStrategyDTO,
+  type MessageSendStrategyCreateParamsByKind,
+} from "../../../sendStrategy/messageSendStrategyKindTypeMaps";
 import {
   SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
@@ -27,24 +30,6 @@ export type UpdateMessageSendStrategyDTO = {
   kind?: SendStrategyKind;
   params?: MessageSendStrategyCreateParamsByKind[SendStrategyKind];
 };
-
-function toListedDTO(row: {
-  id: string;
-  userId: string;
-  name: string;
-  kind: string;
-  params: Record<string, unknown>;
-  campaignBindingsCount: number;
-}): ListedMessageSendStrategyDTO {
-  return {
-    id: row.id,
-    userId: row.userId,
-    name: row.name,
-    kind: row.kind,
-    params: row.params,
-    campaignBindingsCount: row.campaignBindingsCount,
-  };
-}
 
 export class UpdateMessageSendStrategyUseCase {
   constructor(
@@ -209,7 +194,7 @@ export class UpdateMessageSendStrategyUseCase {
 
     const patch = await this.resolveUpdatePatch(dto, existing);
     if (patch === null) {
-      return toListedDTO(existing);
+      return toMessageSendStrategyDTO(existing);
     }
 
     await this.messageSendStrategyRepository.updateByIdAndUserId(
@@ -223,6 +208,6 @@ export class UpdateMessageSendStrategyUseCase {
       dto.userId,
     );
 
-    return toListedDTO(updated!);
+    return toMessageSendStrategyDTO(updated!);
   }
 }

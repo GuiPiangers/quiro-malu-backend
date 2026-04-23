@@ -1,5 +1,6 @@
 import { IMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
 import { ApiError } from "../../../../../utils/ApiError";
+import { toMessageSendStrategyDTO } from "../../../sendStrategy/messageSendStrategyKindTypeMaps";
 import type { ListedMessageSendStrategyDTO } from "../listMessageSendStrategy/ListMessageSendStrategyUseCase";
 
 export type GetMessageSendStrategyByCampaignIdDTO = {
@@ -28,13 +29,6 @@ export class GetMessageSendStrategyByCampaignIdUseCase {
       );
     }
 
-    return {
-      id: row.id,
-      userId: row.userId,
-      name: row.name,
-      kind: row.kind,
-      params: row.params,
-      campaignBindingsCount: row.campaignBindingsCount,
-    };
+    return toMessageSendStrategyDTO(row);
   }
 }

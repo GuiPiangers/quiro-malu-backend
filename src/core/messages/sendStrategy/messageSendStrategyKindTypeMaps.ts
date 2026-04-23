@@ -51,3 +51,25 @@ export type MessageSendStrategyDTOForKind<K extends SendStrategyKind> = {
 export type MessageSendStrategyDTO = {
   [K in SendStrategyKind]: MessageSendStrategyDTOForKind<K>;
 }[SendStrategyKind];
+
+export type MessageSendStrategyPersistenceRow = {
+  id: string;
+  userId: string;
+  name: string;
+  kind: string;
+  params: Record<string, unknown>;
+  campaignBindingsCount: number;
+};
+
+export function toMessageSendStrategyDTO(
+  row: MessageSendStrategyPersistenceRow,
+): MessageSendStrategyDTO {
+  return {
+    id: row.id,
+    userId: row.userId,
+    name: row.name,
+    kind: row.kind as SendStrategyKind,
+    params: row.params,
+    campaignBindingsCount: row.campaignBindingsCount,
+  } as MessageSendStrategyDTO;
+}

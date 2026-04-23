@@ -1,4 +1,8 @@
 import { IMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
+import {
+  toMessageSendStrategyDTO,
+  type MessageSendStrategyDTO,
+} from "../../../sendStrategy/messageSendStrategyKindTypeMaps";
 
 export type ListMessageSendStrategyDTO = {
   userId: string;
@@ -6,14 +10,7 @@ export type ListMessageSendStrategyDTO = {
   limit?: number;
 };
 
-export type ListedMessageSendStrategyDTO = {
-  id: string;
-  userId: string;
-  name: string;
-  kind: string;
-  params: Record<string, unknown>;
-  campaignBindingsCount: number;
-};
+export type ListedMessageSendStrategyDTO = MessageSendStrategyDTO;
 
 export type ListMessageSendStrategyOutput = {
   items: ListedMessageSendStrategyDTO[];
@@ -42,14 +39,7 @@ export class ListMessageSendStrategyUseCase {
         offset,
       });
 
-    const items = rows.map((row) => ({
-      id: row.id,
-      userId: row.userId,
-      name: row.name,
-      kind: row.kind,
-      params: row.params,
-      campaignBindingsCount: row.campaignBindingsCount,
-    }));
+    const items = rows.map(toMessageSendStrategyDTO);
 
     return { items, total, page, limit };
   }
