@@ -72,6 +72,17 @@ function rowToDto(row: MessageLogRow): WhatsAppMessageLogDTO {
 export class KnexWhatsAppMessageLogRepository
   implements IWhatsAppMessageLogRepository
 {
+  async findById(id: string): Promise<WhatsAppMessageLogDTO | null> {
+    try {
+      const row = await Knex(ETableNames.WHATSAPP_MESSAGE_LOGS)
+        .where({ id })
+        .first();
+      return row ? rowToDto(row as MessageLogRow) : null;
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
+  }
+
   async getBySchedulingAndCampaignId(props: GetBySchedulingAndCampaignIdProps): Promise<WhatsAppMessageLogDTO | null> {
     try {
       const row = await Knex(ETableNames.WHATSAPP_MESSAGE_LOGS)

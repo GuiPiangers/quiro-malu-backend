@@ -4,8 +4,9 @@ import { IPatientRepository } from "../../../../../repositories/patient/IPatient
 import { MessageSendStrategyEnforcer } from "../../../sendStrategy/messageSendStrategyEnforcer";
 import { IWhatsAppInstanceRepository } from "../../../../../repositories/whatsapp/IWhatsAppInstanceRepository";
 import { IWhatsAppMessageLogRepository } from "../../../../../repositories/whatsapp/IWhatsAppMessageLogRepository";
+import { DateTime } from "../../../../shared/Date";
+import { Crypto } from "../../../../shared/helpers/Crypto";
 import { IAppEventListener } from "../../../../shared/observers/EventListener";
-import { Id } from "../../../../shared/Id";
 import { BirthdayMessage } from "../../../models/BirthdayMessage";
 import { MessageTemplate } from "../../../models/MessageTemplate";
 import { getConnectedWhatsAppInstance } from "../../../utils/getConnectedWhatsAppInstance";
@@ -24,6 +25,10 @@ export type SendBirthdayMessageJob = {
 
 const BIRTHDAY_LOG_SCHEDULING_PLACEHOLDER = "";
 
+export function buildBirthdayMessageLogId(ymdDate: string, patientId: string): string {
+  return Crypto.createFixedHash(`${ymdDate}${patientId}`);
+}
+
 export class SendBirthdayMessageUseCase {
   constructor(
     private birthdayMessageRepository: IBirthdayMessageRepository,
@@ -41,6 +46,15 @@ export class SendBirthdayMessageUseCase {
     );
 
     if (!campaign?.isActive || campaign.id !== job.campaignId) {
+      return;
+    }
+
+    const todayYmd = DateTime.now().date;
+    const messageLogId = buildBirthdayMessageLogId(todayYmd, job.patientId);
+    const existingLog = await this.whatsAppMessageLogRepository.findById(
+      messageLogId,
+    );
+    if (existingLog) {
       return;
     }
 
@@ -93,7 +107,6 @@ export class SendBirthdayMessageUseCase {
     });
 
     if (sendResult.success) {
-      const messageLogId = new Id().value;
       await this.whatsAppMessageLogRepository.save({
         id: messageLogId,
         userId: job.userId,
@@ -119,7 +132,7 @@ export class SendBirthdayMessageUseCase {
       });
     } else {
       await this.whatsAppMessageLogRepository.save({
-        id: new Id().value,
+        id: messageLogId,
         userId: job.userId,
         patientId: job.patientId,
         schedulingId: BIRTHDAY_LOG_SCHEDULING_PLACEHOLDER,

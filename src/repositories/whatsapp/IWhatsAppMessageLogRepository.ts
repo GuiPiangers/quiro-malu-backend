@@ -83,6 +83,7 @@ export type WhatsAppMessageLogsSummaryDTO = {
 
 export interface IWhatsAppMessageLogRepository {
   save(data: SaveWhatsAppMessageLogProps): Promise<void>;
+  findById(id: string): Promise<WhatsAppMessageLogDTO | null>;
   getBySchedulingAndCampaignId(props: GetBySchedulingAndCampaignIdProps): Promise<WhatsAppMessageLogDTO | null>;
   updateByProviderMessageId(
     data: UpdateWhatsAppMessageLogByProviderIdProps,
