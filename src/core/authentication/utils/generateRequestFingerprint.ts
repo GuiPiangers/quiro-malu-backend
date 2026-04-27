@@ -24,9 +24,12 @@ export function generateRequestFingerprint(request: Request): string {
   const components = [
     ip,
     headerToString(request.headers["user-agent"]),
-    headerToString(request.headers["accept-language"]),
-    headerToString(request.headers["accept-encoding"]),
   ].join("|");
+
+  console.table({
+    ip,
+    userAgent: headerToString(request.headers["user-agent"]),
+  })
 
   return createHash("sha256").update(components).digest("hex");
 }
