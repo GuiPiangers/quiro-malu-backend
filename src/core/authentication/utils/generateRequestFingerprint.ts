@@ -22,7 +22,6 @@ function extractSafeIp(req: Request): string {
 export function generateRequestFingerprint(request: Request): string {
   const ip = extractSafeIp(request);
   const components = [
-    ip,
     headerToString(request.headers["user-agent"]),
   ].join("|");
 
