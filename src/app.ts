@@ -47,6 +47,16 @@ app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
+app.get('/debug/ip', (req, res) => {
+  res.json({
+    'req.ip': req.ip,
+    'req.socket.remoteAddress': req.socket?.remoteAddress,
+    'cf-connecting-ip': req.headers['cf-connecting-ip'],
+    'x-forwarded-for': req.headers['x-forwarded-for'],
+    'x-real-ip': req.headers['x-real-ip'],
+  });
+});
+
 app.use(router);
 
 mongoConnect();

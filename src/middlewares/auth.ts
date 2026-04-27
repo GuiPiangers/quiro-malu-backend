@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { generateRequestFingerprint } from "../core/authentication/utils/generateRequestFingerprint";
+import { validateUserFingerprintUseCase } from "../core/authentication/useCases/userFingerprint";
 import { ApiError } from "../utils/ApiError";
+import { responseError } from "../utils/ResponseError";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -21,11 +24,23 @@ export const authMiddleware = async (
 
     const verifyToken = await jwt.verify(token, process.env.JWT_SECRET!);
     request.user = verifyToken as unknown as JwtPayload;
+
+    const userId = (request.user as JwtPayload).id;
+    if (!userId) {
+      throw new ApiError("Acesso não autorizado", 401);
+    }
+
+    const fpHash = generateRequestFingerprint(request);
+    const fingerprintOk = await validateUserFingerprintUseCase.execute({
+      userId,
+      fpHash,
+    });
+    if (!fingerprintOk) {
+      throw new ApiError("Dispositivo não reconhecido", 418);
+    }
+
     return next();
   } catch (err: any) {
-    const statusCode = err.statusCode ?? 401;
-    return response.status(statusCode).json({
-      message: err.message || "Unexpected error.",
-    });
+    return responseError(response, err);
   }
 };

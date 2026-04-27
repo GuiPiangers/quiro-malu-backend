@@ -7,20 +7,25 @@ import { IUserRepository } from "../../../../../repositories/user/IUserRepositor
 import { InMemoryUserRepository } from "../../../../../repositories/user/inMemory/InMemoryUserRepository";
 import { LoginUserUseCase } from "../LoginUserUseCase";
 
+const stubFingerprint = "stub-fingerprint-hash";
+
 describe("Login user", () => {
   let userRepository: IUserRepository;
   let loginUserUseCase: LoginUserUseCase;
   let refreshToken: IRefreshTokenProvider;
   let generateToken: IGenerateTokenProvider;
+  let registerUserFingerprint: { execute: jest.Mock };
 
   beforeAll(() => {
     userRepository = new InMemoryUserRepository();
     refreshToken = new InMemoryRefreshToken();
     generateToken = new InMemoryGenerateToken();
+    registerUserFingerprint = { execute: jest.fn().mockResolvedValue(undefined) };
     loginUserUseCase = new LoginUserUseCase(
       userRepository,
       refreshToken,
       generateToken,
+      registerUserFingerprint as any,
     );
   });
 
@@ -38,18 +43,26 @@ describe("Login user", () => {
     const userDTO = await user.getUserDTO();
 
     await userRepository.save(userDTO);
-    const resolve = await loginUserUseCase.execute(email, password);
+    const resolve = await loginUserUseCase.execute(
+      email,
+      password,
+      stubFingerprint,
+    );
 
     expect(resolve).toHaveProperty("token");
     expect(resolve).toHaveProperty("refreshToken");
+    expect(registerUserFingerprint.execute).toHaveBeenCalledWith({
+      userId: userDTO.id,
+      fpHash: stubFingerprint,
+    });
   });
 
   it("Should not be able to login if email is not corrected", async () => {
     const email = "emailfake@gmail.com";
     const password = "Senha123";
-    await expect(loginUserUseCase.execute(email, password)).rejects.toEqual(
-      new Error("Email ou senha inválidos"),
-    );
+    await expect(
+      loginUserUseCase.execute(email, password, stubFingerprint),
+    ).rejects.toEqual(new Error("Email ou senha inválidos"));
   });
 
   it("Should not be able to login if password is not corrected", async () => {
@@ -67,7 +80,7 @@ describe("Login user", () => {
 
     await userRepository.save(userDTO);
     await expect(
-      loginUserUseCase.execute(email, wrongPassword),
+      loginUserUseCase.execute(email, wrongPassword, stubFingerprint),
     ).rejects.toEqual(new Error("Email ou senha inválidos"));
   });
 });
