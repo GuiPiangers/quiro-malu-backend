@@ -20,15 +20,10 @@ function extractSafeIp(req: Request): string {
 }
 
 export function generateRequestFingerprint(request: Request): string {
-  const ip = extractSafeIp(request);
   const components = [
-    headerToString(request.headers["user-agent"]),
+    headerToString(request.headers["x-device-id"]),
   ].join("|");
 
-  console.table({
-    ip,
-    userAgent: headerToString(request.headers["user-agent"]),
-  })
 
-  return createHash("sha256").update(components).digest("hex");
+  return headerToString(components);
 }
