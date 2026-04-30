@@ -1,6 +1,7 @@
 import { ApiError } from "../../../utils/ApiError";
 import { DateTime } from "../../shared/Date";
 import { Entity } from "../../shared/Entity";
+import { patientFirstNameFromFullName } from "../utils/patientFirstNameFromFullName";
 import { MessageTemplate, MessageTemplateDTO } from "./MessageTemplate";
 
 export type BeforeScheduleMessageDTO = {
@@ -76,8 +77,11 @@ export class BeforeScheduleMessage extends Entity {
     const dateTime =
       scheduling?.date != null ? new DateTime(scheduling.date) : null;
 
+    const nomeCompleto = `${patient.name}`.trim();
+
     return {
-      nome_paciente: patient.name,
+      nome_paciente: patientFirstNameFromFullName(patient.name),
+      nome_completo_paciente: nomeCompleto,
       telefone_paciente: patient.phone,
       genero_paciente: patient.gender ?? "",
       data_consulta: dateTime ? DateTime.toLocaleDate(dateTime.date) : "",

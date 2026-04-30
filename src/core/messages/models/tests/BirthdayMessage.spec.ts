@@ -62,6 +62,29 @@ describe("BirthdayMessage", () => {
     );
   });
 
+  it("should render nome_paciente como primeiro nome e nome_completo_paciente com nome inteiro", () => {
+    const entity = new BirthdayMessage({
+      name: "Aniversário",
+      sendTime: defaultSend,
+      messageTemplate: new MessageTemplate({
+        textTemplate:
+          "Olá {{nome_paciente}} ({{nome_completo_paciente}}), tel {{telefone_paciente}}.",
+      }),
+    });
+
+    const rendered = entity.render({
+      patient: {
+        name: "Maria Silva",
+        phone: "51999999999",
+        birthDate: "1990-03-05",
+      },
+    });
+
+    expect(rendered).toBe(
+      "Olá Maria (Maria Silva), tel 51999999999.",
+    );
+  });
+
   it("should render empty dia_aniversario when birthDate is missing or invalid", () => {
     const entity = new BirthdayMessage({
       name: "x",

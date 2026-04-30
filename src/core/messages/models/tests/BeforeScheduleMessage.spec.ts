@@ -74,6 +74,24 @@ describe("BeforeScheduleMessage", () => {
     expect(rendered).toBe("Olá Maria, consulta em 15/06/2025 às 14:30.");
   });
 
+  it("should render nome_paciente como primeiro nome e nome_completo_paciente com nome inteiro", () => {
+    const entity = new BeforeScheduleMessage({
+      name: "Consulta",
+      minutesBeforeSchedule: 60,
+      messageTemplate: new MessageTemplate({
+        textTemplate:
+          "{{nome_paciente}} / {{nome_completo_paciente}} em {{data_consulta}}",
+      }),
+    });
+
+    const rendered = entity.render({
+      patient: { name: "João Pedro Costa", phone: "51999999999" },
+      scheduling: { date: "2025-06-15T14:30" },
+    });
+
+    expect(rendered).toBe("João / João Pedro Costa em 15/06/2025");
+  });
+
   it("should render message with empty date fields when scheduling has no date", () => {
     const entity = new BeforeScheduleMessage({
       name: "Sem data",

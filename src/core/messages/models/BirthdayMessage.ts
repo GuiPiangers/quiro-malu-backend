@@ -1,6 +1,7 @@
 import { DateTime as Luxon } from "luxon";
 import { ApiError } from "../../../utils/ApiError";
 import { Entity } from "../../shared/Entity";
+import { patientFirstNameFromFullName } from "../utils/patientFirstNameFromFullName";
 import { MessageTemplate, MessageTemplateDTO } from "./MessageTemplate";
 
 export type BirthdayMessageDTO = {
@@ -77,8 +78,10 @@ export class BirthdayMessage extends Entity {
     birthDate: string | Date | null | undefined;
   }): Record<string, string> {
     const dia = BirthdayMessage.formatBirthDateAsDayMonthPt(patient.birthDate);
+    const nomeCompleto = `${patient.name}`.trim();
     return {
-      nome_paciente: patient.name,
+      nome_paciente: patientFirstNameFromFullName(patient.name),
+      nome_completo_paciente: nomeCompleto,
       telefone_paciente: patient.phone,
       dia_aniversario: dia,
       data_aniversario: dia,
