@@ -7,7 +7,7 @@ describe("CreateBirthdayMessageUseCase", () => {
   it("deve criar entidade, persistir e emitir birthdayMessageCreate", async () => {
     const birthdayMessageRepository = createMockBirthdayMessageRepository();
     const appEventListener = new AppEventListener();
-    const emitSpy = jest.spyOn(appEventListener, "emit");
+    const emitSpy = vi.spyOn(appEventListener, "emit");
 
     const useCase = new CreateBirthdayMessageUseCase(
       birthdayMessageRepository,
@@ -58,7 +58,7 @@ describe("CreateBirthdayMessageUseCase", () => {
   it("deve persistir sendTime quando informado", async () => {
     const birthdayMessageRepository = createMockBirthdayMessageRepository();
     const appEventListener = new AppEventListener();
-    const emitSpy = jest.spyOn(appEventListener, "emit");
+    const emitSpy = vi.spyOn(appEventListener, "emit");
 
     const useCase = new CreateBirthdayMessageUseCase(
       birthdayMessageRepository,
@@ -89,7 +89,7 @@ describe("CreateBirthdayMessageUseCase", () => {
   it("deve persistir isActive false quando informado", async () => {
     const birthdayMessageRepository = createMockBirthdayMessageRepository();
     const appEventListener = new AppEventListener();
-    const emitSpy = jest.spyOn(appEventListener, "emit");
+    const emitSpy = vi.spyOn(appEventListener, "emit");
 
     const useCase = new CreateBirthdayMessageUseCase(
       birthdayMessageRepository,
@@ -129,7 +129,7 @@ describe("CreateBirthdayMessageUseCase", () => {
     );
 
     const appEventListener = new AppEventListener();
-    const emitSpy = jest.spyOn(appEventListener, "emit");
+    const emitSpy = vi.spyOn(appEventListener, "emit");
 
     const useCase = new CreateBirthdayMessageUseCase(
       birthdayMessageRepository,

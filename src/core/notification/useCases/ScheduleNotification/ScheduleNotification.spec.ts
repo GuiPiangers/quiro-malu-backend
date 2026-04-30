@@ -2,6 +2,7 @@ import { ScheduleNotificationUseCase } from "./ScheduleNotificationUseCase";
 import { createMockPushNotificationQueue } from "../../../../repositories/_mocks/PushNotificationQueueMock";
 import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
 import { DateTime as Luxon } from "luxon";
+import type { Mock } from "vitest";
 
 describe("ScheduleNotificationUseCase", () => {
   let pushNotificationQueue: typeof createMockPushNotificationQueue;
@@ -10,8 +11,8 @@ describe("ScheduleNotificationUseCase", () => {
 
   beforeEach(() => {
     pushNotificationQueue = {
-      add: jest.fn(),
-      delete: jest.fn(),
+      add: vi.fn(),
+      delete: vi.fn(),
     };
     schedulingRepository = createMockSchedulingRepository();
     useCase = new ScheduleNotificationUseCase(
@@ -21,7 +22,7 @@ describe("ScheduleNotificationUseCase", () => {
   });
 
   beforeAll(() => {
-    jest.useFakeTimers().setSystemTime(
+    vi.useFakeTimers().setSystemTime(
       Luxon.fromISO("2025-01-01T12:15", {
         zone: "America/Sao_Paulo",
       }).toMillis(),
@@ -29,7 +30,7 @@ describe("ScheduleNotificationUseCase", () => {
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   describe("schedule", () => {
@@ -160,10 +161,10 @@ describe("ScheduleNotificationUseCase", () => {
   //     it("should calculate correct delay time", () => {
   //       const mockDate = new Date("2025-01-01T12:15:00Z");
   //       const instance = new DateTime(mockDate.toISOString());
-  //       (DateTime.now as jest.Mock).mockReturnValue(
+  //       (DateTime.now as Mock).mockReturnValue(
   //         new DateTime("2025-01-01T12:00:00Z"),
   //       );
-  //       (DateTime.difference as jest.Mock).mockReturnValue(900000); // 15 minutos
+  //       (DateTime.difference as Mock).mockReturnValue(900000); // 15 minutos
 
   //       const result = useCase.calculateDelay(mockDate.toISOString(), 15);
   //       expect(result).toBe(900000);

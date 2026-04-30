@@ -10,21 +10,21 @@ const flushPromises = async () => {
 
 describe("BeforeScheduleMessageEventHandlers", () => {
   beforeAll(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it("should schedule a BullMQ job on createSchedule for active configs", async () => {
-    jest.setSystemTime(
+    vi.setSystemTime(
       Luxon.fromISO("2025-01-01T12:00", { zone: "America/Sao_Paulo" }).toMillis(),
     );
 
     const beforeScheduleQueue = {
-      upsert: jest.fn().mockResolvedValue(undefined),
-      remove: jest.fn().mockResolvedValue(undefined),
+      upsert: vi.fn().mockResolvedValue(undefined),
+      remove: vi.fn().mockResolvedValue(undefined),
     };
 
     const appEventListener = new AppEventListener();
@@ -70,13 +70,13 @@ describe("BeforeScheduleMessageEventHandlers", () => {
   });
 
   it("should not schedule a job when config is inactive", async () => {
-    jest.setSystemTime(
+    vi.setSystemTime(
       Luxon.fromISO("2025-01-01T12:00", { zone: "America/Sao_Paulo" }).toMillis(),
     );
 
     const beforeScheduleQueue = {
-      upsert: jest.fn().mockResolvedValue(undefined),
-      remove: jest.fn().mockResolvedValue(undefined),
+      upsert: vi.fn().mockResolvedValue(undefined),
+      remove: vi.fn().mockResolvedValue(undefined),
     };
 
     const appEventListener = new AppEventListener();
@@ -113,13 +113,13 @@ describe("BeforeScheduleMessageEventHandlers", () => {
   });
 
   it("should remove the job on updateSchedule when target time is in the past", async () => {
-    jest.setSystemTime(
+    vi.setSystemTime(
       Luxon.fromISO("2025-01-01T12:00", { zone: "America/Sao_Paulo" }).toMillis(),
     );
 
     const beforeScheduleQueue = {
-      upsert: jest.fn().mockResolvedValue(undefined),
-      remove: jest.fn().mockResolvedValue(undefined),
+      upsert: vi.fn().mockResolvedValue(undefined),
+      remove: vi.fn().mockResolvedValue(undefined),
     };
 
     const appEventListener = new AppEventListener();
@@ -159,8 +159,8 @@ describe("BeforeScheduleMessageEventHandlers", () => {
 
   it("should remove jobs on deleteSchedule", async () => {
     const beforeScheduleQueue = {
-      upsert: jest.fn().mockResolvedValue(undefined),
-      remove: jest.fn().mockResolvedValue(undefined),
+      upsert: vi.fn().mockResolvedValue(undefined),
+      remove: vi.fn().mockResolvedValue(undefined),
     };
 
     const appEventListener = new AppEventListener();
@@ -205,11 +205,11 @@ describe("BeforeScheduleMessageEventHandlers", () => {
   });
 
   it("should log on beforeScheduleMessageSend", async () => {
-    const infoSpy = jest.spyOn(logger, "info").mockImplementation(() => logger as any);
+    const infoSpy = vi.spyOn(logger, "info").mockImplementation(() => logger as any);
 
     const beforeScheduleQueue = {
-      upsert: jest.fn(),
-      remove: jest.fn(),
+      upsert: vi.fn(),
+      remove: vi.fn(),
     };
 
     const appEventListener = new AppEventListener();

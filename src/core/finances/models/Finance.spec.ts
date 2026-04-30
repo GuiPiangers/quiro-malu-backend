@@ -1,11 +1,11 @@
 import { Finance, FinanceDTO } from "./Finance";
 import { DateTime } from "../../shared/Date";
 
-jest.mock("../../shared/Date", () => {
+vi.mock("../../shared/Date", () => {
   return {
-    DateTime: jest.fn().mockImplementation((date: string) => ({
-      dateTime: `formatted-${date}`,
-    })),
+    DateTime: vi.fn(function MockDateTime(this: { dateTime: string }, date: string) {
+      this.dateTime = `formatted-${date}`;
+    }),
   };
 });
 

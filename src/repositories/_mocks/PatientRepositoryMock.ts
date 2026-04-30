@@ -1,18 +1,19 @@
 import { IPatientRepository } from "../patient/IPatientRepository";
+import type { Mocked } from "vitest";
 
 export const createMockPatientRepository =
-  (): jest.Mocked<IPatientRepository> => ({
-    getById: jest.fn(),
-    countAll: jest.fn(),
-    delete: jest.fn(),
-    getAll: jest.fn(),
-    getByCpf: jest.fn(),
-    save: jest.fn(),
-    update: jest.fn(),
-    getByHash: jest.fn(),
-    saveMany: jest.fn(),
-    getByBirthMonthAndDay: jest.fn(),
-    getMostRecent: jest.fn(),
-    listPatientsById: jest.fn(),
-    countPatientsOwnedByUser: jest.fn(),
+  (): Mocked<IPatientRepository> => ({
+    getById: vi.fn(),
+    countAll: vi.fn(),
+    delete: vi.fn(),
+    getAll: vi.fn(),
+    getByCpf: vi.fn(),
+    save: vi.fn(),
+    update: vi.fn(),
+    getByHash: vi.fn(),
+    saveMany: vi.fn(),
+    getByBirthMonthAndDay: vi.fn(),
+    getMostRecent: vi.fn(),
+    listPatientsById: vi.fn(),
+    countPatientsOwnedByUser: vi.fn(),
   });

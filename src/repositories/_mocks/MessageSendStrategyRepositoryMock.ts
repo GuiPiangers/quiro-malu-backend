@@ -1,13 +1,14 @@
 import { IMessageSendStrategyRepository } from "../messageSendStrategy/IMessageSendStrategyRepository";
+import type { Mocked } from "vitest";
 
 export const createMockMessageSendStrategyRepository =
-  (): jest.Mocked<IMessageSendStrategyRepository> => ({
-    save: jest.fn(),
-    listByUserIdPaged: jest.fn(),
-    findByIdAndUserId: jest.fn(),
-    findActiveStrategyByUserAndCampaign: jest.fn(),
-    upsertCampaignBinding: jest.fn(),
-    deleteCampaignBinding: jest.fn(),
-    updateByIdAndUserId: jest.fn(),
-    deleteByIdAndUserId: jest.fn(),
+  (): Mocked<IMessageSendStrategyRepository> => ({
+    save: vi.fn(),
+    listByUserIdPaged: vi.fn(),
+    findByIdAndUserId: vi.fn(),
+    findActiveStrategyByUserAndCampaign: vi.fn(),
+    upsertCampaignBinding: vi.fn(),
+    deleteCampaignBinding: vi.fn(),
+    updateByIdAndUserId: vi.fn(),
+    deleteByIdAndUserId: vi.fn(),
   });

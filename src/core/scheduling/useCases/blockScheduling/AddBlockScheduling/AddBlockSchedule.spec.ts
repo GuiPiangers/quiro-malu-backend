@@ -15,13 +15,13 @@ describe("AddBlockScheduleUseCase", () => {
   const mockSchedulingRepository = createMockSchedulingRepository();
 
   beforeAll(() => {
-    jest
+    vi
       .useFakeTimers()
       .setSystemTime(new Date("2025-01-10T12:00:00Z").getTime());
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     addBlockSchedulingUseCase = new AddBlockSchedulingUseCase(
       mockBlockSchedulingRepository,
       mockSchedulingRepository,

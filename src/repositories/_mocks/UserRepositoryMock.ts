@@ -1,21 +1,22 @@
 import { IGenerateTokenProvider } from "../token/IGenerateTokenProvider";
 import { IRefreshTokenProvider } from "../token/IRefreshTokenProvider";
 import { IUserRepository } from "../user/IUserRepository";
+import type { Mocked } from "vitest";
 
 export const createMockUserRepository = (): IUserRepository => ({
-  getByEmail: jest.fn(),
-  getById: jest.fn(),
-  save: jest.fn(),
+  getByEmail: vi.fn(),
+  getById: vi.fn(),
+  save: vi.fn(),
 });
 
 export const createMockRefreshTokenProvider =
-  (): jest.Mocked<IRefreshTokenProvider> => ({
-    delete: jest.fn(),
-    generate: jest.fn(),
-    getRefreshToken: jest.fn(),
+  (): Mocked<IRefreshTokenProvider> => ({
+    delete: vi.fn(),
+    generate: vi.fn(),
+    getRefreshToken: vi.fn(),
   });
 
 export const createMockGenerateTokenProvider =
-  (): jest.Mocked<IGenerateTokenProvider> => ({
-    execute: jest.fn(),
+  (): Mocked<IGenerateTokenProvider> => ({
+    execute: vi.fn(),
   });

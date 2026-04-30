@@ -16,7 +16,7 @@ describe("RefreshTokenUseCase", () => {
   let refreshTokenUseCase: RefreshTokenUseCase;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     refreshTokenUseCase = new RefreshTokenUseCase(
       mockRefreshTokenProvider,
       mockGenerateTokenProvider,

@@ -15,7 +15,7 @@ Operational assets live in `deploy/`, `nginx/`, `prometheus/`, `grafana/`, `loki
 - `npm run dev`: starts local API with hot reload (`ts-node-dev`) on port `8000` by default.
 - `npm run build`: compiles TypeScript to `build/`.
 - `npm start`: runs compiled server from `build/src/server.js`.
-- `npm run test`: runs Jest test suite (`--maxWorkers=50%`).
+- `npm run test`: runs Vitest (`vitest run`).
 - `npm run test:watch`: watch mode for local TDD.
 - `npm run test:coverage`: generates coverage report in `coverage/`.
 - `npm run knex:migrate` / `npm run knex:rollback`: apply or rollback SQL migrations.
@@ -29,7 +29,7 @@ Linting uses ESLint with `@rocketseat/eslint-config/node` (`.eslintrc.json`); fi
 - For tests, use `*.spec.ts`.
 
 ## Testing Guidelines
-Framework: Jest with `ts-jest` (`jest.config.ts`).  
+Framework: Vitest (`vitest.config.ts`).  
 Default pattern is `**/**/*.spec.ts`; keep tests near the module they validate.  
 Coverage is collected from `src/**/*.ts` with exclusions for wiring/infrastructure layers; prioritize assertions around `core` models and use cases.
 

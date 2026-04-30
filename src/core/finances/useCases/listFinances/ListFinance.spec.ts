@@ -9,7 +9,7 @@ describe("listFinanceUseCase", () => {
   const mockFinanceRepository = createMockFinanceRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     listFinancesUseCase = new ListFinancesUseCase(mockFinanceRepository);
   });
 

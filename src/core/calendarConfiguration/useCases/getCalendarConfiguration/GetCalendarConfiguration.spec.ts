@@ -2,10 +2,11 @@ import { createMockCalendarConfigurationRepository } from "../../../../repositor
 import { ICalendarConfigurationRepository } from "../../../../repositories/calendarConfiguration/ICalendarConfigurationRepository";
 import { GetCalendarConfigurationUseCase } from "./GetCalendarConfiguration";
 import { CalendarConfiguration } from "../../models/CalendarConfiguration";
+import type { Mocked } from "vitest";
 
 describe("GetCalendarConfigurationUseCase", () => {
   let useCase: GetCalendarConfigurationUseCase;
-  let repositoryMock: jest.Mocked<ICalendarConfigurationRepository>;
+  let repositoryMock: Mocked<ICalendarConfigurationRepository>;
 
   beforeEach(() => {
     repositoryMock = createMockCalendarConfigurationRepository();

@@ -11,7 +11,7 @@ describe("listEventsUseCase", () => {
   const mockBlockScheduleRepository = createMockBlockScheduleRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     listEventsUseCase = new ListEventsUseCase(
       mockSchedulingRepository,
       mockBlockScheduleRepository,

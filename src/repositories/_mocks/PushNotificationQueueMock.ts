@@ -1,7 +1,8 @@
 import { IPushNotificationQueue } from "../../database/bull/pushNotifications/IPushNotificationQueue";
+import type { Mocked } from "vitest";
 
-export const createMockPushNotificationQueue: jest.Mocked<IPushNotificationQueue> =
+export const createMockPushNotificationQueue: Mocked<IPushNotificationQueue> =
   {
-    add: jest.fn(),
-    delete: jest.fn(),
+    add: vi.fn(),
+    delete: vi.fn(),
   };

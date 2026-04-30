@@ -7,7 +7,7 @@ describe("SetAnamnesisUseCase", () => {
   const mockAnamnesisRepository = createMockAnamnesisRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     setAnamnesisUseCase = new SetAnamnesisUseCase(mockAnamnesisRepository);
   });
 

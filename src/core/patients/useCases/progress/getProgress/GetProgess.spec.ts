@@ -7,7 +7,7 @@ describe("getProgressUseCase", () => {
   const mockProgressRepository = createMockProgressRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     getProgressUseCase = new GetProgressUseCase(mockProgressRepository);
   });
 

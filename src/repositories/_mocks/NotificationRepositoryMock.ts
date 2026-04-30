@@ -1,12 +1,13 @@
 import { INotificationRepository } from "../notification/INotificationRepository";
+import type { Mocked } from "vitest";
 
 export const createMockNotificationRepository =
-  (): jest.Mocked<INotificationRepository> => ({
-    delete: jest.fn(),
-    get: jest.fn(),
-    list: jest.fn(),
-    save: jest.fn(),
-    update: jest.fn(),
-    countNotReadOrNeedAct: jest.fn(),
-    deleteMany: jest.fn(),
+  (): Mocked<INotificationRepository> => ({
+    delete: vi.fn(),
+    get: vi.fn(),
+    list: vi.fn(),
+    save: vi.fn(),
+    update: vi.fn(),
+    countNotReadOrNeedAct: vi.fn(),
+    deleteMany: vi.fn(),
   });

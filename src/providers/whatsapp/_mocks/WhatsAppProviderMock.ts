@@ -1,9 +1,10 @@
 import { IWhatsAppProvider } from "../IWhatsAppProvider";
+import type { Mocked } from "vitest";
 
-export const createMockWhatsAppProvider = (): jest.Mocked<IWhatsAppProvider> => ({
-  sendMessage: jest.fn(),
-  createInstance: jest.fn(),
-  getQrCode: jest.fn(),
-  getConnectionState: jest.fn(),
-  deleteInstance: jest.fn(),
+export const createMockWhatsAppProvider = (): Mocked<IWhatsAppProvider> => ({
+  sendMessage: vi.fn(),
+  createInstance: vi.fn(),
+  getQrCode: vi.fn(),
+  getConnectionState: vi.fn(),
+  deleteInstance: vi.fn(),
 });

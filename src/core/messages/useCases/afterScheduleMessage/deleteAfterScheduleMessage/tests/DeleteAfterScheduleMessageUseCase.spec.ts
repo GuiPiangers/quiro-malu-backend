@@ -8,9 +8,9 @@ describe("DeleteAfterScheduleMessageUseCase", () => {
     const afterScheduleMessageRepository = createMockAfterScheduleMessageRepository();
     const schedulingRepository = createMockSchedulingRepository();
     const afterScheduleQueue = {
-      remove: jest.fn().mockResolvedValue(undefined),
+      remove: vi.fn().mockResolvedValue(undefined),
     };
-    const appEventListener = { emit: jest.fn() };
+    const appEventListener = { emit: vi.fn() };
 
     const sut = new DeleteAfterScheduleMessageUseCase(
       afterScheduleMessageRepository,

@@ -4,13 +4,14 @@ import { BlockSchedule } from "../../../models/BlockSchedule";
 import { Scheduling } from "../../../models/Scheduling";
 import { DateTime } from "../../../../shared/Date";
 import { EditBlockScheduleUseCase } from "./editBlockScheduleUseCase";
+import type { Mocked } from "vitest";
 
 describe("EditBlockScheduleUseCase", () => {
   let editBlockScheduleUseCase: EditBlockScheduleUseCase;
-  let blockScheduleRepository: jest.Mocked<
+  let blockScheduleRepository: Mocked<
     ReturnType<typeof createMockBlockScheduleRepository>
   >;
-  let schedulingRepository: jest.Mocked<
+  let schedulingRepository: Mocked<
     ReturnType<typeof createMockSchedulingRepository>
   >;
 

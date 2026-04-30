@@ -5,7 +5,7 @@ import { DeleteBirthdayMessageUseCase } from "../DeleteBirthdayMessageUseCase";
 describe("DeleteBirthdayMessageUseCase", () => {
   const makeSut = () => {
     const birthdayMessageRepository = createMockBirthdayMessageRepository();
-    const appEventListener = { emit: jest.fn() };
+    const appEventListener = { emit: vi.fn() };
 
     const sut = new DeleteBirthdayMessageUseCase(
       birthdayMessageRepository,

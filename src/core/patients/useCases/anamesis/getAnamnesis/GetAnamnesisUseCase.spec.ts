@@ -7,7 +7,7 @@ describe("Get anamnesis use case", () => {
   const mockAnamnesisRepository = createMockAnamnesisRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     getAnamnesisUseCase = new GetAnamnesisUseCase(mockAnamnesisRepository);
   });
 

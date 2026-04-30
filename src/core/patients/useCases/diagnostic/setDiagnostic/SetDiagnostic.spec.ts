@@ -6,7 +6,7 @@ describe("setDiagnosticUseCase", () => {
   const mockDiagnosticRepository = createMockDiagnosticRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     setDiagnosticUseCase = new SetDiagnosticUseCase(mockDiagnosticRepository);
   });
 

@@ -6,7 +6,7 @@ describe("getQtdSchedulesByDayUseCase", () => {
   const mockSchedulingRepository = createMockSchedulingRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     getQtdSchedulesByDayUseCase = new GetQtdSchedulesByDay(
       mockSchedulingRepository,
     );

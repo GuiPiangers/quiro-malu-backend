@@ -47,9 +47,7 @@ describe("Update patient", () => {
     await patientRepository.save(patientData2, "userid");
     await expect(
       updatePatientUseCase.execute(patientUpdated, "userid"),
-    ).rejects.toEqual(
-      new Error("Já existe um usuário cadastrado com esse CPF"),
-    );
+    ).rejects.toThrow("Já existe um usuário cadastrado com esse CPF");
   });
 
   it("Should be able to update a patient", async () => {

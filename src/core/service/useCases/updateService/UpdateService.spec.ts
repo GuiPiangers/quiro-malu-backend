@@ -8,7 +8,7 @@ describe("updateServiceUseCase", () => {
   const mockServiceRepository = createMockServiceRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     updateServiceUseCase = new UpdateServiceUseCase(mockServiceRepository);
   });
 

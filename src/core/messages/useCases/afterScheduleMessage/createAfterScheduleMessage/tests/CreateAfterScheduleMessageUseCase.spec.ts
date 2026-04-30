@@ -7,7 +7,7 @@ describe("CreateAfterScheduleMessageUseCase", () => {
   it("deve criar entidade, persistir e emitir afterScheduleMessageCreate", async () => {
     const afterScheduleMessageRepository = createMockAfterScheduleMessageRepository();
     const appEventListener = new AppEventListener();
-    const emitSpy = jest.spyOn(appEventListener, "emit");
+    const emitSpy = vi.spyOn(appEventListener, "emit");
 
     const useCase = new CreateAfterScheduleMessageUseCase(
       afterScheduleMessageRepository,
@@ -56,7 +56,7 @@ describe("CreateAfterScheduleMessageUseCase", () => {
   it("deve persistir isActive false quando informado", async () => {
     const afterScheduleMessageRepository = createMockAfterScheduleMessageRepository();
     const appEventListener = new AppEventListener();
-    const emitSpy = jest.spyOn(appEventListener, "emit");
+    const emitSpy = vi.spyOn(appEventListener, "emit");
 
     const useCase = new CreateAfterScheduleMessageUseCase(
       afterScheduleMessageRepository,

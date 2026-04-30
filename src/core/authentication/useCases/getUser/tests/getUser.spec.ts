@@ -30,7 +30,7 @@ describe("get user", () => {
   it("Should not be get an user that not exist", async () => {
     await expect(
       getUserProfileUseCase.execute("notExistingId"),
-    ).rejects.toEqual(new Error("Não foi possível encontrar o usuário"));
+    ).rejects.toThrow("Não foi possível encontrar o usuário");
   });
 });
 

@@ -2,7 +2,7 @@ import { Service, ServiceDTO } from "../Service";
 
 describe("Service", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("should create Service with provided id", () => {

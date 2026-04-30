@@ -6,6 +6,7 @@ import { InMemoryRefreshToken } from "../../../../../repositories/token/inMemory
 import { IUserRepository } from "../../../../../repositories/user/IUserRepository";
 import { InMemoryUserRepository } from "../../../../../repositories/user/inMemory/InMemoryUserRepository";
 import { LoginUserUseCase } from "../LoginUserUseCase";
+import type { Mock } from "vitest";
 
 const stubFingerprint = "stub-fingerprint-hash";
 
@@ -14,13 +15,13 @@ describe("Login user", () => {
   let loginUserUseCase: LoginUserUseCase;
   let refreshToken: IRefreshTokenProvider;
   let generateToken: IGenerateTokenProvider;
-  let registerUserFingerprint: { execute: jest.Mock };
+  let registerUserFingerprint: { execute: Mock };
 
   beforeAll(() => {
     userRepository = new InMemoryUserRepository();
     refreshToken = new InMemoryRefreshToken();
     generateToken = new InMemoryGenerateToken();
-    registerUserFingerprint = { execute: jest.fn().mockResolvedValue(undefined) };
+    registerUserFingerprint = { execute: vi.fn().mockResolvedValue(undefined) };
     loginUserUseCase = new LoginUserUseCase(
       userRepository,
       refreshToken,
@@ -62,7 +63,7 @@ describe("Login user", () => {
     const password = "Senha123";
     await expect(
       loginUserUseCase.execute(email, password, stubFingerprint),
-    ).rejects.toEqual(new Error("Email ou senha inválidos"));
+    ).rejects.toThrow("Email ou senha inválidos");
   });
 
   it("Should not be able to login if password is not corrected", async () => {
@@ -81,7 +82,7 @@ describe("Login user", () => {
     await userRepository.save(userDTO);
     await expect(
       loginUserUseCase.execute(email, wrongPassword, stubFingerprint),
-    ).rejects.toEqual(new Error("Email ou senha inválidos"));
+    ).rejects.toThrow("Email ou senha inválidos");
   });
 });
 

@@ -20,7 +20,7 @@ describe("SendPushNotificationUseCase", () => {
   beforeEach(() => {
     pushNotificationProvider = createMockPushNotificationProvider();
     useCase = new SendPushNotificationUseCase(pushNotificationProvider);
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe("execute", () => {

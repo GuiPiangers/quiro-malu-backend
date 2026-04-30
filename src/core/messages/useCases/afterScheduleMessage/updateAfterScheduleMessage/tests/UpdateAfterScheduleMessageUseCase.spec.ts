@@ -2,7 +2,7 @@ import { createMockAfterScheduleMessageRepository } from "../../../../../../repo
 import { ApiError } from "../../../../../../utils/ApiError";
 import { UpdateAfterScheduleMessageUseCase } from "../UpdateAfterScheduleMessageUseCase";
 
-const makeAppEventListener = () => ({ emit: jest.fn(), on: jest.fn() } as any);
+const makeAppEventListener = () => ({ emit: vi.fn(), on: vi.fn() } as any);
 
 const existingConfig = {
   id: "msg-1",

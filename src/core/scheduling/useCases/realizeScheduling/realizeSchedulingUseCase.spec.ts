@@ -5,7 +5,7 @@ import { ApiError } from "../../../../utils/ApiError";
 import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
 
 const mockedProgressRepository = {
-  getByScheduling: jest.fn(),
+  getByScheduling: vi.fn(),
 };
 
 describe("Realize scheduling use case", () => {
@@ -13,7 +13,7 @@ describe("Realize scheduling use case", () => {
   const mockSchedulingRepository = createMockSchedulingRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     realizeSchedulingUseCase = new RealizeSchedulingUseCase(
       mockSchedulingRepository,
       mockedProgressRepository as unknown as IProgressRepository,

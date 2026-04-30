@@ -5,10 +5,11 @@ import {
 import { CalendarConfiguration } from "../../models/CalendarConfiguration";
 import { ICalendarConfigurationRepository } from "../../../../repositories/calendarConfiguration/ICalendarConfigurationRepository";
 import { createMockCalendarConfigurationRepository } from "../../../../repositories/_mocks/CalendarConfigurationRepositoryMock";
+import type { Mocked } from "vitest";
 
 describe("SaveCalendarConfigurationUseCase", () => {
   let useCase: SaveCalendarConfigurationUseCase;
-  let repositoryMock: jest.Mocked<ICalendarConfigurationRepository>;
+  let repositoryMock: Mocked<ICalendarConfigurationRepository>;
 
   beforeEach(() => {
     repositoryMock = createMockCalendarConfigurationRepository();

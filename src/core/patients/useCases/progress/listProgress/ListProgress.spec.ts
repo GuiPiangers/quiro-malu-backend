@@ -6,7 +6,7 @@ describe("listProgressUseCase", () => {
   const mockProgressRepository = createMockProgressRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     listProgressUseCase = new ListProgressUseCase(mockProgressRepository);
   });
 

@@ -6,7 +6,7 @@ describe("Logout", () => {
   let logoutUseCase: LogoutUseCase;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     logoutUseCase = new LogoutUseCase(mockRefreshTokenProvider);
   });
 

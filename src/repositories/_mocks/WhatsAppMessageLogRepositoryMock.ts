@@ -1,11 +1,12 @@
 import { IWhatsAppMessageLogRepository } from "../whatsapp/IWhatsAppMessageLogRepository";
+import type { Mocked } from "vitest";
 
 export const createMockWhatsAppMessageLogRepository =
-  (): jest.Mocked<IWhatsAppMessageLogRepository> => ({
-    save: jest.fn(),
-    findById: jest.fn().mockResolvedValue(null),
-    updateByProviderMessageId: jest.fn(),
-    listByUserId: jest.fn(),
-    summaryByUserId: jest.fn(),
-    getBySchedulingAndCampaignId: jest.fn(),
+  (): Mocked<IWhatsAppMessageLogRepository> => ({
+    save: vi.fn(),
+    findById: vi.fn().mockResolvedValue(null),
+    updateByProviderMessageId: vi.fn(),
+    listByUserId: vi.fn(),
+    summaryByUserId: vi.fn(),
+    getBySchedulingAndCampaignId: vi.fn(),
   });

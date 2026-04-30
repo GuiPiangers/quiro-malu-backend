@@ -1,12 +1,13 @@
 import { IProgressRepository } from "../progress/IProgressRepository";
+import type { Mocked } from "vitest";
 
 export const createMockProgressRepository =
-  (): jest.Mocked<IProgressRepository> => ({
-    count: jest.fn(),
-    delete: jest.fn(),
-    get: jest.fn(),
-    getByScheduling: jest.fn(),
-    list: jest.fn(),
-    save: jest.fn(),
-    update: jest.fn(),
+  (): Mocked<IProgressRepository> => ({
+    count: vi.fn(),
+    delete: vi.fn(),
+    get: vi.fn(),
+    getByScheduling: vi.fn(),
+    list: vi.fn(),
+    save: vi.fn(),
+    update: vi.fn(),
   });

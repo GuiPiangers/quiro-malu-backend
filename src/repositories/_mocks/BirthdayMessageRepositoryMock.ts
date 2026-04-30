@@ -1,11 +1,12 @@
 import { IBirthdayMessageRepository } from "../messages/IBirthdayMessageRepository";
+import type { Mocked } from "vitest";
 
 export const createMockBirthdayMessageRepository =
-  (): jest.Mocked<IBirthdayMessageRepository> => ({
-    save: jest.fn(),
-    findActiveByUserId: jest.fn(),
-    getById: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-    listByUserIdPaged: jest.fn(),
+  (): Mocked<IBirthdayMessageRepository> => ({
+    save: vi.fn(),
+    findActiveByUserId: vi.fn(),
+    getById: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+    listByUserIdPaged: vi.fn(),
   });

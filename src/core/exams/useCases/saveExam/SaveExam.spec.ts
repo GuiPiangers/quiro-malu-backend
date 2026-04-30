@@ -14,7 +14,7 @@ describe("SaveExamUseCase", () => {
   beforeEach(() => {
     mockExamRepository = createMockExamRepository();
     mockExamFileStorageRepository = createMockExamFileStorageRepository();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     saveExamUseCase = new SaveExamUseCase(
       mockExamRepository,
       mockExamFileStorageRepository,

@@ -1,18 +1,19 @@
 import { IExamsFileStorageRepository } from "../examsFileStorage/IExamsFileStorageRepository";
 import { IExamsRepository } from "../examsRepository/IExamsRepository";
+import type { Mocked } from "vitest";
 
-export const createMockExamRepository = (): jest.Mocked<IExamsRepository> => ({
-  save: jest.fn(),
-  update: jest.fn(),
-  get: jest.fn(),
-  list: jest.fn(),
-  delete: jest.fn(),
-  count: jest.fn(),
+export const createMockExamRepository = (): Mocked<IExamsRepository> => ({
+  save: vi.fn(),
+  update: vi.fn(),
+  get: vi.fn(),
+  list: vi.fn(),
+  delete: vi.fn(),
+  count: vi.fn(),
 });
 
 export const createMockExamFileStorageRepository =
-  (): jest.Mocked<IExamsFileStorageRepository> => ({
-    save: jest.fn(),
-    get: jest.fn(),
-    delete: jest.fn(),
+  (): Mocked<IExamsFileStorageRepository> => ({
+    save: vi.fn(),
+    get: vi.fn(),
+    delete: vi.fn(),
   });

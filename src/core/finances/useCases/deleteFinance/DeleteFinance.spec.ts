@@ -7,7 +7,7 @@ describe("DeleteFinanceUseCase", () => {
   const mockFinanceRepository = createMockFinanceRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     deleteFinanceUseCase = new DeleteFinanceUseCase(mockFinanceRepository);
   });
 

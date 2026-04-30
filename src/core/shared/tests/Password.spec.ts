@@ -1,8 +1,9 @@
 import { Password } from "../Password";
 import { ApiError } from "../../../utils/ApiError";
 import { Crypto } from "../helpers/Crypto";
+import type { Mock } from "vitest";
 
-jest.mock("../helpers/Crypto");
+vi.mock("../helpers/Crypto");
 
 describe("Password", () => {
   it("should throw an error if the password is shorter than 5 characters", () => {
@@ -34,7 +35,7 @@ describe("Password", () => {
   it("should generate a hash for a valid password", async () => {
     const password = new Password("Abcd1!");
     const fakeHash = "hashedpassword123";
-    (Crypto.createRandomHash as jest.Mock).mockResolvedValue(fakeHash);
+    (Crypto.createRandomHash as Mock).mockResolvedValue(fakeHash);
 
     const hash = await password.getHash();
 

@@ -2,7 +2,7 @@ import { createMockBirthdayMessageRepository } from "../../../../../../repositor
 import { ApiError } from "../../../../../../utils/ApiError";
 import { UpdateBirthdayMessageUseCase } from "../UpdateBirthdayMessageUseCase";
 
-const makeAppEventListener = () => ({ emit: jest.fn(), on: jest.fn() } as any);
+const makeAppEventListener = () => ({ emit: vi.fn(), on: vi.fn() } as any);
 
 const existingConfig = {
   id: "camp-1",

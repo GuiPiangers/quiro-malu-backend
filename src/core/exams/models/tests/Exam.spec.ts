@@ -2,7 +2,7 @@ import { Exam, ExamDTO } from "../Exam";
 
 describe("exam", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("should create exam with provided id", () => {

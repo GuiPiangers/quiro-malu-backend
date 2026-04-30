@@ -10,7 +10,7 @@ describe("CreateNotificationUseCase", () => {
   > = createMockNotificationRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     saveAndSendNotificationUseCase = new SaveSendNotificationUseCase(
       mockNotificationRepository,
     );

@@ -8,7 +8,7 @@ describe("GetFinanceBySchedulingUseCase", () => {
   const mockFinanceRepository = createMockFinanceRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     getFinanceBySchedulingUseCase = new GetFinanceBySchedulingUseCase(
       mockFinanceRepository,
     );

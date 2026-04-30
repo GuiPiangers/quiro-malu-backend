@@ -8,7 +8,7 @@ describe("CreateBeforeScheduleMessageUseCase", () => {
       createMockBeforeScheduleMessageRepository();
 
     const appEventListener = new AppEventListener();
-    const emitSpy = jest.spyOn(appEventListener, "emit");
+    const emitSpy = vi.spyOn(appEventListener, "emit");
 
     const useCase = new CreateBeforeScheduleMessageUseCase(
       beforeScheduleMessageRepository,
@@ -59,7 +59,7 @@ describe("CreateBeforeScheduleMessageUseCase", () => {
       createMockBeforeScheduleMessageRepository();
 
     const appEventListener = new AppEventListener();
-    const emitSpy = jest.spyOn(appEventListener, "emit");
+    const emitSpy = vi.spyOn(appEventListener, "emit");
 
     const useCase = new CreateBeforeScheduleMessageUseCase(
       beforeScheduleMessageRepository,

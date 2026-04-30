@@ -12,7 +12,7 @@ describe("Service sync class observer", () => {
   });
 
   it("should be able to addObservers", () => {
-    const mockObserver = jest.fn();
+    const mockObserver = vi.fn();
     schedulingSyncService.addObserver(
       EIdentifierObserver.SCHEDULING,
       mockObserver,
@@ -24,8 +24,8 @@ describe("Service sync class observer", () => {
   });
 
   it("Should call all relevant observer on synchronizeSchedulingService", async () => {
-    const mockObserver = jest.fn().mockResolvedValue("Success");
-    const irrelevantObserver = jest.fn().mockResolvedValue("Irrelevant");
+    const mockObserver = vi.fn().mockResolvedValue("Success");
+    const irrelevantObserver = vi.fn().mockResolvedValue("Irrelevant");
 
     schedulingSyncService.addObserver(
       EIdentifierObserver.SCHEDULING,
@@ -52,8 +52,8 @@ describe("Service sync class observer", () => {
   });
 
   it("Should call all relevant observer on synchronizeProgressService", async () => {
-    const mockObserver = jest.fn().mockResolvedValue("Success");
-    const irrelevantObserver = jest.fn().mockResolvedValue("Irrelevant");
+    const mockObserver = vi.fn().mockResolvedValue("Success");
+    const irrelevantObserver = vi.fn().mockResolvedValue("Irrelevant");
 
     schedulingSyncService.addObserver(
       EIdentifierObserver.PROGRESS,

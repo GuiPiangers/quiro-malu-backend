@@ -1,10 +1,11 @@
 import { IPushNotificationProvider } from "../notification/IPushNotificationProvider";
+import type { Mocked } from "vitest";
 
 export const createMockPushNotificationProvider =
-  (): jest.Mocked<IPushNotificationProvider> => ({
-    send: jest.fn(),
-    subscribe: jest.fn(),
-    updateSubscription: jest.fn(),
-    unsubscribe: jest.fn(),
-    getAllowedSubscriptions: jest.fn(),
+  (): Mocked<IPushNotificationProvider> => ({
+    send: vi.fn(),
+    subscribe: vi.fn(),
+    updateSubscription: vi.fn(),
+    unsubscribe: vi.fn(),
+    getAllowedSubscriptions: vi.fn(),
   });

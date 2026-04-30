@@ -7,7 +7,7 @@ describe("listSchedulingUseCase", () => {
   const mockSchedulingRepository = createMockSchedulingRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     listSchedulingUseCase = new ListSchedulingUseCase(mockSchedulingRepository);
   });
 

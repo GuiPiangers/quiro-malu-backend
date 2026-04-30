@@ -1,10 +1,11 @@
 import { IFinanceRepository } from "../finance/IFinanceRepository";
+import type { Mocked } from "vitest";
 
-export const createMockFinanceRepository= (): jest.Mocked<IFinanceRepository>  => ( {
-  create: jest.fn(),
-  update: jest.fn(),
-  list: jest.fn(),
-  get: jest.fn(),
-  getByScheduling: jest.fn(),
-  delete: jest.fn(),
+export const createMockFinanceRepository= (): Mocked<IFinanceRepository>  => ( {
+  create: vi.fn(),
+  update: vi.fn(),
+  list: vi.fn(),
+  get: vi.fn(),
+  getByScheduling: vi.fn(),
+  delete: vi.fn(),
 });

@@ -12,7 +12,7 @@ describe("SubscribeNotificationUseCase", () => {
     subscribeNotificationUseCase = new SubscribeNotificationUseCase(
       pushNotificationProvider,
     );
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("should not subscribe notification if it subscription was already registered", async () => {

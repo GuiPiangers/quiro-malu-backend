@@ -1,9 +1,10 @@
 import { IWhatsAppInstanceRepository } from "../whatsapp/IWhatsAppInstanceRepository";
+import type { Mocked } from "vitest";
 
 export const createMockWhatsAppInstanceRepository =
-  (): jest.Mocked<IWhatsAppInstanceRepository> => ({
-    save: jest.fn(),
-    delete: jest.fn(),
-    getByUserId: jest.fn(),
-    getByInstanceName: jest.fn(),
+  (): Mocked<IWhatsAppInstanceRepository> => ({
+    save: vi.fn(),
+    delete: vi.fn(),
+    getByUserId: vi.fn(),
+    getByInstanceName: vi.fn(),
   });

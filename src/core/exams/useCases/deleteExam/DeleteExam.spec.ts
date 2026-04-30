@@ -6,8 +6,8 @@ describe("DeleteExamUseCase", () => {
   const mockExamRepository = createMockExamRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    jest
+    vi.clearAllMocks();
+    vi
       .useFakeTimers()
       .setSystemTime(new Date("2025-01-10T12:00:00Z").getTime());
     deleteExamUseCase = new DeleteExamUseCase(mockExamRepository);

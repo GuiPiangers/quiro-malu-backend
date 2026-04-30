@@ -1,13 +1,14 @@
 import { Location, LocationDTO } from "../Location";
 import { Cep } from "../../shared/Cep";
 import { Name } from "../../shared/Name";
+import type { MockedClass } from "vitest";
 
-jest.mock("../../shared/Cep");
-jest.mock("../../shared/Name");
+vi.mock("../../shared/Cep");
+vi.mock("../../shared/Name");
 
 describe("Location", () => {
-  const MockedCep = Cep as jest.MockedClass<typeof Cep>;
-  const MockedName = Name as jest.MockedClass<typeof Name>;
+  const MockedCep = Cep as MockedClass<typeof Cep>;
+  const MockedName = Name as MockedClass<typeof Name>;
 
   beforeEach(() => {
     MockedCep.mockClear();
@@ -15,8 +16,12 @@ describe("Location", () => {
   });
 
   test("should create Location with valid values", () => {
-    MockedCep.mockImplementation((cep: string) => ({ value: cep }) as Cep);
-    MockedName.mockImplementation((name: string) => ({ value: name }) as Name);
+    MockedCep.mockImplementation(function (this: { value: string }, cep: string) {
+      this.value = cep;
+    } as any);
+    MockedName.mockImplementation(function (this: { value: string }, name: string) {
+      this.value = name;
+    } as any);
 
     const locationProps: LocationDTO = {
       cep: "12345-678",
@@ -36,8 +41,12 @@ describe("Location", () => {
   });
 
   test("should return correct LocationDTO", () => {
-    MockedCep.mockImplementation((cep: string) => ({ value: cep }) as Cep);
-    MockedName.mockImplementation((name: string) => ({ value: name }) as Name);
+    MockedCep.mockImplementation(function (this: { value: string }, cep: string) {
+      this.value = cep;
+    } as any);
+    MockedName.mockImplementation(function (this: { value: string }, name: string) {
+      this.value = name;
+    } as any);
 
     const locationProps: LocationDTO = {
       cep: "12345-678",

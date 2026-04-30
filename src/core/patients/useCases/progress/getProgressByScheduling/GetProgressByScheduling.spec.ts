@@ -7,7 +7,7 @@ describe("getProgressBySchedulingUseCase", () => {
   const mockProgressRepository = createMockProgressRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     getProgressBySchedulingUseCase = new GetProgressBySchedulingUseCase(
       mockProgressRepository,
     );

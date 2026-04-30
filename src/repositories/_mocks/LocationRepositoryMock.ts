@@ -1,8 +1,9 @@
 import { ILocationRepository } from "../location/ILocationRepository";
+import type { Mocked } from "vitest";
 
-export const createMockLocationRepository= (): jest.Mocked<ILocationRepository>  => ( {
-  getLocation: jest.fn(),
-  save: jest.fn(),
-  update: jest.fn(),
-  saveMany: jest.fn(),
+export const createMockLocationRepository= (): Mocked<ILocationRepository>  => ( {
+  getLocation: vi.fn(),
+  save: vi.fn(),
+  update: vi.fn(),
+  saveMany: vi.fn(),
 });

@@ -7,7 +7,7 @@ describe("List patients", () => {
   const mockPatientRepository = createMockPatientRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     listPatientUseCase = new ListPatientsUseCase(mockPatientRepository);
   });
 

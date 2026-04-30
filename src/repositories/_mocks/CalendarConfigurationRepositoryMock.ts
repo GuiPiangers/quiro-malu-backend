@@ -1,8 +1,9 @@
 import { ICalendarConfigurationRepository } from "../calendarConfiguration/ICalendarConfigurationRepository";
+import type { Mocked } from "vitest";
 
 export const createMockCalendarConfigurationRepository =
-  (): jest.Mocked<ICalendarConfigurationRepository> => ({
-    get: jest.fn(),
-    save: jest.fn(),
-    update: jest.fn(),
+  (): Mocked<ICalendarConfigurationRepository> => ({
+    get: vi.fn(),
+    save: vi.fn(),
+    update: vi.fn(),
   });

@@ -10,21 +10,21 @@ const flushPromises = async () => {
 
 describe("AfterScheduleMessageEventHandlers", () => {
   beforeAll(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it("não deve agendar job no createSchedule quando status não é Atendido", async () => {
-    jest.setSystemTime(
+    vi.setSystemTime(
       Luxon.fromISO("2025-01-01T12:00", { zone: "America/Sao_Paulo" }).toMillis(),
     );
 
     const afterScheduleQueue = {
-      upsert: jest.fn().mockResolvedValue(undefined),
-      remove: jest.fn().mockResolvedValue(undefined),
+      upsert: vi.fn().mockResolvedValue(undefined),
+      remove: vi.fn().mockResolvedValue(undefined),
     };
 
     const appEventListener = new AppEventListener();
@@ -60,13 +60,13 @@ describe("AfterScheduleMessageEventHandlers", () => {
   });
 
   it("deve agendar job no updateSchedule quando status é Atendido", async () => {
-    jest.setSystemTime(
+    vi.setSystemTime(
       Luxon.fromISO("2025-01-01T12:00", { zone: "America/Sao_Paulo" }).toMillis(),
     );
 
     const afterScheduleQueue = {
-      upsert: jest.fn().mockResolvedValue(undefined),
-      remove: jest.fn().mockResolvedValue(undefined),
+      upsert: vi.fn().mockResolvedValue(undefined),
+      remove: vi.fn().mockResolvedValue(undefined),
     };
 
     const appEventListener = new AppEventListener();
@@ -111,13 +111,13 @@ describe("AfterScheduleMessageEventHandlers", () => {
   });
 
   it("deve remover o job no updateSchedule quando status não é Atendido", async () => {
-    jest.setSystemTime(
+    vi.setSystemTime(
       Luxon.fromISO("2025-01-01T12:00", { zone: "America/Sao_Paulo" }).toMillis(),
     );
 
     const afterScheduleQueue = {
-      upsert: jest.fn().mockResolvedValue(undefined),
-      remove: jest.fn().mockResolvedValue(undefined),
+      upsert: vi.fn().mockResolvedValue(undefined),
+      remove: vi.fn().mockResolvedValue(undefined),
     };
 
     const appEventListener = new AppEventListener();
@@ -155,13 +155,13 @@ describe("AfterScheduleMessageEventHandlers", () => {
   });
 
   it("não deve agendar job quando config está inativa", async () => {
-    jest.setSystemTime(
+    vi.setSystemTime(
       Luxon.fromISO("2025-01-01T12:00", { zone: "America/Sao_Paulo" }).toMillis(),
     );
 
     const afterScheduleQueue = {
-      upsert: jest.fn().mockResolvedValue(undefined),
-      remove: jest.fn().mockResolvedValue(undefined),
+      upsert: vi.fn().mockResolvedValue(undefined),
+      remove: vi.fn().mockResolvedValue(undefined),
     };
 
     const appEventListener = new AppEventListener();
@@ -198,8 +198,8 @@ describe("AfterScheduleMessageEventHandlers", () => {
 
   it("deve remover jobs no deleteSchedule", async () => {
     const afterScheduleQueue = {
-      upsert: jest.fn().mockResolvedValue(undefined),
-      remove: jest.fn().mockResolvedValue(undefined),
+      upsert: vi.fn().mockResolvedValue(undefined),
+      remove: vi.fn().mockResolvedValue(undefined),
     };
 
     const appEventListener = new AppEventListener();
@@ -243,13 +243,13 @@ describe("AfterScheduleMessageEventHandlers", () => {
   });
 
   it("deve logar no afterScheduleMessageSend", async () => {
-    const infoSpy = jest
+    const infoSpy = vi
       .spyOn(logger, "info")
       .mockImplementation(() => logger as any);
 
     const afterScheduleQueue = {
-      upsert: jest.fn(),
-      remove: jest.fn(),
+      upsert: vi.fn(),
+      remove: vi.fn(),
     };
 
     const appEventListener = new AppEventListener();

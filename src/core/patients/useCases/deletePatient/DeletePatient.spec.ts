@@ -6,7 +6,7 @@ describe("DeletePatientUseCase", () => {
   const mockPatientRepository = createMockPatientRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     deletePatientUseCase = new DeletePatientUseCase(mockPatientRepository);
   });
 

@@ -3,13 +3,13 @@ import { AfterScheduleQueue } from "../AfterScheduleQueue";
 describe("AfterScheduleQueue", () => {
   it("upsert should remove existing job and add a new one", async () => {
     const queueProvider = {
-      add: jest.fn(),
-      delete: jest.fn().mockRejectedValue(new Error("not found")),
-      process: jest.fn(),
+      add: vi.fn(),
+      delete: vi.fn().mockRejectedValue(new Error("not found")),
+      process: vi.fn(),
     };
 
     const sendAfterScheduleMessageUseCase = {
-      execute: jest.fn(),
+      execute: vi.fn(),
     };
 
     const queue = new AfterScheduleQueue(
@@ -42,13 +42,13 @@ describe("AfterScheduleQueue", () => {
 
   it("remove should ignore when job does not exist", async () => {
     const queueProvider = {
-      add: jest.fn(),
-      delete: jest.fn().mockRejectedValue(new Error("not found")),
-      process: jest.fn(),
+      add: vi.fn(),
+      delete: vi.fn().mockRejectedValue(new Error("not found")),
+      process: vi.fn(),
     };
 
     const sendAfterScheduleMessageUseCase = {
-      execute: jest.fn(),
+      execute: vi.fn(),
     };
 
     const queue = new AfterScheduleQueue(
@@ -68,15 +68,15 @@ describe("AfterScheduleQueue", () => {
     };
 
     const queueProvider = {
-      add: jest.fn(),
-      delete: jest.fn(),
-      process: jest.fn(async (callback: any) => {
+      add: vi.fn(),
+      delete: vi.fn(),
+      process: vi.fn(async (callback: any) => {
         await callback(data);
       }),
     };
 
     const sendAfterScheduleMessageUseCase = {
-      execute: jest.fn(),
+      execute: vi.fn(),
     };
 
     const queue = new AfterScheduleQueue(

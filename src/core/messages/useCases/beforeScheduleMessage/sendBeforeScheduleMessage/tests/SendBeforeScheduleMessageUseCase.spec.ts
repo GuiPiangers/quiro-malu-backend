@@ -17,11 +17,11 @@ const registeredInstance = {
 };
 
 function createAppEventListenerMock(): IAppEventListener {
-  return { emit: jest.fn() };
+  return { emit: vi.fn() };
 }
 
 function createMessageSendStrategyEnforcerMock() {
-  return { isSendAllowed: jest.fn().mockResolvedValue(true) };
+  return { isSendAllowed: vi.fn().mockResolvedValue(true) };
 }
 
 describe("SendBeforeScheduleMessageUseCase", () => {

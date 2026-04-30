@@ -3,8 +3,9 @@ import { DeleteBlockScheduleUseCase } from "./deleteBlockSchedule";
 import { BlockSchedule } from "../../../models/BlockSchedule";
 import { DateTime } from "../../../../shared/Date";
 import { IBlockScheduleRepository } from "../../../../../repositories/blockScheduleRepository/IBlockScheduleRepository";
+import type { Mocked } from "vitest";
 
-let blockScheduleRepositoryMock: jest.Mocked<IBlockScheduleRepository>;
+let blockScheduleRepositoryMock: Mocked<IBlockScheduleRepository>;
 let deleteBlockScheduleUseCase: DeleteBlockScheduleUseCase;
 
 describe("DeleteBlockScheduleUseCase", () => {

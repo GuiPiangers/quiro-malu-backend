@@ -6,7 +6,7 @@ describe("DeleteServiceUseCase", () => {
   const mockServiceRepository = createMockServiceRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     deleteServiceUseCase = new DeleteServiceUseCase(mockServiceRepository);
   });
   describe("execute", () => {

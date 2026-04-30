@@ -33,9 +33,9 @@ describe("Create user", () => {
             phone: '(51) 99999 9999'
         }
 
-        await expect(createUserUseCase.execute(user)).rejects.toEqual(
-            new Error('Deve ser informado no mínimo 3 caracteres')
-        )
+        await expect(createUserUseCase.execute(user)).rejects.toThrow(
+            "Deve ser informado no mínimo 3 caracteres",
+        );
     })
     it("The name should not have more than 120 caracteres", async () => {
         const user: UserDTO = {
@@ -45,9 +45,9 @@ describe("Create user", () => {
             phone: '(51) 99999 9999'
         }
 
-        await expect(createUserUseCase.execute(user)).rejects.toEqual(
-            new Error('Deve ser informado no máximo 120 caracteres')
-        )
+        await expect(createUserUseCase.execute(user)).rejects.toThrow(
+            "Deve ser informado no máximo 120 caracteres",
+        );
     })
     it("The email should not be invalid", async () => {
         const user: UserDTO = {
@@ -57,9 +57,9 @@ describe("Create user", () => {
             phone: '(51) 99999 9999'
         }
 
-        await expect(createUserUseCase.execute(user)).rejects.toEqual(
-            new Error('email inválido')
-        )
+        await expect(createUserUseCase.execute(user)).rejects.toThrow(
+            "email inválido",
+        );
     })
     it("The email should not be invalid", async () => {
         const user: UserDTO = {
@@ -69,9 +69,9 @@ describe("Create user", () => {
             phone: '(51) 99999 9999'
         }
 
-        await expect(createUserUseCase.execute(user)).rejects.toEqual(
-            new Error('email inválido')
-        )
+        await expect(createUserUseCase.execute(user)).rejects.toThrow(
+            "email inválido",
+        );
     })
     it("The phone should not be different than pattern", async () => {
         const user: UserDTO = {
@@ -81,9 +81,9 @@ describe("Create user", () => {
             phone: '51 99999 9999'
         }
 
-        await expect(createUserUseCase.execute(user)).rejects.toEqual(
-            new Error('Número de telefone fora do padrão esperado')
-        )
+        await expect(createUserUseCase.execute(user)).rejects.toThrow(
+            "Número de telefone fora do padrão esperado",
+        );
     })
     it("The password should not contain only letters", async () => {
         const user: UserDTO = {
@@ -93,9 +93,9 @@ describe("Create user", () => {
             phone: '(51) 99999 9999'
         }
 
-        await expect(createUserUseCase.execute(user)).rejects.toEqual(
-            new Error('A senha deve conter pelo menos um número ou carácter especial')
-        )
+        await expect(createUserUseCase.execute(user)).rejects.toThrow(
+            "A senha deve conter pelo menos um número ou carácter especial",
+        );
     })
     it("The password should not be short than 5 caracteres", async () => {
         const user: UserDTO = {
@@ -105,9 +105,9 @@ describe("Create user", () => {
             phone: '(51) 99999 9999'
         }
 
-        await expect(createUserUseCase.execute(user)).rejects.toEqual(
-            new Error('A senha deve conter pelo menos 5 caracteres')
-        )
+        await expect(createUserUseCase.execute(user)).rejects.toThrow(
+            "A senha deve conter pelo menos 5 caracteres",
+        );
     })
     it("The password should not contain only lowercase letters", async () => {
         const user: UserDTO = {
@@ -117,9 +117,9 @@ describe("Create user", () => {
             phone: '(51) 99999 9999'
         }
 
-        await expect(createUserUseCase.execute(user)).rejects.toEqual(
-            new Error('A senha deve conter pelo menos uma letra maiúscula')
-        )
+        await expect(createUserUseCase.execute(user)).rejects.toThrow(
+            "A senha deve conter pelo menos uma letra maiúscula",
+        );
     })
     it("Should not be able to create an existing user", async () => {
         const user: UserDTO = {
@@ -130,9 +130,9 @@ describe("Create user", () => {
         }
 
         await createUserUseCase.execute(user)
-        await expect(createUserUseCase.execute(user)).rejects.toEqual(
-            new Error('Usuário já cadastrado')
-        )
+        await expect(createUserUseCase.execute(user)).rejects.toThrow(
+            "Usuário já cadastrado",
+        );
     })
 })
 

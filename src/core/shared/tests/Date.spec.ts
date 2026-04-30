@@ -85,7 +85,7 @@ describe("DateTime", () => {
 
   describe("now", () => {
     beforeAll(() => {
-      jest.useFakeTimers().setSystemTime(
+      vi.useFakeTimers().setSystemTime(
         Luxon.fromISO("2025-01-10T12:00", {
           zone: "America/Sao_Paulo",
         }).toMillis(),

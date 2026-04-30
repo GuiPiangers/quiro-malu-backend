@@ -1,12 +1,13 @@
 import { IAfterScheduleMessageRepository } from "../messages/IAfterScheduleMessageRepository";
+import type { Mocked } from "vitest";
 
 export const createMockAfterScheduleMessageRepository =
-  (): jest.Mocked<IAfterScheduleMessageRepository> => ({
-    save: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-    listAll: jest.fn(),
-    listByUserId: jest.fn(),
-    listByUserIdPaged: jest.fn(),
-    getById: jest.fn(),
+  (): Mocked<IAfterScheduleMessageRepository> => ({
+    save: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+    listAll: vi.fn(),
+    listByUserId: vi.fn(),
+    listByUserIdPaged: vi.fn(),
+    getById: vi.fn(),
   });

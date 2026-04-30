@@ -1,9 +1,10 @@
 import { IAnamnesisRepository } from "../anamnesis/IAnamnesisRepository";
+import type { Mocked } from "vitest";
 
 export const createMockAnamnesisRepository =
-  (): jest.Mocked<IAnamnesisRepository> => ({
-    get: jest.fn(),
-    update: jest.fn(),
-    save: jest.fn(),
-    saveMany: jest.fn(),
+  (): Mocked<IAnamnesisRepository> => ({
+    get: vi.fn(),
+    update: vi.fn(),
+    save: vi.fn(),
+    saveMany: vi.fn(),
   });

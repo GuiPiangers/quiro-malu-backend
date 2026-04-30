@@ -35,7 +35,7 @@ describe("Scheduling", () => {
 
   //   // Assuming ClientStatusStrategy returns the status based on certain logic
   //   if (scheduling.satusStategy) {
-  //     jest
+  //     vi
   //       .spyOn(scheduling.satusStategy, "calculateStatus")
   //       .mockReturnValue("Atendido");
 

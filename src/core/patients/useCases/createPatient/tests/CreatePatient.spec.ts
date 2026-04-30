@@ -18,7 +18,7 @@ describe("Create patients", () => {
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("Should not be able to create a patient with an existing CPF", async () => {

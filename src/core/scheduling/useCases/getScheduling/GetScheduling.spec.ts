@@ -7,7 +7,7 @@ describe("getSchedulingUseCase", () => {
   const mockSchedulingRepository = createMockSchedulingRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     getSchedulingUseCase = new GetSchedulingUseCase(mockSchedulingRepository);
   });
 

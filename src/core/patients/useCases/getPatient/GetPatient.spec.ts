@@ -8,7 +8,7 @@ describe("getPatientUseCase", () => {
   const mockLocationRepository = createMockLocationRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     getPatientUseCase = new GetPatientUseCase(
       mockPatientRepository,
       mockLocationRepository,

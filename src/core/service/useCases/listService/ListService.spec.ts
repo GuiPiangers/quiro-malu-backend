@@ -7,7 +7,7 @@ describe("ListService", () => {
   const mockServiceRepository = createMockServiceRepository();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     listServiceUseCase = new ListServiceUseCase(mockServiceRepository);
   });
 

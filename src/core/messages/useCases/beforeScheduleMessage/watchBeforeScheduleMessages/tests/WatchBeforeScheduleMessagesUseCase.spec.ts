@@ -28,7 +28,7 @@ describe("WatchBeforeScheduleMessagesUseCase", () => {
     ]);
 
     const appEventListener = new AppEventListener();
-    const emitSpy = jest.spyOn(appEventListener, "emit");
+    const emitSpy = vi.spyOn(appEventListener, "emit");
 
     const useCase = new WatchBeforeScheduleMessagesUseCase(
       beforeScheduleMessageRepository,

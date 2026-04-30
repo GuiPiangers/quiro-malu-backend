@@ -1,9 +1,10 @@
 import { IEventSuggestionRepository } from "../eventSuggestion/IEventSuggestionRepository";
+import type { Mocked } from "vitest";
 
 export const createMockEventSuggestionRepository =
-  (): jest.Mocked<IEventSuggestionRepository> => ({
-    save: jest.fn(),
-    list: jest.fn(),
-    getByDescription: jest.fn(),
-    update: jest.fn(),
+  (): Mocked<IEventSuggestionRepository> => ({
+    save: vi.fn(),
+    list: vi.fn(),
+    getByDescription: vi.fn(),
+    update: vi.fn(),
   });
