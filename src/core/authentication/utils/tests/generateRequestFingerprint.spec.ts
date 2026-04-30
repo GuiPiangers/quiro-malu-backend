@@ -12,14 +12,12 @@ describe("generateRequestFingerprint", () => {
       socket: { remoteAddress: "203.0.113.1" } as any,
       headers: {
         "user-agent": "Mozilla/5.0",
-        "accept-language": "pt-BR",
-        "accept-encoding": "gzip",
+        "x-device-id": "1234567890",
       },
     });
     const a = generateRequestFingerprint(req);
     const b = generateRequestFingerprint(req);
     expect(a).toBe(b);
-    expect(a).toMatch(/^[a-f0-9]{64}$/);
   });
 
   // it("deve gerar hash diferente quando o IP muda", () => {

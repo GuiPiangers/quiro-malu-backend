@@ -24,6 +24,5 @@ export function generateRequestFingerprint(request: Request): string {
     headerToString(request.headers["x-device-id"]),
   ].join("|");
 
-
   return headerToString(components);
 }
