@@ -1,10 +1,10 @@
 import { UpdatePatientUseCase } from "../../useCases/updatePatient/UpdatePatientUseCase";
 import { UpdatePatientController } from "./UpdatePatientController";
-import { KnexLocationRepository } from "../../../../repositories/location/KnexLocationRepository";
-import { KnexPatientRepository } from "../../../../repositories/patient/KnexPatientRepository";
+import { knexLocationRepository } from "../../../../repositories/location/knexInstances";
+import { knexPatientRepository } from "../../../../repositories/patient/knexInstances";
 
-const locationRepository = new KnexLocationRepository();
-const patientRepository = new KnexPatientRepository();
+const locationRepository = knexLocationRepository;
+const patientRepository = knexPatientRepository;
 const updatePatientUseCase = new UpdatePatientUseCase(
   patientRepository,
   locationRepository,

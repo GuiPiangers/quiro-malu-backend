@@ -1,11 +1,10 @@
 import { afterScheduleQueue } from "../../../../../queues/afterScheduleMessage";
-import { AfterScheduleMessageRepository } from "../../../../../repositories/messages/AfterScheduleMessageRepository";
-import { KnexSchedulingRepository } from "../../../../../repositories/scheduling/KnexSchedulingRepository";
 import { appEventListener } from "../../../../shared/observers/EventListener";
 import { DeleteAfterScheduleMessageUseCase } from "./DeleteAfterScheduleMessageUseCase";
+import { knexSchedulingRepository } from "../../../../../repositories/scheduling/knexInstances";
+import { afterScheduleMessageRepository } from "../../../../../repositories/messages/knexInstances";
 
-const afterScheduleMessageRepository = new AfterScheduleMessageRepository();
-const schedulingRepository = new KnexSchedulingRepository();
+const schedulingRepository = knexSchedulingRepository;
 
 const deleteAfterScheduleMessageUseCase = new DeleteAfterScheduleMessageUseCase(
   afterScheduleMessageRepository,

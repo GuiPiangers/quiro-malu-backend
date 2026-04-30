@@ -1,9 +1,8 @@
 import { appEventListener } from "../../../shared/observers/EventListener";
-import { AfterScheduleMessageRepository } from "../../../../repositories/messages/AfterScheduleMessageRepository";
 import { UpdateAfterScheduleMessageUseCase } from "../../useCases/afterScheduleMessage/updateAfterScheduleMessage/UpdateAfterScheduleMessageUseCase";
 import { UpdateAfterScheduleMessageController } from "./UpdateAfterScheduleMessageController";
+import { afterScheduleMessageRepository } from "../../../../repositories/messages/knexInstances";
 
-const afterScheduleMessageRepository = new AfterScheduleMessageRepository();
 
 const updateAfterScheduleMessageUseCase = new UpdateAfterScheduleMessageUseCase(
   afterScheduleMessageRepository,

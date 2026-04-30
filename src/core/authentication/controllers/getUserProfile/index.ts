@@ -1,10 +1,9 @@
-import { KnexUserRepository } from "../../../../repositories/user/KnexUserRepository";
 import { GetUserProfileUseCase } from "../../useCases/getUser/GetUserProfileUseCase";
 import { GetUserProfileController } from "./GetUserProfileController";
+import { knexUserRepository } from "../../../../repositories/user/knexInstances";
 
-const mySqlUserRepository = new KnexUserRepository()
+const mySqlUserRepository = knexUserRepository
 const getProfileUseCase = new GetUserProfileUseCase(mySqlUserRepository)
 const getUserProfileController = new GetUserProfileController(getProfileUseCase)
 
 export { getUserProfileController }
-

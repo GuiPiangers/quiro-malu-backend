@@ -1,8 +1,8 @@
-import { KnexUserFingerprintRepository } from "../../../../repositories/userFingerprint/KnexUserFingerprintRepository";
 import { RegisterUserFingerprintUseCase } from "./RegisterUserFingerprintUseCase";
 import { ValidateUserFingerprintUseCase } from "./ValidateUserFingerprintUseCase";
+import { knexUserFingerprintRepository } from "../../../../repositories/userFingerprint/knexInstances";
 
-const userFingerprintRepository = new KnexUserFingerprintRepository();
+const userFingerprintRepository = knexUserFingerprintRepository;
 
 export const validateUserFingerprintUseCase = new ValidateUserFingerprintUseCase(
   userFingerprintRepository,

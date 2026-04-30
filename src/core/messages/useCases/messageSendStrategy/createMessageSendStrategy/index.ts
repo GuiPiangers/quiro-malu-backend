@@ -1,9 +1,9 @@
-import { KnexMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/KnexMessageSendStrategyRepository";
-import { KnexPatientRepository } from "../../../../../repositories/patient/KnexPatientRepository";
 import { CreateMessageSendStrategyUseCase } from "./CreateMessageSendStrategyUseCase";
+import { knexMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/knexInstances";
+import { knexPatientRepository } from "../../../../../repositories/patient/knexInstances";
 
-const messageSendStrategyRepository = new KnexMessageSendStrategyRepository();
-const patientRepository = new KnexPatientRepository();
+const messageSendStrategyRepository = knexMessageSendStrategyRepository;
+const patientRepository = knexPatientRepository;
 
 const createMessageSendStrategyUseCase = new CreateMessageSendStrategyUseCase(
   messageSendStrategyRepository,

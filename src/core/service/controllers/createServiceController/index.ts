@@ -1,8 +1,8 @@
-import { KnexServiceRepository } from "../../../../repositories/service/KnexServiceRepository";
 import { CreateServiceUseCase } from "../../useCases/createService/CreateServiceUseCase";
 import { CreateServiceController } from "./CreateServiceController";
+import { knexServiceRepository } from "../../../../repositories/service/knexInstances";
 
-const serviceRepository = new KnexServiceRepository()
+const serviceRepository = knexServiceRepository
 const createServiceUseCase = new CreateServiceUseCase(serviceRepository)
 const createServiceController = new CreateServiceController(createServiceUseCase)
 

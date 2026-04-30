@@ -1,4 +1,4 @@
-import { Knex } from "./index";
+import { db } from "./index";
 
 const SIMPLE_IDENTIFIER_REGEX = /^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*$/;
 
@@ -17,7 +17,7 @@ export function order({
 
   const normalizedField = `${field}`.replace(/[\\]/g, "").trim();
   const orderTarget = SIMPLE_IDENTIFIER_REGEX.test(normalizedField)
-    ? Knex.ref(normalizedField).toQuery()
+    ? db.ref(normalizedField).toQuery()
     : normalizedField;
 
   return `${orderTarget} ${direction}`;

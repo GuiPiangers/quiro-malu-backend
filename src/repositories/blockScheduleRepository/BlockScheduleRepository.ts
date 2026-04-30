@@ -1,6 +1,5 @@
 import { BlockSchedule } from "../../core/scheduling/models/BlockSchedule";
 import { ETableNames } from "../../database/ETableNames";
-import { Knex } from "../../database/knex";
 import {
   BlockScheduleDeleteParams,
   BlockScheduleListBetweenDatesParams,
@@ -8,17 +7,20 @@ import {
 } from "./IBlockScheduleRepository";
 import { BlockScheduleDto } from "../../core/scheduling/models/dtos/BlockSchedule.dto";
 import { DateTime } from "../../core/shared/Date";
+import type { Knex } from "knex";
 
 export class BlockScheduleRepository implements IBlockScheduleRepository {
+  constructor(private readonly knex: Knex) {}
+
   async delete({ id, userId }: BlockScheduleDeleteParams): Promise<void> {
-    await Knex(ETableNames.BLOCK_SCHEDULES).where({ userId, id }).del();
+    await this.knex(ETableNames.BLOCK_SCHEDULES).where({ userId, id }).del();
   }
 
   async edit(
     { endDate, id, date: startDate, description }: BlockSchedule,
     userId: string,
   ): Promise<void> {
-    await Knex(ETableNames.BLOCK_SCHEDULES)
+    await this.knex(ETableNames.BLOCK_SCHEDULES)
       .update({
         description,
         startDate: startDate.dateTime,
@@ -29,15 +31,15 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
   }
 
   async findById(id: string, userId: string): Promise<BlockSchedule | null> {
-    const blockSchedulesDto: BlockScheduleDto | null = await Knex(
+    const blockSchedulesDto: BlockScheduleDto | null = await this.knex(
       ETableNames.BLOCK_SCHEDULES,
     )
       .select(
         "id",
         "userId",
         "description",
-        Knex.raw(`DATE_FORMAT(startDate, '%Y-%m-%dT%H:%i') as date`),
-        Knex.raw(`DATE_FORMAT(endDate, '%Y-%m-%dT%H:%i') as endDate`),
+        this.knex.raw(`DATE_FORMAT(startDate, '%Y-%m-%dT%H:%i') as date`),
+        this.knex.raw(`DATE_FORMAT(endDate, '%Y-%m-%dT%H:%i') as endDate`),
       )
       .first()
       .where({
@@ -58,7 +60,7 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
     startDate,
     userId,
   }: BlockScheduleListBetweenDatesParams): Promise<{ total: number }> {
-    const result = await Knex(ETableNames.BLOCK_SCHEDULES)
+    const result = await this.knex(ETableNames.BLOCK_SCHEDULES)
       .count("id")
       .where("userId", userId)
       .andWhereBetween("startDate", [startDate.dateTime, endDate.dateTime])
@@ -75,15 +77,15 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
     startDate,
     userId,
   }: BlockScheduleListBetweenDatesParams): Promise<BlockSchedule[]> {
-    const blockSchedulesDto: BlockScheduleDto[] = await Knex(
+    const blockSchedulesDto: BlockScheduleDto[] = await this.knex(
       ETableNames.BLOCK_SCHEDULES,
     )
       .select(
         "id",
         "userId",
         "description",
-        Knex.raw(`DATE_FORMAT(startDate, '%Y-%m-%dT%H:%i') as date`),
-        Knex.raw(`DATE_FORMAT(endDate, '%Y-%m-%dT%H:%i') as endDate`),
+        this.knex.raw(`DATE_FORMAT(startDate, '%Y-%m-%dT%H:%i') as date`),
+        this.knex.raw(`DATE_FORMAT(endDate, '%Y-%m-%dT%H:%i') as endDate`),
       )
       .where("userId", userId)
       .andWhere((qb) => {
@@ -113,13 +115,13 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
   }): Promise<BlockScheduleDto[]> {
     const { userId, date, config } = data;
 
-    const query = Knex(ETableNames.BLOCK_SCHEDULES)
+    const query = this.knex(ETableNames.BLOCK_SCHEDULES)
       .select(
         "id",
         "userId",
         "description",
-        Knex.raw(`DATE_FORMAT(startDate, '%Y-%m-%dT%H:%i') as startDate`),
-        Knex.raw(`DATE_FORMAT(endDate, '%Y-%m-%dT%H:%i') as endDate`),
+        this.knex.raw(`DATE_FORMAT(startDate, '%Y-%m-%dT%H:%i') as startDate`),
+        this.knex.raw(`DATE_FORMAT(endDate, '%Y-%m-%dT%H:%i') as endDate`),
       )
       .where("userId", userId)
       .andWhere((qb) => {
@@ -143,7 +145,7 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
     { endDate, id, date: startDate, description }: BlockSchedule,
     userId: string,
   ): Promise<void> {
-    await Knex(ETableNames.BLOCK_SCHEDULES).insert({
+    await this.knex(ETableNames.BLOCK_SCHEDULES).insert({
       description,
       id,
       startDate: startDate.dateTime,

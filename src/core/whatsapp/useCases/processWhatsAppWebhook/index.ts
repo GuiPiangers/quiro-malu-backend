@@ -1,7 +1,7 @@
-import { KnexWhatsAppMessageLogRepository } from "../../../../repositories/whatsapp/KnexWhatsAppMessageLogRepository";
 import { ProcessWhatsAppWebhookUseCase } from "./ProcessWhatsAppWebhookUseCase";
+import { knexWhatsAppMessageLogRepository } from "../../../../repositories/whatsapp/knexInstances";
 
-const whatsAppMessageLogRepository = new KnexWhatsAppMessageLogRepository();
+const whatsAppMessageLogRepository = knexWhatsAppMessageLogRepository;
 
 const processWhatsAppWebhookUseCase = new ProcessWhatsAppWebhookUseCase(
   whatsAppMessageLogRepository,

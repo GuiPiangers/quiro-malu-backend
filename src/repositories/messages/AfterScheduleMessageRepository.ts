@@ -1,4 +1,4 @@
-import { Knex } from "../../database/knex";
+import type { Knex } from "knex";
 import { ETableNames } from "../../database/ETableNames";
 import { ApiError } from "../../utils/ApiError";
 import {
@@ -16,9 +16,11 @@ import {
 export class AfterScheduleMessageRepository
   implements IAfterScheduleMessageRepository
 {
+  constructor(private readonly knex: Knex) {}
+
   async save(data: SaveAfterScheduleMessageProps): Promise<void> {
     try {
-      await Knex(ETableNames.AFTER_SCHEDULE_MESSAGES).insert(data);
+      await this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES).insert(data);
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }
@@ -26,7 +28,7 @@ export class AfterScheduleMessageRepository
 
   async delete(data: DeleteAfterScheduleMessageProps): Promise<void> {
     try {
-      await Knex(ETableNames.AFTER_SCHEDULE_MESSAGES)
+      await this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES)
         .where({ id: data.id, userId: data.userId })
         .del();
     } catch (error: any) {
@@ -46,7 +48,7 @@ export class AfterScheduleMessageRepository
       if (data.isActive !== undefined)
         updateData.isActive = data.isActive;
 
-      await Knex(ETableNames.AFTER_SCHEDULE_MESSAGES)
+      await this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES)
         .where({ id: data.id, userId: data.userId })
         .update(updateData);
     } catch (error: any) {
@@ -56,7 +58,7 @@ export class AfterScheduleMessageRepository
 
   async listAll(): Promise<AfterScheduleMessageConfigDTO[]> {
     try {
-      const rows = await Knex(ETableNames.AFTER_SCHEDULE_MESSAGES).select(
+      const rows = await this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES).select(
         "id",
         "userId",
         "name",
@@ -78,7 +80,7 @@ export class AfterScheduleMessageRepository
     data: ListAfterScheduleMessagesByUserIdProps,
   ): Promise<AfterScheduleMessageConfigDTO[]> {
     try {
-      const rows = await Knex(ETableNames.AFTER_SCHEDULE_MESSAGES)
+      const rows = await this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES)
         .select(
           "id",
           "userId",
@@ -103,7 +105,7 @@ export class AfterScheduleMessageRepository
   ): Promise<ListAfterScheduleMessagesPagedResult> {
     try {
       const base = () =>
-        Knex(ETableNames.AFTER_SCHEDULE_MESSAGES).where({ userId: data.userId });
+        this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES).where({ userId: data.userId });
 
       const countRows = await base().clone().count("* as total");
       const total = Number(
@@ -139,7 +141,7 @@ export class AfterScheduleMessageRepository
     data: GetAfterScheduleMessageByIdProps,
   ): Promise<AfterScheduleMessageConfigDTO | null> {
     try {
-      const row = await Knex(ETableNames.AFTER_SCHEDULE_MESSAGES)
+      const row = await this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES)
         .select(
           "id",
           "userId",

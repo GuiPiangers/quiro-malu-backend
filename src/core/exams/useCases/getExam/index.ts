@@ -1,7 +1,7 @@
-import { KnexExamsRepository } from "../../../../repositories/examsRepository/KnexExamsRepository";
 import { GetExamUseCase } from "./getExamUseCase";
+import { knexExamsRepository } from "../../../../repositories/examsRepository/knexInstances";
 
-const examRepository = new KnexExamsRepository();
+const examRepository = knexExamsRepository;
 const getExamUseCase = new GetExamUseCase(examRepository);
 
 export { getExamUseCase };

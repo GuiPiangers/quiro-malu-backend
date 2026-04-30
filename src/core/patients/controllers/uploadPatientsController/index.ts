@@ -1,17 +1,17 @@
-import { KnexLocationRepository } from "../../../../repositories/location/KnexLocationRepository";
 import { UploadPatientsController } from "./UploadPatientsController";
-import { KnexPatientRepository } from "../../../../repositories/patient/KnexPatientRepository";
 import { UploadPatientsUseCase } from "../../useCases/uploadPatients/UploadPatientsUseCase";
 import { Request, Response } from "express";
-import { KnexAnamnesisRepository } from "../../../../repositories/anamnesis/KnexAnamnesisRepository";
-import { KnexDiagnosticRepository } from "../../../../repositories/diagnostic/KnexDiagnosticRepository";
+import { knexAnamnesisRepository } from "../../../../repositories/anamnesis/knexInstances";
+import { knexDiagnosticRepository } from "../../../../repositories/diagnostic/knexInstances";
+import { knexLocationRepository } from "../../../../repositories/location/knexInstances";
+import { knexPatientRepository } from "../../../../repositories/patient/knexInstances";
 
 const uploadPatients = {
   handle: (reques: Request, response: Response) => {
-    const locationRepository = new KnexLocationRepository();
-    const patientRepository = new KnexPatientRepository();
-    const anamnesisRepository = new KnexAnamnesisRepository();
-    const diagnosticRepository = new KnexDiagnosticRepository();
+    const locationRepository = knexLocationRepository;
+    const patientRepository = knexPatientRepository;
+    const anamnesisRepository = knexAnamnesisRepository;
+    const diagnosticRepository = knexDiagnosticRepository;
     const uploadPatientsUseCase = new UploadPatientsUseCase(
       patientRepository,
       locationRepository,

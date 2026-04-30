@@ -1,7 +1,7 @@
-import { KnexEventSuggestionRepository } from "../../../../repositories/eventSuggestion/KnexEventSuggestionRepository";
 import { SaveEventSuggestionUseCase } from "./SaveEventSuggestionUseCase";
+import { knexEventSuggestionRepository } from "../../../../repositories/eventSuggestion/knexInstances";
 
-const eventSuggestionRepository = new KnexEventSuggestionRepository();
+const eventSuggestionRepository = knexEventSuggestionRepository;
 
 const saveEventSuggestionUseCase = new SaveEventSuggestionUseCase(
   eventSuggestionRepository,

@@ -1,19 +1,17 @@
 import { EvolutionWhatsAppProvider } from "../../../../../providers/whatsapp/EvolutionWhatsAppProvider";
-import { AfterScheduleMessageRepository } from "../../../../../repositories/messages/AfterScheduleMessageRepository";
-import { KnexMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/KnexMessageSendStrategyRepository";
-import { KnexPatientRepository } from "../../../../../repositories/patient/KnexPatientRepository";
-import { KnexSchedulingRepository } from "../../../../../repositories/scheduling/KnexSchedulingRepository";
-import { KnexWhatsAppInstanceRepository } from "../../../../../repositories/whatsapp/KnexWhatsAppInstanceRepository";
-import { KnexWhatsAppMessageLogRepository } from "../../../../../repositories/whatsapp/KnexWhatsAppMessageLogRepository";
 import { appEventListener } from "../../../../shared/observers/EventListener";
 import { MessageSendStrategyFactory } from "../../../sendStrategy/messageSendStrategyFactory";
 import { MessageSendStrategyEnforcer } from "../../../sendStrategy/messageSendStrategyEnforcer";
 import { SendAfterScheduleMessageUseCase } from "./sendAfterScheduleMessageUseCase";
+import { knexMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/knexInstances";
+import { knexPatientRepository } from "../../../../../repositories/patient/knexInstances";
+import { knexSchedulingRepository } from "../../../../../repositories/scheduling/knexInstances";
+import { knexWhatsAppInstanceRepository, knexWhatsAppMessageLogRepository } from "../../../../../repositories/whatsapp/knexInstances";
+import { afterScheduleMessageRepository } from "../../../../../repositories/messages/knexInstances";
 
-const afterScheduleMessageRepository = new AfterScheduleMessageRepository();
-const patientRepository = new KnexPatientRepository();
-const schedulingRepository = new KnexSchedulingRepository();
-const messageSendStrategyRepository = new KnexMessageSendStrategyRepository();
+const patientRepository = knexPatientRepository;
+const schedulingRepository = knexSchedulingRepository;
+const messageSendStrategyRepository = knexMessageSendStrategyRepository;
 const messageSendStrategyFactory = new MessageSendStrategyFactory(
   patientRepository,
   schedulingRepository,
@@ -22,8 +20,8 @@ const messageSendStrategyEnforcer = new MessageSendStrategyEnforcer(
   messageSendStrategyRepository,
   messageSendStrategyFactory,
 );
-const whatsAppInstanceRepository = new KnexWhatsAppInstanceRepository();
-const whatsAppMessageLogRepository = new KnexWhatsAppMessageLogRepository();
+const whatsAppInstanceRepository = knexWhatsAppInstanceRepository;
+const whatsAppMessageLogRepository = knexWhatsAppMessageLogRepository;
 
 const whatsAppProvider = new EvolutionWhatsAppProvider(
   process.env.EVOLUTION_API_BASE_URL ?? "",

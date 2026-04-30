@@ -1,7 +1,7 @@
-import { KnexMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/KnexMessageSendStrategyRepository";
 import { UnbindMessageSendStrategyCampaignUseCase } from "./UnbindMessageSendStrategyCampaignUseCase";
+import { knexMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/knexInstances";
 
-const messageSendStrategyRepository = new KnexMessageSendStrategyRepository();
+const messageSendStrategyRepository = knexMessageSendStrategyRepository;
 
 const unbindMessageSendStrategyCampaignUseCase =
   new UnbindMessageSendStrategyCampaignUseCase(messageSendStrategyRepository);

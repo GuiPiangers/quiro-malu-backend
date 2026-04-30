@@ -12,4 +12,5 @@ const getEnvironment = () => {
   }
 };
 
-export const Knex = knex(getEnvironment());
+/** Instância padrão do Knex (app e wiring de repositórios). */
+export const db = knex(getEnvironment());

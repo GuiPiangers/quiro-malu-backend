@@ -1,7 +1,7 @@
-import { KnexMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/KnexMessageSendStrategyRepository";
 import { DeleteMessageSendStrategyUseCase } from "./DeleteMessageSendStrategyUseCase";
+import { knexMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/knexInstances";
 
-const messageSendStrategyRepository = new KnexMessageSendStrategyRepository();
+const messageSendStrategyRepository = knexMessageSendStrategyRepository;
 
 const deleteMessageSendStrategyUseCase = new DeleteMessageSendStrategyUseCase(
   messageSendStrategyRepository,

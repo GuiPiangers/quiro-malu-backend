@@ -1,8 +1,8 @@
 import { PatientDTO } from "../../core/patients/models/Patient";
-import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
 import { IPatientRepository } from "../../repositories/patient/IPatientRepository";
 import { ApiError } from "../../utils/ApiError";
+import type { Knex } from "knex";
 
 const SIMPLE_IDENTIFIER_REGEX =
   /^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*$/;
@@ -12,6 +12,8 @@ function normalizeOrientation(orientation: string) {
 }
 
 export class KnexPatientRepository implements IPatientRepository {
+  constructor(private readonly knex: Knex) {}
+
   async getByBirthMonthAndDay({
     birthMonth,
     birthDay,
@@ -33,7 +35,7 @@ export class KnexPatientRepository implements IPatientRepository {
     }
 
     try {
-      let q = Knex(ETableNames.PATIENTS)
+      let q = this.knex(ETableNames.PATIENTS)
         .select("*")
         .whereNotNull("dateOfBirth")
         .whereRaw("MONTH(dateOfBirth) = ? AND DAY(dateOfBirth) = ?", [
@@ -54,7 +56,7 @@ export class KnexPatientRepository implements IPatientRepository {
 
   async save(data: PatientDTO, userId: string): Promise<void> {
     try {
-      await Knex(ETableNames.PATIENTS).insert({
+      await this.knex(ETableNames.PATIENTS).insert({
         ...data,
         userId,
       });
@@ -65,7 +67,7 @@ export class KnexPatientRepository implements IPatientRepository {
 
   async saveMany(data: (PatientDTO & { userId: string })[]): Promise<void> {
     try {
-      await Knex(ETableNames.PATIENTS).insert(data);
+      await this.knex(ETableNames.PATIENTS).insert(data);
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }
@@ -77,7 +79,7 @@ export class KnexPatientRepository implements IPatientRepository {
     userId: string,
   ): Promise<void> {
     try {
-      await Knex(ETableNames.PATIENTS)
+      await this.knex(ETableNames.PATIENTS)
         .update(data)
         .where({ id: patientId, userId });
     } catch (error: any) {
@@ -94,7 +96,7 @@ export class KnexPatientRepository implements IPatientRepository {
       orderBy?: { field: string; orientation: "ASC" | "DESC" }[];
     },
   ): Promise<PatientDTO[]> {
-    const query = Knex(ETableNames.PATIENTS)
+    const query = this.knex(ETableNames.PATIENTS)
       .select("*")
       .where({ userId })
       .andWhere("name", "like", `%${config?.search?.name ?? ""}%`);
@@ -135,7 +137,7 @@ export class KnexPatientRepository implements IPatientRepository {
     search?: { name?: string },
   ): Promise<[{ total: number }]> {
     try {
-      const [result] = await Knex(ETableNames.PATIENTS)
+      const [result] = await this.knex(ETableNames.PATIENTS)
         .count("id as total")
         .where({ userId })
         .andWhere("name", "like", `%${search?.name}%`);
@@ -148,7 +150,7 @@ export class KnexPatientRepository implements IPatientRepository {
 
   async getByCpf(cpf: string, userId: string): Promise<PatientDTO[]> {
     try {
-      const result = await Knex(ETableNames.PATIENTS)
+      const result = await this.knex(ETableNames.PATIENTS)
         .select("*")
         .where({ cpf, userId });
 
@@ -160,7 +162,7 @@ export class KnexPatientRepository implements IPatientRepository {
 
   async getByHash(hashData: string, userId: string): Promise<PatientDTO> {
     try {
-      const result = await Knex(ETableNames.PATIENTS)
+      const result = await this.knex(ETableNames.PATIENTS)
         .first("*")
         .where({ hashData, userId });
 
@@ -173,7 +175,7 @@ export class KnexPatientRepository implements IPatientRepository {
   async getMostRecent(userId: string, limit: number): Promise<PatientDTO[]> {
     const safeLimit = Math.min(Math.max(limit, 0), 100);
 
-    return await Knex(ETableNames.PATIENTS)
+    return await this.knex(ETableNames.PATIENTS)
       .select("*")
       .where({ userId })
       .orderBy("created_at", "desc")
@@ -188,7 +190,7 @@ export class KnexPatientRepository implements IPatientRepository {
       return [];
     }
 
-    const rows = await Knex(ETableNames.PATIENTS)
+    const rows = await this.knex(ETableNames.PATIENTS)
       .select("*")
       .where({ userId: data.userId })
       .whereIn("id", data.patientIds);
@@ -213,7 +215,7 @@ export class KnexPatientRepository implements IPatientRepository {
     }
 
     try {
-      const [row] = await Knex(ETableNames.PATIENTS)
+      const [row] = await this.knex(ETableNames.PATIENTS)
         .where({ userId: data.userId })
         .whereIn("id", data.patientIds)
         .count("id as total");
@@ -226,7 +228,7 @@ export class KnexPatientRepository implements IPatientRepository {
   }
 
   async getById(patientId: string, userId: string): Promise<PatientDTO[]> {
-    const result: PatientDTO = await Knex(ETableNames.PATIENTS)
+    const result: PatientDTO = await this.knex(ETableNames.PATIENTS)
       .first("*", "created_at AS createAt")
       .where({ id: patientId, userId });
 
@@ -235,7 +237,7 @@ export class KnexPatientRepository implements IPatientRepository {
 
   async delete(patientId: string, userId: string): Promise<void> {
     try {
-      await Knex(ETableNames.PATIENTS).where({ id: patientId, userId }).del();
+      await this.knex(ETableNames.PATIENTS).where({ id: patientId, userId }).del();
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }

@@ -1,4 +1,4 @@
-import { Knex } from "../../database/knex";
+import type { Knex } from "knex";
 import { ETableNames } from "../../database/ETableNames";
 import { ApiError } from "../../utils/ApiError";
 import {
@@ -36,8 +36,8 @@ function rowBindingsCount(row: Record<string, unknown>): number {
   return parseCampaignBindingsCount(raw);
 }
 
-function bindingsCountSubquery(strategyTableRef: string) {
-  return Knex.raw(
+function bindingsCountSubquery(knex: Knex, strategyTableRef: string) {
+  return knex.raw(
     `(SELECT COUNT(*) FROM \`${ETableNames.USER_MESSAGE_SEND_STRATEGY}\` u WHERE u.strategyId = ${strategyTableRef}) AS campaignBindingsCount`,
   );
 }
@@ -45,12 +45,14 @@ function bindingsCountSubquery(strategyTableRef: string) {
 export class KnexMessageSendStrategyRepository
   implements IMessageSendStrategyRepository
 {
+  constructor(private readonly knex: Knex) {}
+
   async listByUserIdPaged(
     data: ListMessageSendStrategiesByUserIdProps,
   ): Promise<ListMessageSendStrategiesByUserIdResult> {
     try {
       const base = () =>
-        Knex(ETableNames.MESSAGE_SEND_STRATEGIES).where({ userId: data.userId });
+        this.knex(ETableNames.MESSAGE_SEND_STRATEGIES).where({ userId: data.userId });
 
       const countRows = await base().clone().count<{ total: string | number }>(
         "* as total",
@@ -68,7 +70,7 @@ export class KnexMessageSendStrategyRepository
           "name",
           "kind",
           "params",
-          bindingsCountSubquery(strategyTable),
+          bindingsCountSubquery(this.knex, strategyTable),
         )
         .orderBy("created_at", "desc")
         .limit(data.limit)
@@ -91,7 +93,7 @@ export class KnexMessageSendStrategyRepository
 
   async save(data: SaveMessageSendStrategyProps): Promise<void> {
     try {
-      await Knex(ETableNames.MESSAGE_SEND_STRATEGIES).insert({
+      await this.knex(ETableNames.MESSAGE_SEND_STRATEGIES).insert({
         id: data.id,
         userId: data.userId,
         name: data.name,
@@ -109,14 +111,14 @@ export class KnexMessageSendStrategyRepository
   ): Promise<MessageSendStrategyRow | null> {
     try {
       const strategyTable = `\`${ETableNames.MESSAGE_SEND_STRATEGIES}\`.id`;
-      const row = await Knex(ETableNames.MESSAGE_SEND_STRATEGIES)
+      const row = await this.knex(ETableNames.MESSAGE_SEND_STRATEGIES)
         .select(
           "id",
           "userId",
           "name",
           "kind",
           "params",
-          bindingsCountSubquery(strategyTable),
+          bindingsCountSubquery(this.knex, strategyTable),
         )
         .where({ id, userId })
         .first();
@@ -141,7 +143,7 @@ export class KnexMessageSendStrategyRepository
     campaignId: string,
   ): Promise<MessageSendStrategyRow | null> {
     try {
-      const row = await Knex(`${ETableNames.MESSAGE_SEND_STRATEGIES} as s`)
+      const row = await this.knex(`${ETableNames.MESSAGE_SEND_STRATEGIES} as s`)
         .innerJoin(
           `${ETableNames.USER_MESSAGE_SEND_STRATEGY} as u`,
           "u.strategyId",
@@ -153,7 +155,7 @@ export class KnexMessageSendStrategyRepository
           "s.name",
           "s.kind",
           "s.params",
-          bindingsCountSubquery("s.id"),
+          bindingsCountSubquery(this.knex, "s.id"),
         )
         .where("u.userId", userId)
         .andWhere("u.campaignId", campaignId)
@@ -180,7 +182,7 @@ export class KnexMessageSendStrategyRepository
     strategyId: string,
   ): Promise<void> {
     try {
-      await Knex.transaction(async (trx) => {
+      await this.knex.transaction(async (trx) => {
         await trx(ETableNames.USER_MESSAGE_SEND_STRATEGY)
           .where({ userId, campaignId })
           .del();
@@ -200,7 +202,7 @@ export class KnexMessageSendStrategyRepository
     campaignId: string,
   ): Promise<void> {
     try {
-      await Knex(ETableNames.USER_MESSAGE_SEND_STRATEGY)
+      await this.knex(ETableNames.USER_MESSAGE_SEND_STRATEGY)
         .where({ userId, campaignId })
         .del();
     } catch (error: any) {
@@ -229,7 +231,7 @@ export class KnexMessageSendStrategyRepository
         return;
       }
 
-      const updated = await Knex(ETableNames.MESSAGE_SEND_STRATEGIES)
+      const updated = await this.knex(ETableNames.MESSAGE_SEND_STRATEGIES)
         .where({ id, userId })
         .update(row);
 
@@ -244,7 +246,7 @@ export class KnexMessageSendStrategyRepository
 
   async deleteByIdAndUserId(id: string, userId: string): Promise<void> {
     try {
-      const deleted = await Knex(ETableNames.MESSAGE_SEND_STRATEGIES)
+      const deleted = await this.knex(ETableNames.MESSAGE_SEND_STRATEGIES)
         .where({ id, userId })
         .del();
 

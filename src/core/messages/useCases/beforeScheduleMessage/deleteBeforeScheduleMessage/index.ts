@@ -1,11 +1,10 @@
 import { beforeScheduleQueue } from "../../../../../queues/beforeScheduleMessage";
-import { BeforeScheduleMessageRepository } from "../../../../../repositories/messages/BeforeScheduleMessageRepository";
-import { KnexSchedulingRepository } from "../../../../../repositories/scheduling/KnexSchedulingRepository";
 import { appEventListener } from "../../../../shared/observers/EventListener";
 import { DeleteBeforeScheduleMessageUseCase } from "./DeleteBeforeScheduleMessageUseCase";
+import { knexSchedulingRepository } from "../../../../../repositories/scheduling/knexInstances";
+import { beforeScheduleMessageRepository } from "../../../../../repositories/messages/knexInstances";
 
-const beforeScheduleMessageRepository = new BeforeScheduleMessageRepository();
-const schedulingRepository = new KnexSchedulingRepository();
+const schedulingRepository = knexSchedulingRepository;
 
 const deleteBeforeScheduleMessageUseCase = new DeleteBeforeScheduleMessageUseCase(
   beforeScheduleMessageRepository,

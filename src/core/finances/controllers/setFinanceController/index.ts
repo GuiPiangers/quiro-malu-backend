@@ -1,8 +1,8 @@
 import { SetFinanceController } from "./setFinanceController";
 import { SetFinanceUseCase } from "../../useCases/setFinance/setFinanceUseCase";
-import { KnexFinanceRepository } from "../../../../repositories/finance/knexFinanceRepository";
+import { knexFinanceRepository } from "../../../../repositories/finance/knexInstances";
 
-const financeRepository = new KnexFinanceRepository();
+const financeRepository = knexFinanceRepository;
 const setFinanceUseCase = new SetFinanceUseCase(financeRepository);
 const setFinanceController = new SetFinanceController(setFinanceUseCase);
 

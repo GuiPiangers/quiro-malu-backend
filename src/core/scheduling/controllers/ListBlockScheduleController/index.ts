@@ -1,8 +1,6 @@
-import { BlockScheduleRepository } from "../../../../repositories/blockScheduleRepository/BlockScheduleRepository";
 import { ListBlockSchedulingUseCase } from "../../useCases/blockScheduling/listBlockSchedules/ListBlockSchedulingUseCase";
 import { ListBlockScheduleController } from "./ListBlockSchedulingController";
-
-const blockScheduleRepository = new BlockScheduleRepository();
+import { blockScheduleRepository } from "../../../../repositories/blockScheduleRepository/knexInstances";
 const listBlockSchedulingUseCase = new ListBlockSchedulingUseCase(
   blockScheduleRepository,
 );

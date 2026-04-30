@@ -1,9 +1,9 @@
+import type { Knex } from "knex";
 import {
   Scheduling,
   SchedulingDTO,
 } from "../../core/scheduling/models/Scheduling";
 import { SchedulingWithPatientDTO } from "../../core/scheduling/models/SchedulingWithPatient";
-import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
 import { ApiError } from "../../utils/ApiError";
 import { getValidObjectValues } from "../../utils/getValidObjectValues";
@@ -14,18 +14,20 @@ import {
 } from "./ISchedulingRepository";
 
 export class KnexSchedulingRepository implements ISchedulingRepository {
+  constructor(private readonly knex: Knex) {}
+
   async listBetweenDates({
     endDate,
     startDate,
     userId,
   }: ListBetweenDatesParams): Promise<Scheduling[]> {
-    const result = await Knex(ETableNames.SCHEDULES)
+    const result = await this.knex(ETableNames.SCHEDULES)
       .select(
         "id",
         "userId",
         "patientId",
-        Knex.raw(`DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date`),
-        Knex.raw(
+        this.knex.raw(`DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date`),
+        this.knex.raw(
           `DATE_FORMAT(reminderSentAt, '%Y-%m-%dT%H:%i') as reminderSentAt`,
         ),
         "duration",
@@ -45,7 +47,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     updateAt,
     ...data
   }: SchedulingDTO & { userId: string }): Promise<void> {
-    await Knex(ETableNames.SCHEDULES).insert(data);
+    await this.knex(ETableNames.SCHEDULES).insert(data);
   }
 
   async update({
@@ -55,7 +57,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     updateAt,
     ...data
   }: UpdateSchedulingParams): Promise<void> {
-    await Knex(ETableNames.SCHEDULES).update(data).where({ id, userId });
+    await this.knex(ETableNames.SCHEDULES).update(data).where({ id, userId });
   }
 
   async list({
@@ -67,7 +69,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     config?: { limit: number; offSet: number };
   }): Promise<SchedulingWithPatientDTO[]> {
     try {
-      const result = await Knex(`${ETableNames.SCHEDULES} as s`)
+      const result = await this.knex(`${ETableNames.SCHEDULES} as s`)
         .leftJoin(`${ETableNames.PATIENTS} as p`, function joinPatients() {
           this.on("s.patientId", "=", "p.id").andOn(
             "s.userId",
@@ -78,17 +80,17 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
         .select(
           "s.id",
           "s.patientId",
-          Knex.raw("p.name as patient"),
+          this.knex.raw("p.name as patient"),
           "p.phone",
-          Knex.raw(`DATE_FORMAT(s.date, '%Y-%m-%dT%H:%i') as date`),
-          Knex.raw(
+          this.knex.raw(`DATE_FORMAT(s.date, '%Y-%m-%dT%H:%i') as date`),
+          this.knex.raw(
             `DATE_FORMAT(s.reminderSentAt, '%Y-%m-%dT%H:%i') as reminderSentAt`,
           ),
           "s.duration",
           "s.service",
           "s.status",
-          Knex.raw("s.updated_at as updateAt"),
-          Knex.raw("s.created_at as createAt"),
+          this.knex.raw("s.updated_at as updateAt"),
+          this.knex.raw("s.created_at as createAt"),
         )
         .where("s.userId", userId)
         .andWhereRaw("date_format(s.date, '%Y-%m-%d') = ?", [date])
@@ -110,7 +112,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     userId: string;
   }): Promise<[{ total: number }]> {
     try {
-      const [result] = await Knex(ETableNames.SCHEDULES)
+      const [result] = await this.knex(ETableNames.SCHEDULES)
         .count("id as total")
         .where({ userId })
         .andWhereRaw("date_format(date, '%Y-%m-%d') = ?", [date]);
@@ -132,10 +134,10 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     userId: string;
   }): Promise<{ formattedDate: string; qtd: number }[]> {
     try {
-      const result = await Knex(ETableNames.SCHEDULES)
+      const result = await this.knex(ETableNames.SCHEDULES)
         .select(
-          Knex.raw("date_format(date, '%Y-%m-%d') as formattedDate"),
-          Knex.raw("count(id) as qtd"),
+          this.knex.raw("date_format(date, '%Y-%m-%d') as formattedDate"),
+          this.knex.raw("count(id) as qtd"),
         )
         .where({ userId })
         .andWhereRaw("month(date) = ? AND year(date) = ?", [month, year])
@@ -151,7 +153,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
   }
 
   async listIdsByUserId({ userId }: { userId: string }): Promise<string[]> {
-    const rows = await Knex(ETableNames.SCHEDULES)
+    const rows = await this.knex(ETableNames.SCHEDULES)
       .select("id")
       .where({ userId })
       .andWhereRaw("date > NOW()");
@@ -164,7 +166,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     limit: number,
   ): Promise<string[]> {
     try {
-      const rows = await Knex(`${ETableNames.SCHEDULES} as s`)
+      const rows = await this.knex(`${ETableNames.SCHEDULES} as s`)
         .join(`${ETableNames.PATIENTS} as p`, (join) => {
           join
             .on("p.id", "=", "s.patientId")
@@ -193,7 +195,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     userId: string;
   }): Promise<SchedulingWithPatientDTO[]> {
     try {
-      const result = await Knex(`${ETableNames.SCHEDULES} as s`)
+      const result = await this.knex(`${ETableNames.SCHEDULES} as s`)
         .leftJoin(`${ETableNames.PATIENTS} as p`, function joinPatients() {
           this.on("s.patientId", "=", "p.id").andOn(
             "s.userId",
@@ -204,17 +206,17 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
         .select(
           "s.id",
           "s.patientId",
-          Knex.raw("p.name as patient"),
+          this.knex.raw("p.name as patient"),
           "p.phone",
-          Knex.raw(`DATE_FORMAT(s.date, '%Y-%m-%dT%H:%i') as date`),
-          Knex.raw(
+          this.knex.raw(`DATE_FORMAT(s.date, '%Y-%m-%dT%H:%i') as date`),
+          this.knex.raw(
             `DATE_FORMAT(s.reminderSentAt, '%Y-%m-%dT%H:%i') as reminderSentAt`,
           ),
           "s.duration",
           "s.service",
           "s.status",
-          Knex.raw("s.updated_at as updateAt"),
-          Knex.raw("s.created_at as createAt"),
+          this.knex.raw("s.updated_at as updateAt"),
+          this.knex.raw("s.created_at as createAt"),
         )
         .where({ "s.id": id, "s.userId": userId });
 
@@ -235,12 +237,12 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
   }): Promise<Scheduling[]> {
     const safeOffset = Math.max(offsetMinutes, 0);
 
-    const result = await Knex(ETableNames.SCHEDULES)
+    const result = await this.knex(ETableNames.SCHEDULES)
       .select(
         "id",
         "patientId",
-        Knex.raw(`DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date`),
-        Knex.raw(
+        this.knex.raw(`DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date`),
+        this.knex.raw(
           `DATE_FORMAT(reminderSentAt, '%Y-%m-%dT%H:%i') as reminderSentAt`,
         ),
         "duration",
@@ -249,8 +251,8 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
       )
       .where({ userId })
       .andWhereBetween("date", [
-        Knex.raw("NOW()"),
-        Knex.raw("DATE_ADD(NOW(), INTERVAL ? MINUTE)", [safeOffset]),
+        this.knex.raw("NOW()"),
+        this.knex.raw("DATE_ADD(NOW(), INTERVAL ? MINUTE)", [safeOffset]),
       ]);
 
     return result.map((row) => new Scheduling(row));
@@ -267,12 +269,12 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     const startOffset = safeOffset - 5;
     const endOffset = safeOffset + 5;
 
-    const result = await Knex(ETableNames.SCHEDULES)
+    const result = await this.knex(ETableNames.SCHEDULES)
       .select(
         "id",
         "patientId",
-        Knex.raw(`DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date`),
-        Knex.raw(
+        this.knex.raw(`DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date`),
+        this.knex.raw(
           `DATE_FORMAT(reminderSentAt, '%Y-%m-%dT%H:%i') as reminderSentAt`,
         ),
         "duration",
@@ -281,8 +283,8 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
       )
       .where({ userId })
       .andWhereBetween("date", [
-        Knex.raw("DATE_ADD(NOW(), INTERVAL ? MINUTE)", [startOffset]),
-        Knex.raw("DATE_ADD(NOW(), INTERVAL ? MINUTE)", [endOffset]),
+        this.knex.raw("DATE_ADD(NOW(), INTERVAL ? MINUTE)", [startOffset]),
+        this.knex.raw("DATE_ADD(NOW(), INTERVAL ? MINUTE)", [endOffset]),
       ]);
 
     return result.map((row) => new Scheduling(row));
@@ -297,12 +299,12 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
   }): Promise<Scheduling[]> {
     const safeWindow = Math.max(windowMinutes, 0);
 
-    const result = await Knex(ETableNames.SCHEDULES)
+    const result = await this.knex(ETableNames.SCHEDULES)
       .select(
         "id",
         "patientId",
-        Knex.raw(`DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date`),
-        Knex.raw(
+        this.knex.raw(`DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date`),
+        this.knex.raw(
           `DATE_FORMAT(reminderSentAt, '%Y-%m-%dT%H:%i') as reminderSentAt`,
         ),
         "duration",
@@ -312,14 +314,14 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
       .where({ userId })
       .whereNull("reminderSentAt")
       .andWhereBetween("date", [
-        Knex.raw("NOW()"),
-        Knex.raw("DATE_ADD(NOW(), INTERVAL ? MINUTE)", [safeWindow]),
+        this.knex.raw("NOW()"),
+        this.knex.raw("DATE_ADD(NOW(), INTERVAL ? MINUTE)", [safeWindow]),
       ]);
 
     return result.map((row) => new Scheduling(row));
   }
 
   async delete({ id, userId }: { id: string; userId: string }): Promise<void> {
-    await Knex(ETableNames.SCHEDULES).where({ id, userId }).del();
+    await this.knex(ETableNames.SCHEDULES).where({ id, userId }).del();
   }
 }

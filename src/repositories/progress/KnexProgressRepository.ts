@@ -1,7 +1,7 @@
 import { ProgressDTO } from "../../core/patients/models/Progress";
 import { IProgressRepository } from "./IProgressRepository";
-import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
+import type { Knex } from "knex";
 
 interface ProgressWithPainScaleRow {
   id: string;
@@ -18,6 +18,8 @@ interface ProgressWithPainScaleRow {
   description: string;
 }
 export class KnexProgressRepository implements IProgressRepository {
+  constructor(private readonly knex: Knex) {}
+
   async getByScheduling({
     patientId,
     schedulingId,
@@ -27,7 +29,7 @@ export class KnexProgressRepository implements IProgressRepository {
     patientId: string;
     userId: string;
   }): Promise<ProgressDTO[]> {
-    const rows: ProgressWithPainScaleRow[] = await Knex(
+    const rows: ProgressWithPainScaleRow[] = await this.knex(
       `${ETableNames.PROGRESS} as p`,
     )
       .leftJoin(`${ETableNames.PAIN_SCALES} as ps`, "p.id", "ps.progressId")
@@ -42,7 +44,7 @@ export class KnexProgressRepository implements IProgressRepository {
         "ps.id as painScaleId",
         "ps.painLevel",
         "ps.description",
-        Knex.raw('DATE_FORMAT(p.date, "%Y-%m-%dT%H:%i") as date'),
+        this.knex.raw('DATE_FORMAT(p.date, "%Y-%m-%dT%H:%i") as date'),
       )
       .select()
       .where({
@@ -60,7 +62,7 @@ export class KnexProgressRepository implements IProgressRepository {
     painScales,
     ...data
   }: ProgressDTO & { userId: string }): Promise<void> {
-    await Knex.transaction(async (trx) => {
+    await this.knex.transaction(async (trx) => {
       await trx(ETableNames.PROGRESS).insert(
         {
           ...data,
@@ -90,7 +92,7 @@ export class KnexProgressRepository implements IProgressRepository {
     painScales,
     ...data
   }: ProgressDTO & { userId: string }): Promise<void> {
-    await Knex.transaction(async (trx) => {
+    await this.knex.transaction(async (trx) => {
       await trx(ETableNames.PROGRESS)
         .update(data)
         .where({ id, patientId, userId });
@@ -121,7 +123,7 @@ export class KnexProgressRepository implements IProgressRepository {
     patientId: string;
     userId: string;
   }): Promise<ProgressDTO[]> {
-    const rows: ProgressWithPainScaleRow[] = await Knex(
+    const rows: ProgressWithPainScaleRow[] = await this.knex(
       `${ETableNames.PROGRESS} as p`,
     )
       .leftJoin(`${ETableNames.PAIN_SCALES} as ps`, "p.id", "ps.progressId")
@@ -136,7 +138,7 @@ export class KnexProgressRepository implements IProgressRepository {
         "ps.id as painScaleId",
         "ps.painLevel",
         "ps.description",
-        Knex.raw('DATE_FORMAT(p.date, "%Y-%m-%dT%H:%i") as date'),
+        this.knex.raw('DATE_FORMAT(p.date, "%Y-%m-%dT%H:%i") as date'),
       )
       .select()
       .where({
@@ -159,7 +161,7 @@ export class KnexProgressRepository implements IProgressRepository {
     userId: string;
     config?: { limit: number; offSet: number };
   }): Promise<ProgressDTO[]> {
-    const query = Knex(`${ETableNames.PROGRESS} as p`)
+    const query = this.knex(`${ETableNames.PROGRESS} as p`)
       .leftJoin(`${ETableNames.PAIN_SCALES} as ps`, "p.id", "ps.progressId")
       .column(
         "p.id",
@@ -172,7 +174,7 @@ export class KnexProgressRepository implements IProgressRepository {
         "ps.id as painScaleId",
         "ps.painLevel",
         "ps.description",
-        Knex.raw('DATE_FORMAT(p.date, "%Y-%m-%dT%H:%i") as date'),
+        this.knex.raw('DATE_FORMAT(p.date, "%Y-%m-%dT%H:%i") as date'),
       )
       .select()
       .where({
@@ -199,7 +201,7 @@ export class KnexProgressRepository implements IProgressRepository {
     patientId: string;
     userId: string;
   }): Promise<[{ total: number }]> {
-    const [result] = await Knex(ETableNames.PROGRESS)
+    const [result] = await this.knex(ETableNames.PROGRESS)
       .count("id as total")
       .where({ userId, patientId });
 
@@ -215,7 +217,7 @@ export class KnexProgressRepository implements IProgressRepository {
     patientId: string;
     userId: string;
   }): Promise<void> {
-    await Knex(ETableNames.PROGRESS).where({ id, patientId, userId }).del();
+    await this.knex(ETableNames.PROGRESS).where({ id, patientId, userId }).del();
   }
 
   private groupProgressPainScales(rows: ProgressWithPainScaleRow[]) {

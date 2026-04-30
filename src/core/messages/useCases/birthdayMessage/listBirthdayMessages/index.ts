@@ -1,7 +1,5 @@
-import { BirthdayMessageRepository } from "../../../../../repositories/messages/BirthdayMessageRepository";
+import { birthdayMessageRepository } from "../../../../../repositories/messages/knexInstances";
 import { ListBirthdayMessagesUseCase } from "./ListBirthdayMessagesUseCase";
-
-const birthdayMessageRepository = new BirthdayMessageRepository();
 
 const listBirthdayMessagesUseCase = new ListBirthdayMessagesUseCase(
   birthdayMessageRepository,

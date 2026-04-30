@@ -1,4 +1,4 @@
-import { Knex } from "../../database/knex";
+import type { Knex } from "knex";
 import { ETableNames } from "../../database/ETableNames";
 import { ApiError } from "../../utils/ApiError";
 import {
@@ -8,9 +8,11 @@ import {
 } from "./IUserFingerprintRepository";
 
 export class KnexUserFingerprintRepository implements IUserFingerprintRepository {
+  constructor(private readonly knex: Knex) {}
+
   async isKnown(props: UserFingerprintUpsertProps): Promise<boolean> {
     try {
-      const row = await Knex(ETableNames.USER_FINGERPRINTS)
+      const row = await this.knex(ETableNames.USER_FINGERPRINTS)
         .where({ userId: props.userId, fpHash: props.fpHash })
         .first("id");
       return row !== undefined;
@@ -22,8 +24,8 @@ export class KnexUserFingerprintRepository implements IUserFingerprintRepository
 
   async upsertTouchLastUsed(props: UserFingerprintUpsertProps): Promise<void> {
     try {
-      const now = Knex.fn.now();
-      await Knex(ETableNames.USER_FINGERPRINTS)
+      const now = this.knex.fn.now();
+      await this.knex(ETableNames.USER_FINGERPRINTS)
         .insert({
           userId: props.userId,
           fpHash: props.fpHash,
@@ -49,20 +51,20 @@ export class KnexUserFingerprintRepository implements IUserFingerprintRepository
 
   private async enforceLimit(userId: string): Promise<void> {
     try {
-      const [row] = await Knex(ETableNames.USER_FINGERPRINTS)
+      const [row] = await this.knex(ETableNames.USER_FINGERPRINTS)
         .where({ userId })
         .count("id as total");
       const total = Number((row as { total?: number | string })?.total ?? 0);
       if (total <= MAX_FINGERPRINTS_PER_USER) {
         return;
       }
-      const oldest = await Knex(ETableNames.USER_FINGERPRINTS)
+      const oldest = await this.knex(ETableNames.USER_FINGERPRINTS)
         .where({ userId })
         .orderBy("lastUsed", "asc")
         .orderBy("id", "asc")
         .first("id");
       if (oldest?.id !== undefined) {
-        await Knex(ETableNames.USER_FINGERPRINTS)
+        await this.knex(ETableNames.USER_FINGERPRINTS)
           .where({ id: oldest.id })
           .delete();
       }

@@ -1,8 +1,8 @@
 import { BirthdayMessageCampaignQueue } from "../../../queues/birthdayMessageCampaign/BirthdayMessageCampaignQueue";
 import { BirthdayMessageCampaignJobData } from "../../../queues/birthdayMessageCampaign/birthdayMessageCampaignJobData";
 import { QueueProvider } from "../queueProvider";
-import { KnexPatientRepository } from "../../patient/KnexPatientRepository";
-import { BirthdayMessageRepository } from "../../messages/BirthdayMessageRepository";
+import { birthdayMessageRepository } from "../../messages/knexInstances";
+import { knexPatientRepository } from "../../patient/knexInstances";
 import {
   PatientsBirthDayQueue,
   PatientsBirthdayJobData,
@@ -18,11 +18,8 @@ const birthdayMessageCampaignQueue = new BirthdayMessageCampaignQueue(
   campaignQueueProvider,
 );
 
-const patientRepository = new KnexPatientRepository();
-const birthdayMessageRepository = new BirthdayMessageRepository();
-
 const patientsBirthDayQueue = new PatientsBirthDayQueue(
-  patientRepository,
+  knexPatientRepository,
   queueProvider,
   birthdayMessageRepository,
   birthdayMessageCampaignQueue,

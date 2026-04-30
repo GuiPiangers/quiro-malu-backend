@@ -1,7 +1,7 @@
-import { KnexWhatsAppMessageLogRepository } from "../../../../../repositories/whatsapp/KnexWhatsAppMessageLogRepository";
 import { GetWhatsAppMessageLogsSummaryUseCase } from "./GetWhatsAppMessageLogsSummaryUseCase";
+import { knexWhatsAppMessageLogRepository } from "../../../../../repositories/whatsapp/knexInstances";
 
-const whatsAppMessageLogRepository = new KnexWhatsAppMessageLogRepository();
+const whatsAppMessageLogRepository = knexWhatsAppMessageLogRepository;
 
 export const getWhatsAppMessageLogsSummaryUseCase =
   new GetWhatsAppMessageLogsSummaryUseCase(whatsAppMessageLogRepository);

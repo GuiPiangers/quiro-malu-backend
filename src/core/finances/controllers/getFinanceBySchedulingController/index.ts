@@ -1,8 +1,8 @@
 import { GetFinanceBySchedulingController } from "./getFinanceBySchedulingController";
-import { KnexFinanceRepository } from "../../../../repositories/finance/knexFinanceRepository";
 import { GetFinanceBySchedulingUseCase } from "../../useCases/getFinanceByScheduling/getFinanceByScheduling";
+import { knexFinanceRepository } from "../../../../repositories/finance/knexInstances";
 
-const financeRepository = new KnexFinanceRepository();
+const financeRepository = knexFinanceRepository;
 const getFinanceBySchedulingUseCase = new GetFinanceBySchedulingUseCase(
   financeRepository,
 );

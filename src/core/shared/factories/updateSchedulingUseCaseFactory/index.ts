@@ -1,8 +1,8 @@
-import { KnexSchedulingRepository } from "../../../../repositories/scheduling/KnexSchedulingRepository";
 import { UpdateSchedulingUseCase } from "../../../scheduling/useCases/updateScheduling/UpdateSchedulingUseCase";
+import { knexSchedulingRepository } from "../../../../repositories/scheduling/knexInstances";
 
 export function updateSchedulingUseCaseFactory() {
-  const schedulingRepository = new KnexSchedulingRepository();
+  const schedulingRepository = knexSchedulingRepository;
   const updateSchedulingUseCase = new UpdateSchedulingUseCase(
     schedulingRepository,
   );

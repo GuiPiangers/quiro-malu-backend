@@ -1,8 +1,6 @@
-import { BlockScheduleRepository } from "../../../../repositories/blockScheduleRepository/BlockScheduleRepository";
 import { DeleteBlockScheduleUseCase } from "../../useCases/blockScheduling/deleteBlockSchedule/deleteBlockSchedule";
 import { DeleteBlockScheduleController } from "./deleteBlockScheduleController";
-
-const blockScheduleRepository = new BlockScheduleRepository();
+import { blockScheduleRepository } from "../../../../repositories/blockScheduleRepository/knexInstances";
 
 const deleteBlockScheduleUseCase = new DeleteBlockScheduleUseCase(
   blockScheduleRepository,

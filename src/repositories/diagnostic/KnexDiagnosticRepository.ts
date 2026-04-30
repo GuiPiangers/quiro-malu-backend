@@ -1,14 +1,15 @@
 import { DiagnosticDTO } from "../../core/patients/models/Diagnostic";
 import { IDiagnosticRepository } from "./IDiagnosticRepository";
 import { ETableNames } from "../../database/ETableNames";
-import { Knex } from "../../database/knex";
-
+import type { Knex } from "knex";
 export class KnexDiagnosticRepository implements IDiagnosticRepository {
+  constructor(private readonly knex: Knex) {}
+
   async save(
     { patientId, ...data }: DiagnosticDTO,
     userId: string,
   ): Promise<void> {
-    return await Knex(ETableNames.DIAGNOSTICS).insert({
+    return await this.knex(ETableNames.DIAGNOSTICS).insert({
       ...data,
       userId,
       patientId,
@@ -16,20 +17,20 @@ export class KnexDiagnosticRepository implements IDiagnosticRepository {
   }
 
   async saveMany(data: (DiagnosticDTO & { userId: string })[]): Promise<void> {
-    await Knex(ETableNames.DIAGNOSTICS).insert(data);
+    await this.knex(ETableNames.DIAGNOSTICS).insert(data);
   }
 
   async update(
     { patientId, ...data }: DiagnosticDTO,
     userId: string,
   ): Promise<void> {
-    await Knex(ETableNames.DIAGNOSTICS)
+    await this.knex(ETableNames.DIAGNOSTICS)
       .update(data)
       .where({ patientId, userId });
   }
 
   async get(patientId: string, userId: string): Promise<DiagnosticDTO> {
-    const result = await Knex(ETableNames.DIAGNOSTICS)
+    const result = await this.knex(ETableNames.DIAGNOSTICS)
       .first("*")
       .where({ patientId, userId });
 

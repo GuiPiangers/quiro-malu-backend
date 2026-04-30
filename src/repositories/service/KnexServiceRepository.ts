@@ -1,14 +1,16 @@
 import { ServiceDTO } from "../../core/service/models/Service";
-import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
 import { IServiceRepository, listServiceProps } from "./IServiceRepository";
+import type { Knex } from "knex";
 
 export class KnexServiceRepository implements IServiceRepository {
+  constructor(private readonly knex: Knex) {}
+
   async save({
     userId,
     ...data
   }: ServiceDTO & { userId: string }): Promise<void> {
-    return await Knex(ETableNames.SERVICES).insert({
+    return await this.knex(ETableNames.SERVICES).insert({
       ...data,
       userId,
     });
@@ -19,14 +21,14 @@ export class KnexServiceRepository implements IServiceRepository {
     userId,
     ...data
   }: ServiceDTO & { id: string; userId: string }): Promise<void> {
-    await Knex(ETableNames.SERVICES).update(data).where({ id, userId });
+    await this.knex(ETableNames.SERVICES).update(data).where({ id, userId });
   }
 
   async list({ userId, config }: listServiceProps): Promise<ServiceDTO[]> {
     const order = config?.search ? "name" : "created_at";
     const orderDirection = config?.search ? "asc" : "desc";
 
-    const result = Knex(ETableNames.SERVICES)
+    const result = this.knex(ETableNames.SERVICES)
       .select("*")
       .where({ userId })
       .andWhere("name", "like", `%${config?.search ?? ""}%`)
@@ -45,7 +47,7 @@ export class KnexServiceRepository implements IServiceRepository {
     userId: string;
     search?: string;
   }): Promise<[{ total: number }]> {
-    const [result] = await Knex(ETableNames.SERVICES)
+    const [result] = await this.knex(ETableNames.SERVICES)
       .count("id as total")
       .where({ userId })
       .andWhere("name", "like", `%${search ?? ""}%`);
@@ -59,7 +61,7 @@ export class KnexServiceRepository implements IServiceRepository {
     id: string;
     userId: string;
   }): Promise<ServiceDTO[]> {
-    return await Knex(ETableNames.SERVICES).select("*").where({ userId, id });
+    return await this.knex(ETableNames.SERVICES).select("*").where({ userId, id });
   }
 
   async getByName({
@@ -69,10 +71,10 @@ export class KnexServiceRepository implements IServiceRepository {
     name: string;
     userId: string;
   }): Promise<ServiceDTO[]> {
-    return await Knex(ETableNames.SERVICES).select("*").where({ userId, name });
+    return await this.knex(ETableNames.SERVICES).select("*").where({ userId, name });
   }
 
   async delete({ id, userId }: { id: string; userId: string }): Promise<void> {
-    await Knex(ETableNames.SERVICES).where({ id, userId }).del();
+    await this.knex(ETableNames.SERVICES).where({ id, userId }).del();
   }
 }

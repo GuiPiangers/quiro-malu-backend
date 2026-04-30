@@ -1,8 +1,8 @@
 import { pushNotificationQueue } from "../../../../database/bull/pushNotifications/pushNotificationsQueue";
-import { KnexSchedulingRepository } from "../../../../repositories/scheduling/KnexSchedulingRepository";
 import { ScheduleNotificationUseCase } from "./ScheduleNotificationUseCase";
+import { knexSchedulingRepository } from "../../../../repositories/scheduling/knexInstances";
 
-const schedulingRepository = new KnexSchedulingRepository();
+const schedulingRepository = knexSchedulingRepository;
 const scheduleNotificationUseCase = new ScheduleNotificationUseCase(
   pushNotificationQueue,
   schedulingRepository,

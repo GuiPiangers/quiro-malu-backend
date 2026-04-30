@@ -1,8 +1,7 @@
-import { AfterScheduleMessageRepository } from "../../../../repositories/messages/AfterScheduleMessageRepository";
 import { ListAfterScheduleMessagesUseCase } from "../../useCases/afterScheduleMessage/listAfterScheduleMessages/ListAfterScheduleMessagesUseCase";
 import { ListAfterScheduleMessagesController } from "./ListAfterScheduleMessagesController";
+import { afterScheduleMessageRepository } from "../../../../repositories/messages/knexInstances";
 
-const afterScheduleMessageRepository = new AfterScheduleMessageRepository();
 
 const listAfterScheduleMessagesUseCase = new ListAfterScheduleMessagesUseCase(
   afterScheduleMessageRepository,

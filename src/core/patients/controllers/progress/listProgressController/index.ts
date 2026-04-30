@@ -1,8 +1,8 @@
-import { KnexProgressRepository } from "../../../../../repositories/progress/KnexProgressRepository";
 import { ListProgressUseCase } from "../../../useCases/progress/listProgress/ListProgressUseCase";
 import { ListProgressController } from "./ListProgressController";
+import { knexProgressRepository } from "../../../../../repositories/progress/knexInstances";
 
-const ProgressRepository = new KnexProgressRepository();
+const ProgressRepository = knexProgressRepository;
 const listProgressUseCase = new ListProgressUseCase(ProgressRepository);
 const listProgressController = new ListProgressController(listProgressUseCase);
 

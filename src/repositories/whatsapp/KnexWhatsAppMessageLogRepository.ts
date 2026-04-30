@@ -1,4 +1,4 @@
-import { Knex } from "../../database/knex";
+import type { Knex } from "knex";
 import { ETableNames } from "../../database/ETableNames";
 import { ApiError } from "../../utils/ApiError";
 import {
@@ -72,9 +72,11 @@ function rowToDto(row: MessageLogRow): WhatsAppMessageLogDTO {
 export class KnexWhatsAppMessageLogRepository
   implements IWhatsAppMessageLogRepository
 {
+  constructor(private readonly knex: Knex) {}
+
   async findById(id: string): Promise<WhatsAppMessageLogDTO | null> {
     try {
-      const row = await Knex(ETableNames.WHATSAPP_MESSAGE_LOGS)
+      const row = await this.knex(ETableNames.WHATSAPP_MESSAGE_LOGS)
         .where({ id })
         .first();
       return row ? rowToDto(row as MessageLogRow) : null;
@@ -85,7 +87,7 @@ export class KnexWhatsAppMessageLogRepository
 
   async getBySchedulingAndCampaignId(props: GetBySchedulingAndCampaignIdProps): Promise<WhatsAppMessageLogDTO | null> {
     try {
-      const row = await Knex(ETableNames.WHATSAPP_MESSAGE_LOGS)
+      const row = await this.knex(ETableNames.WHATSAPP_MESSAGE_LOGS)
         .where({
           schedulingId: props.schedulingId,
           scheduleMessageConfigId: props.campaignId,
@@ -99,7 +101,7 @@ export class KnexWhatsAppMessageLogRepository
 
   async save(data: SaveWhatsAppMessageLogProps): Promise<void> {
     try {
-      await Knex(ETableNames.WHATSAPP_MESSAGE_LOGS).insert({
+      await this.knex(ETableNames.WHATSAPP_MESSAGE_LOGS).insert({
         id: data.id,
         userId: data.userId,
         patientId: data.patientId,
@@ -112,7 +114,7 @@ export class KnexWhatsAppMessageLogRepository
         status: data.status,
         providerMessageId: data.providerMessageId,
         errorMessage: data.errorMessage ?? null,
-        sentAt: Knex.fn.now(),
+        sentAt: this.knex.fn.now(),
       });
     } catch (error: any) {
       throw new ApiError(error.message, 500);
@@ -134,7 +136,7 @@ export class KnexWhatsAppMessageLogRepository
         patch.readAt = data.readAt;
       }
 
-      await Knex(ETableNames.WHATSAPP_MESSAGE_LOGS)
+      await this.knex(ETableNames.WHATSAPP_MESSAGE_LOGS)
         .where({ providerMessageId: data.providerMessageId })
         .update(patch);
     } catch (error: any) {
@@ -147,7 +149,7 @@ export class KnexWhatsAppMessageLogRepository
   ): Promise<ListWhatsAppMessageLogsResult> {
     try {
       const base = () => {
-        let q = Knex(ETableNames.WHATSAPP_MESSAGE_LOGS).where({
+        let q = this.knex(ETableNames.WHATSAPP_MESSAGE_LOGS).where({
           userId: filter.userId,
         });
 
@@ -199,7 +201,7 @@ export class KnexWhatsAppMessageLogRepository
     },
   ): Promise<WhatsAppMessageLogsSummaryDTO> {
     try {
-      let base = Knex(ETableNames.WHATSAPP_MESSAGE_LOGS).where({ userId });
+      let base = this.knex(ETableNames.WHATSAPP_MESSAGE_LOGS).where({ userId });
 
       if (filter?.patientId) {
         base = base.andWhere({ patientId: filter.patientId });

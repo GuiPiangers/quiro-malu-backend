@@ -1,27 +1,28 @@
+import type { Knex } from "knex";
 import { RefreshTokenDTO } from "../../core/authentication/models/RefreshToken";
-import { IRefreshTokenProvider } from "./IRefreshTokenProvider";
-import { Knex } from "../../database/knex";
+import { db } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
+import { IRefreshTokenProvider } from "./IRefreshTokenProvider";
 
-class RefreshTokenProvider implements IRefreshTokenProvider {
+export class RefreshTokenProvider implements IRefreshTokenProvider {
+  constructor(private readonly knex: Knex) {}
+
   private async deleteWithUserId(userId: string) {
-    await Knex(ETableNames.REFRESH_TOKEN).where({ userId }).del();
+    await this.knex(ETableNames.REFRESH_TOKEN).where({ userId }).del();
   }
 
   async delete(id: string) {
-    await Knex(ETableNames.REFRESH_TOKEN).where({ id }).del();
+    await this.knex(ETableNames.REFRESH_TOKEN).where({ id }).del();
   }
 
   async generate(RefreshToken: RefreshTokenDTO): Promise<void> {
     await this.deleteWithUserId(RefreshToken.userId);
-    return await Knex(ETableNames.REFRESH_TOKEN).insert(RefreshToken);
+    return await this.knex(ETableNames.REFRESH_TOKEN).insert(RefreshToken);
   }
 
   async getRefreshToken(id: string): Promise<RefreshTokenDTO[]> {
-    return await Knex(ETableNames.REFRESH_TOKEN).select("*").where({ id });
+    return await this.knex(ETableNames.REFRESH_TOKEN).select("*").where({ id });
   }
 }
 
-const refreshTokenProvider = new RefreshTokenProvider();
-
-export { refreshTokenProvider };
+export const refreshTokenProvider = new RefreshTokenProvider(db);

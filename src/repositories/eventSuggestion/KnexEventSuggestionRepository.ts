@@ -3,18 +3,20 @@ import {
   EventSuggestionDTO,
 } from "../../core/scheduling/models/EventSuggestion";
 import { ETableNames } from "../../database/ETableNames";
-import { Knex } from "../../database/knex";
 import { IEventSuggestionRepository } from "./IEventSuggestionRepository";
+import type { Knex } from "knex";
 
 export class KnexEventSuggestionRepository
   implements IEventSuggestionRepository
 {
+  constructor(private readonly knex: Knex) {}
+
   async getByDescription(params: {
     description: string;
     userId: string;
   }): Promise<EventSuggestion | null> {
     const { description, userId } = params;
-    const result = await Knex(ETableNames.EVENT_SUGGESTIONS)
+    const result = await this.knex(ETableNames.EVENT_SUGGESTIONS)
       .select<EventSuggestionDTO>()
       .where({ description, userId })
       .first();
@@ -28,13 +30,13 @@ export class KnexEventSuggestionRepository
     eventSuggestion: EventSuggestion,
     userId: string,
   ): Promise<void> {
-    await Knex(ETableNames.EVENT_SUGGESTIONS)
+    await this.knex(ETableNames.EVENT_SUGGESTIONS)
       .update(eventSuggestion.getDTO())
       .where({ id: eventSuggestion.id, userId });
   }
 
   async save(eventSuggestion: EventSuggestion, userId: string): Promise<void> {
-    await Knex(ETableNames.EVENT_SUGGESTIONS).insert({
+    await this.knex(ETableNames.EVENT_SUGGESTIONS).insert({
       ...eventSuggestion.getDTO(),
       userId,
     });
@@ -46,7 +48,7 @@ export class KnexEventSuggestionRepository
   }): Promise<EventSuggestion[]> {
     const { userId, config } = params;
 
-    const query = Knex(ETableNames.EVENT_SUGGESTIONS)
+    const query = this.knex(ETableNames.EVENT_SUGGESTIONS)
       .select<EventSuggestionDTO[]>()
       .where({ userId })
       .orderBy("frequency", "desc")

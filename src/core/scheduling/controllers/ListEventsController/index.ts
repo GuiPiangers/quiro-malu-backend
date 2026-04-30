@@ -1,10 +1,10 @@
-import { BlockScheduleRepository } from "../../../../repositories/blockScheduleRepository/BlockScheduleRepository";
-import { KnexSchedulingRepository } from "../../../../repositories/scheduling/KnexSchedulingRepository";
 import { ListEventsUseCase } from "../../useCases/listEvents/ListEventsUseCase";
 import { ListEventsController } from "./ListEventsController";
+import { blockScheduleRepository } from "../../../../repositories/blockScheduleRepository/knexInstances";
+import { knexSchedulingRepository } from "../../../../repositories/scheduling/knexInstances";
 
-const schedulingRepository = new KnexSchedulingRepository();
-const blockedSchedulingRepository = new BlockScheduleRepository();
+const schedulingRepository = knexSchedulingRepository;
+const blockedSchedulingRepository = blockScheduleRepository;
 const listEventsUseCase = new ListEventsUseCase(
   schedulingRepository,
   blockedSchedulingRepository,

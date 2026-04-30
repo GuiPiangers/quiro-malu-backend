@@ -1,9 +1,9 @@
 import { S3ExamsFileStorage } from "../../../../repositories/examsFileStorage/S3ExamsFileStorage";
-import { KnexExamsRepository } from "../../../../repositories/examsRepository/KnexExamsRepository";
 import { ListExamUseCase } from "../../useCases/listExams/ListExamUseCase";
 import { ListExamController } from "./ListExamController";
+import { knexExamsRepository } from "../../../../repositories/examsRepository/knexInstances";
 
-const examRepository = new KnexExamsRepository();
+const examRepository = knexExamsRepository;
 const examsFileStorage = new S3ExamsFileStorage();
 
 const listExamUseCase = new ListExamUseCase(examRepository, examsFileStorage);

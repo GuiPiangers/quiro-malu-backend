@@ -1,4 +1,4 @@
-import { Knex } from "../../database/knex";
+import type { Knex } from "knex";
 import { ETableNames } from "../../database/ETableNames";
 import { ApiError } from "../../utils/ApiError";
 import {
@@ -16,9 +16,11 @@ import {
 export class BeforeScheduleMessageRepository
   implements IBeforeScheduleMessageRepository
 {
+  constructor(private readonly knex: Knex) {}
+
   async save(data: SaveBeforeScheduleMessageProps): Promise<void> {
     try {
-      await Knex(ETableNames.BEFORE_SCHEDULE_MESSAGES).insert(data);
+      await this.knex(ETableNames.BEFORE_SCHEDULE_MESSAGES).insert(data);
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }
@@ -26,7 +28,7 @@ export class BeforeScheduleMessageRepository
 
   async delete(data: DeleteBeforeScheduleMessageProps): Promise<void> {
     try {
-      await Knex(ETableNames.BEFORE_SCHEDULE_MESSAGES)
+      await this.knex(ETableNames.BEFORE_SCHEDULE_MESSAGES)
         .where({ id: data.id, userId: data.userId })
         .del();
     } catch (error: any) {
@@ -46,7 +48,7 @@ export class BeforeScheduleMessageRepository
       if (data.isActive !== undefined)
         updateData.isActive = data.isActive;
 
-      await Knex(ETableNames.BEFORE_SCHEDULE_MESSAGES)
+      await this.knex(ETableNames.BEFORE_SCHEDULE_MESSAGES)
         .where({ id: data.id, userId: data.userId })
         .update(updateData);
     } catch (error: any) {
@@ -56,7 +58,7 @@ export class BeforeScheduleMessageRepository
 
   async listAll(): Promise<BeforeScheduleMessageConfigDTO[]> {
     try {
-      const rows = await Knex(ETableNames.BEFORE_SCHEDULE_MESSAGES).select(
+      const rows = await this.knex(ETableNames.BEFORE_SCHEDULE_MESSAGES).select(
         "id",
         "userId",
         "name",
@@ -78,7 +80,7 @@ export class BeforeScheduleMessageRepository
     data: ListBeforeScheduleMessagesByUserIdProps,
   ): Promise<BeforeScheduleMessageConfigDTO[]> {
     try {
-      const rows = await Knex(ETableNames.BEFORE_SCHEDULE_MESSAGES)
+      const rows = await this.knex(ETableNames.BEFORE_SCHEDULE_MESSAGES)
         .select(
           "id",
           "userId",
@@ -105,7 +107,7 @@ export class BeforeScheduleMessageRepository
   ): Promise<ListBeforeScheduleMessagesPagedResult> {
     try {
       const base = () =>
-        Knex(ETableNames.BEFORE_SCHEDULE_MESSAGES).where({
+        this.knex(ETableNames.BEFORE_SCHEDULE_MESSAGES).where({
           userId: data.userId,
         });
 
@@ -143,7 +145,7 @@ export class BeforeScheduleMessageRepository
     data: GetBeforeScheduleMessageByIdProps,
   ): Promise<BeforeScheduleMessageConfigDTO | null> {
     try {
-      const row = await Knex(ETableNames.BEFORE_SCHEDULE_MESSAGES)
+      const row = await this.knex(ETableNames.BEFORE_SCHEDULE_MESSAGES)
         .select(
           "id",
           "userId",

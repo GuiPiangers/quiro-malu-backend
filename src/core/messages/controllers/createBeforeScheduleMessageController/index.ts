@@ -1,9 +1,8 @@
 import { appEventListener } from "../../../shared/observers/EventListener";
-import { BeforeScheduleMessageRepository } from "../../../../repositories/messages/BeforeScheduleMessageRepository";
 import { CreateBeforeScheduleMessageUseCase } from "../../useCases/beforeScheduleMessage/createBeforeScheduleMessage/CreateBeforeScheduleMessageUseCase";
 import { CreateBeforeScheduleMessageController } from "./CreateBeforeScheduleMessageController";
+import { beforeScheduleMessageRepository } from "../../../../repositories/messages/knexInstances";
 
-const beforeScheduleMessageRepository = new BeforeScheduleMessageRepository();
 
 const createBeforeScheduleMessageUseCase = new CreateBeforeScheduleMessageUseCase(
   beforeScheduleMessageRepository,

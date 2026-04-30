@@ -1,8 +1,6 @@
 import { appEventListener } from "../../../../shared/observers/EventListener";
-import { BirthdayMessageRepository } from "../../../../../repositories/messages/BirthdayMessageRepository";
+import { birthdayMessageRepository } from "../../../../../repositories/messages/knexInstances";
 import { DeleteBirthdayMessageUseCase } from "./DeleteBirthdayMessageUseCase";
-
-const birthdayMessageRepository = new BirthdayMessageRepository();
 
 const deleteBirthdayMessageUseCase = new DeleteBirthdayMessageUseCase(
   birthdayMessageRepository,

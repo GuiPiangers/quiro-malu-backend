@@ -1,4 +1,4 @@
-import { Knex } from "../../database/knex";
+import type { Knex } from "knex";
 import { ETableNames } from "../../database/ETableNames";
 import { ApiError } from "../../utils/ApiError";
 import {
@@ -24,9 +24,11 @@ function mapSendTimeToHhMm(value: unknown): string {
 }
 
 export class BirthdayMessageRepository implements IBirthdayMessageRepository {
+  constructor(private readonly knex: Knex) {}
+
   async save(data: SaveBirthdayMessageProps): Promise<void> {
     try {
-      await Knex(ETableNames.BIRTHDAY_MESSAGES).insert(data);
+      await this.knex(ETableNames.BIRTHDAY_MESSAGES).insert(data);
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }
@@ -36,7 +38,7 @@ export class BirthdayMessageRepository implements IBirthdayMessageRepository {
     data: GetBirthdayMessageByIdProps,
   ): Promise<BirthdayMessageCampaignDTO | null> {
     try {
-      const row = await Knex(ETableNames.BIRTHDAY_MESSAGES)
+      const row = await this.knex(ETableNames.BIRTHDAY_MESSAGES)
         .select("id", "userId", "name", "textTemplate", "isActive", "sendTime")
         .where({ id: data.id, userId: data.userId })
         .first();
@@ -69,7 +71,7 @@ export class BirthdayMessageRepository implements IBirthdayMessageRepository {
         return;
       }
 
-      await Knex(ETableNames.BIRTHDAY_MESSAGES)
+      await this.knex(ETableNames.BIRTHDAY_MESSAGES)
         .where({ id: data.id, userId: data.userId })
         .update(updateData);
     } catch (error: any) {
@@ -79,7 +81,7 @@ export class BirthdayMessageRepository implements IBirthdayMessageRepository {
 
   async delete(data: DeleteBirthdayMessageProps): Promise<void> {
     try {
-      await Knex(ETableNames.BIRTHDAY_MESSAGES)
+      await this.knex(ETableNames.BIRTHDAY_MESSAGES)
         .where({ id: data.id, userId: data.userId })
         .del();
     } catch (error: any) {
@@ -91,7 +93,7 @@ export class BirthdayMessageRepository implements IBirthdayMessageRepository {
     userId: string,
   ): Promise<BirthdayMessageCampaignDTO | null> {
     try {
-      const row = await Knex(ETableNames.BIRTHDAY_MESSAGES)
+      const row = await this.knex(ETableNames.BIRTHDAY_MESSAGES)
         .where({ userId, isActive: true })
         .orderBy("updated_at", "desc")
         .first();
@@ -116,7 +118,7 @@ export class BirthdayMessageRepository implements IBirthdayMessageRepository {
   ): Promise<ListBirthdayMessagesResult> {
     try {
       const base = () =>
-        Knex(ETableNames.BIRTHDAY_MESSAGES).where({ userId: data.userId });
+        this.knex(ETableNames.BIRTHDAY_MESSAGES).where({ userId: data.userId });
 
       const countRows = await base().clone().count<{ total: string | number }>(
         "* as total",

@@ -1,5 +1,5 @@
+import type { Knex } from "knex";
 import { ExamDTO } from "../../core/exams/models/Exam";
-import { Knex } from "../../database/knex";
 import { ETableNames } from "../../database/ETableNames";
 import {
   countExamRepositoryProps,
@@ -12,11 +12,13 @@ import {
 } from "./IExamsRepository";
 
 export class KnexExamsRepository implements IExamsRepository {
+  constructor(private readonly knex: Knex) {}
+
   async count({
     patientId,
     userId,
   }: countExamRepositoryProps): Promise<{ total: number }> {
-    const result = await Knex(ETableNames.EXAMS)
+    const result = await this.knex(ETableNames.EXAMS)
       .count("id as total")
       .where({ patientId, userId })
       .andWhere("deleted", false)
@@ -26,7 +28,7 @@ export class KnexExamsRepository implements IExamsRepository {
   }
 
   async save(data: saveExamRepositoryRepositoryProps) {
-    await Knex(ETableNames.EXAMS).insert(data);
+    await this.knex(ETableNames.EXAMS).insert(data);
   }
 
   async update({
@@ -35,7 +37,7 @@ export class KnexExamsRepository implements IExamsRepository {
     patientId,
     ...data
   }: updateExamRepositoryRepositoryProps) {
-    await Knex(ETableNames.EXAMS).update(data).where({ id, userId, patientId });
+    await this.knex(ETableNames.EXAMS).update(data).where({ id, userId, patientId });
   }
 
   async get({
@@ -43,7 +45,7 @@ export class KnexExamsRepository implements IExamsRepository {
     patientId,
     userId,
   }: getExamRepositoryProps): Promise<ExamDTO> {
-    return await Knex(ETableNames.EXAMS)
+    return await this.knex(ETableNames.EXAMS)
       .first("*")
       .where({ id, patientId, userId });
   }
@@ -53,7 +55,7 @@ export class KnexExamsRepository implements IExamsRepository {
     userId,
     config,
   }: listExamRepositoryProps): Promise<ExamDTO[]> {
-    return await Knex(ETableNames.EXAMS)
+    return await this.knex(ETableNames.EXAMS)
       .select("*")
       .where({ patientId, userId })
       .andWhere("deleted", false)
@@ -66,6 +68,6 @@ export class KnexExamsRepository implements IExamsRepository {
     userId,
     patientId,
   }: deleteExamRepositoryProps): Promise<void> {
-    await Knex(ETableNames.EXAMS).where({ id, userId, patientId }).del();
+    await this.knex(ETableNames.EXAMS).where({ id, userId, patientId }).del();
   }
 }
