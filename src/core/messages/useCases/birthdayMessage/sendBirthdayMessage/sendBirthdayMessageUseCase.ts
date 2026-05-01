@@ -73,11 +73,11 @@ export class SendBirthdayMessageUseCase {
       return;
     }
 
-    const allowed = await this.messageSendStrategyEnforcer.isSendAllowed(
-      job.userId,
-      job.campaignId,
-      job.patientId,
-    );
+    const allowed = await this.messageSendStrategyEnforcer.isSendAllowed({
+      userId: job.userId,
+      campaignId: job.campaignId,
+      patientId: job.patientId,
+    });
     if (!allowed) {
       return;
     }

@@ -70,11 +70,11 @@ export class SendAfterScheduleMessageUseCase {
 
     if (!patient?.phone) return;
 
-    const allowed = await this.messageSendStrategyEnforcer.isSendAllowed(
-      job.userId,
-      job.afterScheduleMessageId,
-      scheduling.patientId,
-    );
+    const allowed = await this.messageSendStrategyEnforcer.isSendAllowed({
+      userId: job.userId,
+      campaignId: job.afterScheduleMessageId,
+      patientId: scheduling.patientId,
+    });
     if (!allowed) {
       return;
     }

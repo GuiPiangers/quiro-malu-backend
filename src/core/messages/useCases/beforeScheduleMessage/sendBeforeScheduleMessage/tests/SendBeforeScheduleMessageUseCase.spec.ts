@@ -488,11 +488,11 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       beforeScheduleMessageId: "cfg-1",
     });
 
-    expect(messageSendStrategyEnforcer.isSendAllowed).toHaveBeenCalledWith(
-      "user-1",
-      "cfg-1",
-      "patient-1",
-    );
+    expect(messageSendStrategyEnforcer.isSendAllowed).toHaveBeenCalledWith({
+      userId: "user-1",
+      campaignId: "cfg-1",
+      patientId: "patient-1",
+    });
     expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled();
     expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled();
     expect(appEventListener.emit).not.toHaveBeenCalled();

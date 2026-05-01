@@ -306,11 +306,11 @@ describe("SendBirthdayMessageUseCase", () => {
 
     await useCase.execute(baseJob);
 
-    expect(messageSendStrategyEnforcer.isSendAllowed).toHaveBeenCalledWith(
-      "user-1",
-      "camp-1",
-      "patient-1",
-    );
+    expect(messageSendStrategyEnforcer.isSendAllowed).toHaveBeenCalledWith({
+      userId: "user-1",
+      campaignId: "camp-1",
+      patientId: "patient-1",
+    });
     expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled();
     expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled();
     expect(appEventListener.emit).not.toHaveBeenCalled();

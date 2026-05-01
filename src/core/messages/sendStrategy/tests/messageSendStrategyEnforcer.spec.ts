@@ -11,7 +11,11 @@ describe("MessageSendStrategyEnforcer", () => {
 
     const sut = new MessageSendStrategyEnforcer(repo as any, factory as any);
 
-    const allowed = await sut.isSendAllowed("user-1", "camp-1", "patient-1");
+    const allowed = await sut.isSendAllowed({
+      userId: "user-1",
+      campaignId: "camp-1",
+      patientId: "patient-1",
+    });
 
     expect(allowed).toBe(true);
     expect(repo.findActiveStrategiesByUserAndCampaign).toHaveBeenCalledWith(
@@ -50,7 +54,11 @@ describe("MessageSendStrategyEnforcer", () => {
 
     const sut = new MessageSendStrategyEnforcer(repo as any, factory as any);
 
-    const allowed = await sut.isSendAllowed("user-1", "camp-1", "patient-1");
+    const allowed = await sut.isSendAllowed({
+      userId: "user-1",
+      campaignId: "camp-1",
+      patientId: "patient-1",
+    });
 
     expect(allowed).toBe(true);
     expect(factory.create).toHaveBeenCalledTimes(2);
@@ -90,7 +98,11 @@ describe("MessageSendStrategyEnforcer", () => {
 
     const sut = new MessageSendStrategyEnforcer(repo as any, factory as any);
 
-    const allowed = await sut.isSendAllowed("user-1", "camp-1", "patient-1");
+    const allowed = await sut.isSendAllowed({
+      userId: "user-1",
+      campaignId: "camp-1",
+      patientId: "patient-1",
+    });
 
     expect(allowed).toBe(false);
     expect(allowsSend).toHaveBeenCalledTimes(2);
@@ -137,7 +149,11 @@ describe("MessageSendStrategyEnforcer", () => {
 
     const sut = new MessageSendStrategyEnforcer(repo as any, factory as any);
 
-    const allowed = await sut.isSendAllowed("user-1", "camp-1", "patient-1");
+    const allowed = await sut.isSendAllowed({
+      userId: "user-1",
+      campaignId: "camp-1",
+      patientId: "patient-1",
+    });
 
     expect(allowed).toBe(false);
     expect(factory.create).toHaveBeenCalledTimes(1);
