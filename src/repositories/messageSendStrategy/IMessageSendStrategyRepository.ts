@@ -41,14 +41,14 @@ export interface IMessageSendStrategyRepository {
     id: string,
     userId: string,
   ): Promise<MessageSendStrategyRow | null>;
-  findActiveStrategyByUserAndCampaign(
+  findActiveStrategiesByUserAndCampaign(
     userId: string,
     campaignId: string,
-  ): Promise<MessageSendStrategyRow | null>;
-  upsertCampaignBinding(
+  ): Promise<MessageSendStrategyRow[]>;
+  setCampaignStrategyBindings(
     userId: string,
     campaignId: string,
-    strategyId: string,
+    strategyIds: string[],
   ): Promise<void>;
   deleteCampaignBinding(userId: string, campaignId: string): Promise<void>;
   updateByIdAndUserId(

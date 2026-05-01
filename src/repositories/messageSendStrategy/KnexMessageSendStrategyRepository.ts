@@ -138,12 +138,12 @@ export class KnexMessageSendStrategyRepository
     }
   }
 
-  async findActiveStrategyByUserAndCampaign(
+  async findActiveStrategiesByUserAndCampaign(
     userId: string,
     campaignId: string,
-  ): Promise<MessageSendStrategyRow | null> {
+  ): Promise<MessageSendStrategyRow[]> {
     try {
-      const row = await this.knex(`${ETableNames.MESSAGE_SEND_STRATEGIES} as s`)
+      const rows = await this.knex(`${ETableNames.MESSAGE_SEND_STRATEGIES} as s`)
         .innerJoin(
           `${ETableNames.USER_MESSAGE_SEND_STRATEGY} as u`,
           "u.strategyId",
@@ -159,38 +159,40 @@ export class KnexMessageSendStrategyRepository
         )
         .where("u.userId", userId)
         .andWhere("u.campaignId", campaignId)
-        .first();
+        .orderBy("s.created_at", "asc");
 
-      if (!row) return null;
-
-      return {
+      return rows.map((row) => ({
         id: row.id,
         userId: row.userId,
         name: row.name ?? "",
         kind: row.kind,
         params: parseParams(row.params),
         campaignBindingsCount: rowBindingsCount(row as Record<string, unknown>),
-      };
+      }));
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }
   }
 
-  async upsertCampaignBinding(
+  async setCampaignStrategyBindings(
     userId: string,
     campaignId: string,
-    strategyId: string,
+    strategyIds: string[],
   ): Promise<void> {
     try {
       await this.knex.transaction(async (trx) => {
         await trx(ETableNames.USER_MESSAGE_SEND_STRATEGY)
           .where({ userId, campaignId })
           .del();
-        await trx(ETableNames.USER_MESSAGE_SEND_STRATEGY).insert({
+        if (strategyIds.length === 0) {
+          return;
+        }
+        const rows = strategyIds.map((strategyId) => ({
           userId,
           campaignId,
           strategyId,
-        });
+        }));
+        await trx(ETableNames.USER_MESSAGE_SEND_STRATEGY).insert(rows);
       });
     } catch (error: any) {
       throw new ApiError(error.message, 500);

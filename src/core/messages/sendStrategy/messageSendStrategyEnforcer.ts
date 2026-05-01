@@ -12,18 +12,23 @@ export class MessageSendStrategyEnforcer {
     campaignId: string,
     patientId: string,
   ): Promise<boolean> {
-    const row =
-      await this.messageSendStrategyRepository.findActiveStrategyByUserAndCampaign(
+    const rows =
+      await this.messageSendStrategyRepository.findActiveStrategiesByUserAndCampaign(
         userId,
         campaignId,
       );
 
-    if (!row) {
+    if (rows.length === 0) {
       return true;
     }
 
-    const strategy = this.messageSendStrategyFactory.create(row);
+    for (const row of rows) {
+      const strategy = this.messageSendStrategyFactory.create(row);
+      if (!(await strategy.allowsSend({ userId, patientId }))) {
+        return false;
+      }
+    }
 
-    return strategy.allowsSend({ userId, patientId });
+    return true;
   }
 }

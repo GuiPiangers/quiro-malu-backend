@@ -15,20 +15,20 @@ export class GetMessageSendStrategyByCampaignIdUseCase {
 
   async execute(
     dto: GetMessageSendStrategyByCampaignIdDTO,
-  ): Promise<ListedMessageSendStrategyDTO> {
-    const row =
-      await this.messageSendStrategyRepository.findActiveStrategyByUserAndCampaign(
+  ): Promise<ListedMessageSendStrategyDTO[]> {
+    const rows =
+      await this.messageSendStrategyRepository.findActiveStrategiesByUserAndCampaign(
         dto.userId,
         dto.campaignId,
       );
 
-    if (!row) {
+    if (rows.length === 0) {
       throw new ApiError(
         "Nenhuma estratégia de envio vinculada a esta campanha",
         404,
       );
     }
 
-    return toMessageSendStrategyDTO(row);
+    return rows.map((row) => toMessageSendStrategyDTO(row));
   }
 }

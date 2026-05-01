@@ -3,16 +3,26 @@ import { SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS } from "../../../../sendSt
 import { GetMessageSendStrategyByCampaignIdUseCase } from "../GetMessageSendStrategyByCampaignIdUseCase";
 
 describe("GetMessageSendStrategyByCampaignIdUseCase", () => {
-  it("deve retornar a estratégia vinculada à campanha", async () => {
+  it("deve retornar todas as estratégias vinculadas à campanha", async () => {
     const repo = createMockMessageSendStrategyRepository();
-    repo.findActiveStrategyByUserAndCampaign.mockResolvedValue({
-      id: "strat-1",
-      userId: "user-1",
-      name: "Lista",
-      kind: SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
-      params: { amount: 10 },
-      campaignBindingsCount: 1,
-    });
+    repo.findActiveStrategiesByUserAndCampaign.mockResolvedValue([
+      {
+        id: "strat-1",
+        userId: "user-1",
+        name: "Lista",
+        kind: SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+        params: { amount: 10 },
+        campaignBindingsCount: 1,
+      },
+      {
+        id: "strat-2",
+        userId: "user-1",
+        name: "Outra",
+        kind: SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
+        params: { amount: 5 },
+        campaignBindingsCount: 1,
+      },
+    ]);
 
     const sut = new GetMessageSendStrategyByCampaignIdUseCase(repo);
     const result = await sut.execute({
@@ -20,17 +30,19 @@ describe("GetMessageSendStrategyByCampaignIdUseCase", () => {
       campaignId: "camp-uuid",
     });
 
-    expect(repo.findActiveStrategyByUserAndCampaign).toHaveBeenCalledWith(
+    expect(repo.findActiveStrategiesByUserAndCampaign).toHaveBeenCalledWith(
       "user-1",
       "camp-uuid",
     );
-    expect(result.id).toBe("strat-1");
-    expect(result.kind).toBe(SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS);
+    expect(result).toHaveLength(2);
+    expect(result[0].id).toBe("strat-1");
+    expect(result[0].kind).toBe(SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS);
+    expect(result[1].id).toBe("strat-2");
   });
 
   it("deve lançar 404 quando não houver estratégia vinculada", async () => {
     const repo = createMockMessageSendStrategyRepository();
-    repo.findActiveStrategyByUserAndCampaign.mockResolvedValue(null);
+    repo.findActiveStrategiesByUserAndCampaign.mockResolvedValue([]);
 
     const sut = new GetMessageSendStrategyByCampaignIdUseCase(repo);
 

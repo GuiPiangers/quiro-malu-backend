@@ -9,14 +9,14 @@ export class BindMessageSendStrategyCampaignsController {
 
   async handle(request: Request, response: Response) {
     try {
-      const { id } = request.params;
-      const body = request.body as { campaignIds?: string[] };
+      const { campaignId } = request.params;
+      const body = request.body as { strategyIds?: string[] };
       const userId = request.user.id!;
 
       await this.bindMessageSendStrategyCampaignsUseCase.execute({
         userId,
-        strategyId: id,
-        campaignIds: body.campaignIds ?? [],
+        campaignId,
+        strategyIds: body.strategyIds ?? [],
       });
 
       return response.status(204).send();

@@ -3,43 +3,48 @@ import { IMessageSendStrategyRepository } from "../../../../../repositories/mess
 
 export type BindMessageSendStrategyCampaignsDTO = {
   userId: string;
-  strategyId: string;
-  campaignIds: string[];
+  campaignId: string;
+  strategyIds: string[];
 };
+
 export class BindMessageSendStrategyCampaignsUseCase {
   constructor(
     private readonly messageSendStrategyRepository: IMessageSendStrategyRepository,
   ) {}
 
   async execute(dto: BindMessageSendStrategyCampaignsDTO): Promise<void> {
-    const strategy = await this.messageSendStrategyRepository.findByIdAndUserId(
-      dto.strategyId,
-      dto.userId,
-    );
-
-    if (!strategy) {
-      throw new ApiError("Estratégia não encontrada", 404);
-    }
-
-    if (!dto.campaignIds?.length) {
+    if (!dto.strategyIds?.length) {
       throw new ApiError(
-        "campaignIds deve ter ao menos um item",
+        "strategyIds deve ter ao menos um item",
         400,
-        "campaignIds",
+        "strategyIds",
       );
     }
 
     const seen = new Set<string>();
-    for (const campaignId of dto.campaignIds) {
-      if (seen.has(campaignId)) {
+    const uniqueStrategyIds: string[] = [];
+    for (const strategyId of dto.strategyIds) {
+      if (seen.has(strategyId)) {
         continue;
       }
-      seen.add(campaignId);
-      await this.messageSendStrategyRepository.upsertCampaignBinding(
-        dto.userId,
-        campaignId,
-        dto.strategyId,
-      );
+      seen.add(strategyId);
+      uniqueStrategyIds.push(strategyId);
     }
+
+    for (const strategyId of uniqueStrategyIds) {
+      const strategy = await this.messageSendStrategyRepository.findByIdAndUserId(
+        strategyId,
+        dto.userId,
+      );
+      if (!strategy) {
+        throw new ApiError("Estratégia não encontrada", 404);
+      }
+    }
+
+    await this.messageSendStrategyRepository.setCampaignStrategyBindings(
+      dto.userId,
+      dto.campaignId,
+      uniqueStrategyIds,
+    );
   }
 }

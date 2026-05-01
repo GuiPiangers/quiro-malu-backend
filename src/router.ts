@@ -498,7 +498,7 @@ router.post("/messageSendStrategies", authMiddleware, async (request, response) 
   return await createMessageSendStrategyController.handle(request, response);
 });
 
-router.put("/messageSendStrategies/:id/campaigns", authMiddleware, async (request, response) => {
+router.put("/messageSendStrategies/campaigns/:campaignId", authMiddleware, async (request, response) => {
   return await bindMessageSendStrategyCampaignsController.handle(request, response);
 });
 
