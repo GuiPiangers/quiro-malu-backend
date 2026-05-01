@@ -223,4 +223,74 @@ describe("SendAfterScheduleMessageUseCase", () => {
     expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled();
     expect(appEventListener.emit).not.toHaveBeenCalled();
   });
+
+  it("não deve enviar quando a estratégia (isSendAllowed) retorna false", async () => {
+    const afterScheduleMessageRepository = createMockAfterScheduleMessageRepository();
+    const patientRepository = createMockPatientRepository();
+    const schedulingRepository = createMockSchedulingRepository();
+    const whatsAppProvider = createMockWhatsAppProvider();
+    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
+    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
+    const appEventListener = createAppEventListenerMock();
+    const messageSendStrategyEnforcer = {
+      isSendAllowed: vi.fn().mockResolvedValue(false),
+    };
+
+    whatsAppMessageLogRepository.getBySchedulingAndCampaignId.mockResolvedValue(
+      null,
+    );
+
+    afterScheduleMessageRepository.getById.mockResolvedValue({
+      id: "cfg-1",
+      userId: "user-1",
+      name: "Envio",
+      minutesAfterSchedule: 60,
+      textTemplate: "Obrigado {{nome_paciente}}",
+      isActive: true,
+    });
+
+    whatsAppInstanceRepository.getByUserId.mockResolvedValue(registeredInstance);
+    whatsAppProvider.getConnectionState.mockResolvedValue("open");
+
+    patientRepository.getById.mockResolvedValue([
+      { id: "patient-1", name: "Maria", phone: "(51) 99999 9999" } as any,
+    ]);
+
+    schedulingRepository.get.mockResolvedValue([
+      {
+        id: "schedule-1",
+        patientId: "patient-1",
+        date: "2025-01-01T10:00",
+        service: "Consulta",
+        status: "Atendido",
+      } as any,
+    ]);
+
+    const useCase = new SendAfterScheduleMessageUseCase(
+      afterScheduleMessageRepository,
+      patientRepository,
+      schedulingRepository,
+      whatsAppProvider,
+      whatsAppInstanceRepository,
+      whatsAppMessageLogRepository,
+      appEventListener,
+      messageSendStrategyEnforcer as any,
+    );
+
+    await useCase.execute({
+      userId: "user-1",
+      patientId: "patient-1",
+      schedulingId: "schedule-1",
+      afterScheduleMessageId: "cfg-1",
+    });
+
+    expect(messageSendStrategyEnforcer.isSendAllowed).toHaveBeenCalledWith(
+      "user-1",
+      "cfg-1",
+      "patient-1",
+    );
+    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled();
+    expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled();
+    expect(appEventListener.emit).not.toHaveBeenCalled();
+  });
 });

@@ -263,7 +263,7 @@ describe("SendBirthdayMessageUseCase", () => {
     expect(appEventListener.emit).not.toHaveBeenCalled();
   });
 
-  it("não deve enviar quando estratégia de envio bloquear o paciente", async () => {
+  it("não deve enviar quando a estratégia (isSendAllowed) retorna false", async () => {
     const birthdayMessageRepository = createMockBirthdayMessageRepository();
     const patientRepository = createMockPatientRepository();
     const whatsAppProvider = createMockWhatsAppProvider();
@@ -313,5 +313,6 @@ describe("SendBirthdayMessageUseCase", () => {
     );
     expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled();
     expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled();
+    expect(appEventListener.emit).not.toHaveBeenCalled();
   });
 });

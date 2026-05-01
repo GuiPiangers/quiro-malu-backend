@@ -427,6 +427,77 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled();
   });
 
+  it("não deve enviar quando a estratégia (isSendAllowed) retorna false", async () => {
+    const beforeScheduleMessageRepository =
+      createMockBeforeScheduleMessageRepository();
+    const patientRepository = createMockPatientRepository();
+    const schedulingRepository = createMockSchedulingRepository();
+    const whatsAppProvider = createMockWhatsAppProvider();
+    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
+    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
+    const appEventListener = createAppEventListenerMock();
+    const messageSendStrategyEnforcer = {
+      isSendAllowed: vi.fn().mockResolvedValue(false),
+    };
+
+    whatsAppMessageLogRepository.getBySchedulingAndCampaignId.mockResolvedValue(
+      null,
+    );
+
+    beforeScheduleMessageRepository.getById.mockResolvedValue({
+      id: "cfg-1",
+      userId: "user-1",
+      name: "Envio",
+      minutesBeforeSchedule: 60,
+      textTemplate: "Olá {{nome_paciente}}",
+      isActive: true,
+    });
+
+    whatsAppInstanceRepository.getByUserId.mockResolvedValue(registeredInstance);
+    whatsAppProvider.getConnectionState.mockResolvedValue("open");
+
+    patientRepository.getById.mockResolvedValue([
+      { id: "patient-1", name: "Maria", phone: "(51) 99999 9999" } as any,
+    ]);
+
+    schedulingRepository.get.mockResolvedValue([
+      {
+        id: "schedule-1",
+        patientId: "patient-1",
+        date: "2025-01-01T10:00",
+        service: "Consulta",
+        status: "Agendado",
+      } as any,
+    ]);
+
+    const useCase = new SendBeforeScheduleMessageUseCase(
+      beforeScheduleMessageRepository,
+      patientRepository,
+      schedulingRepository,
+      whatsAppProvider,
+      whatsAppInstanceRepository,
+      whatsAppMessageLogRepository,
+      appEventListener,
+      messageSendStrategyEnforcer as any,
+    );
+
+    await useCase.execute({
+      userId: "user-1",
+      patientId: "patient-1",
+      schedulingId: "schedule-1",
+      beforeScheduleMessageId: "cfg-1",
+    });
+
+    expect(messageSendStrategyEnforcer.isSendAllowed).toHaveBeenCalledWith(
+      "user-1",
+      "cfg-1",
+      "patient-1",
+    );
+    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled();
+    expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled();
+    expect(appEventListener.emit).not.toHaveBeenCalled();
+  });
+
   it("não deve enviar quando config está ausente", async () => {
     const beforeScheduleMessageRepository =
       createMockBeforeScheduleMessageRepository();

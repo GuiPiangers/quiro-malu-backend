@@ -17,3 +17,4 @@ Aplique a arquitetura do projeto seguindo os guias em `docs/` e os exemplos reai
 - Erros de domínio/API: sempre `throw new ApiError(...)`.
 - Datas: sempre `DateTime` de `src/core/shared/Date.ts`; DTOs com string `yyyy-MM-ddTHH:mm`.
 - Testes: `*.spec.ts` colocalizados perto do UseCase; mocks em `src/repositories/_mocks`.
+- Aplicar o TDD. Primeiro criar os testes e depois realizar a implementação
