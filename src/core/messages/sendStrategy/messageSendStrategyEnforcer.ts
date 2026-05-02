@@ -27,7 +27,13 @@ export class MessageSendStrategyEnforcer {
 
     for (const row of rows) {
       const strategy = this.messageSendStrategyFactory.create(row);
-      if (!(await strategy.allowsSend({ userId, patientId }))) {
+      if (
+        !(await strategy.allowsSend({
+          userId,
+          patientId,
+          campaignId,
+        }))
+      ) {
         return false;
       }
     }

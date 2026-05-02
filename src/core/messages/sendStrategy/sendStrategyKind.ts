@@ -10,6 +10,12 @@ export const SEND_STRATEGY_KIND_SEND_SELECTED_LIST =
 export const SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST =
   "exclude_patients_list" as const;
 
+export const SEND_STRATEGY_KIND_UNIQUE_SEND_BY_PATIENT =
+  "unique_send_by_patient" as const;
+
+/** Estratégia virtual (sem CRUD); vínculo apenas via bind de campanha. */
+export const UNIQUE_USER_STRATEGY_ID = "unique-user-strategy" as const;
+
 export const SEND_STRATEGY_KINDS = [
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,

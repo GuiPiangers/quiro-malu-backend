@@ -1,5 +1,6 @@
 import { createMockMessageSendStrategyRepository } from "../../../../../../repositories/_mocks/MessageSendStrategyRepositoryMock";
 import { ApiError } from "../../../../../../utils/ApiError";
+import { UNIQUE_USER_STRATEGY_ID } from "../../../../sendStrategy/sendStrategyKind";
 import { BindMessageSendStrategyCampaignsUseCase } from "../BindMessageSendStrategyCampaignsUseCase";
 
 describe("BindMessageSendStrategyCampaignsUseCase", () => {
@@ -94,5 +95,28 @@ describe("BindMessageSendStrategyCampaignsUseCase", () => {
     ).rejects.toThrow(ApiError);
 
     expect(repo.setCampaignStrategyBindings).not.toHaveBeenCalled();
+  });
+
+  it("não deve validar findByIdAndUserId para a estratégia virtual unique-user-strategy", async () => {
+    const repo = createMockMessageSendStrategyRepository();
+    repo.findByIdAndUserId.mockImplementation(async (id: string) =>
+      id === "s-1" ? strategyRow("s-1") : null,
+    );
+
+    const sut = new BindMessageSendStrategyCampaignsUseCase(repo);
+
+    await sut.execute({
+      userId: "user-1",
+      campaignId: "camp-1",
+      strategyIds: [UNIQUE_USER_STRATEGY_ID, "s-1"],
+    });
+
+    expect(repo.findByIdAndUserId).toHaveBeenCalledTimes(1);
+    expect(repo.findByIdAndUserId).toHaveBeenCalledWith("s-1", "user-1");
+    expect(repo.setCampaignStrategyBindings).toHaveBeenCalledWith(
+      "user-1",
+      "camp-1",
+      [UNIQUE_USER_STRATEGY_ID, "s-1"],
+    );
   });
 });

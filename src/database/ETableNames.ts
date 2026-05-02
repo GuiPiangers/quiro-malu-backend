@@ -22,4 +22,6 @@ export enum ETableNames {
   WHATSAPP_MESSAGE_LOGS = "whatsapp_message_logs",
   MESSAGE_SEND_STRATEGIES = "message_send_strategies",
   USER_MESSAGE_SEND_STRATEGY = "user_message_send_strategy",
+  /** Campanhas com regra “único por paciente” (sem FK para `message_send_strategies`). */
+  USER_CAMPAIGN_UNIQUE_SEND_STRATEGY = "user_campaign_unique_send_strategy",
 }

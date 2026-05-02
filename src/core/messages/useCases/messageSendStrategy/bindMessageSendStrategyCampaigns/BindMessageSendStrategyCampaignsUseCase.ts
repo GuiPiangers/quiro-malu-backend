@@ -1,5 +1,6 @@
 import { ApiError } from "../../../../../utils/ApiError";
 import { IMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
+import { UNIQUE_USER_STRATEGY_ID } from "../../../sendStrategy/sendStrategyKind";
 
 export type BindMessageSendStrategyCampaignsDTO = {
   userId: string;
@@ -32,6 +33,9 @@ export class BindMessageSendStrategyCampaignsUseCase {
     }
 
     for (const strategyId of uniqueStrategyIds) {
+      if (strategyId === UNIQUE_USER_STRATEGY_ID) {
+        continue;
+      }
       const strategy = await this.messageSendStrategyRepository.findByIdAndUserId(
         strategyId,
         dto.userId,

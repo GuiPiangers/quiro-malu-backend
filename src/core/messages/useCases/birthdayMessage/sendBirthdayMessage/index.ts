@@ -11,17 +11,18 @@ import { knexWhatsAppInstanceRepository, knexWhatsAppMessageLogRepository } from
 
 const patientRepository = knexPatientRepository;
 const schedulingRepository = knexSchedulingRepository;
+const whatsAppMessageLogRepository = knexWhatsAppMessageLogRepository;
 const messageSendStrategyRepository = knexMessageSendStrategyRepository;
 const messageSendStrategyFactory = new MessageSendStrategyFactory(
   patientRepository,
   schedulingRepository,
+  whatsAppMessageLogRepository,
 );
 const messageSendStrategyEnforcer = new MessageSendStrategyEnforcer(
   messageSendStrategyRepository,
   messageSendStrategyFactory,
 );
 const whatsAppInstanceRepository = knexWhatsAppInstanceRepository;
-const whatsAppMessageLogRepository = knexWhatsAppMessageLogRepository;
 
 const whatsAppProvider = new EvolutionWhatsAppProvider(
   process.env.EVOLUTION_API_BASE_URL ?? "",

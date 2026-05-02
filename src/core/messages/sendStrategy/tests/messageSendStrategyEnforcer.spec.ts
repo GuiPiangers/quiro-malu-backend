@@ -109,10 +109,12 @@ describe("MessageSendStrategyEnforcer", () => {
     expect(allowsSend).toHaveBeenNthCalledWith(1, {
       userId: "user-1",
       patientId: "patient-1",
+      campaignId: "camp-1",
     });
     expect(allowsSend).toHaveBeenNthCalledWith(2, {
       userId: "user-1",
       patientId: "patient-1",
+      campaignId: "camp-1",
     });
   });
 

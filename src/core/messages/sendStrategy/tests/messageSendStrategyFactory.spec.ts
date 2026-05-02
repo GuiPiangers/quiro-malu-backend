@@ -1,17 +1,20 @@
 import { createMockPatientRepository } from "../../../../repositories/_mocks/PatientRepositoryMock";
 import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
+import { createMockWhatsAppMessageLogRepository } from "../../../../repositories/_mocks/WhatsAppMessageLogRepositoryMock";
 import type { MessageSendStrategyRow } from "../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
 import { ApiError } from "../../../../utils/ApiError";
 import { ExcludePatientsListStrategy } from "../strategies/excludePatientsListStrategy";
 import { SendMostFrequencyPatientsStrategy } from "../strategies/sendMostFrequencyPatientsStrategy";
 import { SendMostRecentPatientsStrategy } from "../strategies/sendMostRecentPatientsStrategy";
 import { SendSelectedListStrategy } from "../strategies/sendSelectedListStrategy";
+import { UniqueSendByPatientStrategy } from "../strategies/uniqueSendByPatientStrategy";
 import { MessageSendStrategyFactory } from "../messageSendStrategyFactory";
 import {
   SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
   SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
+  SEND_STRATEGY_KIND_UNIQUE_SEND_BY_PATIENT,
 } from "../sendStrategyKind";
 
 function baseRow(overrides: Partial<MessageSendStrategyRow>): MessageSendStrategyRow {
@@ -29,9 +32,14 @@ function baseRow(overrides: Partial<MessageSendStrategyRow>): MessageSendStrateg
 describe("MessageSendStrategyFactory", () => {
   const patientRepository = createMockPatientRepository();
   const schedulingRepository = createMockSchedulingRepository();
+  const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
 
   function sut() {
-    return new MessageSendStrategyFactory(patientRepository, schedulingRepository);
+    return new MessageSendStrategyFactory(
+      patientRepository,
+      schedulingRepository,
+      whatsAppMessageLogRepository,
+    );
   }
 
   it("deve instanciar SendMostRecentPatientsStrategy para send_most_recent_patients", () => {
@@ -80,6 +88,18 @@ describe("MessageSendStrategyFactory", () => {
 
     expect(strategy).toBeInstanceOf(ExcludePatientsListStrategy);
     expect(strategy.kind).toBe(SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST);
+  });
+
+  it("deve instanciar UniqueSendByPatientStrategy para unique_send_by_patient", () => {
+    const strategy = sut().create(
+      baseRow({
+        kind: SEND_STRATEGY_KIND_UNIQUE_SEND_BY_PATIENT,
+        params: {},
+      }),
+    );
+
+    expect(strategy).toBeInstanceOf(UniqueSendByPatientStrategy);
+    expect(strategy.kind).toBe(SEND_STRATEGY_KIND_UNIQUE_SEND_BY_PATIENT);
   });
 
   it("deve lançar ApiError 501 para kind desconhecido", () => {
