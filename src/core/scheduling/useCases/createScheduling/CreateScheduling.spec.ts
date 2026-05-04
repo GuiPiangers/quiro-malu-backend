@@ -142,6 +142,35 @@ describe("createSchedulingUseCase", () => {
       expect(mockSchedulingRepository.save).not.toHaveBeenCalled();
     });
 
+    it("should save when overlapping scheduling is Atendido", async () => {
+      const patientId = "test-patient-id";
+
+      const schedulingData: SchedulingDTO & { userId: string; date: string } = {
+        userId: "test-user-id",
+        id: "test-Scheduling-id",
+        patientId,
+        date: "2025-01-10T14:00",
+        duration: 3600,
+        status: "Agendado",
+        service: "Quiropraxia",
+      };
+
+      mockSchedulingRepository.list.mockResolvedValue([
+        {
+          ...schedulingData,
+          id: "test-Scheduling-id2",
+          date: "2025-01-10T14:30",
+          status: "Atendido",
+          patient: "Lucas Fernando",
+          phone: "(99) 99999 9999",
+        },
+      ]);
+
+      await createSchedulingUseCase.execute(schedulingData);
+
+      expect(mockSchedulingRepository.save).toHaveBeenCalledTimes(1);
+    });
+
     it("should throw an ApiError if scheduling are overlaps with block scheduling event", async () => {
       const patientId = "test-patient-id";
 
