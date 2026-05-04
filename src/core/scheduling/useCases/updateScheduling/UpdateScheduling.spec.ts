@@ -1,5 +1,8 @@
+import { createMockBlockScheduleRepository } from "../../../../repositories/_mocks/BlockScheduleRepositoryMock";
 import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
 import { ApiError } from "../../../../utils/ApiError";
+import { DateTime } from "../../../shared/Date";
+import { BlockSchedule } from "../../models/BlockSchedule";
 import { SchedulingDTO } from "../../models/Scheduling";
 import { UpdateSchedulingUseCase } from "./UpdateSchedulingUseCase";
 
@@ -17,6 +20,7 @@ const defaultExistingSchedule = {
 describe("updateSchedulingUseCase", () => {
   let updateSchedulingUseCase: UpdateSchedulingUseCase;
   const mockSchedulingRepository = createMockSchedulingRepository();
+  const mockBlockScheduleRepository = createMockBlockScheduleRepository();
 
   describe("execute", () => {
     beforeAll(() => {
@@ -27,8 +31,10 @@ describe("updateSchedulingUseCase", () => {
 
     beforeEach(() => {
       vi.clearAllMocks();
+      mockBlockScheduleRepository.listBetweenDates.mockResolvedValue([]);
       updateSchedulingUseCase = new UpdateSchedulingUseCase(
         mockSchedulingRepository,
+        mockBlockScheduleRepository,
       );
       mockSchedulingRepository.get.mockResolvedValue([
         { ...defaultExistingSchedule } as any,
@@ -208,7 +214,43 @@ describe("updateSchedulingUseCase", () => {
       await updateSchedulingUseCase.execute(schedulingData);
 
       expect(mockSchedulingRepository.list).not.toHaveBeenCalled();
+      expect(
+        mockBlockScheduleRepository.listBetweenDates,
+      ).not.toHaveBeenCalled();
       expect(mockSchedulingRepository.update).toBeCalled();
+    });
+
+    it("should throw an ApiError if update overlaps with block scheduling event", async () => {
+      const patientId = "test-patient-id";
+
+      const blockScheduling = new BlockSchedule({
+        date: new DateTime("2025-01-10T14:00"),
+        endDate: new DateTime("2025-02-10T14:00"),
+        description: "evento",
+      });
+
+      mockBlockScheduleRepository.listBetweenDates.mockResolvedValue([
+        blockScheduling,
+      ]);
+
+      const schedulingData: SchedulingDTO & { userId: string; date: string } = {
+        userId: "test-user-id",
+        id: "test-Scheduling-id",
+        patientId,
+        date: "2025-01-10T14:00",
+        duration: 3600,
+        status: "Agendado",
+        service: "Quiropraxia",
+      };
+
+      mockSchedulingRepository.list.mockResolvedValue([]);
+
+      await expect(
+        updateSchedulingUseCase.execute(schedulingData),
+      ).rejects.toThrow(
+        `O horário informado está bloqueado por um evento ${blockScheduling.description}`,
+      );
+      expect(mockSchedulingRepository.update).not.toHaveBeenCalled();
     });
 
     it("should throw an ApiError if schedulingId parameter is not passed", async () => {

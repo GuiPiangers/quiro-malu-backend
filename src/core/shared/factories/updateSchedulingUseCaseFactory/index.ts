@@ -1,10 +1,10 @@
 import { UpdateSchedulingUseCase } from "../../../scheduling/useCases/updateScheduling/UpdateSchedulingUseCase";
+import { blockScheduleRepository } from "../../../../repositories/blockScheduleRepository/knexInstances";
 import { knexSchedulingRepository } from "../../../../repositories/scheduling/knexInstances";
 
 export function updateSchedulingUseCaseFactory() {
-  const schedulingRepository = knexSchedulingRepository;
-  const updateSchedulingUseCase = new UpdateSchedulingUseCase(
-    schedulingRepository,
+  return new UpdateSchedulingUseCase(
+    knexSchedulingRepository,
+    blockScheduleRepository,
   );
-  return updateSchedulingUseCase;
 }
