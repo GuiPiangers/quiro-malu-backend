@@ -6,6 +6,8 @@
   "type": "commonjs",
   "scripts": {
     "test": "vitest run",
+    "test:unit": "vitest run --exclude \"**/*.int.spec.ts\"",
+    "test:integration": "RUN_INTEGRATION_TESTS=true vitest run --config vitest.integration.config.ts",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "dev": "ts-node-dev --transpile-only --respawn --ignore-watch node_modules ./src/server.ts",

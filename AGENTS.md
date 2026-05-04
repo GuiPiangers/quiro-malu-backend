@@ -29,8 +29,8 @@ Linting uses ESLint with `@rocketseat/eslint-config/node` (`.eslintrc.json`); fi
 - For tests, use `*.spec.ts`.
 
 ## Testing Guidelines
-Framework: Vitest (`vitest.config.ts`).  
-Default pattern is `**/**/*.spec.ts`; keep tests near the module they validate.  
+Framework: Vitest (`vitest.config.ts`). 
+Default pattern is `**/**/*.spec.ts` for testes unitários e `**/**/*.int.spec.ts` para integração (`npm run test:unit` / `npm run test:integration`, com `RUN_INTEGRATION_TESTS`); ver `docs/INTEGRATION_TESTS.md`. Keep tests near the module they validate.
 Coverage is collected from `src/**/*.ts` with exclusions for wiring/infrastructure layers; prioritize assertions around `core` models and use cases.
 
 ## Commit & Pull Request Guidelines
