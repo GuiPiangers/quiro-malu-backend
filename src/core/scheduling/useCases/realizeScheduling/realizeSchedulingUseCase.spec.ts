@@ -73,7 +73,7 @@ describe("Realize scheduling use case", () => {
       expect((error as ApiError).message).toBe(
         "A evolução deve ser salva para poder realizar a consulta",
       );
-      expect((error as ApiError).statusCode).toBe(401);
+      expect((error as ApiError).statusCode).toBe(424);
     }
 
     expect(mockSchedulingRepository.update).not.toHaveBeenCalled();
