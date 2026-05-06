@@ -5,7 +5,10 @@ import { KnexSchedulingRepository } from "../../../../repositories/scheduling/Kn
 import { ApiError } from "../../../../utils/ApiError";
 import { createKnexForIntegrationTests } from "../../../../test/integration/knexTestConnection";
 import { withRollbackTransaction } from "../../../../test/integration/transactionRollback";
-import { appEventListener } from "../../../shared/observers/EventListener";
+import {
+  AppEventListener,
+  type IAppEventListener,
+} from "../../../shared/observers/EventListener";
 import { DateTime } from "../../../shared/Date";
 import { BlockSchedule } from "../../models/BlockSchedule";
 import { CreateSchedulingUseCase } from "./CreateSchedulingUseCase";
@@ -40,6 +43,17 @@ async function insertUserAndPatient(trx: Knex.Transaction) {
   return { userId, patientId };
 }
 
+function createCreateSchedulingUseCase(
+  trx: Knex.Transaction,
+  events: IAppEventListener = new AppEventListener(),
+) {
+  return new CreateSchedulingUseCase(
+    new KnexSchedulingRepository(trx),
+    new BlockScheduleRepository(trx),
+    events,
+  );
+}
+
 describe.skipIf(!shouldRunIntegrationSuite)(
   "CreateSchedulingUseCase (integration)",
   () => {
@@ -54,7 +68,6 @@ describe.skipIf(!shouldRunIntegrationSuite)(
     });
 
     afterEach(() => {
-      appEventListener.clearAllListeners();
       vi.restoreAllMocks();
     });
 
@@ -62,10 +75,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
       await withRollbackTransaction(knex, async (trx) => {
         const { userId, patientId } = await insertUserAndPatient(trx);
         const schedulingId = uuidv4();
-        const useCase = new CreateSchedulingUseCase(
-          new KnexSchedulingRepository(trx),
-          new BlockScheduleRepository(trx),
-        );
+        const useCase = createCreateSchedulingUseCase(trx);
 
         await useCase.execute({
           userId,
@@ -103,10 +113,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           status: "Agendado",
         });
 
-        const useCase = new CreateSchedulingUseCase(
-          new KnexSchedulingRepository(trx),
-          new BlockScheduleRepository(trx),
-        );
+        const useCase = createCreateSchedulingUseCase(trx);
 
         await expect(
           useCase.execute({
@@ -143,10 +150,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           status: "Atendido",
         });
 
-        const useCase = new CreateSchedulingUseCase(
-          new KnexSchedulingRepository(trx),
-          new BlockScheduleRepository(trx),
-        );
+        const useCase = createCreateSchedulingUseCase(trx);
 
         const newId = uuidv4();
         await useCase.execute({
@@ -177,10 +181,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           status: "Cancelado",
         });
 
-        const useCase = new CreateSchedulingUseCase(
-          new KnexSchedulingRepository(trx),
-          new BlockScheduleRepository(trx),
-        );
+        const useCase = createCreateSchedulingUseCase(trx);
 
         await useCase.execute({
           userId,
@@ -209,10 +210,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         });
         await blockRepo.save(block, userId);
 
-        const useCase = new CreateSchedulingUseCase(
-          new KnexSchedulingRepository(trx),
-          blockRepo,
-        );
+        const useCase = createCreateSchedulingUseCase(trx);
 
         await expect(
           useCase.execute({
@@ -235,15 +233,13 @@ describe.skipIf(!shouldRunIntegrationSuite)(
     it("emite createSchedule no appEventListener e executa listeners registrados", async () => {
       await withRollbackTransaction(knex, async (trx) => {
         const { userId, patientId } = await insertUserAndPatient(trx);
+        const events = new AppEventListener();
         const listener = vi.fn().mockResolvedValue(undefined);
-        appEventListener.on("createSchedule", listener);
-        const emitSpy = vi.spyOn(appEventListener, "emit");
+        events.on("createSchedule", listener);
+        const emitSpy = vi.spyOn(events, "emit");
 
         const schedulingId = uuidv4();
-        const useCase = new CreateSchedulingUseCase(
-          new KnexSchedulingRepository(trx),
-          new BlockScheduleRepository(trx),
-        );
+        const useCase = createCreateSchedulingUseCase(trx, events);
 
         await useCase.execute({
           userId,

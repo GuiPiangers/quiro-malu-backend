@@ -46,6 +46,8 @@ Padrão: usar `withRollbackTransaction` (ou equivalente) em **todos** os futuros
 
 Sem (1) ou (2), a suíte de integração fica `skipped` e `npm run test` permanece verde sem MySQL.
 
-## Eventos globais (`appEventListener`)
+## Eventos (`AppEventListener`)
 
-O `appEventListener` é singleton. Entre casos que registram `on(...)`, chame `appEventListener.clearAllListeners()` no `afterEach` (e registre listeners só no teste que precisa).
+O `appEventListener` exportado é o **singleton da aplicação**. **Não** chame `clearAllListeners()` nele em testes que possam rodar no mesmo processo que a API (remove listeners registrados no bootstrap).
+
+Para testar `emit` / `on`, injete uma instância isolada: os use cases de agendamento aceitam `IAppEventListener` (default = singleton). Nos `*.int.spec.ts`, use `new AppEventListener()` e passe ao construtor do use case; registre `on` e `spyOn` só nessa instância.

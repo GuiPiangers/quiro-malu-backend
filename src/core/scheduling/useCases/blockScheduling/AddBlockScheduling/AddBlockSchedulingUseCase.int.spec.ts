@@ -6,7 +6,7 @@ import { KnexSchedulingRepository } from "../../../../../repositories/scheduling
 import { ApiError } from "../../../../../utils/ApiError";
 import { createKnexForIntegrationTests } from "../../../../../test/integration/knexTestConnection";
 import { withRollbackTransaction } from "../../../../../test/integration/transactionRollback";
-import { appEventListener } from "../../../../shared/observers/EventListener";
+import { AppEventListener } from "../../../../shared/observers/EventListener";
 import { AddBlockSchedulingUseCase } from "./AddBlockSchedulingUseCase";
 
 const integrationEnvReady = Boolean(
@@ -52,7 +52,6 @@ describe.skipIf(!shouldRunIntegrationSuite)(
     });
 
     afterEach(() => {
-      appEventListener.clearAllListeners();
       vi.restoreAllMocks();
     });
 
@@ -60,15 +59,16 @@ describe.skipIf(!shouldRunIntegrationSuite)(
       await withRollbackTransaction(knex, async (trx) => {
         const { userId } = await insertUserAndPatient(trx);
         const blockRepo = new BlockScheduleRepository(trx);
+        const events = new AppEventListener();
         const useCase = new AddBlockSchedulingUseCase(
           blockRepo,
           new KnexSchedulingRepository(trx),
-          appEventListener,
+          events,
         );
 
         const listener = vi.fn().mockResolvedValue(undefined);
-        appEventListener.on("createBlockSchedule", listener);
-        const emitSpy = vi.spyOn(appEventListener, "emit");
+        events.on("createBlockSchedule", listener);
+        const emitSpy = vi.spyOn(events, "emit");
 
         await useCase.execute({
           userId,
@@ -110,7 +110,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const useCase = new AddBlockSchedulingUseCase(
           new BlockScheduleRepository(trx),
           new KnexSchedulingRepository(trx),
-          appEventListener,
+          new AppEventListener(),
         );
 
         await expect(
@@ -145,7 +145,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const useCase = new AddBlockSchedulingUseCase(
           new BlockScheduleRepository(trx),
           new KnexSchedulingRepository(trx),
-          appEventListener,
+          new AppEventListener(),
         );
 
         await expect(

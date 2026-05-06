@@ -4,12 +4,14 @@ import { ApiError } from "../../../../utils/ApiError";
 import { DateTime } from "../../../shared/Date";
 import { BlockSchedule } from "../../models/BlockSchedule";
 import { SchedulingDTO } from "../../models/Scheduling";
+import { IAppEventListener } from "../../../shared/observers/EventListener";
 import { CreateSchedulingUseCase } from "./CreateSchedulingUseCase";
 
 describe("createSchedulingUseCase", () => {
   let createSchedulingUseCase: CreateSchedulingUseCase;
   const mockSchedulingRepository = createMockSchedulingRepository();
   const mockBlockScheduleRepository = createMockBlockScheduleRepository();
+  const eventsStub: IAppEventListener = { emit: vi.fn() };
 
   beforeAll(() => {
     vi
@@ -23,6 +25,7 @@ describe("createSchedulingUseCase", () => {
       createSchedulingUseCase = new CreateSchedulingUseCase(
         mockSchedulingRepository,
         mockBlockScheduleRepository,
+        eventsStub,
       );
     });
 

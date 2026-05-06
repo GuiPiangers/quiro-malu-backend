@@ -4,7 +4,10 @@ import { ApiError } from "../../../../utils/ApiError";
 import { DateTime } from "../../../shared/Date";
 import { BlockSchedule } from "../../models/BlockSchedule";
 import { SchedulingDTO } from "../../models/Scheduling";
+import { IAppEventListener } from "../../../shared/observers/EventListener";
 import { UpdateSchedulingUseCase } from "./UpdateSchedulingUseCase";
+
+const eventsStub: IAppEventListener = { emit: vi.fn() };
 
 const defaultExistingSchedule = {
   id: "test-Scheduling-id",
@@ -35,6 +38,7 @@ describe("updateSchedulingUseCase", () => {
       updateSchedulingUseCase = new UpdateSchedulingUseCase(
         mockSchedulingRepository,
         mockBlockScheduleRepository,
+        eventsStub,
       );
       mockSchedulingRepository.get.mockResolvedValue([
         { ...defaultExistingSchedule } as any,

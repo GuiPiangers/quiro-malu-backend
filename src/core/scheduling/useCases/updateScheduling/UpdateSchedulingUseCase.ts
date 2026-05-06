@@ -5,12 +5,16 @@ import { ApiError } from "../../../../utils/ApiError";
 import { getValidObjectValues } from "../../../../utils/getValidObjectValues";
 import { DateTime } from "../../../shared/Date";
 import DatabaseStatusStrategy from "../../models/status/DatabaseStatusStrategy";
-import { appEventListener } from "../../../shared/observers/EventListener";
+import {
+  appEventListener,
+  IAppEventListener,
+} from "../../../shared/observers/EventListener";
 
 export class UpdateSchedulingUseCase {
   constructor(
     private SchedulingRepository: ISchedulingRepository,
     private BlockSchedulingRepository: IBlockScheduleRepository,
+    private readonly events: IAppEventListener = appEventListener,
   ) {}
 
   async execute({ userId, ...data }: SchedulingDTO & { userId: string }) {
@@ -41,7 +45,7 @@ export class UpdateSchedulingUseCase {
       ...schedulingDTO,
     });
 
-    appEventListener.emit("updateSchedule", {
+    this.events.emit("updateSchedule", {
       ...schedulingDTO,
       userId,
       scheduleId: data.id,

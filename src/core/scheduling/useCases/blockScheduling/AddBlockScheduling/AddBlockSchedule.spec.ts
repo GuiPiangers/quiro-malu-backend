@@ -4,6 +4,7 @@ import { DateTime } from "../../../../shared/Date";
 import { BlockSchedule } from "../../../models/BlockSchedule";
 import { Scheduling } from "../../../models/Scheduling";
 
+import { IAppEventListener } from "../../../../shared/observers/EventListener";
 import {
   AddBlockSchedulingUseCase,
   AddBlockSchedulingDTO,
@@ -13,6 +14,7 @@ describe("AddBlockScheduleUseCase", () => {
   let addBlockSchedulingUseCase: AddBlockSchedulingUseCase;
   const mockBlockSchedulingRepository = createMockBlockScheduleRepository();
   const mockSchedulingRepository = createMockSchedulingRepository();
+  const eventsStub: IAppEventListener = { emit: vi.fn() };
 
   beforeAll(() => {
     vi
@@ -25,6 +27,7 @@ describe("AddBlockScheduleUseCase", () => {
     addBlockSchedulingUseCase = new AddBlockSchedulingUseCase(
       mockBlockSchedulingRepository,
       mockSchedulingRepository,
+      eventsStub,
     );
   });
 

@@ -2,7 +2,10 @@ import { IBlockScheduleRepository } from "../../../../../repositories/blockSched
 import { ISchedulingRepository } from "../../../../../repositories/scheduling/ISchedulingRepository";
 import { ApiError } from "../../../../../utils/ApiError";
 import { DateTime } from "../../../../shared/Date";
-import { AppEventListener } from "../../../../shared/observers/EventListener";
+import {
+  appEventListener,
+  IAppEventListener,
+} from "../../../../shared/observers/EventListener";
 import { BlockSchedule } from "../../../models/BlockSchedule";
 
 export interface AddBlockSchedulingDTO {
@@ -16,7 +19,7 @@ export class AddBlockSchedulingUseCase {
   constructor(
     private blockSchedulingRepository: IBlockScheduleRepository,
     private schedulingRepository: ISchedulingRepository,
-    private appEventListener?: AppEventListener,
+    private readonly events: IAppEventListener = appEventListener,
   ) {}
 
   async execute(blockSchedulingDTO: AddBlockSchedulingDTO) {
@@ -67,7 +70,7 @@ export class AddBlockSchedulingUseCase {
       blockSchedulingDTO.userId,
     );
 
-    this.appEventListener?.emit("createBlockSchedule", {
+    this.events.emit("createBlockSchedule", {
       ...blockScheduling.getDTO(),
       userId: blockSchedulingDTO.userId,
     });

@@ -6,7 +6,10 @@ import { KnexSchedulingRepository } from "../../../../repositories/scheduling/Kn
 import { ApiError } from "../../../../utils/ApiError";
 import { createKnexForIntegrationTests } from "../../../../test/integration/knexTestConnection";
 import { withRollbackTransaction } from "../../../../test/integration/transactionRollback";
-import { appEventListener } from "../../../shared/observers/EventListener";
+import {
+  AppEventListener,
+  type IAppEventListener,
+} from "../../../shared/observers/EventListener";
 import { DateTime } from "../../../shared/Date";
 import { BlockSchedule } from "../../models/BlockSchedule";
 import { UpdateSchedulingUseCase } from "./UpdateSchedulingUseCase";
@@ -63,10 +66,14 @@ async function insertSchedule(
   });
 }
 
-function createUpdateSchedulingUseCase(trx: Knex.Transaction) {
+function createUpdateSchedulingUseCase(
+  trx: Knex.Transaction,
+  events: IAppEventListener = new AppEventListener(),
+) {
   return new UpdateSchedulingUseCase(
     new KnexSchedulingRepository(trx),
     new BlockScheduleRepository(trx),
+    events,
   );
 }
 
@@ -84,7 +91,6 @@ describe.skipIf(!shouldRunIntegrationSuite)(
     });
 
     afterEach(() => {
-      appEventListener.clearAllListeners();
       vi.restoreAllMocks();
     });
 
@@ -338,11 +344,12 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           service: "Sessão",
         });
 
+        const events = new AppEventListener();
         const listener = vi.fn().mockResolvedValue(undefined);
-        appEventListener.on("updateSchedule", listener);
-        const emitSpy = vi.spyOn(appEventListener, "emit");
+        events.on("updateSchedule", listener);
+        const emitSpy = vi.spyOn(events, "emit");
 
-        const useCase = createUpdateSchedulingUseCase(trx);
+        const useCase = createUpdateSchedulingUseCase(trx, events);
 
         await useCase.execute({
           userId,

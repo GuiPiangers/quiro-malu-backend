@@ -4,7 +4,7 @@ import { ETableNames } from "../../../../database/ETableNames";
 import { KnexSchedulingRepository } from "../../../../repositories/scheduling/KnexSchedulingRepository";
 import { createKnexForIntegrationTests } from "../../../../test/integration/knexTestConnection";
 import { withRollbackTransaction } from "../../../../test/integration/transactionRollback";
-import { appEventListener } from "../../../shared/observers/EventListener";
+import { AppEventListener } from "../../../shared/observers/EventListener";
 import { DeleteSchedulingUseCase } from "./DeleteSchedulingUseCase";
 
 const integrationEnvReady = Boolean(
@@ -73,7 +73,6 @@ describe.skipIf(!shouldRunIntegrationSuite)(
     });
 
     afterEach(() => {
-      appEventListener.clearAllListeners();
       vi.restoreAllMocks();
     });
 
@@ -94,6 +93,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         const useCase = new DeleteSchedulingUseCase(
           new KnexSchedulingRepository(trx),
+          new AppEventListener(),
         );
 
         await useCase.execute({ id: scheduleId, userId });
@@ -124,6 +124,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         const useCase = new DeleteSchedulingUseCase(
           new KnexSchedulingRepository(trx),
+          new AppEventListener(),
         );
 
         await useCase.execute({ id: scheduleId, userId: other.userId });
@@ -152,12 +153,14 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           service: "Sessão",
         });
 
+        const events = new AppEventListener();
         const listener = vi.fn().mockResolvedValue(undefined);
-        appEventListener.on("deleteSchedule", listener);
-        const emitSpy = vi.spyOn(appEventListener, "emit");
+        events.on("deleteSchedule", listener);
+        const emitSpy = vi.spyOn(events, "emit");
 
         const useCase = new DeleteSchedulingUseCase(
           new KnexSchedulingRepository(trx),
+          events,
         );
 
         await useCase.execute({ id: scheduleId, userId });
