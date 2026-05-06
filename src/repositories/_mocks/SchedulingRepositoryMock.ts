@@ -15,5 +15,4 @@ export const createMockSchedulingRepository =
     listBetweenDates: vi.fn(),
     listFromNowWithinMinutes: vi.fn(),
     listScheduledInMinutes: vi.fn(),
-    listUpcoming: vi.fn(),
   });

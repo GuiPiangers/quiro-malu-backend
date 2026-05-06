@@ -57,9 +57,4 @@ export interface ISchedulingRepository {
     userId: string;
     offsetMinutes: number;
   }): Promise<Scheduling[]>;
-
-  listUpcoming(data: {
-    userId: string;
-    windowMinutes: number;
-  }): Promise<Scheduling[]>;
 }

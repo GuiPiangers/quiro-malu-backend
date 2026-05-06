@@ -290,37 +290,6 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     return result.map((row) => new Scheduling(row));
   }
 
-  async listUpcoming({
-    userId,
-    windowMinutes,
-  }: {
-    userId: string;
-    windowMinutes: number;
-  }): Promise<Scheduling[]> {
-    const safeWindow = Math.max(windowMinutes, 0);
-
-    const result = await this.knex(ETableNames.SCHEDULES)
-      .select(
-        "id",
-        "patientId",
-        this.knex.raw(`DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date`),
-        this.knex.raw(
-          `DATE_FORMAT(reminderSentAt, '%Y-%m-%dT%H:%i') as reminderSentAt`,
-        ),
-        "duration",
-        "status",
-        "service",
-      )
-      .where({ userId })
-      .whereNull("reminderSentAt")
-      .andWhereBetween("date", [
-        this.knex.raw("NOW()"),
-        this.knex.raw("DATE_ADD(NOW(), INTERVAL ? MINUTE)", [safeWindow]),
-      ]);
-
-    return result.map((row) => new Scheduling(row));
-  }
-
   async delete({ id, userId }: { id: string; userId: string }): Promise<void> {
     await this.knex(ETableNames.SCHEDULES).where({ id, userId }).del();
   }
