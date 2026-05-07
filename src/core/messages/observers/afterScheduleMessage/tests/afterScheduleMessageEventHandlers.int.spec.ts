@@ -2,6 +2,11 @@ import { randomUUID } from "node:crypto";
 import { Queue, type Job } from "bullmq";
 import { DateTime as Luxon } from "luxon";
 import { redis } from "../../../../../database/redis";
+import { createMockAfterScheduleMessageRepository } from "../../../../../repositories/_mocks/AfterScheduleMessageRepositoryMock";
+import type {
+  AfterScheduleMessageConfigDTO,
+  IAfterScheduleMessageRepository,
+} from "../../../../../repositories/messages/IAfterScheduleMessageRepository";
 import { AfterScheduleQueue } from "../../../../../queues/afterScheduleMessage/AfterScheduleQueue";
 import { QueueProvider } from "../../../../../repositories/queueProvider/queueProvider";
 import { AppEventListener } from "../../../../shared/observers/EventListener";
@@ -97,13 +102,35 @@ async function waitForBullJobRemoved(
   );
 }
 
-/** Acessa `configsById` (privado) via cast para inspecionar estado interno. */
-function getConfigsMap(handlers: AfterScheduleMessageEventHandlers) {
-  return (
-    handlers as unknown as {
-      configsById: Map<string, AfterScheduleMessageListenerConfig>;
-    }
-  ).configsById;
+function listenerConfigToDto(
+  c: AfterScheduleMessageListenerConfig,
+): AfterScheduleMessageConfigDTO {
+  return {
+    id: c.id,
+    userId: c.userId,
+    name: c.name,
+    minutesAfterSchedule: c.minutesAfterSchedule,
+    textTemplate: "",
+    isActive: c.isActive,
+  };
+}
+
+/** `listByUserId` devolve as configs agrupadas por `userId` (como no repositório real). */
+function createRepoReturningConfigs(
+  configs: AfterScheduleMessageListenerConfig[],
+): IAfterScheduleMessageRepository {
+  const byUser = new Map<string, AfterScheduleMessageListenerConfig[]>();
+  for (const c of configs) {
+    const arr = byUser.get(c.userId) ?? [];
+    arr.push(c);
+    byUser.set(c.userId, arr);
+  }
+  const repo = createMockAfterScheduleMessageRepository();
+  repo.listByUserId.mockImplementation(async ({ userId }) => {
+    const list = byUser.get(userId) ?? [];
+    return list.map(listenerConfigToDto);
+  });
+  return repo;
 }
 
 /** Monta uma fixture de agendamento com valores-padrão sobrescritíveis. */
@@ -136,92 +163,6 @@ function makeConfig(
     ...overrides,
   };
 }
-
-// ---------------------------------------------------------------------------
-// Testes unitários — não dependem de Redis
-// ---------------------------------------------------------------------------
-
-describe("AfterScheduleMessageEventHandlers (unit)", () => {
-  it("afterScheduleMessageCreate armazena config em configsById", async () => {
-    const appEventListener = new AppEventListener();
-    const sendStub = {
-      execute: vi.fn(),
-    } as unknown as SendAfterScheduleMessageUseCase;
-    const queueProvider = new QueueProvider<SendAfterScheduleMessageJob>(
-      `unit-${randomUUID()}`,
-    );
-    const afterScheduleQueue = new AfterScheduleQueue(queueProvider, sendStub);
-    const handlers = new AfterScheduleMessageEventHandlers(
-      afterScheduleQueue,
-      appEventListener,
-    );
-    handlers.register();
-
-    const cfg = makeConfig({ id: "cfg-create", userId: "user-1", name: "Pós consulta" });
-    appEventListener.emit("afterScheduleMessageCreate", cfg);
-    await flushAsyncListeners();
-
-    expect(getConfigsMap(handlers).get("cfg-create")).toEqual(cfg);
-  });
-
-  it("afterScheduleMessageUpdate substitui config em configsById", async () => {
-    const appEventListener = new AppEventListener();
-    const sendStub = {
-      execute: vi.fn(),
-    } as unknown as SendAfterScheduleMessageUseCase;
-    const queueProvider = new QueueProvider<SendAfterScheduleMessageJob>(
-      `unit-${randomUUID()}`,
-    );
-    const afterScheduleQueue = new AfterScheduleQueue(queueProvider, sendStub);
-    const handlers = new AfterScheduleMessageEventHandlers(
-      afterScheduleQueue,
-      appEventListener,
-    );
-    handlers.register();
-
-    const original = makeConfig({ id: "cfg-upd", userId: "user-2", name: "v1", minutesAfterSchedule: 15 });
-    appEventListener.emit("afterScheduleMessageCreate", original);
-    await flushAsyncListeners();
-
-    const updated: AfterScheduleMessageListenerConfig = {
-      ...original,
-      name: "v2",
-      minutesAfterSchedule: 90,
-      isActive: false,
-    };
-    appEventListener.emit("afterScheduleMessageUpdate", updated);
-    await flushAsyncListeners();
-
-    expect(getConfigsMap(handlers).get("cfg-upd")).toEqual(updated);
-  });
-
-  it("afterScheduleMessageDelete remove config de configsById", async () => {
-    const appEventListener = new AppEventListener();
-    const sendStub = {
-      execute: vi.fn(),
-    } as unknown as SendAfterScheduleMessageUseCase;
-    const queueProvider = new QueueProvider<SendAfterScheduleMessageJob>(
-      `unit-${randomUUID()}`,
-    );
-    const afterScheduleQueue = new AfterScheduleQueue(queueProvider, sendStub);
-    const handlers = new AfterScheduleMessageEventHandlers(
-      afterScheduleQueue,
-      appEventListener,
-    );
-    handlers.register();
-
-    const cfg = makeConfig({ id: "cfg-del-unit" });
-    appEventListener.emit("afterScheduleMessageCreate", cfg);
-    await flushAsyncListeners();
-
-    expect(getConfigsMap(handlers).has("cfg-del-unit")).toBe(true);
-
-    appEventListener.emit("afterScheduleMessageDelete", { id: "cfg-del-unit" });
-    await flushAsyncListeners();
-
-    expect(getConfigsMap(handlers).has("cfg-del-unit")).toBe(false);
-  });
-});
 
 // ---------------------------------------------------------------------------
 // Testes de integração — dependem de Redis real
@@ -258,14 +199,14 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
     });
 
     // Cria instâncias frescas de handlers + eventListener para cada teste
-    function makeHandlers() {
+    function makeHandlers(repo: IAfterScheduleMessageRepository) {
       const appEventListener = new AppEventListener();
-      const handlers = new AfterScheduleMessageEventHandlers(
+      new AfterScheduleMessageEventHandlers(
         afterScheduleQueue,
         appEventListener,
-      );
-      handlers.register();
-      return { appEventListener, handlers };
+        repo,
+      ).register();
+      return { appEventListener };
     }
 
     it("createSchedule cria job na fila com delay alinhado ao agendamento + minutos da config", async () => {
@@ -273,11 +214,9 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
         Luxon.fromISO("2025-01-01T12:00:00", { zone: "America/Sao_Paulo" }).toMillis(),
       );
 
-      const { appEventListener } = makeHandlers();
       const cfg = makeConfig({ id: "cfg-job", userId: "user-job", minutesAfterSchedule: 60 });
-
-      appEventListener.emit("afterScheduleMessageCreate", cfg);
-      await flushAsyncListeners();
+      const repo = createRepoReturningConfigs([cfg]);
+      const { appEventListener } = makeHandlers(repo);
 
       const scheduleDate = "2025-01-01T14:00";
       appEventListener.emit("createSchedule", makeSchedulePayload({
@@ -313,15 +252,13 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
         Luxon.fromISO("2025-01-01T12:00:00", { zone: "America/Sao_Paulo" }).toMillis(),
       );
 
-      const { appEventListener } = makeHandlers();
       const cfg = makeConfig({
         id: "cfg-inactive",
         userId: "user-inactive",
         isActive: false, // inativa — não deve gerar job
       });
-
-      appEventListener.emit("afterScheduleMessageCreate", cfg);
-      await flushAsyncListeners();
+      const repo = createRepoReturningConfigs([cfg]);
+      const { appEventListener } = makeHandlers(repo);
 
       appEventListener.emit("createSchedule", makeSchedulePayload({
         userId: "user-inactive",
@@ -339,11 +276,9 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
         Luxon.fromISO("2025-01-01T12:00:00", { zone: "America/Sao_Paulo" }).toMillis(),
       );
 
-      const { appEventListener } = makeHandlers();
       const cfg = makeConfig({ id: "cfg-status", userId: "user-status" });
-
-      appEventListener.emit("afterScheduleMessageCreate", cfg);
-      await flushAsyncListeners();
+      const repo = createRepoReturningConfigs([cfg]);
+      const { appEventListener } = makeHandlers(repo);
 
       appEventListener.emit("createSchedule", makeSchedulePayload({
         userId: "user-status",
@@ -361,11 +296,9 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
         Luxon.fromISO("2025-01-01T12:00:00", { zone: "America/Sao_Paulo" }).toMillis(),
       );
 
-      const { appEventListener } = makeHandlers();
       const cfg = makeConfig({ id: "cfg-status-upd", userId: "user-status-upd" });
-
-      appEventListener.emit("afterScheduleMessageCreate", cfg);
-      await flushAsyncListeners();
+      const repo = createRepoReturningConfigs([cfg]);
+      const { appEventListener } = makeHandlers(repo);
 
       // Cria o job com status Atendido
       appEventListener.emit("createSchedule", makeSchedulePayload({
@@ -398,11 +331,9 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
         Luxon.fromISO("2025-01-01T12:00:00", { zone: "America/Sao_Paulo" }).toMillis(),
       );
 
-      const { appEventListener } = makeHandlers();
       const cfg = makeConfig({ id: "cfg-upd-job", userId: "user-upd", minutesAfterSchedule: 60 });
-
-      appEventListener.emit("afterScheduleMessageCreate", cfg);
-      await flushAsyncListeners();
+      const repo = createRepoReturningConfigs([cfg]);
+      const { appEventListener } = makeHandlers(repo);
 
       appEventListener.emit("createSchedule", makeSchedulePayload({
         userId: "user-upd",
@@ -444,7 +375,6 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
         Luxon.fromISO("2025-01-01T12:00:00", { zone: "America/Sao_Paulo" }).toMillis(),
       );
 
-      const { appEventListener } = makeHandlers();
       const cfgA = makeConfig({
         id: "cfg-iso-upd-a",
         userId: "user-iso-upd-a",
@@ -455,10 +385,8 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
         userId: "user-iso-upd-b",
         minutesAfterSchedule: 60,
       });
-
-      appEventListener.emit("afterScheduleMessageCreate", cfgA);
-      appEventListener.emit("afterScheduleMessageCreate", cfgB);
-      await flushAsyncListeners();
+      const repo = createRepoReturningConfigs([cfgA, cfgB]);
+      const { appEventListener } = makeHandlers(repo);
 
       const scheduleDate = "2025-01-01T14:00";
       appEventListener.emit(
@@ -519,11 +447,9 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
         Luxon.fromISO("2025-01-01T12:00:00", { zone: "America/Sao_Paulo" }).toMillis(),
       );
 
-      const { appEventListener } = makeHandlers();
       const cfg = makeConfig({ id: "cfg-del", userId: "user-del", minutesAfterSchedule: 30 });
-
-      appEventListener.emit("afterScheduleMessageCreate", cfg);
-      await flushAsyncListeners();
+      const repo = createRepoReturningConfigs([cfg]);
+      const { appEventListener } = makeHandlers(repo);
 
       appEventListener.emit("createSchedule", makeSchedulePayload({
         userId: "user-del",
@@ -554,7 +480,6 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
         Luxon.fromISO("2025-01-01T12:00:00", { zone: "America/Sao_Paulo" }).toMillis(),
       );
 
-      const { appEventListener } = makeHandlers();
       const cfgA = makeConfig({
         id: "cfg-iso-del-a",
         userId: "user-iso-del-a",
@@ -565,10 +490,8 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
         userId: "user-iso-del-b",
         minutesAfterSchedule: 60,
       });
-
-      appEventListener.emit("afterScheduleMessageCreate", cfgA);
-      appEventListener.emit("afterScheduleMessageCreate", cfgB);
-      await flushAsyncListeners();
+      const repo = createRepoReturningConfigs([cfgA, cfgB]);
+      const { appEventListener } = makeHandlers(repo);
 
       const scheduleDate = "2025-01-01T14:00";
       appEventListener.emit(

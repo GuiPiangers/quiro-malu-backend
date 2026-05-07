@@ -1,27 +1,8 @@
-import { IAfterScheduleMessageRepository } from "../../../../../repositories/messages/IAfterScheduleMessageRepository";
-import { ApiError } from "../../../../../utils/ApiError";
-import { AppEventListener } from "../../../../shared/observers/EventListener";
-
+/**
+ * Antes hidratava o listener em memória na subida da API.
+ * `AfterScheduleMessageEventHandlers` passa a consultar o repositório (`listByUserId`)
+ * a cada evento de agendamento; este use case permanece como no-op para não quebrar imports.
+ */
 export class WatchAfterScheduleMessagesUseCase {
-  constructor(
-    private afterScheduleMessageRepository: IAfterScheduleMessageRepository,
-    private appEventListener: AppEventListener,
-  ) {}
-
-  async execute() {
-    const configs = await this.afterScheduleMessageRepository.listAll();
-
-    for (const config of configs) {
-      if (config.id == null)
-        throw new ApiError("afterScheduleMessage.id is required", 500);
-
-      this.appEventListener.emit("afterScheduleMessageCreate", {
-        id: config.id,
-        userId: config.userId,
-        name: config.name,
-        minutesAfterSchedule: config.minutesAfterSchedule,
-        isActive: config.isActive,
-      });
-    }
-  }
+  async execute(): Promise<void> {}
 }

@@ -1,4 +1,5 @@
 import { AfterScheduleQueue } from "../../../../queues/afterScheduleMessage/AfterScheduleQueue";
+import type { IAfterScheduleMessageRepository } from "../../../../repositories/messages/IAfterScheduleMessageRepository";
 import { logger } from "../../../../utils/logger";
 import { buildAfterScheduleMessageJobId } from "../../utils/buildAfterScheduleMessageJobId";
 import { calculateScheduleMessageDelay } from "../../utils/calculateScheduleMessageDelay";
@@ -14,23 +15,15 @@ export type AfterScheduleMessageListenerConfig = {
 
 export class AfterScheduleMessageEventHandlers {
   private isRegistered = false;
-  private configsById = new Map<string, AfterScheduleMessageListenerConfig>();
 
   constructor(
     private afterScheduleQueue: AfterScheduleQueue,
     private appEventListener: AppEventListener,
+    private afterScheduleMessageRepository: IAfterScheduleMessageRepository,
   ) {}
 
   register() {
     if (this.isRegistered) return;
-
-    this.appEventListener.on("afterScheduleMessageCreate", async (config) => {
-      this.configsById.set(config.id, config);
-    });
-
-    this.appEventListener.on("afterScheduleMessageUpdate", async (config) => {
-      this.configsById.set(config.id, config);
-    });
 
     this.appEventListener.on("createSchedule", async (data) => {
       await this.handleCreateOrUpdateSchedule({
@@ -59,10 +52,6 @@ export class AfterScheduleMessageEventHandlers {
         userId: data.userId,
         scheduleId: data.scheduleId,
       });
-    });
-
-    this.appEventListener.on("afterScheduleMessageDelete", async (data) => {
-      this.configsById.delete(data.id);
     });
 
     this.appEventListener.on("afterScheduleMessageSend", async (data) => {
@@ -100,7 +89,10 @@ export class AfterScheduleMessageEventHandlers {
     scheduleDate: string | undefined;
     status: string | undefined;
   }) {
-    const configs = this.getActiveConfigsByUser(userId);
+    const rows = await this.afterScheduleMessageRepository.listByUserId({
+      userId,
+    });
+    const configs = rows.filter((row) => row.isActive);
 
     await Promise.all(
       configs.map(async (config) => {
@@ -148,7 +140,9 @@ export class AfterScheduleMessageEventHandlers {
     userId: string;
     scheduleId: string;
   }) {
-    const configs = this.getConfigsByUser(userId);
+    const configs = await this.afterScheduleMessageRepository.listByUserId({
+      userId,
+    });
 
     await Promise.all(
       configs.map(async (config) => {
@@ -161,15 +155,5 @@ export class AfterScheduleMessageEventHandlers {
         await this.afterScheduleQueue.remove(jobId);
       }),
     );
-  }
-
-  private getConfigsByUser(userId: string) {
-    return Array.from(this.configsById.values()).filter(
-      (config) => config.userId === userId,
-    );
-  }
-
-  private getActiveConfigsByUser(userId: string) {
-    return this.getConfigsByUser(userId).filter((config) => config.isActive);
   }
 }
