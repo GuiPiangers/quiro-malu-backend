@@ -49,6 +49,7 @@ Never commit real secrets from `.env`. Use `.env.sample` as the template.
 When changing database schema, ship migration plus rollback-safe code in the same PR.
 
 ## Architecture
+- READ file `docs/ZOD_OPENAPI.md` for Zod request validation in controllers and OpenAPI/Swagger (`/docs`, `/openapi.json`)
 - READ file `docs/CONTROLLER_GUIDE.md` to create an controller
 - READ file `docs/USECASE_GUIDE.md` to create an use case
 - READ file `docs/REPOSITORY_GUIDE.md` to create an repository

@@ -4,5 +4,6 @@ Siga os guias em `docs/` para aplicar os padrões do projeto:
 - `docs/USECASE_GUIDE.md` (use cases `execute`, DTOs, interfaces de repositório, testes)
 - `docs/ENTITY_GUIDE.md` (entidades `extends Entity` + `getDTO`)
 - `docs/REPOSITORY_GUIDE.md` (interfaces + implementações com Knex + `ETableNames`)
+- `docs/ZOD_OPENAPI.md` (validação de request com Zod nos controllers + Swagger/OpenAPI)
 
 Regra de ouro: carregue/aplique somente o(s) guia(s) necessário(s) para a tarefa (não pre-carregar tudo).

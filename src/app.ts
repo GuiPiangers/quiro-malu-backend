@@ -1,5 +1,7 @@
 import "express-async-errors";
 import express from "express";
+import swaggerUi from "swagger-ui-express";
+import { generateOpenApiDocument } from "./docs/swagger";
 import { requestLoggerMiddleware } from "./middlewares/requestLogger";
 import { router } from "./router";
 import cors from "cors";
@@ -12,6 +14,8 @@ import { httpResponseSizeMiddleware } from "./metrics/httpResponseSize";
 import { httpErrorsCounterMiddleware } from "./metrics/httpErrorsCounter";
 
 const app = express();
+
+const openApiDocument = generateOpenApiDocument();
 
 app.use(express.json());
 
@@ -46,6 +50,12 @@ app.get("/metrics", async (req, res) => {
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
+
+app.get("/openapi.json", (_req, res) => {
+  res.json(openApiDocument);
+});
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
 app.get('/debug/ip', (req, res) => {
   res.json({
