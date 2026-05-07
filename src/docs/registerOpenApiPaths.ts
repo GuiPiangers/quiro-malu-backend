@@ -4,3 +4,4 @@
  */
 import "./paths/authPaths";
 import "./paths/healthPaths";
+import "./paths/patientPaths";

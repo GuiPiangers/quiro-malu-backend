@@ -14,10 +14,12 @@ export class UploadPatientsController {
           userId,
         });
 
-        return response.send(result).status(200);
-      } else {
-        response.send({ message: "Nenhum arquivo foi enviado" }).status(400);
+        return response.status(200).send(result);
       }
+
+      return response
+        .status(400)
+        .json({ message: "Nenhum arquivo foi enviado" });
     } catch (err: any) {
       return responseError(response, err);
     }

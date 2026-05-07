@@ -1,15 +1,22 @@
 import { Request, Response } from "express";
 import { UpdatePatientUseCase } from "../../useCases/updatePatient/UpdatePatientUseCase";
-import { Patient, PatientDTO } from "../../models/Patient";
+import { Patient } from "../../models/Patient";
 import { responseError } from "../../../../utils/ResponseError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
+import { PatientWriteBodySchema } from "../patientSharedSchemas";
 
 export class UpdatePatientController {
   constructor(private updatePatientUseCase: UpdatePatientUseCase) {}
 
-  async handle(request: Request, response: Response): Promise<void> {
+  async handle(request: Request, response: Response) {
+    const parsed = parseWithSchema(PatientWriteBodySchema, request.body);
+    if (!parsed.success) {
+      return sendZodBadRequest(response, parsed.error);
+    }
+
     try {
       const userId = request.user.id;
-      const patientData = request.body as PatientDTO;
+      const patientData = parsed.data;
       const patient = new Patient(patientData);
       const patientDTO = patient.getPatientDTO();
 
