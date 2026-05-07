@@ -10,7 +10,17 @@ openApiRegistry.registerPath({
   summary: "Cadastro de usuário",
   request: {
     body: {
-      content: { "application/json": { schema: CreateUserBodySchema } },
+      content: {
+        "application/json": {
+          schema: CreateUserBodySchema,
+          example: {
+            name: "Maria Silva",
+            email: "maria@exemplo.com",
+            phone: "(51) 99999 9999",
+            password: "Senha123",
+          },
+        },
+      },
     },
   },
   responses: {
@@ -31,7 +41,15 @@ openApiRegistry.registerPath({
   summary: "Login (access + refresh token)",
   request: {
     body: {
-      content: { "application/json": { schema: LoginBodySchema } },
+      content: {
+        "application/json": {
+          schema: LoginBodySchema,
+          example: {
+            email: "eduardo@gmail.com",
+            password: "Senha123",
+          },
+        },
+      },
     },
   },
   responses: {
@@ -52,7 +70,14 @@ openApiRegistry.registerPath({
   summary: "Encerra sessão (invalida refresh token)",
   request: {
     body: {
-      content: { "application/json": { schema: LogoutBodySchema } },
+      content: {
+        "application/json": {
+          schema: LogoutBodySchema,
+          example: {
+            refreshTokenId: "00000000-0000-4000-8000-000000000001",
+          },
+        },
+      },
     },
   },
   responses: {

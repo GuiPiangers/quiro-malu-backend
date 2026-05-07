@@ -2,6 +2,11 @@ import "express-async-errors";
 import express from "express";
 import swaggerUi from "swagger-ui-express";
 import { generateOpenApiDocument } from "./docs/swagger";
+import {
+  expressJsonVerifyStripUtf8Bom,
+  parseAuthRoutesJsonBody,
+  shouldExpressJsonParse,
+} from "./middlewares/authJsonBody";
 import { requestLoggerMiddleware } from "./middlewares/requestLogger";
 import { router } from "./router";
 import cors from "cors";
@@ -17,7 +22,13 @@ const app = express();
 
 const openApiDocument = generateOpenApiDocument();
 
-app.use(express.json());
+app.use(
+  express.json({
+    type: shouldExpressJsonParse,
+    verify: expressJsonVerifyStripUtf8Bom,
+  }),
+);
+app.use(parseAuthRoutesJsonBody);
 
 app.use(requestLoggerMiddleware);
 

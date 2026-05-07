@@ -23,7 +23,11 @@ export class LoginUserController {
         fingerprintHash,
       );
 
-      return response.status(200).json({ token, refreshToken, user });
+      return response.status(200).json({
+        token: String(token).trim(),
+        refreshToken: String(refreshToken).trim(),
+        user,
+      });
     } catch (err: any) {
       return responseError(response, err);
     }

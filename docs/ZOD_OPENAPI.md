@@ -50,6 +50,16 @@ await this.meuUseCase.execute(parsed.data);
 
 Regra de ouro: **um schema, duas leituras** — o controller valida com ele e o OpenAPI descreve o contrato com o mesmo objeto Zod, evitando divergência entre código e documentação.
 
+5. Para **Try it out** no Swagger, prefira o **Example** gerado (JSON em uma linha). Evite colar senhas com **Enter no meio do campo** — isso gera JSON inválido (`SyntaxError: Bad control character in string literal` no `body-parser`).
+
+## POST /login, /register e /logout (corpo JSON)
+
+Essas três rotas usam `src/middlewares/authJsonBody.ts`:
+
+- O `express.json` **não** faz o parse delas (`type: shouldExpressJsonParse`).
+- O middleware **`parseAuthRoutesJsonBody`** lê o texto bruto, remove BOM, substitui **quebras de linha literais** por espaço e faz `JSON.parse`, tolerando o caso comum de colagem no Swagger.
+- Demais rotas continuam com `express.json` + `verify` que neutraliza **BOM UTF-8 em buffer** (EF BB BF).
+
 ## Referências no repositório
 
 - Auth (exemplo de schemas colocados no controller): `src/core/authentication/controllers/*/*Schemas.ts` e `src/docs/paths/authPaths.ts`.
