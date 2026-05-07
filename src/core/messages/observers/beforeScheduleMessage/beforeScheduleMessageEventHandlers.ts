@@ -1,4 +1,5 @@
 import { BeforeScheduleQueue } from "../../../../queues/beforeScheduleMessage/BeforeScheduleQueue";
+import type { IBeforeScheduleMessageRepository } from "../../../../repositories/messages/IBeforeScheduleMessageRepository";
 import { logger } from "../../../../utils/logger";
 import { buildBeforeScheduleMessageJobId } from "../../utils/buildBeforeScheduleMessageJobId";
 import { calculateScheduleMessageDelay } from "../../utils/calculateScheduleMessageDelay";
@@ -14,23 +15,15 @@ export type BeforeScheduleMessageListenerConfig = {
 
 export class BeforeScheduleMessageEventHandlers {
   private isRegistered = false;
-  private configsById = new Map<string, BeforeScheduleMessageListenerConfig>();
 
   constructor(
     private beforeScheduleQueue: BeforeScheduleQueue,
     private appEventListener: AppEventListener,
+    private beforeScheduleMessageRepository: IBeforeScheduleMessageRepository,
   ) {}
 
   register() {
     if (this.isRegistered) return;
-
-    this.appEventListener.on("beforeScheduleMessageCreate", async (config) => {
-      this.configsById.set(config.id, config);
-    });
-
-    this.appEventListener.on("beforeScheduleMessageUpdate", async (config) => {
-      this.configsById.set(config.id, config);
-    });
 
     this.appEventListener.on("createSchedule", async (data) => {
       await this.handleCreateOrUpdateSchedule({
@@ -57,10 +50,6 @@ export class BeforeScheduleMessageEventHandlers {
         userId: data.userId,
         scheduleId: data.scheduleId,
       });
-    });
-
-    this.appEventListener.on("beforeScheduleMessageDelete", async (data) => {
-      this.configsById.delete(data.id);
     });
 
     this.appEventListener.on("beforeScheduleMessageSend", async (data) => {
@@ -96,7 +85,10 @@ export class BeforeScheduleMessageEventHandlers {
     patientId: string;
     scheduleDate: string | undefined;
   }) {
-    const configs = this.getActiveConfigsByUser(userId);
+    const rows = await this.beforeScheduleMessageRepository.listByUserId({
+      userId,
+    });
+    const configs = rows.filter((row) => row.isActive);
 
     await Promise.all(
       configs.map(async (config) => {
@@ -137,7 +129,9 @@ export class BeforeScheduleMessageEventHandlers {
     userId: string;
     scheduleId: string;
   }) {
-    const configs = this.getConfigsByUser(userId);
+    const configs = await this.beforeScheduleMessageRepository.listByUserId({
+      userId,
+    });
 
     await Promise.all(
       configs.map(async (config) => {
@@ -150,16 +144,6 @@ export class BeforeScheduleMessageEventHandlers {
         await this.beforeScheduleQueue.remove(jobId);
       }),
     );
-  }
-
-  private getConfigsByUser(userId: string) {
-    return Array.from(this.configsById.values()).filter(
-      (config) => config.userId === userId,
-    );
-  }
-
-  private getActiveConfigsByUser(userId: string) {
-    return this.getConfigsByUser(userId).filter((config) => config.isActive);
   }
 
   private calculateDelay(

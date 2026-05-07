@@ -1,7 +1,6 @@
 import { getExamUseCase } from "../core/exams/useCases/getExam";
 import { beforeScheduleMessageEventHandlers } from "../core/messages/observers/beforeScheduleMessage";
 import { afterScheduleMessageEventHandlers } from "../core/messages/observers/afterScheduleMessage";
-import { watchBeforeScheduleMessagesUseCase } from "../core/messages/useCases/beforeScheduleMessage/watchBeforeScheduleMessages";
 import { NotificationUndoExam } from "../core/notification/models/NotificationUndoExam";
 import { scheduleNotificationUseCase } from "../core/notification/useCases/ScheduleNotification";
 import { sendAndSaveNotificationUseCase } from "../core/notification/useCases/sendAndSaveNotification";
@@ -28,8 +27,6 @@ export async function start() {
   } catch (err) {
     logger.error({ err }, "patientsBirthDayQueue.registerPatientBirthdayScheduler failed");
   }
-
-  await watchBeforeScheduleMessagesUseCase.execute();
 
   await beforeScheduleQueue.process();
   await afterScheduleQueue.process();
