@@ -1,16 +1,21 @@
 import { Request, Response } from "express";
 import { DeleteSchedulingUseCase } from "../../useCases/deleteScheduling/DeleteSchedulingUseCase";
 import { responseError } from "../../../../utils/ResponseError";
-import { ApiError } from "../../../../utils/ApiError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
+import { DeleteSchedulingBodySchema } from "../schedulingSharedSchemas";
 
 export class DeleteSchedulingController {
   constructor(private deleteSchedulingUseCase: DeleteSchedulingUseCase) {}
-  async handle(request: Request, response: Response): Promise<void> {
+
+  async handle(request: Request, response: Response) {
+    const parsed = parseWithSchema(DeleteSchedulingBodySchema, request.body);
+    if (!parsed.success) {
+      return sendZodBadRequest(response, parsed.error);
+    }
+
     try {
       const userId = request.user.id;
-      const { id } = request.body;
-
-      if (!id) throw new ApiError("Deve ser informado o Id e o PatientId", 400);
+      const { id } = parsed.data;
 
       await this.deleteSchedulingUseCase.execute({ id, userId: userId! });
 

@@ -1,14 +1,20 @@
 import { CreateSchedulingUseCase } from "../../useCases/createScheduling/CreateSchedulingUseCase";
 import { Request, Response } from "express";
-import { SchedulingDTO } from "../../models/Scheduling";
 import { responseError } from "../../../../utils/ResponseError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
+import { CreateSchedulingBodySchema } from "../schedulingSharedSchemas";
 
 export class CreateSchedulingController {
   constructor(private createScheduleUseCase: CreateSchedulingUseCase) {}
 
   async handle(request: Request, response: Response) {
+    const parsed = parseWithSchema(CreateSchedulingBodySchema, request.body);
+    if (!parsed.success) {
+      return sendZodBadRequest(response, parsed.error);
+    }
+
     try {
-      const data = request.body as SchedulingDTO & { date: string };
+      const data = parsed.data;
       const userId = request.user.id as string;
 
       const scheduling = await this.createScheduleUseCase.execute({

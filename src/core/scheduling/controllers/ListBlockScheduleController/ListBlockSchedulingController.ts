@@ -1,23 +1,25 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
 import { ListBlockSchedulingUseCase } from "../../useCases/blockScheduling/listBlockSchedules/ListBlockSchedulingUseCase";
-import { ApiError } from "../../../../utils/ApiError";
+import { ListBlockSchedulesQuerySchema } from "../blockScheduleSchemas";
 
 export class ListBlockScheduleController {
   constructor(private listBlockScheduleUseCase: ListBlockSchedulingUseCase) {}
 
   async handle(request: Request, response: Response) {
+    const parsed = parseWithSchema(ListBlockSchedulesQuerySchema, request.query);
+    if (!parsed.success) {
+      return sendZodBadRequest(response, parsed.error);
+    }
+
     try {
-      const { startDate, endDate } = request.query;
+      const { startDate, endDate } = parsed.data;
       const userId = request.user.id as string;
 
-      if (!startDate || !endDate) {
-        throw new ApiError("Start date and end date are required");
-      }
-
       const blockSchedules = await this.listBlockScheduleUseCase.execute({
-        endDate: endDate as string,
-        startDate: startDate as string,
+        endDate,
+        startDate,
         userId,
       });
 

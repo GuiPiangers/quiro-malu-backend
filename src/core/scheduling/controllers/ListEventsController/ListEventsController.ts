@@ -1,22 +1,24 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
-import { ApiError } from "../../../../utils/ApiError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
 import { ListEventsUseCase } from "../../useCases/listEvents/ListEventsUseCase";
+import { ListEventsQuerySchema } from "../schedulingSharedSchemas";
 
 export class ListEventsController {
   constructor(private listEventsUseCase: ListEventsUseCase) {}
 
   async handle(request: Request, response: Response) {
+    const parsed = parseWithSchema(ListEventsQuerySchema, request.query);
+    if (!parsed.success) {
+      return sendZodBadRequest(response, parsed.error);
+    }
+
     try {
-      const { date } = request.query;
+      const { date } = parsed.data;
       const userId = request.user.id as string;
 
-      if (!date) {
-        throw new ApiError("Date is required");
-      }
-
       const events = await this.listEventsUseCase.execute({
-        date: date as string,
+        date,
         userId,
       });
 
