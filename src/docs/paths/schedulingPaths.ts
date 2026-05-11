@@ -5,9 +5,17 @@ import {
   ListBlockSchedulesQuerySchema,
 } from "../../core/scheduling/controllers/blockScheduleSchemas";
 import {
+  ListBlockSchedulesResponseSchema,
+  ListEventSuggestionsResponseSchema,
+  ListEventsResponseSchema,
+  ListSchedulesResponseSchema,
+  QtdSchedulesResponseSchema,
+  SchedulingPersistedSchema,
+  SchedulingWithPatientResponseSchema,
+} from "../../core/scheduling/controllers/schedulingResponseSchemas";
+import {
   CreateSchedulingBodySchema,
   DeleteSchedulingBodySchema,
-  JsonRecordResponseSchema,
   ListEventSuggestionsQuerySchema,
   ListEventsQuerySchema,
   ListSchedulesQuerySchema,
@@ -32,7 +40,7 @@ openApiRegistry.registerPath({
     200: {
       description: "Lista paginada",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: ListSchedulesResponseSchema },
       },
     },
     400: { description: "Query inválida (Zod)" },
@@ -51,7 +59,7 @@ openApiRegistry.registerPath({
     200: {
       description: "Totais por dia",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: QtdSchedulesResponseSchema },
       },
     },
     400: { description: "Query inválida (Zod)" },
@@ -70,7 +78,7 @@ openApiRegistry.registerPath({
     200: {
       description: "Agendamento",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: SchedulingWithPatientResponseSchema },
       },
     },
     400: { description: "Parâmetros inválidos (Zod)" },
@@ -95,7 +103,7 @@ openApiRegistry.registerPath({
     201: {
       description: "Criado",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: SchedulingPersistedSchema },
       },
     },
     400: { description: "Corpo inválido (Zod)" },
@@ -120,7 +128,7 @@ openApiRegistry.registerPath({
     201: {
       description: "Atualizado",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: SchedulingPersistedSchema },
       },
     },
     400: { description: "Corpo inválido (Zod)" },
@@ -214,7 +222,7 @@ openApiRegistry.registerPath({
     200: {
       description: "Lista de bloqueios",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: ListBlockSchedulesResponseSchema },
       },
     },
     400: { description: "Query inválida (Zod)" },
@@ -278,7 +286,7 @@ openApiRegistry.registerPath({
     200: {
       description: "Eventos",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: ListEventsResponseSchema },
       },
     },
     400: { description: "Query inválida (Zod)" },
@@ -297,7 +305,7 @@ openApiRegistry.registerPath({
     200: {
       description: "Sugestões",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: ListEventSuggestionsResponseSchema },
       },
     },
     400: { description: "Query inválida (Zod)" },

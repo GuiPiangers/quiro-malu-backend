@@ -3,12 +3,20 @@ import { DeletePatientBodySchema } from "../../core/patients/controllers/deleteP
 import { SetAnamnesisBodySchema } from "../../core/patients/controllers/setAnamnesisController/anamnesisBodySchemas";
 import { SetDiagnosticBodySchema } from "../../core/patients/controllers/setDiagnosticController/diagnosticBodySchemas";
 import {
-  JsonRecordResponseSchema,
   MessageResponseSchema,
   PatientIdParamSchema,
   PatientIdPathParamSchema,
   PatientWriteBodySchema,
 } from "../../core/patients/controllers/patientSharedSchemas";
+import {
+  AnamnesisResponseSchema,
+  GetDiagnosticResponseSchema,
+  ListPatientsResponseSchema,
+  ListProgressResponseSchema,
+  PatientSavedSchema,
+  ProgressDTOSchema,
+  UploadPatientsResponseSchema,
+} from "../../core/patients/controllers/patientResponseSchemas";
 import { ListPatientsQuerySchema } from "../../core/patients/controllers/listPatientsController/listPatientsSchemas";
 import {
   DeleteProgressBodySchema,
@@ -55,7 +63,7 @@ openApiRegistry.registerPath({
     201: {
       description: "Paciente criado",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: PatientSavedSchema },
       },
     },
     400: { description: "Corpo inválido (Zod)" },
@@ -76,7 +84,7 @@ openApiRegistry.registerPath({
     200: {
       description: "Lista e total",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: ListPatientsResponseSchema },
       },
     },
     400: { description: "Query inválida (Zod)" },
@@ -97,7 +105,7 @@ openApiRegistry.registerPath({
     200: {
       description: "Paciente",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: PatientSavedSchema },
       },
     },
     400: { description: "Parâmetros inválidos (Zod)" },
@@ -173,7 +181,7 @@ openApiRegistry.registerPath({
     200: {
       description: "Dados da anamnese",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: AnamnesisResponseSchema },
       },
     },
     400: { description: "Parâmetros inválidos (Zod)" },
@@ -221,7 +229,7 @@ openApiRegistry.registerPath({
     200: {
       description: "Diagnóstico",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: GetDiagnosticResponseSchema },
       },
     },
     400: { description: "Parâmetros inválidos (Zod)" },
@@ -275,7 +283,7 @@ openApiRegistry.registerPath({
     201: {
       description: "Evolução salva",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: ProgressDTOSchema },
       },
     },
     400: { description: "Corpo inválido (Zod)" },
@@ -324,7 +332,7 @@ openApiRegistry.registerPath({
     200: {
       description: "Lista paginada",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: ListProgressResponseSchema },
       },
     },
     400: { description: "Parâmetros ou query inválidos (Zod)" },
@@ -345,7 +353,7 @@ openApiRegistry.registerPath({
     200: {
       description: "Evolução",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: ProgressDTOSchema },
       },
     },
     400: { description: "Parâmetros inválidos (Zod)" },
@@ -366,7 +374,7 @@ openApiRegistry.registerPath({
     200: {
       description: "Evolução",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: ProgressDTOSchema },
       },
     },
     400: { description: "Parâmetros inválidos (Zod)" },
@@ -395,7 +403,7 @@ openApiRegistry.registerPath({
     200: {
       description: "Resultado da importação",
       content: {
-        "application/json": { schema: JsonRecordResponseSchema },
+        "application/json": { schema: UploadPatientsResponseSchema },
       },
     },
     400: { description: "Arquivo ausente ou inválido" },

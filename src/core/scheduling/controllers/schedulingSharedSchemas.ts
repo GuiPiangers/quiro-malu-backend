@@ -19,10 +19,6 @@ export const MessageResponseSchema = z
   .object({ message: z.string() })
   .openapi("SchedulingMessageResponse");
 
-export const JsonRecordResponseSchema = z
-  .record(z.string(), z.unknown())
-  .openapi("SchedulingJsonRecord");
-
 export const CreateSchedulingBodySchema = z
   .object({
     patientId: z.string().min(1),

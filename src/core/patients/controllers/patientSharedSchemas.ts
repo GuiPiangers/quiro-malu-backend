@@ -53,7 +53,3 @@ export const PatientIdPathParamSchema = z
 export const MessageResponseSchema = z
   .object({ message: z.string() })
   .openapi("PatientMessageResponse");
-
-export const JsonRecordResponseSchema = z
-  .record(z.string(), z.unknown())
-  .openapi("JsonRecordResponse");
