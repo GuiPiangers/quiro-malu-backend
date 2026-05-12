@@ -121,6 +121,27 @@ if [[ -f ".env" ]]; then
 fi
 
 # ==========================
+# 5. Detectar e salvar DOCKER_GID
+# ==========================
+log_info "Detectando GID do grupo docker..."
+
+DOCKER_GID=$(getent group docker | cut -d: -f3)
+
+if [[ -z "$DOCKER_GID" ]]; then
+    log_error "Grupo docker não encontrado. Docker está instalado?"
+    exit 1
+fi
+
+# Atualiza ou adiciona no .env
+if grep -q "^DOCKER_GID=" .env 2>/dev/null; then
+    sed -i "s/^DOCKER_GID=.*/DOCKER_GID=$DOCKER_GID/" .env
+else
+    echo "DOCKER_GID=$DOCKER_GID" >> .env
+fi
+
+log_info "✓ DOCKER_GID=$DOCKER_GID salvo no .env"
+
+# ==========================
 # Resumo final
 # ==========================
 echo ""
