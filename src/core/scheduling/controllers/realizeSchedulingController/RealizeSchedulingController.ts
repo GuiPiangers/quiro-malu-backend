@@ -1,16 +1,20 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
 import { RealizeSchedulingUseCase } from "../../useCases/realizeScheduling/realizeSchedulingUseCase";
+import { RealizeSchedulingBodySchema } from "../schedulingSharedSchemas";
 
-export class UpdateSchedulingController {
+export class RealizeSchedulingController {
   constructor(private realizeSchedulingUseCase: RealizeSchedulingUseCase) {}
 
   async handle(request: Request, response: Response) {
+    const parsed = parseWithSchema(RealizeSchedulingBodySchema, request.body);
+    if (!parsed.success) {
+      return sendZodBadRequest(response, parsed.error);
+    }
+
     try {
-      const data = request.body as {
-        id: string;
-        patientId: string;
-      };
+      const data = parsed.data;
       const userId = request.user.id;
 
       await this.realizeSchedulingUseCase.execute({

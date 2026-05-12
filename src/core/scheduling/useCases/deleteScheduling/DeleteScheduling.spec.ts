@@ -1,14 +1,17 @@
 import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
+import { IAppEventListener } from "../../../shared/observers/EventListener";
 import { DeleteSchedulingUseCase } from "./DeleteSchedulingUseCase";
 
 describe("DeleteSchedulingUseCase", () => {
   let deleteSchedulingUseCase: DeleteSchedulingUseCase;
   const mockSchedulingRepository = createMockSchedulingRepository();
+  const eventsStub: IAppEventListener = { emit: vi.fn() };
 
   beforeEach(() => {
     vi.clearAllMocks();
     deleteSchedulingUseCase = new DeleteSchedulingUseCase(
       mockSchedulingRepository,
+      eventsStub,
     );
   });
 

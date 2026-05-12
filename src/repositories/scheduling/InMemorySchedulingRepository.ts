@@ -161,11 +161,4 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
   }): Promise<Scheduling[]> {
     return [];
   }
-
-  async listUpcoming(data: {
-    userId: string;
-    windowMinutes: number;
-  }): Promise<Scheduling[]> {
-    return [];
-  }
 }

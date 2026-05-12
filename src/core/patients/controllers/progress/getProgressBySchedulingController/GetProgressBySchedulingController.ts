@@ -1,17 +1,23 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../../utils/ResponseError";
-import { ApiError } from "../../../../../utils/ApiError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../../utils/zodValidation";
 import { GetProgressBySchedulingUseCase } from "../../../useCases/progress/getProgressByScheduling/GetProgressBySchedulingUseCase";
+import { ProgressBySchedulingParamsSchema } from "../progressBodySchemas";
 
 export class GetProgressBySchedulingController {
   constructor(private getProgressUseCase: GetProgressBySchedulingUseCase) {}
   async handle(request: Request, response: Response) {
-    try {
-      const { schedulingId, patientId } = request.params;
-      const userId = request.user.id;
+    const parsedParams = parseWithSchema(
+      ProgressBySchedulingParamsSchema,
+      request.params,
+    );
+    if (!parsedParams.success) {
+      return sendZodBadRequest(response, parsedParams.error);
+    }
 
-      if (!schedulingId)
-        throw new ApiError("O id e o patientId devem ser informados", 400);
+    try {
+      const { schedulingId, patientId } = parsedParams.data;
+      const userId = request.user.id;
 
       const progress = await this.getProgressUseCase.execute({
         schedulingId,

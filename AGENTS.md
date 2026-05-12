@@ -29,8 +29,8 @@ Linting uses ESLint with `@rocketseat/eslint-config/node` (`.eslintrc.json`); fi
 - For tests, use `*.spec.ts`.
 
 ## Testing Guidelines
-Framework: Vitest (`vitest.config.ts`).  
-Default pattern is `**/**/*.spec.ts`; keep tests near the module they validate.  
+Framework: Vitest (`vitest.config.ts`). 
+Default pattern is `**/**/*.spec.ts` for testes unitários e `**/**/*.int.spec.ts` para integração (`npm run test:unit` / `npm run test:integration`, com `RUN_INTEGRATION_TESTS`); ver `docs/INTEGRATION_TESTS.md`. Keep tests near the module they validate.
 Coverage is collected from `src/**/*.ts` with exclusions for wiring/infrastructure layers; prioritize assertions around `core` models and use cases.
 
 ## Commit & Pull Request Guidelines
@@ -49,6 +49,7 @@ Never commit real secrets from `.env`. Use `.env.sample` as the template.
 When changing database schema, ship migration plus rollback-safe code in the same PR.
 
 ## Architecture
+- READ file `docs/ZOD_OPENAPI.md` for Zod request validation in controllers and OpenAPI/Swagger (`/docs`, `/openapi.json`)
 - READ file `docs/CONTROLLER_GUIDE.md` to create an controller
 - READ file `docs/USECASE_GUIDE.md` to create an use case
 - READ file `docs/REPOSITORY_GUIDE.md` to create an repository

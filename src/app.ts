@@ -1,5 +1,12 @@
 import "express-async-errors";
 import express from "express";
+import swaggerUi from "swagger-ui-express";
+import { generateOpenApiDocument } from "./docs/swagger";
+import {
+  expressJsonVerifyStripUtf8Bom,
+  parseAuthRoutesJsonBody,
+  shouldExpressJsonParse,
+} from "./middlewares/authJsonBody";
 import { requestLoggerMiddleware } from "./middlewares/requestLogger";
 import { router } from "./router";
 import cors from "cors";
@@ -13,7 +20,15 @@ import { httpErrorsCounterMiddleware } from "./metrics/httpErrorsCounter";
 
 const app = express();
 
-app.use(express.json());
+const openApiDocument = generateOpenApiDocument();
+
+app.use(
+  express.json({
+    type: shouldExpressJsonParse,
+    verify: expressJsonVerifyStripUtf8Bom,
+  }),
+);
+app.use(parseAuthRoutesJsonBody);
 
 app.use(requestLoggerMiddleware);
 
@@ -46,6 +61,12 @@ app.get("/metrics", async (req, res) => {
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
+
+app.get("/openapi.json", (_req, res) => {
+  res.json(openApiDocument);
+});
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
 app.get('/debug/ip', (req, res) => {
   res.json({

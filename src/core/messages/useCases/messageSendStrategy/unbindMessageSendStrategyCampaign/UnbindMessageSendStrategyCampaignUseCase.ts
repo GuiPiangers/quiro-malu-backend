@@ -1,13 +1,9 @@
 import { IMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
-import { ApiError } from "../../../../../utils/ApiError";
-
 
 export type UnbindMessageSendStrategyCampaignDTO = {
   userId: string;
   campaignId: string;
 };
-
-
 
 export class UnbindMessageSendStrategyCampaignUseCase {
   constructor(

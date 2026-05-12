@@ -1,17 +1,20 @@
 import { GetProgressUseCase } from "../../../useCases/progress/getProgress/GetProgressUseCase";
 import { Request, Response } from "express";
 import { responseError } from "../../../../../utils/ResponseError";
-import { ApiError } from "../../../../../utils/ApiError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../../utils/zodValidation";
+import { ProgressEntryParamsSchema } from "../progressBodySchemas";
 
 export class GetProgressController {
   constructor(private getProgressUseCase: GetProgressUseCase) {}
   async handle(request: Request, response: Response) {
-    try {
-      const { id, patientId } = request.params;
-      const userId = request.user.id;
+    const parsedParams = parseWithSchema(ProgressEntryParamsSchema, request.params);
+    if (!parsedParams.success) {
+      return sendZodBadRequest(response, parsedParams.error);
+    }
 
-      if (!id)
-        throw new ApiError("O id e o patientId devem ser informados", 400);
+    try {
+      const { id, patientId } = parsedParams.data;
+      const userId = request.user.id;
 
       const progress = await this.getProgressUseCase.execute({
         id,

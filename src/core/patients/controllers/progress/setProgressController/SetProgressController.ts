@@ -1,13 +1,19 @@
 import { SetProgressUseCase } from "../../../useCases/progress/setProgress/SetProgressUseCase";
 import { Request, Response } from "express";
-import { ProgressDTO } from "../../../models/Progress";
 import { responseError } from "../../../../../utils/ResponseError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../../utils/zodValidation";
+import { SetProgressBodySchema } from "../progressBodySchemas";
 
 export class SetProgressController {
   constructor(private setProgressUseCase: SetProgressUseCase) {}
   async handle(request: Request, response: Response) {
+    const parsed = parseWithSchema(SetProgressBodySchema, request.body);
+    if (!parsed.success) {
+      return sendZodBadRequest(response, parsed.error);
+    }
+
     try {
-      const data = request.body as ProgressDTO;
+      const data = parsed.data;
       const userId = request.user.id;
 
       const progress = await this.setProgressUseCase.execute({

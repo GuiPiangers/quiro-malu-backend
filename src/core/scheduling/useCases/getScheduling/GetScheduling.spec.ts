@@ -68,5 +68,74 @@ describe("getSchedulingUseCase", () => {
         getSchedulingUseCase.execute({ userId, id }),
       ).rejects.toThrow(errorMessage);
     });
+
+    it("should throw 404 when scheduling is not found", async () => {
+      mockSchedulingRepository.get.mockResolvedValue([]);
+
+      await expect(
+        getSchedulingUseCase.execute({
+          userId: "test-user-id",
+          id: "missing-id",
+        }),
+      ).rejects.toMatchObject({
+        message: "Agendamento não encontrado",
+        statusCode: 404,
+      });
+    });
+
+    it.each([
+      ["2026-05-04T08:00"],
+      ["2026-05-04T00:00"],
+      ["2030-12-31T23:59"],
+      ["2025-06-15T14:05"],
+    ])(
+      "retorna a data exatamente como a string do agendamento (%s), sem reinterpretar fuso",
+      async (bookedDate) => {
+        const userId = "test-user-id";
+        const id = "test-scheduling-id";
+
+        const schedulingData: SchedulingWithPatientDTO = {
+          id,
+          patientId: "test-patient-id",
+          date: bookedDate,
+          duration: 3600,
+          service: "Quiropraxia",
+          status: "Agendado",
+          patient: "Paciente",
+          phone: "(11) 91111-1111",
+        };
+
+        mockSchedulingRepository.get.mockResolvedValue([schedulingData]);
+
+        const result = await getSchedulingUseCase.execute({ userId, id });
+
+        expect(result.date).toBe(bookedDate);
+        expect(typeof result.date).toBe("string");
+        expect(result.date).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/);
+      },
+    );
+
+    it("mantém a mesma string de data que o repositório retornou (contrato do cliente)", async () => {
+      const userId = "test-user-id";
+      const id = "test-scheduling-id";
+      const clientBookedAt = "2031-03-20T16:30";
+
+      mockSchedulingRepository.get.mockResolvedValue([
+        {
+          id,
+          patientId: "test-patient-id",
+          date: clientBookedAt,
+          duration: 2700,
+          service: "Retorno",
+          status: "Agendado",
+          patient: "Ana",
+          phone: "(11) 98888-8888",
+        },
+      ]);
+
+      const result = await getSchedulingUseCase.execute({ userId, id });
+
+      expect(result.date).toBe(clientBookedAt);
+    });
   });
 });

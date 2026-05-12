@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { ListEventSuggestionsUseCase } from "../../useCases/listEventSuggestions/ListEventSuggestionsUseCase";
 import { responseError } from "../../../../utils/ResponseError";
-import { ApiError } from "../../../../utils/ApiError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
+import { ListEventSuggestionsQuerySchema } from "../schedulingSharedSchemas";
 
 export class ListEventSuggestionsController {
   constructor(
@@ -9,14 +10,17 @@ export class ListEventSuggestionsController {
   ) {}
 
   async handle(request: Request, response: Response) {
+    const parsed = parseWithSchema(ListEventSuggestionsQuerySchema, request.query);
+    if (!parsed.success) {
+      return sendZodBadRequest(response, parsed.error);
+    }
+
     try {
       const userId = request.user.id;
-      const filter = request.query.filter as string | undefined;
-
-      if (!userId) throw new ApiError("Unauthorized", 401);
+      const { filter } = parsed.data;
 
       const result = await this.listEventSuggestionsUseCase.execute({
-        userId,
+        userId: userId!,
         config: { filter },
       });
 

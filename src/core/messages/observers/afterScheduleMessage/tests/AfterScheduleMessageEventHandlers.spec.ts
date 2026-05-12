@@ -1,4 +1,6 @@
 import { DateTime as Luxon } from "luxon";
+import { createMockAfterScheduleMessageRepository } from "../../../../../repositories/_mocks/AfterScheduleMessageRepositoryMock";
+import type { AfterScheduleMessageConfigDTO } from "../../../../../repositories/messages/IAfterScheduleMessageRepository";
 import { logger } from "../../../../../utils/logger";
 import { AppEventListener } from "../../../../shared/observers/EventListener";
 import { AfterScheduleMessageEventHandlers } from "../afterScheduleMessageEventHandlers";
@@ -7,6 +9,23 @@ const flushPromises = async () => {
   await Promise.resolve();
   await Promise.resolve();
 };
+
+function dtoFromConfig(
+  partial: Pick<
+    AfterScheduleMessageConfigDTO,
+    "id" | "userId" | "minutesAfterSchedule" | "isActive"
+  > &
+    Partial<Pick<AfterScheduleMessageConfigDTO, "name" | "textTemplate">>,
+): AfterScheduleMessageConfigDTO {
+  return {
+    id: partial.id,
+    userId: partial.userId,
+    name: partial.name ?? "cfg",
+    minutesAfterSchedule: partial.minutesAfterSchedule,
+    textTemplate: partial.textTemplate ?? "",
+    isActive: partial.isActive,
+  };
+}
 
 describe("AfterScheduleMessageEventHandlers", () => {
   beforeAll(() => {
@@ -27,21 +46,24 @@ describe("AfterScheduleMessageEventHandlers", () => {
       remove: vi.fn().mockResolvedValue(undefined),
     };
 
+    const repo = createMockAfterScheduleMessageRepository();
+    repo.listByUserId.mockResolvedValue([
+      dtoFromConfig({
+        id: "cfg-1",
+        userId: "user-1",
+        minutesAfterSchedule: 60,
+        isActive: true,
+      }),
+    ]);
+
     const appEventListener = new AppEventListener();
     const handlers = new AfterScheduleMessageEventHandlers(
       afterScheduleQueue as any,
       appEventListener,
+      repo,
     );
 
     handlers.register();
-
-    appEventListener.emit("afterScheduleMessageCreate", {
-      id: "cfg-1",
-      userId: "user-1",
-      name: "cfg-1",
-      minutesAfterSchedule: 60,
-      isActive: true,
-    });
 
     appEventListener.emit("createSchedule", {
       userId: "user-1",
@@ -69,21 +91,24 @@ describe("AfterScheduleMessageEventHandlers", () => {
       remove: vi.fn().mockResolvedValue(undefined),
     };
 
+    const repo = createMockAfterScheduleMessageRepository();
+    repo.listByUserId.mockResolvedValue([
+      dtoFromConfig({
+        id: "cfg-1",
+        userId: "user-1",
+        minutesAfterSchedule: 60,
+        isActive: true,
+      }),
+    ]);
+
     const appEventListener = new AppEventListener();
     const handlers = new AfterScheduleMessageEventHandlers(
       afterScheduleQueue as any,
       appEventListener,
+      repo,
     );
 
     handlers.register();
-
-    appEventListener.emit("afterScheduleMessageCreate", {
-      id: "cfg-1",
-      userId: "user-1",
-      name: "cfg-1",
-      minutesAfterSchedule: 60,
-      isActive: true,
-    });
 
     appEventListener.emit("updateSchedule", {
       userId: "user-1",
@@ -120,21 +145,24 @@ describe("AfterScheduleMessageEventHandlers", () => {
       remove: vi.fn().mockResolvedValue(undefined),
     };
 
+    const repo = createMockAfterScheduleMessageRepository();
+    repo.listByUserId.mockResolvedValue([
+      dtoFromConfig({
+        id: "cfg-1",
+        userId: "user-1",
+        minutesAfterSchedule: 60,
+        isActive: true,
+      }),
+    ]);
+
     const appEventListener = new AppEventListener();
     const handlers = new AfterScheduleMessageEventHandlers(
       afterScheduleQueue as any,
       appEventListener,
+      repo,
     );
 
     handlers.register();
-
-    appEventListener.emit("afterScheduleMessageCreate", {
-      id: "cfg-1",
-      userId: "user-1",
-      name: "cfg-1",
-      minutesAfterSchedule: 60,
-      isActive: true,
-    });
 
     appEventListener.emit("updateSchedule", {
       userId: "user-1",
@@ -164,21 +192,24 @@ describe("AfterScheduleMessageEventHandlers", () => {
       remove: vi.fn().mockResolvedValue(undefined),
     };
 
+    const repo = createMockAfterScheduleMessageRepository();
+    repo.listByUserId.mockResolvedValue([
+      dtoFromConfig({
+        id: "cfg-1",
+        userId: "user-1",
+        minutesAfterSchedule: 60,
+        isActive: false,
+      }),
+    ]);
+
     const appEventListener = new AppEventListener();
     const handlers = new AfterScheduleMessageEventHandlers(
       afterScheduleQueue as any,
       appEventListener,
+      repo,
     );
 
     handlers.register();
-
-    appEventListener.emit("afterScheduleMessageCreate", {
-      id: "cfg-1",
-      userId: "user-1",
-      name: "cfg-1",
-      minutesAfterSchedule: 60,
-      isActive: false,
-    });
 
     appEventListener.emit("updateSchedule", {
       userId: "user-1",
@@ -202,29 +233,30 @@ describe("AfterScheduleMessageEventHandlers", () => {
       remove: vi.fn().mockResolvedValue(undefined),
     };
 
+    const repo = createMockAfterScheduleMessageRepository();
+    repo.listByUserId.mockResolvedValue([
+      dtoFromConfig({
+        id: "cfg-1",
+        userId: "user-1",
+        minutesAfterSchedule: 60,
+        isActive: true,
+      }),
+      dtoFromConfig({
+        id: "cfg-2",
+        userId: "user-1",
+        minutesAfterSchedule: 15,
+        isActive: false,
+      }),
+    ]);
+
     const appEventListener = new AppEventListener();
     const handlers = new AfterScheduleMessageEventHandlers(
       afterScheduleQueue as any,
       appEventListener,
+      repo,
     );
 
     handlers.register();
-
-    appEventListener.emit("afterScheduleMessageCreate", {
-      id: "cfg-1",
-      userId: "user-1",
-      name: "cfg-1",
-      minutesAfterSchedule: 60,
-      isActive: true,
-    });
-
-    appEventListener.emit("afterScheduleMessageCreate", {
-      id: "cfg-2",
-      userId: "user-1",
-      name: "cfg-2",
-      minutesAfterSchedule: 15,
-      isActive: false,
-    });
 
     appEventListener.emit("deleteSchedule", {
       userId: "user-1",
@@ -252,10 +284,13 @@ describe("AfterScheduleMessageEventHandlers", () => {
       remove: vi.fn(),
     };
 
+    const repo = createMockAfterScheduleMessageRepository();
+
     const appEventListener = new AppEventListener();
     const handlers = new AfterScheduleMessageEventHandlers(
       afterScheduleQueue as any,
       appEventListener,
+      repo,
     );
 
     handlers.register();

@@ -108,8 +108,12 @@ export class Scheduling extends Entity {
         start <= schedulingStart && schedulingStart < end;
       const unavailableEndDate = start < schedulingEnd && schedulingEnd < end;
 
+      const statusAllowsOverlap =
+        schedulingValue.status === "Cancelado" ||
+        schedulingValue.status === "Atendido";
+
       return (
-        schedulingValue.status !== "Cancelado" &&
+        !statusAllowsOverlap &&
         schedulingValue.id !== this.id &&
         (unavailableEndDate || unavailableStartDate)
       );

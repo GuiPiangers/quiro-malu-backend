@@ -148,6 +148,10 @@ class AppEventListener {
       });
     }
   }
+
+  clearAllListeners(): void {
+    this.listeners.clear();
+  }
 }
 
 const appEventListener = new AppEventListener();

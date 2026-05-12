@@ -1,13 +1,21 @@
 import { Scheduling, SchedulingDTO } from "../../models/Scheduling";
+import { IBlockScheduleRepository } from "../../../../repositories/blockScheduleRepository/IBlockScheduleRepository";
 import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
 import { ApiError } from "../../../../utils/ApiError";
+import { getValidObjectValues } from "../../../../utils/getValidObjectValues";
 import { DateTime } from "../../../shared/Date";
 import DatabaseStatusStrategy from "../../models/status/DatabaseStatusStrategy";
-import { appEventListener } from "../../../shared/observers/EventListener";
-import { getValidObjectValues } from "../../../../utils/getValidObjectValues";
+import {
+  appEventListener,
+  IAppEventListener,
+} from "../../../shared/observers/EventListener";
 
 export class UpdateSchedulingUseCase {
-  constructor(private SchedulingRepository: ISchedulingRepository) {}
+  constructor(
+    private SchedulingRepository: ISchedulingRepository,
+    private BlockSchedulingRepository: IBlockScheduleRepository,
+    private readonly events: IAppEventListener = appEventListener,
+  ) {}
 
   async execute({ userId, ...data }: SchedulingDTO & { userId: string }) {
     if (!data.id)
@@ -28,6 +36,7 @@ export class UpdateSchedulingUseCase {
 
     const { id: _, ...schedulingDTO } = scheduling.getDTO();
 
+    await this.validateBlockSchedules({ scheduling, userId });
     await this.validateDate({ scheduling, userId });
 
     await this.SchedulingRepository.update({
@@ -36,13 +45,41 @@ export class UpdateSchedulingUseCase {
       ...schedulingDTO,
     });
 
-    appEventListener.emit("updateSchedule", {
+    this.events.emit("updateSchedule", {
       ...schedulingDTO,
       userId,
       scheduleId: data.id,
     });
 
     return schedulingDTO;
+  }
+
+  private async validateBlockSchedules({
+    scheduling,
+    userId,
+  }: {
+    scheduling: Scheduling;
+    userId: string;
+  }) {
+    const blockSchedules =
+      scheduling.date && scheduling.endDate
+        ? await this.BlockSchedulingRepository.listBetweenDates({
+            userId,
+            endDate: scheduling.date,
+            startDate: scheduling.endDate,
+          })
+        : [];
+
+    blockSchedules?.forEach((blockSchedule) => {
+      const scheduleOverlaps = blockSchedule.overlapsWithSchedule(scheduling);
+
+      if (scheduleOverlaps)
+        throw new ApiError(
+          `O horário informado está bloqueado por um evento ${
+            blockSchedule.description ?? ""
+          }`,
+        );
+    });
   }
 
   private async validateDate({

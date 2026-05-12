@@ -1,14 +1,20 @@
 import { CreatePatientUseCase } from "../../useCases/createPatient/CreatePatientUseCase";
 import { Request, Response } from "express";
-import { PatientDTO } from "../../models/Patient";
 import { responseError } from "../../../../utils/ResponseError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
+import { PatientWriteBodySchema } from "../patientSharedSchemas";
 
 export class CreatePatientController {
   constructor(private createPatientUseCase: CreatePatientUseCase) {}
 
   async handle(request: Request, response: Response) {
+    const parsed = parseWithSchema(PatientWriteBodySchema, request.body);
+    if (!parsed.success) {
+      return sendZodBadRequest(response, parsed.error);
+    }
+
     try {
-      const data = request.body as PatientDTO;
+      const data = parsed.data;
       const userId = request.user.id;
 
       const res = await this.createPatientUseCase.execute(data, userId!);

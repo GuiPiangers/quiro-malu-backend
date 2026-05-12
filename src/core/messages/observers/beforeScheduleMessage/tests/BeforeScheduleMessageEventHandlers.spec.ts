@@ -1,4 +1,6 @@
 import { DateTime as Luxon } from "luxon";
+import { createMockBeforeScheduleMessageRepository } from "../../../../../repositories/_mocks/BeforeScheduleMessageRepositoryMock";
+import type { BeforeScheduleMessageConfigDTO } from "../../../../../repositories/messages/IBeforeScheduleMessageRepository";
 import { logger } from "../../../../../utils/logger";
 import { AppEventListener } from "../../../../shared/observers/EventListener";
 import { BeforeScheduleMessageEventHandlers } from "../beforeScheduleMessageEventHandlers";
@@ -7,6 +9,23 @@ const flushPromises = async () => {
   await Promise.resolve();
   await Promise.resolve();
 };
+
+function dtoFromConfig(
+  partial: Pick<
+    BeforeScheduleMessageConfigDTO,
+    "id" | "userId" | "minutesBeforeSchedule" | "isActive"
+  > &
+    Partial<Pick<BeforeScheduleMessageConfigDTO, "name" | "textTemplate">>,
+): BeforeScheduleMessageConfigDTO {
+  return {
+    id: partial.id,
+    userId: partial.userId,
+    name: partial.name ?? "cfg",
+    minutesBeforeSchedule: partial.minutesBeforeSchedule,
+    textTemplate: partial.textTemplate ?? "",
+    isActive: partial.isActive,
+  };
+}
 
 describe("BeforeScheduleMessageEventHandlers", () => {
   beforeAll(() => {
@@ -27,22 +46,25 @@ describe("BeforeScheduleMessageEventHandlers", () => {
       remove: vi.fn().mockResolvedValue(undefined),
     };
 
+    const repo = createMockBeforeScheduleMessageRepository();
+    repo.listByUserId.mockResolvedValue([
+      dtoFromConfig({
+        id: "cfg-1",
+        userId: "user-1",
+        minutesBeforeSchedule: 60,
+        isActive: true,
+      }),
+    ]);
+
     const appEventListener = new AppEventListener();
 
     const handlers = new BeforeScheduleMessageEventHandlers(
       beforeScheduleQueue as any,
       appEventListener,
+      repo,
     );
 
     handlers.register();
-
-    appEventListener.emit("beforeScheduleMessageCreate", {
-      id: "cfg-1",
-      userId: "user-1",
-      name: "cfg-1",
-      minutesBeforeSchedule: 60,
-      isActive: true,
-    });
 
     appEventListener.emit("createSchedule", {
       userId: "user-1",
@@ -79,22 +101,25 @@ describe("BeforeScheduleMessageEventHandlers", () => {
       remove: vi.fn().mockResolvedValue(undefined),
     };
 
+    const repo = createMockBeforeScheduleMessageRepository();
+    repo.listByUserId.mockResolvedValue([
+      dtoFromConfig({
+        id: "cfg-1",
+        userId: "user-1",
+        minutesBeforeSchedule: 60,
+        isActive: false,
+      }),
+    ]);
+
     const appEventListener = new AppEventListener();
 
     const handlers = new BeforeScheduleMessageEventHandlers(
       beforeScheduleQueue as any,
       appEventListener,
+      repo,
     );
 
     handlers.register();
-
-    appEventListener.emit("beforeScheduleMessageCreate", {
-      id: "cfg-1",
-      userId: "user-1",
-      name: "cfg-1",
-      minutesBeforeSchedule: 60,
-      isActive: false,
-    });
 
     appEventListener.emit("createSchedule", {
       userId: "user-1",
@@ -122,22 +147,25 @@ describe("BeforeScheduleMessageEventHandlers", () => {
       remove: vi.fn().mockResolvedValue(undefined),
     };
 
+    const repo = createMockBeforeScheduleMessageRepository();
+    repo.listByUserId.mockResolvedValue([
+      dtoFromConfig({
+        id: "cfg-1",
+        userId: "user-1",
+        minutesBeforeSchedule: 60,
+        isActive: true,
+      }),
+    ]);
+
     const appEventListener = new AppEventListener();
 
     const handlers = new BeforeScheduleMessageEventHandlers(
       beforeScheduleQueue as any,
       appEventListener,
+      repo,
     );
 
     handlers.register();
-
-    appEventListener.emit("beforeScheduleMessageCreate", {
-      id: "cfg-1",
-      userId: "user-1",
-      name: "cfg-1",
-      minutesBeforeSchedule: 60,
-      isActive: true,
-    });
 
     appEventListener.emit("updateSchedule", {
       userId: "user-1",
@@ -163,30 +191,31 @@ describe("BeforeScheduleMessageEventHandlers", () => {
       remove: vi.fn().mockResolvedValue(undefined),
     };
 
+    const repo = createMockBeforeScheduleMessageRepository();
+    repo.listByUserId.mockResolvedValue([
+      dtoFromConfig({
+        id: "cfg-1",
+        userId: "user-1",
+        minutesBeforeSchedule: 60,
+        isActive: true,
+      }),
+      dtoFromConfig({
+        id: "cfg-2",
+        userId: "user-1",
+        minutesBeforeSchedule: 15,
+        isActive: false,
+      }),
+    ]);
+
     const appEventListener = new AppEventListener();
 
     const handlers = new BeforeScheduleMessageEventHandlers(
       beforeScheduleQueue as any,
       appEventListener,
+      repo,
     );
 
     handlers.register();
-
-    appEventListener.emit("beforeScheduleMessageCreate", {
-      id: "cfg-1",
-      userId: "user-1",
-      name: "cfg-1",
-      minutesBeforeSchedule: 60,
-      isActive: true,
-    });
-
-    appEventListener.emit("beforeScheduleMessageCreate", {
-      id: "cfg-2",
-      userId: "user-1",
-      name: "cfg-2",
-      minutesBeforeSchedule: 15,
-      isActive: false,
-    });
 
     appEventListener.emit("deleteSchedule", {
       userId: "user-1",
@@ -212,10 +241,13 @@ describe("BeforeScheduleMessageEventHandlers", () => {
       remove: vi.fn(),
     };
 
+    const repo = createMockBeforeScheduleMessageRepository();
+
     const appEventListener = new AppEventListener();
     const handlers = new BeforeScheduleMessageEventHandlers(
       beforeScheduleQueue as any,
       appEventListener,
+      repo,
     );
 
     handlers.register();
