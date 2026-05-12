@@ -293,9 +293,13 @@ volumes:
   mongo-logs: # Volumes Release (externos)
 
   nginx-logs-release:
+    external: true
   app-logs-release:
+    external: true
   mysql-logs-release:
+    external: true
   mongo-logs-release:
+    external: true
     # ================================================
     # Networks
     # ================================================
