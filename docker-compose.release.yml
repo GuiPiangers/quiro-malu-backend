@@ -136,3 +136,5 @@ volumes:
 networks:
   release_network:
     driver: bridge
+  quiro-shared-net:
+    external: true 
