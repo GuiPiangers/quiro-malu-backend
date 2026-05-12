@@ -4,6 +4,7 @@ import {
   SendMessageParams,
   SendMessageResult,
 } from "./IWhatsAppProvider";
+import { ApiError } from "../../utils/ApiError";
 
 export class EvolutionWhatsAppProvider implements IWhatsAppProvider {
   constructor(
@@ -95,11 +96,18 @@ export class EvolutionWhatsAppProvider implements IWhatsAppProvider {
   async getConnectionState(
     instanceName: string,
   ): Promise<"open" | "close" | "connecting"> {
-    const response = await axios.get(
-      `${this.url}/instance/connectionState/${instanceName}`,
-      { headers: this.headers },
-    );
-    return response.data?.instance?.state ?? "close";
+    try {
+      const response = await axios.get(
+        `${this.url}/instance/connectionState/${instanceName}`,
+        { headers: this.headers },
+      );
+      return response.data?.instance?.state ?? "close";
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return "close";
+      }
+      throw new ApiError("Erro ao obter estado da conexão do WhatsApp", 500);
+    }
   }
 
   async deleteInstance(instanceName: string): Promise<void> {

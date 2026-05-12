@@ -21,6 +21,7 @@ export class RegisterWhatsAppUseCase {
 
   async execute({ userId }: RegisterWhatsAppDTO): Promise<RegisterWhatsAppResult> {
     const existingDTO = await this.whatsAppInstanceRepository.getByUserId(userId);
+    const instanceName = `clinic-${userId}`;
 
     if (existingDTO) {
       const existing = new WhatsAppInstance(existingDTO);
@@ -32,12 +33,12 @@ export class RegisterWhatsAppUseCase {
       if (connectionState === "open") {
         throw new ApiError("WhatsApp já está conectado para esta clínica", 409);
       }
+      await this.whatsAppProvider.createInstance(existing.instanceName);
 
       const qrCode = await this.whatsAppProvider.getQrCode(existing.instanceName);
       return { instanceName: existing.instanceName, qrCode };
     }
 
-    const instanceName = `clinic-${userId}`;
     await this.whatsAppProvider.createInstance(instanceName);
 
     const newInstance = new WhatsAppInstance({
