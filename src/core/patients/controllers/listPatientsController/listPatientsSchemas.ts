@@ -18,16 +18,19 @@ export const ListPatientsQuerySchema = z
     }),
     orderBy: z.string().optional().transform((val, ctx) => {
       if (val === undefined || val === "") return undefined;
+      const trimmed = val.trim();
+      if (trimmed === "null" || trimmed === "undefined") return undefined;
       try {
-        const arr = JSON.parse(val);
-        if (!Array.isArray(arr)) {
+        const parsed = JSON.parse(val);
+        if (parsed === null) return undefined;
+        if (!Array.isArray(parsed)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "orderBy deve ser um array JSON",
           });
           return z.NEVER;
         }
-        return arr as { field: string; orientation: "ASC" | "DESC" }[];
+        return parsed as { field: string; orientation: "ASC" | "DESC" }[];
       } catch {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
