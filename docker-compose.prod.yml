@@ -177,6 +177,7 @@ services:
       - app
     networks:
       - minha_rede
+      - quiro-shared-net
     labels:
       logging: "promtail"
       logging_jobname: "nginx"
