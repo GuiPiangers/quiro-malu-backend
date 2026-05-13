@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
 import { ListAfterScheduleMessagesUseCase } from "../../useCases/afterScheduleMessage/listAfterScheduleMessages/ListAfterScheduleMessagesUseCase";
+import { ListPageLimitQuerySchema } from "../messagesCommonSchemas";
 
 export class ListAfterScheduleMessagesController {
   constructor(
@@ -8,14 +10,19 @@ export class ListAfterScheduleMessagesController {
   ) {}
 
   async handle(request: Request, response: Response) {
+    const parsed = parseWithSchema(ListPageLimitQuerySchema, request.query);
+    if (!parsed.success) {
+      return sendZodBadRequest(response, parsed.error);
+    }
+
     try {
       const userId = request.user.id;
-      const { page, limit } = request.query;
+      const { page, limit } = parsed.data;
 
       const res = await this.listAfterScheduleMessagesUseCase.execute({
         userId: userId!,
-        page: page != null ? Number(page) : undefined,
-        limit: limit != null ? Number(limit) : undefined,
+        page,
+        limit,
       });
 
       return response.status(200).json(res);

@@ -8,3 +8,4 @@ import "./paths/patientPaths";
 import "./paths/schedulingPaths";
 import "./paths/servicePaths";
 import "./paths/financePaths";
+import "./paths/messagesPaths";

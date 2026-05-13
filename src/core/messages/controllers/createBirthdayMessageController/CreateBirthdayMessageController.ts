@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
-import {
-  CreateBirthdayMessageDTO,
-  CreateBirthdayMessageUseCase,
-} from "../../useCases/birthdayMessage/createBirthdayMessage/CreateBirthdayMessageUseCase";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
+import { CreateBirthdayMessageUseCase } from "../../useCases/birthdayMessage/createBirthdayMessage/CreateBirthdayMessageUseCase";
+import { CreateBirthdayMessageBodySchema } from "../birthdayMessageSchemas";
 
 export class CreateBirthdayMessageController {
   constructor(
@@ -11,8 +10,13 @@ export class CreateBirthdayMessageController {
   ) {}
 
   async handle(request: Request, response: Response) {
+    const parsed = parseWithSchema(CreateBirthdayMessageBodySchema, request.body);
+    if (!parsed.success) {
+      return sendZodBadRequest(response, parsed.error);
+    }
+
     try {
-      const body = request.body as Omit<CreateBirthdayMessageDTO, "userId">;
+      const body = parsed.data;
       const userId = request.user.id;
 
       const res = await this.createBirthdayMessageUseCase.execute({
