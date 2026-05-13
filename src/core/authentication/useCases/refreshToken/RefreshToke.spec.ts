@@ -7,10 +7,11 @@ import {
 } from "../../../../repositories/_mocks/UserRepositoryMock";
 import { RefreshTokenUseCase } from "./RefreshTokenUseCase";
 
-// Mock dependencies
 const mockRefreshTokenProvider = createMockRefreshTokenProvider();
 
 const mockGenerateTokenProvider = createMockGenerateTokenProvider();
+
+const fingerprint = "device-fingerprint";
 
 describe("RefreshTokenUseCase", () => {
   let refreshTokenUseCase: RefreshTokenUseCase;
@@ -28,66 +29,95 @@ describe("RefreshTokenUseCase", () => {
     const mockToken = "new-access-token";
 
     it("should throw ApiError when refresh token is invalid", async () => {
-      mockRefreshTokenProvider.getRefreshToken.mockResolvedValueOnce([]);
+      mockRefreshTokenProvider.getRefreshToken.mockResolvedValueOnce(null);
 
-      await expect(refreshTokenUseCase.execute("invalid-id")).rejects.toThrow(
-        new ApiError("Refresh Token inválido", 401),
-      );
+      await expect(
+        refreshTokenUseCase.execute("invalid-id", fingerprint),
+      ).rejects.toThrow(new ApiError("Refresh Token inválido", 401));
     });
 
-    it("should return new access token when refresh token is valid and not expired", async () => {
+    it("should throw when fingerprint does not match", async () => {
       const validRefreshToken = new RefreshToken({
-        id: "valid-id",
+        id: "00000000-0000-4000-8000-000000000001",
         userId: mockUserId,
+        fingerprint: "other-fp",
         expiresIn: dayjs().add(1, "hour").unix(),
       });
 
-      mockRefreshTokenProvider.getRefreshToken.mockResolvedValueOnce([
-        validRefreshToken,
-      ]);
-      mockGenerateTokenProvider.execute.mockResolvedValueOnce(mockToken);
+      mockRefreshTokenProvider.getRefreshToken.mockResolvedValueOnce(
+        validRefreshToken.getDTO(),
+      );
 
-      const result = await refreshTokenUseCase.execute("valid-id");
-
-      expect(result).toEqual({ token: mockToken });
-      expect(mockRefreshTokenProvider.generate).not.toHaveBeenCalled();
+      await expect(
+        refreshTokenUseCase.execute(validRefreshToken.id, fingerprint),
+      ).rejects.toThrow(
+        new ApiError("Refresh Token inválido para este dispositivo", 401),
+      );
     });
 
-    // it("should generate new refresh token when current one is expired", async () => {
-    //   const expiredRefreshToken = new RefreshToken({
-    //     id: "expired-id",
-    //     userId: mockUserId,
-    //     expiresIn: dayjs().subtract(1, "hour").unix(),
-    //   });
+    it("should return new access and refresh tokens when refresh token is valid and not expired", async () => {
+      const validRefreshToken = new RefreshToken({
+        id: "00000000-0000-4000-8000-000000000001",
+        userId: mockUserId,
+        fingerprint,
+        expiresIn: dayjs().add(1, "hour").unix(),
+      });
 
-    //   mockRefreshTokenProvider.getRefreshToken.mockResolvedValue([
-    //     expiredRefreshToken,
-    //   ]);
-    //   mockGenerateTokenProvider.execute.mockResolvedValue(mockToken);
-    //   mockRefreshTokenProvider.generate.mockResolvedValue();
+      mockRefreshTokenProvider.getRefreshToken.mockResolvedValueOnce(
+        validRefreshToken.getDTO(),
+      );
+      mockGenerateTokenProvider.execute.mockResolvedValueOnce(mockToken);
 
-    //   const result = await refreshTokenUseCase.execute("expired-id");
+      const result = await refreshTokenUseCase.execute(
+        validRefreshToken.id,
+        fingerprint,
+      );
 
-    //   expect(result).toEqual({
-    //     token: mockToken,
-    //     newRefreshToken: expect.any(Object),
-    //   });
+      expect(result).toEqual({
+        token: mockToken,
+        refreshToken: expect.any(String),
+      });
+      expect(mockRefreshTokenProvider.markAsUsed).toHaveBeenCalledWith(
+        validRefreshToken.id,
+      );
+      expect(mockRefreshTokenProvider.generate).toHaveBeenCalled();
+      expect(mockRefreshTokenProvider.delete).toHaveBeenCalledWith(
+        validRefreshToken.id,
+      );
+    });
 
-    //   expect(mockRefreshTokenProvider.generate).toHaveBeenCalledWith(
-    //     expect.objectContaining({
-    //       userId: mockUserId,
-    //       expiresIn: expiredRefreshToken.expiresIn,
-    //     }),
-    //   );
-    // });
+    it("should throw when refresh token is expired", async () => {
+      const expiredRefreshToken = new RefreshToken({
+        id: "00000000-0000-4000-8000-000000000003",
+        userId: mockUserId,
+        fingerprint,
+        expiresIn: dayjs().subtract(1, "hour").unix(),
+      });
+
+      mockRefreshTokenProvider.getRefreshToken.mockResolvedValueOnce(
+        expiredRefreshToken.getDTO(),
+      );
+
+      await expect(
+        refreshTokenUseCase.execute(expiredRefreshToken.id, fingerprint),
+      ).rejects.toThrow(
+        new ApiError("Sessão expirada, faça login novamente", 401),
+      );
+      expect(mockRefreshTokenProvider.deleteByFingerprint).toHaveBeenCalledWith(
+        mockUserId,
+        fingerprint,
+      );
+    });
 
     it("should propagate errors from dependencies", async () => {
       const testError = new Error("Test error");
       mockRefreshTokenProvider.getRefreshToken.mockRejectedValueOnce(testError);
 
-      await expect(refreshTokenUseCase.execute("any-id")).rejects.toThrow(
-        testError,
-      );
+      await expect(
+        refreshTokenUseCase.execute("any-id", fingerprint),
+      ).rejects.toThrow(testError);
     });
   });
 });
+
+export {};

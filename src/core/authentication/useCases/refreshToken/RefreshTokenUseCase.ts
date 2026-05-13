@@ -10,26 +10,45 @@ export class RefreshTokenUseCase {
     private generateTokenProvider: IGenerateTokenProvider,
   ) {}
 
-  async execute(refreshTokenId: string) {
-    const [refreshToken] =
+  async execute(refreshTokenId: string, fingerprint: string) {
+    const refreshToken =
       await this.refreshTokenProvider.getRefreshToken(refreshTokenId);
+    console.log("REFRESH TOKEN - refreshToken", refreshToken);
     if (!refreshToken) throw new ApiError("Refresh Token inválido", 401);
-    const token = await this.generateTokenProvider.execute(refreshToken.userId);
-    const refreshTokenExpired = dayjs().isAfter(
+
+    if (refreshToken.fingerprint !== fingerprint) {
+      throw new ApiError(
+        "Refresh Token inválido para este dispositivo",
+        401,
+      );
+    }
+
+    const tokenExpired = dayjs().isAfter(
       dayjs.unix(refreshToken.expiresIn),
     );
 
-    if (refreshTokenExpired) {
-      const { id: _, ...refreshTokenData } = refreshToken;
-      const { id, expiresIn, userId } = new RefreshToken(refreshTokenData);
-      const newRefreshToken = await this.refreshTokenProvider.generate({
-        id,
-        expiresIn,
-        userId,
-      });
-      return { token, newRefreshToken };
+    if (tokenExpired) {
+      await this.refreshTokenProvider.deleteByFingerprint(
+        refreshToken.userId,
+        refreshToken.fingerprint,
+      );
+      throw new ApiError("Sessão expirada, faça login novamente", 401);
     }
 
-    return { token };
+    await this.refreshTokenProvider.markAsUsed(refreshTokenId);
+
+    const token = await this.generateTokenProvider.execute(refreshToken.userId);
+
+    const newExpiresIn = dayjs().add(15, "days").unix();
+    const newRefreshToken = new RefreshToken({
+      userId: refreshToken.userId,
+      fingerprint: refreshToken.fingerprint,
+      expiresIn: newExpiresIn,
+    });
+
+    await this.refreshTokenProvider.generate(newRefreshToken.getDTO());
+    await this.refreshTokenProvider.delete(refreshTokenId);
+
+    return { token, refreshToken: newRefreshToken.id };
   }
 }

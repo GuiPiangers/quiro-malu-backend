@@ -14,6 +14,10 @@ export const createMockRefreshTokenProvider =
     delete: vi.fn(),
     generate: vi.fn(),
     getRefreshToken: vi.fn(),
+    markAsUsed: vi.fn(),
+    deleteByFingerprint: vi.fn(),
+    deleteAllFromUser: vi.fn(),
+    deleteExpired: vi.fn(),
   });
 
 export const createMockGenerateTokenProvider =

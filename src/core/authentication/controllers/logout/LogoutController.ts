@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { LogoutBodySchema } from "./logoutSchemas";
 import { responseError } from "../../../../utils/ResponseError";
 import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
+import { generateRequestFingerprint } from "../../utils/generateRequestFingerprint";
 import { LogoutUseCase } from "../../useCases/logout/logoutUseCase";
 
 export class LogoutController {
@@ -14,9 +15,13 @@ export class LogoutController {
     }
 
     try {
-      await this.logoutUseCase.execute(parsed.data.refreshTokenId);
+      const fingerprintHash = generateRequestFingerprint(request);
+      await this.logoutUseCase.execute(
+        parsed.data.refreshTokenId,
+        fingerprintHash,
+      );
       return response.status(200).json({ message: "deslogado com sucesso" });
-    } catch (err: any) {
+    } catch (err: unknown) {
       return responseError(response, err);
     }
   }

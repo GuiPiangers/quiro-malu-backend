@@ -32,13 +32,13 @@ export class LoginUserUseCase {
 
     const token = await this.generateTokenProvider.execute(user.id);
     const expiresIn = dayjs().add(15, "days").unix();
-    const refreshToken = new RefreshToken({ userId: user.id, expiresIn });
-
-    await this.refreshTokenProvider.generate({
-      expiresIn: refreshToken.expiresIn,
-      userId: refreshToken.userId,
-      id: refreshToken.id,
+    const refreshToken = new RefreshToken({
+      userId: user.id,
+      fingerprint: fingerprintHash,
+      expiresIn,
     });
+
+    await this.refreshTokenProvider.generate(refreshToken.getDTO());
 
     return {
       token,

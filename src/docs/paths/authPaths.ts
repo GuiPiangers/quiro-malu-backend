@@ -1,6 +1,10 @@
 import { CreateUserBodySchema, CreateUserResponseSchema } from "../../core/authentication/controllers/createUserController/createUserSchemas";
 import { LoginBodySchema, LoginResponseSchema } from "../../core/authentication/controllers/loginUserController/loginSchemas";
 import { LogoutBodySchema, LogoutResponseSchema } from "../../core/authentication/controllers/logout/logoutSchemas";
+import {
+  RefreshTokenBodySchema,
+  RefreshTokenResponseSchema,
+} from "../../core/authentication/controllers/refreshTokenController/refreshTokenSchemas";
 import { openApiRegistry } from "../registry";
 
 openApiRegistry.registerPath({
@@ -36,9 +40,40 @@ openApiRegistry.registerPath({
 
 openApiRegistry.registerPath({
   method: "post",
+  path: "/refresh-token",
+  tags: ["Auth"],
+  summary:
+    "Renova access token (rotação de refresh). O fingerprint do dispositivo deve ser o mesmo do login (header x-device-id).",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: RefreshTokenBodySchema,
+          example: {
+            refreshTokenId: "00000000-0000-4000-8000-000000000001",
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Novo access token e novo refresh token",
+      content: {
+        "application/json": { schema: RefreshTokenResponseSchema },
+      },
+    },
+    400: { description: "Corpo inválido" },
+    401: { description: "Refresh token inválido, expirado ou dispositivo incorreto" },
+  },
+});
+
+openApiRegistry.registerPath({
+  method: "post",
   path: "/login",
   tags: ["Auth"],
-  summary: "Login (access + refresh token)",
+  summary:
+    "Login (access + refresh token). Envie o header x-device-id para identificar o dispositivo nas rotas de refresh e logout.",
   request: {
     body: {
       content: {
@@ -67,7 +102,8 @@ openApiRegistry.registerPath({
   method: "post",
   path: "/logout",
   tags: ["Auth"],
-  summary: "Encerra sessão (invalida refresh token)",
+  summary:
+    "Encerra sessão do dispositivo atual (invalida refresh token). O fingerprint deve ser o mesmo do login (header x-device-id).",
   request: {
     body: {
       content: {
