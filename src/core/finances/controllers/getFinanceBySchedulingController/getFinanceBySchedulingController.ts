@@ -1,25 +1,33 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
 import { ApiError } from "../../../../utils/ApiError";
 import { GetFinanceBySchedulingUseCase } from "../../useCases/getFinanceByScheduling/getFinanceByScheduling";
+import { FinanceSchedulingIdParamSchema } from "../financeSharedSchemas";
 
 export class GetFinanceBySchedulingController {
   constructor(private getFinanceUseCase: GetFinanceBySchedulingUseCase) {}
 
   async handle(request: Request, response: Response) {
+    const parsedParams = parseWithSchema(
+      FinanceSchedulingIdParamSchema,
+      request.params,
+    );
+    if (!parsedParams.success) {
+      return sendZodBadRequest(response, parsedParams.error);
+    }
+
     try {
-      const { schedulingId } = request.params;
+      const { schedulingId } = parsedParams.data;
       const userId = request.user.id;
 
-      if (!userId) throw new ApiError("Usuário não autorizado", 401);
-
       const res = await this.getFinanceUseCase.execute({
-        userId,
+        userId: userId!,
         schedulingId,
       });
 
       if (!res)
-        throw new ApiError("Movimentação financeira não encontrada", 401);
+        throw new ApiError("Movimentação financeira não encontrada", 404);
 
       response.status(200).json(res);
     } catch (err: any) {

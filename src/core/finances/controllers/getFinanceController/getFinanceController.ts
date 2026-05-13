@@ -1,20 +1,24 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
-import { ApiError } from "../../../../utils/ApiError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
 import { GetFinanceUseCase } from "../../useCases/getFinance/getFinanceUseCase";
+import { FinanceIdParamSchema } from "../financeSharedSchemas";
 
 export class GetFinanceController {
   constructor(private getFinanceUseCase: GetFinanceUseCase) {}
 
   async handle(request: Request, response: Response) {
+    const parsedParams = parseWithSchema(FinanceIdParamSchema, request.params);
+    if (!parsedParams.success) {
+      return sendZodBadRequest(response, parsedParams.error);
+    }
+
     try {
-      const { id } = request.params;
+      const { id } = parsedParams.data;
       const userId = request.user.id;
 
-      if (!userId) throw new ApiError("Usuário não autorizado", 401);
-
       const res = await this.getFinanceUseCase.execute({
-        userId,
+        userId: userId!,
         id,
       });
 
