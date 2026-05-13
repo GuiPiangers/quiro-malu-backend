@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
 import {
-  UpdateAfterScheduleMessageDTO,
   UpdateAfterScheduleMessageUseCase,
 } from "../../useCases/afterScheduleMessage/updateAfterScheduleMessage/UpdateAfterScheduleMessageUseCase";
+import { MessageEntityIdParamSchema } from "../messagesCommonSchemas";
+import { UpdateAfterScheduleMessageBodySchema } from "../scheduledMessageSchemas";
 
 export class UpdateAfterScheduleMessageController {
   constructor(
@@ -11,9 +13,18 @@ export class UpdateAfterScheduleMessageController {
   ) {}
 
   async handle(request: Request, response: Response) {
+    const parsedParams = parseWithSchema(MessageEntityIdParamSchema, request.params);
+    if (!parsedParams.success) {
+      return sendZodBadRequest(response, parsedParams.error);
+    }
+    const parsedBody = parseWithSchema(UpdateAfterScheduleMessageBodySchema, request.body);
+    if (!parsedBody.success) {
+      return sendZodBadRequest(response, parsedBody.error);
+    }
+
     try {
-      const { id } = request.params;
-      const body = request.body as Omit<UpdateAfterScheduleMessageDTO, "id" | "userId">;
+      const { id } = parsedParams.data;
+      const body = parsedBody.data;
       const userId = request.user.id;
 
       const res = await this.updateAfterScheduleMessageUseCase.execute({

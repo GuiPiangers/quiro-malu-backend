@@ -1,20 +1,24 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
-import { ApiError } from "../../../../utils/ApiError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
 import { DeleteFinanceUseCase } from "../../useCases/deleteFinance/deleteFinanceUseCase";
+import { DeleteFinanceBodySchema } from "../financeSharedSchemas";
 
 export class DeleteFinanceController {
   constructor(private deleteFinanceUseCase: DeleteFinanceUseCase) {}
 
   async handle(request: Request, response: Response) {
+    const parsed = parseWithSchema(DeleteFinanceBodySchema, request.body);
+    if (!parsed.success) {
+      return sendZodBadRequest(response, parsed.error);
+    }
+
     try {
-      const { id } = request.body;
+      const { id } = parsed.data;
       const userId = request.user.id;
 
-      if (!userId) throw new ApiError("Usuário não autorizado", 401);
-
-      const res = await this.deleteFinanceUseCase.execute({
-        userId,
+      await this.deleteFinanceUseCase.execute({
+        userId: userId!,
         id,
       });
 

@@ -9,7 +9,6 @@ export class ListPatientsController {
   async handle(request: Request, response: Response) {
     const parsed = parseWithSchema(ListPatientsQuerySchema, request.query);
 
-    console.log("PARSED", parsed);
     if (!parsed.success) {
       return sendZodBadRequest(response, parsed.error);
     }
@@ -18,10 +17,6 @@ export class ListPatientsController {
       const userId = request.user.id;
       const { page, search, orderBy, limit } = parsed.data;
 
-      console.log("SEARCH", search);
-      console.log("ORDER BY", orderBy);
-      console.log("LIMIT", limit);
-
       const patients = await this.listPatientsUseCase.execute({
         userId: userId!,
         page,
@@ -29,8 +24,6 @@ export class ListPatientsController {
         orderBy,
         limit,
       });
-
-      console.log("PATIENTS", patients);
 
       response.json(patients);
     } catch (err: any) {

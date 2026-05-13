@@ -1,19 +1,26 @@
 import { Request, Response } from "express";
 import { DeleteServiceUseCase } from "../../useCases/deleteService/DeleteServiceUseCase";
 import { responseError } from "../../../../utils/ResponseError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
+import { DeleteServiceBodySchema } from "../serviceSharedSchemas";
 
 export class DeleteServiceController {
-    constructor(private deleteServiceUseCase: DeleteServiceUseCase) { }
-    async handle(request: Request, response: Response): Promise<void> {
-        try {
-            const userId = request.user.id
-            const { id } = request.body
-            await this.deleteServiceUseCase.execute({ id, userId: userId! })
+  constructor(private deleteServiceUseCase: DeleteServiceUseCase) {}
 
-            response.json({ message: 'Paciente deletado com sucesso!' })
-        } catch (err: any) {
-            responseError(response, err)
-        }
+  async handle(request: Request, response: Response) {
+    const parsed = parseWithSchema(DeleteServiceBodySchema, request.body);
+    if (!parsed.success) {
+      return sendZodBadRequest(response, parsed.error);
     }
 
+    try {
+      const userId = request.user.id;
+      const { id } = parsed.data;
+      await this.deleteServiceUseCase.execute({ id, userId: userId! });
+
+      response.json({ message: "Serviço deletado com sucesso!" });
+    } catch (err: any) {
+      responseError(response, err);
+    }
+  }
 }

@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
 import {
-  UpdateBeforeScheduleMessageDTO,
   UpdateBeforeScheduleMessageUseCase,
 } from "../../useCases/beforeScheduleMessage/updateBeforeScheduleMessage/UpdateBeforeScheduleMessageUseCase";
+import { MessageEntityIdParamSchema } from "../messagesCommonSchemas";
+import { UpdateBeforeScheduleMessageBodySchema } from "../scheduledMessageSchemas";
 
 export class UpdateBeforeScheduleMessageController {
   constructor(
@@ -11,10 +13,19 @@ export class UpdateBeforeScheduleMessageController {
   ) {}
 
   async handle(request: Request, response: Response) {
+    const parsedParams = parseWithSchema(MessageEntityIdParamSchema, request.params);
+    if (!parsedParams.success) {
+      return sendZodBadRequest(response, parsedParams.error);
+    }
+    const parsedBody = parseWithSchema(UpdateBeforeScheduleMessageBodySchema, request.body);
+    if (!parsedBody.success) {
+      return sendZodBadRequest(response, parsedBody.error);
+    }
+
     try {
       const userId = request.user.id;
-      const { id } = request.params;
-      const body = request.body as Omit<UpdateBeforeScheduleMessageDTO, "id" | "userId">;
+      const { id } = parsedParams.data;
+      const body = parsedBody.data;
 
       const res = await this.updateBeforeScheduleMessageUseCase.execute({
         ...body,

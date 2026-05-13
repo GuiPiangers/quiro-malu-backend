@@ -1,22 +1,25 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
-import { ApiError } from "../../../../utils/ApiError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
 import { ListFinancesUseCase } from "../../useCases/listFinances/listFinancesUseCase";
+import { ListFinancesQuerySchema } from "../financeSharedSchemas";
 
 export class ListFinancesController {
   constructor(private listFinancesUseCase: ListFinancesUseCase) {}
 
   async handle(request: Request, response: Response) {
+    const parsed = parseWithSchema(ListFinancesQuerySchema, request.query);
+    if (!parsed.success) {
+      return sendZodBadRequest(response, parsed.error);
+    }
+
     try {
       const userId = request.user.id;
-      const { yearAndMonth } = request.query;
-
-      if (!userId) throw new ApiError("Usuário não autorizado", 401);
-      if (!yearAndMonth) throw new ApiError("A data deve ser definida", 401);
+      const { yearAndMonth } = parsed.data;
 
       const res = await this.listFinancesUseCase.execute({
-        userId,
-        yearAndMonth: yearAndMonth as string,
+        userId: userId!,
+        yearAndMonth,
       });
 
       response.status(200).json(res);

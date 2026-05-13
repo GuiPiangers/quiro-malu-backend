@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
 import { GetWhatsAppMessageLogsSummaryUseCase } from "../../useCases/whatsAppMessageLogs/getWhatsAppMessageLogsSummary/GetWhatsAppMessageLogsSummaryUseCase";
+import { GetWhatsAppMessageLogsSummaryQuerySchema } from "../whatsAppMessageLogsSchemas";
 
 export class GetWhatsAppMessageLogsSummaryController {
   constructor(
@@ -8,26 +10,20 @@ export class GetWhatsAppMessageLogsSummaryController {
   ) {}
 
   async handle(request: Request, response: Response) {
+    const parsed = parseWithSchema(GetWhatsAppMessageLogsSummaryQuerySchema, request.query);
+    if (!parsed.success) {
+      return sendZodBadRequest(response, parsed.error);
+    }
+
     try {
       const userId = request.user.id!;
-      const { patientId, scheduleMessageType, scheduleMessageConfigId } =
-        request.query;
+      const q = parsed.data;
 
       const res = await this.getWhatsAppMessageLogsSummaryUseCase.execute({
         userId,
-        patientId:
-          typeof patientId === "string" && patientId.trim()
-            ? patientId
-            : undefined,
-        scheduleMessageType:
-          typeof scheduleMessageType === "string" && scheduleMessageType.trim()
-            ? (scheduleMessageType.trim() as any)
-            : undefined,
-        scheduleMessageConfigId:
-          typeof scheduleMessageConfigId === "string" &&
-          scheduleMessageConfigId.trim()
-            ? scheduleMessageConfigId
-            : undefined,
+        patientId: q.patientId,
+        scheduleMessageType: q.scheduleMessageType,
+        scheduleMessageConfigId: q.scheduleMessageConfigId,
       });
 
       return response.status(200).json(res);

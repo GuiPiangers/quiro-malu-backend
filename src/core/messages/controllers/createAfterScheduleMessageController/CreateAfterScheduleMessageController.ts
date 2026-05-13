@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
 import {
-  CreateAfterScheduleMessageDTO,
   CreateAfterScheduleMessageUseCase,
 } from "../../useCases/afterScheduleMessage/createAfterScheduleMessage/CreateAfterScheduleMessageUseCase";
+import { CreateAfterScheduleMessageBodySchema } from "../scheduledMessageSchemas";
 
 export class CreateAfterScheduleMessageController {
   constructor(
@@ -11,8 +12,13 @@ export class CreateAfterScheduleMessageController {
   ) {}
 
   async handle(request: Request, response: Response) {
+    const parsed = parseWithSchema(CreateAfterScheduleMessageBodySchema, request.body);
+    if (!parsed.success) {
+      return sendZodBadRequest(response, parsed.error);
+    }
+
     try {
-      const body = request.body as Omit<CreateAfterScheduleMessageDTO, "userId">;
+      const body = parsed.data;
       const userId = request.user.id;
 
       const res = await this.createAfterScheduleMessageUseCase.execute({

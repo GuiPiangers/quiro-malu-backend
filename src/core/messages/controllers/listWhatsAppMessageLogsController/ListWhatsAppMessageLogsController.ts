@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { responseError } from "../../../../utils/ResponseError";
+import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
 import { ListWhatsAppMessageLogsUseCase } from "../../useCases/whatsAppMessageLogs/listWhatsAppMessageLogs/ListWhatsAppMessageLogsUseCase";
+import { ListWhatsAppMessageLogsQuerySchema } from "../whatsAppMessageLogsSchemas";
 
 export class ListWhatsAppMessageLogsController {
   constructor(
@@ -8,36 +10,23 @@ export class ListWhatsAppMessageLogsController {
   ) {}
 
   async handle(request: Request, response: Response) {
+    const parsed = parseWithSchema(ListWhatsAppMessageLogsQuerySchema, request.query);
+    if (!parsed.success) {
+      return sendZodBadRequest(response, parsed.error);
+    }
+
     try {
       const userId = request.user.id!;
-
-      const {
-        page,
-        limit,
-        patientId,
-        scheduleMessageType,
-        scheduleMessageConfigId,
-        status,
-      } = request.query;
+      const q = parsed.data;
 
       const res = await this.listWhatsAppMessageLogsUseCase.execute({
         userId,
-        page: page != null ? Number(page) : undefined,
-        limit: limit != null ? Number(limit) : undefined,
-        patientId:
-          typeof patientId === "string" && patientId.trim()
-            ? patientId
-            : undefined,
-        scheduleMessageType:
-          typeof scheduleMessageType === "string" && scheduleMessageType.trim()
-            ? scheduleMessageType
-            : undefined,
-        scheduleMessageConfigId:
-          typeof scheduleMessageConfigId === "string" &&
-          scheduleMessageConfigId.trim()
-            ? scheduleMessageConfigId
-            : undefined,
-        status: typeof status === "string" && status.trim() ? status : undefined,
+        page: q.page,
+        limit: q.limit,
+        patientId: q.patientId,
+        scheduleMessageType: q.scheduleMessageType,
+        scheduleMessageConfigId: q.scheduleMessageConfigId,
+        status: q.status,
       });
 
       return response.status(200).json(res);
