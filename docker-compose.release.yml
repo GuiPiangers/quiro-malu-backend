@@ -5,6 +5,7 @@ services:
   # Aplicação Backend
   # ================================================
   release-app:
+    container_name: release-app
     restart: always
     image: guipiangers/quiro-backend:latest
     env_file:
@@ -32,6 +33,7 @@ services:
   # MySQL Database
   # ================================================
   release-mysql-db:
+    container_name: release-mysql-db
     image: mysql:8.0
     restart: always
     env_file:
@@ -55,6 +57,7 @@ services:
   # MongoDB
   # ================================================
   release-mongo:
+    container_name: release-mongo
     image: mongo:8.0.4
     restart: always
     env_file:
@@ -78,6 +81,7 @@ services:
   # Redis Cache
   # ================================================
   release-redis:
+    container_name: release-redis
     image: redis:7.4.2-alpine
     restart: always
     env_file:
