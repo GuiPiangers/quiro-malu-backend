@@ -4,12 +4,14 @@ export interface ServiceDTO {
   id?: string;
   name: string;
   value: number;
+  /** Duração do serviço em segundos (ex.: duração de atendimento ou slot). */
   duration: number;
 }
 
 export class Service extends Entity {
   readonly name: string;
   readonly value: number;
+  /** Duração do serviço em segundos. */
   readonly duration: number;
 
   constructor({ id, duration, value, name }: ServiceDTO) {

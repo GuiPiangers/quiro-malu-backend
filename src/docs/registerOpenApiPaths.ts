@@ -6,3 +6,4 @@ import "./paths/authPaths";
 import "./paths/healthPaths";
 import "./paths/patientPaths";
 import "./paths/schedulingPaths";
+import "./paths/servicePaths";
