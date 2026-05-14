@@ -228,68 +228,6 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     }
   }
 
-  async listFromNowWithinMinutes({
-    clinicId,
-    offsetMinutes,
-  }: {
-    clinicId: string;
-    offsetMinutes: number;
-  }): Promise<Scheduling[]> {
-    const safeOffset = Math.max(offsetMinutes, 0);
-
-    const result = await this.knex(ETableNames.SCHEDULES)
-      .select(
-        "id",
-        "patientId",
-        this.knex.raw(`DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date`),
-        this.knex.raw(
-          `DATE_FORMAT(reminderSentAt, '%Y-%m-%dT%H:%i') as reminderSentAt`,
-        ),
-        "duration",
-        "status",
-        "service",
-      )
-      .where({ clinicId })
-      .andWhereBetween("date", [
-        this.knex.raw("NOW()"),
-        this.knex.raw("DATE_ADD(NOW(), INTERVAL ? MINUTE)", [safeOffset]),
-      ]);
-
-    return result.map((row) => new Scheduling(row));
-  }
-
-  async listScheduledInMinutes({
-    clinicId,
-    offsetMinutes,
-  }: {
-    clinicId: string;
-    offsetMinutes: number;
-  }): Promise<Scheduling[]> {
-    const safeOffset = Math.max(offsetMinutes, 0);
-    const startOffset = safeOffset - 5;
-    const endOffset = safeOffset + 5;
-
-    const result = await this.knex(ETableNames.SCHEDULES)
-      .select(
-        "id",
-        "patientId",
-        this.knex.raw(`DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date`),
-        this.knex.raw(
-          `DATE_FORMAT(reminderSentAt, '%Y-%m-%dT%H:%i') as reminderSentAt`,
-        ),
-        "duration",
-        "status",
-        "service",
-      )
-      .where({ clinicId })
-      .andWhereBetween("date", [
-        this.knex.raw("DATE_ADD(NOW(), INTERVAL ? MINUTE)", [startOffset]),
-        this.knex.raw("DATE_ADD(NOW(), INTERVAL ? MINUTE)", [endOffset]),
-      ]);
-
-    return result.map((row) => new Scheduling(row));
-  }
-
   async delete({ id, clinicId }: { id: string; clinicId: string }): Promise<void> {
     await this.knex(ETableNames.SCHEDULES).where({ id, clinicId }).del();
   }

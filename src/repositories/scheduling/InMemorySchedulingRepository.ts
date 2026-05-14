@@ -151,18 +151,4 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
         scheduling.id === data.id && scheduling.clinicId === data.clinicId,
     );
   }
-
-  async listFromNowWithinMinutes(data: {
-    clinicId: string;
-    offsetMinutes: number;
-  }): Promise<Scheduling[]> {
-    return [];
-  }
-
-  async listScheduledInMinutes(data: {
-    clinicId: string;
-    offsetMinutes: number;
-  }): Promise<Scheduling[]> {
-    return [];
-  }
 }

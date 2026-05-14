@@ -49,14 +49,4 @@ export interface ISchedulingRepository {
   ): Promise<string[]>;
 
   delete(data: { id: string; clinicId: string }): Promise<void>;
-
-  listFromNowWithinMinutes(data: {
-    clinicId: string;
-    offsetMinutes: number;
-  }): Promise<Scheduling[]>;
-
-  listScheduledInMinutes(data: {
-    clinicId: string;
-    offsetMinutes: number;
-  }): Promise<Scheduling[]>;
 }
