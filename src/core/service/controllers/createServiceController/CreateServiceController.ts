@@ -7,9 +7,7 @@ import { CreateServiceBodySchema } from "../serviceSharedSchemas";
 export class CreateServiceController {
   constructor(private createServiceUseCase: CreateServiceUseCase) {}
   async handle(request: Request, response: Response) {
-    console.table(request.body);
     const parsed = parseWithSchema(CreateServiceBodySchema, request.body);
-    console.log("CREATE SERVICE - parsed", parsed);
     if (!parsed.success) {
       return sendZodBadRequest(response, parsed.error);
     }
