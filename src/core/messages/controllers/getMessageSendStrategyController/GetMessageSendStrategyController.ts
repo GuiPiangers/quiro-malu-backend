@@ -21,6 +21,7 @@ export class GetMessageSendStrategyController {
 
       const res = await this.getMessageSendStrategyUseCase.execute({
         userId,
+        clinicId: request.user.clinicId as string,
         strategyId: id,
       });
 

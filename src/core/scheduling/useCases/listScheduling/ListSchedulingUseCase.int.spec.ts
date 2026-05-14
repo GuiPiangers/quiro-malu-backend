@@ -118,7 +118,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         );
 
         const result = await useCase.execute({
-          userId,
+          clinicId: userId,
           date: "2030-11-15",
         });
 
@@ -167,7 +167,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         );
 
         const result = await useCase.execute({
-          userId: a.userId,
+          clinicId: a.userId,
           date: "2030-12-01",
         });
 
@@ -196,7 +196,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         );
 
         const result = await useCase.execute({
-          userId,
+          clinicId: userId,
           date: "2030-08-02",
         });
 

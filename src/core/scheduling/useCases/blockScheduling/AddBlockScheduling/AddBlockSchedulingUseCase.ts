@@ -13,6 +13,7 @@ export interface AddBlockSchedulingDTO {
   date: string;
   endDate: string;
   userId: string;
+  clinicId: string;
 }
 
 export class AddBlockSchedulingUseCase {
@@ -29,7 +30,7 @@ export class AddBlockSchedulingUseCase {
     const schedules = await this.schedulingRepository.listBetweenDates({
       endDate,
       startDate: date,
-      userId: blockSchedulingDTO.userId,
+      clinicId: blockSchedulingDTO.clinicId,
     });
 
     const blockSchedules =

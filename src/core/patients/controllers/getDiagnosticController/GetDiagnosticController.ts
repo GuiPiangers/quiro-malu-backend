@@ -14,10 +14,10 @@ export class GetDiagnosticController {
     }
 
     try {
-      const userId = request.user.clinicId;
+      const clinicId = request.user.clinicId;
       const { patientId } = parsedParams.data;
       const { diagnostic, treatmentPlan } =
-        await this.listDiagnosticUseCase.execute(patientId, userId!);
+        await this.listDiagnosticUseCase.execute(patientId, clinicId!);
 
       response.json({ diagnostic, treatmentPlan, patientId });
     } catch (err: any) {

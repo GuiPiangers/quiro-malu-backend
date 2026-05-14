@@ -5,6 +5,7 @@ import { UniqueSendByPatientStrategy } from "../uniqueSendByPatientStrategy";
 describe("UniqueSendByPatientStrategy", () => {
   const ctx = {
     userId: "user-1",
+    clinicId: "clinic-1",
     patientId: "patient-1",
     campaignId: "camp-1",
   };
@@ -78,6 +79,7 @@ describe("UniqueSendByPatientStrategy", () => {
 
     const ok = await sut.allowsSend({
       userId: "user-1",
+      clinicId: "clinic-1",
       patientId: "patient-1",
     });
 

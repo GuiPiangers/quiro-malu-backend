@@ -5,12 +5,12 @@ import { ApiError } from "../../../../utils/ApiError";
 export class CreateServiceUseCase {
   constructor(private ServiceRepository: IServiceRepository) {}
 
-  async execute({ userId, ...data }: ServiceDTO & { userId: string }) {
+  async execute({ clinicId, ...data }: ServiceDTO & { clinicId: string }) {
     const service = new Service(data).getDTO();
 
     const [verifyName] = await this.ServiceRepository.getByName({
       name: service.name,
-      userId,
+      clinicId,
     });
     if (verifyName)
       throw new ApiError(
@@ -19,7 +19,7 @@ export class CreateServiceUseCase {
         "service",
       );
 
-    await this.ServiceRepository.save({ userId, ...service });
+    await this.ServiceRepository.save({ clinicId, ...service });
 
     return service;
   }

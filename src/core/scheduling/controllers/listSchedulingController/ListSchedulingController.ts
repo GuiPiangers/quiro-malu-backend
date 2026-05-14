@@ -14,10 +14,10 @@ export class ListSchedulingController {
 
     try {
       const { page, date } = parsed.data;
-      const userId = request.user.id;
+      const clinicId = request.user.clinicId as string;
 
       const scheduling = await this.listSchedulingUseCase.execute({
-        userId: userId!,
+        clinicId,
         page,
         date,
       });

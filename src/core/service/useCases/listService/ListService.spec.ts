@@ -12,7 +12,7 @@ describe("ListService", () => {
   });
 
   it("should call the repository list and count method with the correct Params", async () => {
-    const userId = "test-user-id";
+    const clinicId = "test-user-id";
 
     mockServiceRepository.list.mockResolvedValue([
       { duration: 3600, name: "Quiropraxia", value: 150 },
@@ -25,25 +25,25 @@ describe("ListService", () => {
     ]);
 
     await listServiceUseCase.execute({
-      userId,
+      clinicId,
       page: 1,
       search: "Quiropraxia",
     });
 
     expect(mockServiceRepository.list).toHaveBeenCalledTimes(1);
     expect(mockServiceRepository.list).toHaveBeenCalledWith({
-      userId,
+      clinicId,
       config: { limit: 20, offSet: 0, search: "Quiropraxia" },
     });
 
     expect(mockServiceRepository.count).toHaveBeenCalledTimes(1);
     expect(mockServiceRepository.count).toHaveBeenCalledWith({
-      userId,
+      clinicId,
     });
   });
 
   it("should update offset if page is provided", async () => {
-    const userId = "test-user-id";
+    const clinicId = "test-user-id";
 
     mockServiceRepository.list.mockResolvedValue([
       { duration: 3600, name: "Quiropraxia", value: 150 },
@@ -56,24 +56,24 @@ describe("ListService", () => {
     ]);
 
     await listServiceUseCase.execute({
-      userId,
+      clinicId,
       page: 2,
     });
 
     expect(mockServiceRepository.list).toHaveBeenCalledTimes(1);
     expect(mockServiceRepository.list).toHaveBeenCalledWith({
-      userId,
+      clinicId,
       config: { limit: 20, offSet: 20, search: undefined },
     });
 
     expect(mockServiceRepository.count).toHaveBeenCalledTimes(1);
     expect(mockServiceRepository.count).toHaveBeenCalledWith({
-      userId,
+      clinicId,
     });
   });
 
   it("should call the repository list method without offset and limit if page is not provided", async () => {
-    const userId = "test-user-id";
+    const clinicId = "test-user-id";
 
     mockServiceRepository.list.mockResolvedValue([
       { duration: 3600, name: "Quiropraxia", value: 150 },
@@ -86,24 +86,24 @@ describe("ListService", () => {
     ]);
 
     await listServiceUseCase.execute({
-      userId,
+      clinicId,
     });
 
     expect(mockServiceRepository.list).toHaveBeenCalledTimes(1);
     expect(mockServiceRepository.list).toHaveBeenCalledWith({
-      userId,
+      clinicId,
       config: { search: undefined },
     });
 
     expect(mockServiceRepository.count).toHaveBeenCalledTimes(1);
     expect(mockServiceRepository.count).toHaveBeenCalledWith({
-      userId,
+      clinicId,
     });
   });
 
   it("should return an object with total, limit and list of Service", async () => {
     const id = "test-Service-id";
-    const userId = "test-user-id";
+    const clinicId = "test-user-id";
 
     const ServiceData: ServiceDTO = {
       id,
@@ -127,7 +127,7 @@ describe("ListService", () => {
     ]);
 
     const result = await listServiceUseCase.execute({
-      userId,
+      clinicId,
     });
 
     expect(result).toEqual({
@@ -138,27 +138,27 @@ describe("ListService", () => {
   });
 
   it("should propagate an error if the repository list method throws", async () => {
-    const userId = "test-user-id";
+    const clinicId = "test-user-id";
     const errorMessage = "Failed to list Service";
 
     mockServiceRepository.list.mockRejectedValueOnce(new Error(errorMessage));
 
     await expect(
       listServiceUseCase.execute({
-        userId,
+        clinicId,
       }),
     ).rejects.toThrow(errorMessage);
   });
 
   it("should propagate an error if the repository count method throws", async () => {
-    const userId = "test-user-id";
+    const clinicId = "test-user-id";
     const errorMessage = "Failed to list Service";
 
     mockServiceRepository.count.mockRejectedValueOnce(new Error(errorMessage));
 
     await expect(
       listServiceUseCase.execute({
-        userId,
+        clinicId,
       }),
     ).rejects.toThrow(errorMessage);
   });

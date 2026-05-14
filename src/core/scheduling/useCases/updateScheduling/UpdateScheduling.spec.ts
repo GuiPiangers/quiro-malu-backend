@@ -7,6 +7,12 @@ import { SchedulingDTO } from "../../models/Scheduling";
 import { IAppEventListener } from "../../../shared/observers/EventListener";
 import { UpdateSchedulingUseCase } from "./UpdateSchedulingUseCase";
 
+type SchedulingUpdateTestInput = SchedulingDTO & {
+  userId: string;
+  clinicId: string;
+  date?: string;
+};
+
 const eventsStub: IAppEventListener = { emit: vi.fn() };
 
 const defaultExistingSchedule = {
@@ -48,8 +54,9 @@ describe("updateSchedulingUseCase", () => {
     it("should call the repository update method with the correct Data", async () => {
       const patientId = "test-patient-id";
 
-      const schedulingData: SchedulingDTO & { userId: string; date: string } = {
+      const schedulingData: SchedulingUpdateTestInput = {
         userId: "test-user-id",
+        clinicId: "test-clinic-id",
         id: "test-Scheduling-id",
         patientId,
         date: "2025-01-10T00:00",
@@ -64,12 +71,12 @@ describe("updateSchedulingUseCase", () => {
 
       expect(mockSchedulingRepository.get).toHaveBeenCalledWith({
         id: "test-Scheduling-id",
-        userId: "test-user-id",
+        clinicId: "test-clinic-id",
       });
       expect(mockSchedulingRepository.update).toHaveBeenCalledTimes(1);
       expect(mockSchedulingRepository.update).toHaveBeenCalledWith(
         expect.objectContaining({
-          userId: schedulingData.userId,
+          clinicId: "test-clinic-id",
           id: schedulingData.id,
           patientId: schedulingData.patientId,
           date: schedulingData.date,
@@ -83,8 +90,9 @@ describe("updateSchedulingUseCase", () => {
     it("should call the repository update method with status param equal Atrasado if date is in the past and status is Agendado, Atrasado or undefined", async () => {
       const patientId = "test-patient-id";
 
-      const schedulingData: SchedulingDTO & { userId: string; date: string } = {
+      const schedulingData: SchedulingUpdateTestInput = {
         userId: "test-user-id",
+        clinicId: "test-clinic-id",
         id: "test-Scheduling-id",
         patientId,
         date: "2025-01-11T00:00",
@@ -111,8 +119,13 @@ describe("updateSchedulingUseCase", () => {
       expect(mockSchedulingRepository.update).toHaveBeenCalled();
       expect(mockSchedulingRepository.update).toHaveBeenCalledWith(
         expect.objectContaining({
-          ...schedulingData,
+          clinicId: "test-clinic-id",
+          id: schedulingData.id,
+          patientId: schedulingData.patientId,
+          date: schedulingData.date,
+          duration: schedulingData.duration,
           status: "Agendado",
+          service: schedulingData.service,
         }),
       );
     });
@@ -120,13 +133,15 @@ describe("updateSchedulingUseCase", () => {
     it("should call the repository update method with status param equal Agendado if date is in the past and status is Agendado, Atrasado or undefined", async () => {
       const patientId = "test-patient-id";
 
-      const schedulingData: SchedulingDTO & { userId: string; date: string } = {
+      const schedulingData: SchedulingUpdateTestInput = {
         userId: "test-user-id",
+        clinicId: "test-clinic-id",
         id: "test-Scheduling-id",
         patientId,
         date: "2025-01-09T00:00",
         duration: 3600,
         status: "Agendado",
+        service: "Quiropraxia",
       };
 
       mockSchedulingRepository.get.mockResolvedValue([
@@ -147,8 +162,13 @@ describe("updateSchedulingUseCase", () => {
       expect(mockSchedulingRepository.update).toHaveBeenCalled();
       expect(mockSchedulingRepository.update).toHaveBeenCalledWith(
         expect.objectContaining({
-          ...schedulingData,
+          clinicId: "test-clinic-id",
+          id: schedulingData.id,
+          patientId: schedulingData.patientId,
+          date: schedulingData.date,
+          duration: schedulingData.duration,
           status: "Agendado",
+          service: schedulingData.service,
         }),
       );
     });
@@ -156,8 +176,9 @@ describe("updateSchedulingUseCase", () => {
     it("should throw an ApiError if scheduling is not available", async () => {
       const patientId = "test-patient-id";
 
-      const schedulingData: SchedulingDTO & { userId: string; date: string } = {
+      const schedulingData: SchedulingUpdateTestInput = {
         userId: "test-user-id",
+        clinicId: "test-clinic-id",
         id: "test-Scheduling-id",
         patientId,
         date: "2025-01-10T14:00",
@@ -194,8 +215,9 @@ describe("updateSchedulingUseCase", () => {
     it("should not validate if is available if date param is not passed to be updated", async () => {
       const patientId = "test-patient-id";
 
-      const schedulingData: SchedulingDTO & { userId: string } = {
+      const schedulingData: SchedulingUpdateTestInput = {
         userId: "test-user-id",
+        clinicId: "test-clinic-id",
         id: "test-Scheduling-id",
         patientId,
         duration: 3600,
@@ -237,8 +259,9 @@ describe("updateSchedulingUseCase", () => {
         blockScheduling,
       ]);
 
-      const schedulingData: SchedulingDTO & { userId: string; date: string } = {
+      const schedulingData: SchedulingUpdateTestInput = {
         userId: "test-user-id",
+        clinicId: "test-clinic-id",
         id: "test-Scheduling-id",
         patientId,
         date: "2025-01-10T14:00",
@@ -260,8 +283,9 @@ describe("updateSchedulingUseCase", () => {
     it("should throw an ApiError if schedulingId parameter is not passed", async () => {
       const patientId = "test-patient-id";
 
-      const schedulingData: SchedulingDTO & { userId: string; date: string } = {
+      const schedulingData: SchedulingUpdateTestInput = {
         userId: "test-user-id",
+        clinicId: "test-clinic-id",
         patientId,
         date: "2025-01-10T14:00",
         duration: 3600,
@@ -282,6 +306,7 @@ describe("updateSchedulingUseCase", () => {
       await expect(
         updateSchedulingUseCase.execute({
           userId: "test-user-id",
+          clinicId: "test-clinic-id",
           id: "non-existent-scheduling-id",
           patientId: "test-patient-id",
           date: "2025-01-10T00:00",
@@ -315,6 +340,7 @@ describe("updateSchedulingUseCase", () => {
           id: "test-Scheduling-id",
           patientId,
           userId,
+          clinicId: "test-clinic-id",
           date: "2025-01-10T00:00",
           duration: 3600,
         }),

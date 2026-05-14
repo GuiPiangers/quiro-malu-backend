@@ -20,6 +20,7 @@ describe("DeleteExamUseCase", () => {
 
       await deleteExamUseCase.execute({
         userId,
+        clinicId: "clinic-1",
         id: examId,
         patientId,
       });
@@ -47,6 +48,7 @@ describe("DeleteExamUseCase", () => {
         deleteExamUseCase.execute({
           patientId,
           userId,
+          clinicId: "clinic-1",
           id: examId,
         }),
       ).rejects.toThrow(errorMessage);

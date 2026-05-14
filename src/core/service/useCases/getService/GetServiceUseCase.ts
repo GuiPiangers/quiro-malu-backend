@@ -5,8 +5,8 @@ export class GetServiceUseCase {
         private ServiceRepository: IServiceRepository
     ) { }
 
-    async execute({ id, userId }: { id: string, userId: string }) {
-        const [serviceData] = await this.ServiceRepository.get({ id, userId })
+    async execute({ id, clinicId }: { id: string; clinicId: string }) {
+        const [serviceData] = await this.ServiceRepository.get({ id, clinicId })
         return serviceData
     }
 }

@@ -13,12 +13,12 @@ export class DeleteProgressController {
     }
 
     try {
-      const userId = request.user.clinicId;
+      const clinicId = request.user.clinicId!;
       const { id, patientId } = parsed.data;
       await this.deleteProgressUseCase.execute({
         id,
         patientId,
-        userId: userId!,
+        clinicId,
       });
 
       response.json({ message: "Paciente deletado com sucesso!" });

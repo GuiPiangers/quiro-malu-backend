@@ -15,11 +15,11 @@ export class GetServiceController {
 
     try {
       const { id } = parsedParams.data;
-      const userId = request.user.clinicId;
+      const clinicId = request.user.clinicId;
 
       const Service = await this.getServiceUseCase.execute({
         id,
-        userId: userId!,
+        clinicId: clinicId!,
       });
       response.status(200).json(Service);
     } catch (err: any) {

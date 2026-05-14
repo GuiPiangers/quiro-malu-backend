@@ -9,20 +9,20 @@ export class UpdatePatientUseCase {
     private locationRepository: ILocationRepository,
   ) {}
 
-  async execute(data: PatientDTO, userId: string) {
+  async execute(data: PatientDTO, clinicId: string) {
     const patient = new Patient(data);
     const { location, id, ...patientDTO } = patient.getPatientDTO();
 
     await this.validateCpfNotExist({
       cpf: patientDTO.cpf,
-      userId,
+      clinicId,
       patientId: patient.id,
     });
 
     const updatePatient = this.patientRepository.update(
       patientDTO,
       patient.id,
-      userId,
+      clinicId,
     );
 
     if (
@@ -31,21 +31,21 @@ export class UpdatePatientUseCase {
     ) {
       const [validateLocation] = await this.locationRepository.getLocation(
         patient.id,
-        userId,
+        clinicId,
       );
 
       if (validateLocation) {
         const updateLocation = this.locationRepository.update(
           location,
           patient.id,
-          userId,
+          clinicId,
         );
         await Promise.all([updatePatient, updateLocation]);
       } else {
         const saveLocation = this.locationRepository.save(
           location,
           patient.id,
-          userId,
+          clinicId,
         );
         await Promise.all([updatePatient, saveLocation]);
       }
@@ -59,16 +59,16 @@ export class UpdatePatientUseCase {
   private async validateCpfNotExist({
     cpf,
     patientId,
-    userId,
+    clinicId,
   }: {
     cpf?: string;
     patientId: string;
-    userId: string;
+    clinicId: string;
   }) {
     if (cpf) {
       const [verifyPatient] = await this.patientRepository.getByCpf(
         cpf,
-        userId,
+        clinicId,
       );
 
       if (verifyPatient?.id && verifyPatient?.id !== patientId) {

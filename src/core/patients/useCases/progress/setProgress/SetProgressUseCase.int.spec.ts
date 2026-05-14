@@ -37,7 +37,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         await useCase.execute({
           id: progressId,
           patientId,
-          userId,
+          clinicId: userId,
           service: "Quiropraxia",
           date: "2038-01-10T09:00",
           actualProblem: "Dor",
@@ -73,7 +73,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         await useCase.execute({
           id: progressId,
           patientId,
-          userId,
+          clinicId: userId,
           service: "Massagem",
           actualProblem: "Atualizado",
         });

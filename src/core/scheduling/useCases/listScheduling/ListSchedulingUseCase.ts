@@ -7,10 +7,10 @@ export class ListSchedulingUseCase {
   constructor(private SchedulingRepository: ISchedulingRepository) {}
 
   async execute({
-    userId,
+    clinicId,
     date: schedulingDate,
   }: {
-    userId: string;
+    clinicId: string;
     date: string;
     page?: number;
   }) {
@@ -19,11 +19,11 @@ export class ListSchedulingUseCase {
     const date = schedulingDate || DateTime.now().dateTime;
 
     const schedulingData = this.SchedulingRepository.list({
-      userId,
+      clinicId,
       date,
     });
     const totalScheduling = this.SchedulingRepository.count({
-      userId,
+      clinicId,
       date,
     });
 

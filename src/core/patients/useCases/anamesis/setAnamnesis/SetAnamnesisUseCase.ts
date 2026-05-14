@@ -3,16 +3,16 @@ import { IAnamnesisRepository } from "../../../../../repositories/anamnesis/IAna
 
 export class SetAnamnesisUseCase {
   constructor(private anamnesisRepository: IAnamnesisRepository) {}
-  async execute(data: AnamnesisDTO, userId: string) {
+  async execute(data: AnamnesisDTO, clinicId: string) {
     const anamnesis = new Anamnesis(data);
     const anamnesisAlreadyExist = (
-      await this.anamnesisRepository.get(data.patientId, userId)
+      await this.anamnesisRepository.get(data.patientId, clinicId)
     ).patientId;
 
     if (anamnesisAlreadyExist) {
-      await this.anamnesisRepository.update(data, userId);
+      await this.anamnesisRepository.update(data, clinicId);
     } else {
-      await this.anamnesisRepository.save(data, userId);
+      await this.anamnesisRepository.save(data, clinicId);
     }
     return anamnesis;
   }

@@ -27,13 +27,17 @@ describe("GetMessageSendStrategyUseCase", () => {
       patientRepo,
       schedulingRepo,
     );
-    const result = await sut.execute({ userId: "user-1", strategyId: "s-1" });
+    const result = await sut.execute({
+      userId: "user-1",
+      clinicId: "clinic-1",
+      strategyId: "s-1",
+    });
 
     expect(repo.findByIdAndUserId).toHaveBeenCalledWith("s-1", "user-1");
-    expect(patientRepo.getMostRecent).toHaveBeenCalledWith("user-1", 10);
+    expect(patientRepo.getMostRecent).toHaveBeenCalledWith("clinic-1", 10);
     expect(patientRepo.listPatientsById).not.toHaveBeenCalled();
     expect(
-      schedulingRepo.listPatientIdsByUserIdOrderBySchedulingCountDesc,
+      schedulingRepo.listPatientIdsByClinicIdOrderBySchedulingCountDesc,
     ).not.toHaveBeenCalled();
     expect(result).toEqual({
       id: "s-1",
@@ -61,7 +65,7 @@ describe("GetMessageSendStrategyUseCase", () => {
       params: { amount: 3 },
       campaignBindingsCount: 0,
     });
-    schedulingRepo.listPatientIdsByUserIdOrderBySchedulingCountDesc.mockResolvedValue(
+    schedulingRepo.listPatientIdsByClinicIdOrderBySchedulingCountDesc.mockResolvedValue(
       ["p-c"],
     );
     patientRepo.listPatientsById.mockResolvedValue([
@@ -73,13 +77,17 @@ describe("GetMessageSendStrategyUseCase", () => {
       patientRepo,
       schedulingRepo,
     );
-    const result = await sut.execute({ userId: "user-1", strategyId: "s-2" });
+    const result = await sut.execute({
+      userId: "user-1",
+      clinicId: "clinic-1",
+      strategyId: "s-2",
+    });
 
     expect(
-      schedulingRepo.listPatientIdsByUserIdOrderBySchedulingCountDesc,
-    ).toHaveBeenCalledWith("user-1", 3);
+      schedulingRepo.listPatientIdsByClinicIdOrderBySchedulingCountDesc,
+    ).toHaveBeenCalledWith("clinic-1", 3);
     expect(patientRepo.listPatientsById).toHaveBeenCalledWith({
-      userId: "user-1",
+      clinicId: "clinic-1",
       patientIds: ["p-c"],
     });
     expect(patientRepo.getMostRecent).not.toHaveBeenCalled();
@@ -100,7 +108,7 @@ describe("GetMessageSendStrategyUseCase", () => {
       params: { amount: 5 },
       campaignBindingsCount: 0,
     });
-    schedulingRepo.listPatientIdsByUserIdOrderBySchedulingCountDesc.mockResolvedValue(
+    schedulingRepo.listPatientIdsByClinicIdOrderBySchedulingCountDesc.mockResolvedValue(
       [],
     );
 
@@ -109,7 +117,11 @@ describe("GetMessageSendStrategyUseCase", () => {
       patientRepo,
       schedulingRepo,
     );
-    const result = await sut.execute({ userId: "user-1", strategyId: "s-2b" });
+    const result = await sut.execute({
+      userId: "user-1",
+      clinicId: "clinic-1",
+      strategyId: "s-2b",
+    });
 
     expect(patientRepo.listPatientsById).not.toHaveBeenCalled();
     expect(result.patients).toEqual([]);
@@ -137,10 +149,14 @@ describe("GetMessageSendStrategyUseCase", () => {
       patientRepo,
       schedulingRepo,
     );
-    const result = await sut.execute({ userId: "user-1", strategyId: "s-3" });
+    const result = await sut.execute({
+      userId: "user-1",
+      clinicId: "clinic-1",
+      strategyId: "s-3",
+    });
 
     expect(patientRepo.listPatientsById).toHaveBeenCalledWith({
-      userId: "user-1",
+      clinicId: "clinic-1",
       patientIds: ["p-2", "p-1"],
     });
     expect(result.patients).toEqual([
@@ -170,10 +186,14 @@ describe("GetMessageSendStrategyUseCase", () => {
       patientRepo,
       schedulingRepo,
     );
-    const result = await sut.execute({ userId: "user-1", strategyId: "s-4" });
+    const result = await sut.execute({
+      userId: "user-1",
+      clinicId: "clinic-1",
+      strategyId: "s-4",
+    });
 
     expect(patientRepo.listPatientsById).toHaveBeenCalledWith({
-      userId: "user-1",
+      clinicId: "clinic-1",
       patientIds: ["p-9"],
     });
     expect(result.patients).toEqual([{ name: "Nove", phone: "99", cpf: "9" }]);
@@ -192,7 +212,11 @@ describe("GetMessageSendStrategyUseCase", () => {
     );
 
     await expect(
-      sut.execute({ userId: "user-1", strategyId: "s-x" }),
+      sut.execute({
+        userId: "user-1",
+        clinicId: "clinic-1",
+        strategyId: "s-x",
+      }),
     ).rejects.toThrow(ApiError);
   });
 });

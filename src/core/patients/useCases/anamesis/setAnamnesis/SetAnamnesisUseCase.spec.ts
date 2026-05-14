@@ -25,7 +25,7 @@ describe("SetAnamnesisUseCase", () => {
       medicines: "medicines",
       surgeries: "surgeries",
     };
-    const userId = "user456";
+    const clinicId = "user456";
 
     const anamnesis = new Anamnesis(data);
 
@@ -34,13 +34,13 @@ describe("SetAnamnesisUseCase", () => {
       patientId: anamnesis.patientId,
     });
 
-    const result = await setAnamnesisUseCase.execute(data, userId);
+    const result = await setAnamnesisUseCase.execute(data, clinicId);
 
     expect(mockAnamnesisRepository.get).toHaveBeenCalledWith(
       data.patientId,
-      userId,
+      clinicId,
     );
-    expect(mockAnamnesisRepository.update).toHaveBeenCalledWith(data, userId);
+    expect(mockAnamnesisRepository.update).toHaveBeenCalledWith(data, clinicId);
     expect(mockAnamnesisRepository.save).not.toHaveBeenCalled();
     expect(result).toBeInstanceOf(Anamnesis);
     expect(result).toEqual(expect.objectContaining(data));
@@ -60,16 +60,16 @@ describe("SetAnamnesisUseCase", () => {
       medicines: "medicines",
       surgeries: "surgeries",
     };
-    const userId = "user456";
+    const clinicId = "user456";
     mockAnamnesisRepository.get.mockResolvedValue({ patientId: "" });
 
-    const result = await setAnamnesisUseCase.execute(data, userId);
+    const result = await setAnamnesisUseCase.execute(data, clinicId);
 
     expect(mockAnamnesisRepository.get).toHaveBeenCalledWith(
       data.patientId,
-      userId,
+      clinicId,
     );
-    expect(mockAnamnesisRepository.save).toHaveBeenCalledWith(data, userId);
+    expect(mockAnamnesisRepository.save).toHaveBeenCalledWith(data, clinicId);
     expect(mockAnamnesisRepository.update).not.toHaveBeenCalled();
     expect(result).toBeInstanceOf(Anamnesis);
     expect(result).toEqual(expect.objectContaining(data));
@@ -88,11 +88,11 @@ describe("SetAnamnesisUseCase", () => {
       medicines: "medicines",
       surgeries: "surgeries",
     };
-    const userId = "user456";
+    const clinicId = "user456";
 
     mockAnamnesisRepository.get.mockResolvedValue({ patientId: "" });
 
-    const result = await setAnamnesisUseCase.execute(data, userId);
+    const result = await setAnamnesisUseCase.execute(data, clinicId);
 
     expect(result).toBeInstanceOf(Anamnesis);
     expect(result.patientId).toBe(data.patientId);

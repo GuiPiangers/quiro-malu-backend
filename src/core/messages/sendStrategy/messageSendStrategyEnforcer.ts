@@ -3,6 +3,7 @@ import { MessageSendStrategyFactory } from "./messageSendStrategyFactory";
 
 export type IsSendAllowedParams = {
   userId: string;
+  clinicId: string;
   campaignId: string;
   patientId: string;
 };
@@ -14,7 +15,7 @@ export class MessageSendStrategyEnforcer {
   ) {}
 
   async isSendAllowed(params: IsSendAllowedParams): Promise<boolean> {
-    const { userId, campaignId, patientId } = params;
+    const { userId, clinicId, campaignId, patientId } = params;
     const rows =
       await this.messageSendStrategyRepository.findActiveStrategiesByUserAndCampaign(
         userId,
@@ -30,6 +31,7 @@ export class MessageSendStrategyEnforcer {
       if (
         !(await strategy.allowsSend({
           userId,
+          clinicId,
           patientId,
           campaignId,
         }))

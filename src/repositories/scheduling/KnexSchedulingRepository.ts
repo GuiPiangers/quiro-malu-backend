@@ -19,7 +19,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
   async listBetweenDates({
     endDate,
     startDate,
-    userId,
+    clinicId,
   }: ListBetweenDatesParams): Promise<Scheduling[]> {
     const result = await this.knex(ETableNames.SCHEDULES)
       .select(
@@ -35,7 +35,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
         "service",
       )
       .where({
-        userId,
+        clinicId,
       })
       .andWhereBetween("date", [startDate.dateTime, endDate.dateTime]);
 
@@ -52,19 +52,19 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
 
   async update({
     id,
-    userId,
+    clinicId,
     createAt,
     updateAt,
     ...data
   }: UpdateSchedulingParams): Promise<void> {
-    await this.knex(ETableNames.SCHEDULES).update(data).where({ id, clinicId: userId });
+    await this.knex(ETableNames.SCHEDULES).update(data).where({ id, clinicId });
   }
 
   async list({
-    userId,
+    clinicId,
     date,
   }: {
-    userId: string;
+    clinicId: string;
     date: string;
     config?: { limit: number; offSet: number };
   }): Promise<SchedulingWithPatientDTO[]> {
@@ -92,7 +92,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
           this.knex.raw("s.updated_at as updateAt"),
           this.knex.raw("s.created_at as createAt"),
         )
-        .where("s.userId", userId)
+        .where("s.clinicId", clinicId)
         .andWhereRaw("date_format(s.date, '%Y-%m-%d') = ?", [date])
         .orderBy("s.updated_at", "desc");
 
@@ -106,15 +106,15 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
 
   async count({
     date,
-    userId,
+    clinicId,
   }: {
     date: string;
-    userId: string;
+    clinicId: string;
   }): Promise<[{ total: number }]> {
     try {
       const [result] = await this.knex(ETableNames.SCHEDULES)
         .count("id as total")
-        .where({ userId })
+        .where({ clinicId })
         .andWhereRaw("date_format(date, '%Y-%m-%d') = ?", [date]);
 
       const total = Number((result as any)?.total ?? 0);
@@ -127,11 +127,11 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
   async qdtSchedulesByDay({
     month,
     year,
-    userId,
+    clinicId,
   }: {
     month: number;
     year: number;
-    userId: string;
+    clinicId: string;
   }): Promise<{ formattedDate: string; qtd: number }[]> {
     try {
       const result = await this.knex(ETableNames.SCHEDULES)
@@ -139,7 +139,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
           this.knex.raw("date_format(date, '%Y-%m-%d') as formattedDate"),
           this.knex.raw("count(id) as qtd"),
         )
-        .where({ userId })
+        .where({ clinicId })
         .andWhereRaw("month(date) = ? AND year(date) = ?", [month, year])
         .groupByRaw("date_format(date, '%Y-%m-%d')");
 
@@ -152,17 +152,17 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     }
   }
 
-  async listIdsByUserId({ userId }: { userId: string }): Promise<string[]> {
+  async listIdsByClinicId({ clinicId }: { clinicId: string }): Promise<string[]> {
     const rows = await this.knex(ETableNames.SCHEDULES)
       .select("id")
-      .where({ userId })
+      .where({ clinicId })
       .andWhereRaw("date > NOW()");
 
     return rows.map((row: { id: string }) => row.id);
   }
 
-  async listPatientIdsByUserIdOrderBySchedulingCountDesc(
-    userId: string,
+  async listPatientIdsByClinicIdOrderBySchedulingCountDesc(
+    clinicId: string,
     limit: number,
   ): Promise<string[]> {
     try {
@@ -172,7 +172,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
             .on("p.id", "=", "s.patientId")
             .andOn("p.clinicId", "=", "s.clinicId");
         })
-        .where("s.userId", userId)
+        .where("s.clinicId", clinicId)
         .where((b) => {
           b.whereNull("s.status").orWhere("s.status", "<>", "Cancelado");
         })
@@ -189,10 +189,10 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
 
   async get({
     id,
-    userId,
+    clinicId,
   }: {
     id: string;
-    userId: string;
+    clinicId: string;
   }): Promise<SchedulingWithPatientDTO[]> {
     try {
       const result = await this.knex(`${ETableNames.SCHEDULES} as s`)
@@ -218,7 +218,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
           this.knex.raw("s.updated_at as updateAt"),
           this.knex.raw("s.created_at as createAt"),
         )
-        .where({ "s.id": id, "s.userId": userId });
+        .where({ "s.id": id, "s.clinicId": clinicId });
 
       return result.map((scheduling) =>
         getValidObjectValues(scheduling as SchedulingWithPatientDTO),
@@ -229,10 +229,10 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
   }
 
   async listFromNowWithinMinutes({
-    userId,
+    clinicId,
     offsetMinutes,
   }: {
-    userId: string;
+    clinicId: string;
     offsetMinutes: number;
   }): Promise<Scheduling[]> {
     const safeOffset = Math.max(offsetMinutes, 0);
@@ -249,7 +249,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
         "status",
         "service",
       )
-      .where({ userId })
+      .where({ clinicId })
       .andWhereBetween("date", [
         this.knex.raw("NOW()"),
         this.knex.raw("DATE_ADD(NOW(), INTERVAL ? MINUTE)", [safeOffset]),
@@ -259,10 +259,10 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
   }
 
   async listScheduledInMinutes({
-    userId,
+    clinicId,
     offsetMinutes,
   }: {
-    userId: string;
+    clinicId: string;
     offsetMinutes: number;
   }): Promise<Scheduling[]> {
     const safeOffset = Math.max(offsetMinutes, 0);
@@ -281,7 +281,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
         "status",
         "service",
       )
-      .where({ userId })
+      .where({ clinicId })
       .andWhereBetween("date", [
         this.knex.raw("DATE_ADD(NOW(), INTERVAL ? MINUTE)", [startOffset]),
         this.knex.raw("DATE_ADD(NOW(), INTERVAL ? MINUTE)", [endOffset]),
@@ -290,7 +290,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     return result.map((row) => new Scheduling(row));
   }
 
-  async delete({ id, userId }: { id: string; userId: string }): Promise<void> {
-    await this.knex(ETableNames.SCHEDULES).where({ id, userId }).del();
+  async delete({ id, clinicId }: { id: string; clinicId: string }): Promise<void> {
+    await this.knex(ETableNames.SCHEDULES).where({ id, clinicId }).del();
   }
 }

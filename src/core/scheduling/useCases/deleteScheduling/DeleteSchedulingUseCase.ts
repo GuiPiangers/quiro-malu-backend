@@ -10,8 +10,16 @@ export class DeleteSchedulingUseCase {
     private readonly events: IAppEventListener = appEventListener,
   ) {}
 
-  async execute({ id, userId }: { id: string; userId: string }) {
-    await this.SchedulingRepository.delete({ id, userId });
-    this.events.emit("deleteSchedule", { scheduleId: id, userId });
+  async execute({
+    id,
+    userId,
+    clinicId,
+  }: {
+    id: string;
+    userId: string;
+    clinicId: string;
+  }) {
+    await this.SchedulingRepository.delete({ id, clinicId });
+    this.events.emit("deleteSchedule", { scheduleId: id, userId, clinicId });
   }
 }

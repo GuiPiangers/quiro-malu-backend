@@ -44,7 +44,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         const useCase = new DeleteProgressUseCase(
           new KnexProgressRepository(trx),
         );
-        await useCase.execute({ id: progressId, patientId, userId });
+        await useCase.execute({ id: progressId, patientId, clinicId: userId });
 
         const row = await trx(ETableNames.PROGRESS)
           .where({ id: progressId, patientId, clinicId: userId })

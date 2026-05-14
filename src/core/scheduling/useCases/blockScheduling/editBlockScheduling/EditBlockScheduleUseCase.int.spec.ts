@@ -81,6 +81,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
             description: "Novo texto",
           },
           userId,
+          userId,
         );
 
         const row = await trx(ETableNames.BLOCK_SCHEDULES)
@@ -102,6 +103,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await expect(
           useCase.execute(
             { id: uuidv4(), description: "X" },
+            userId,
             userId,
           ),
         ).rejects.toMatchObject({ message: "Agendamento não encontrado" });
@@ -143,6 +145,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
               date: "2038-03-05T10:00",
               endDate: "2038-03-05T11:30",
             },
+            userId,
             userId,
           ),
         ).rejects.toThrow(/indisponível/);

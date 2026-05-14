@@ -21,6 +21,7 @@ describe("BeforeScheduleQueue", () => {
       "job-1",
       {
         userId: "user-1",
+        clinicId: "clinic-1",
         patientId: "patient-1",
         schedulingId: "schedule-1",
         beforeScheduleMessageId: "cfg-1",
@@ -32,6 +33,7 @@ describe("BeforeScheduleQueue", () => {
     expect(queueProvider.add).toHaveBeenCalledWith(
       {
         userId: "user-1",
+        clinicId: "clinic-1",
         patientId: "patient-1",
         schedulingId: "schedule-1",
         beforeScheduleMessageId: "cfg-1",

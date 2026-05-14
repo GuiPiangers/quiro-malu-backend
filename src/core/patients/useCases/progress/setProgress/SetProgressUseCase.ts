@@ -3,20 +3,20 @@ import { IProgressRepository } from "../../../../../repositories/progress/IProgr
 
 export class SetProgressUseCase {
   constructor(private ProgressRepository: IProgressRepository) {}
-  async execute({ userId, ...data }: ProgressDTO & { userId: string }) {
+  async execute({ clinicId, ...data }: ProgressDTO & { clinicId: string }) {
     const progress = new Progress(data);
     const progressDTO = progress.getDTO();
 
     const [progressAlreadyExist] = await this.ProgressRepository.get({
       id: progressDTO.id,
       patientId: progressDTO.patientId,
-      userId,
+      clinicId,
     });
 
     if (progressAlreadyExist) {
-      await this.ProgressRepository.update({ ...progressDTO, userId });
+      await this.ProgressRepository.update({ ...progressDTO, clinicId });
     } else {
-      await this.ProgressRepository.save({ ...progressDTO, userId });
+      await this.ProgressRepository.save({ ...progressDTO, clinicId });
     }
 
     return progressDTO;

@@ -18,7 +18,7 @@ describe("getPatientUseCase", () => {
   describe("execute", () => {
     it("should get patient data", async () => {
       const patientId = "test-patient-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
 
       mockPatientRepository.getById.mockResolvedValue([
         {
@@ -29,17 +29,17 @@ describe("getPatientUseCase", () => {
 
       mockLocationRepository.getLocation.mockResolvedValue([]);
 
-      const result = await getPatientUseCase.execute(patientId, userId);
+      const result = await getPatientUseCase.execute(patientId, clinicId);
 
       expect(mockPatientRepository.getById).toHaveBeenCalledTimes(1);
       expect(mockPatientRepository.getById).toHaveBeenCalledWith(
         patientId,
-        userId,
+        clinicId,
       );
       expect(mockLocationRepository.getLocation).toHaveBeenCalledTimes(1);
       expect(mockLocationRepository.getLocation).toHaveBeenCalledWith(
         patientId,
-        userId,
+        clinicId,
       );
 
       expect(result).toEqual({
@@ -50,7 +50,7 @@ describe("getPatientUseCase", () => {
 
     it("should get patient data and location data if location exists on Database", async () => {
       const patientId = "test-patient-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const locationData = {
         state: "state",
         address: "address",
@@ -68,17 +68,17 @@ describe("getPatientUseCase", () => {
 
       mockLocationRepository.getLocation.mockResolvedValue([locationData]);
 
-      const result = await getPatientUseCase.execute(patientId, userId);
+      const result = await getPatientUseCase.execute(patientId, clinicId);
 
       expect(mockPatientRepository.getById).toHaveBeenCalledTimes(1);
       expect(mockPatientRepository.getById).toHaveBeenCalledWith(
         patientId,
-        userId,
+        clinicId,
       );
       expect(mockLocationRepository.getLocation).toHaveBeenCalledTimes(1);
       expect(mockLocationRepository.getLocation).toHaveBeenCalledWith(
         patientId,
-        userId,
+        clinicId,
       );
 
       expect(result).toEqual({
@@ -90,7 +90,7 @@ describe("getPatientUseCase", () => {
 
     it("should propagate an error if the patient repository get method throws", async () => {
       const patientId = "test-patient-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const errorMessage = "Failed to get patient";
 
       mockPatientRepository.getById.mockRejectedValueOnce(
@@ -98,13 +98,13 @@ describe("getPatientUseCase", () => {
       );
 
       await expect(
-        getPatientUseCase.execute(patientId, userId),
+        getPatientUseCase.execute(patientId, clinicId),
       ).rejects.toThrow(errorMessage);
     });
 
     it("should propagate an error if the location repository get method throws", async () => {
       const patientId = "test-patient-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const errorMessage = "Failed to get patient";
 
       mockLocationRepository.getLocation.mockRejectedValueOnce(
@@ -112,7 +112,7 @@ describe("getPatientUseCase", () => {
       );
 
       await expect(
-        getPatientUseCase.execute(patientId, userId),
+        getPatientUseCase.execute(patientId, clinicId),
       ).rejects.toThrow(errorMessage);
     });
   });

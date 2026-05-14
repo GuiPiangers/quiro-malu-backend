@@ -7,6 +7,8 @@ import { BlockScheduleDto } from "../../models/dtos/BlockSchedule.dto";
 
 interface IListEventsUseCaseRequest {
   date: string;
+  clinicId: string;
+  /** Usuário dono dos bloqueios de agenda (tabela ainda escopada por `userId`). */
   userId: string;
 }
 
@@ -22,6 +24,7 @@ export class ListEventsUseCase {
 
   async execute({
     date,
+    clinicId,
     userId,
   }: IListEventsUseCaseRequest): Promise<IListEventsUseCaseResponse> {
     const onlyDate = date.substring(0, 10);
@@ -31,7 +34,7 @@ export class ListEventsUseCase {
     const [schedules, blockedSchedules] = await Promise.all([
       this.scheduleRepository.list({
         date,
-        userId,
+        clinicId,
       }),
       this.blockScheduleRepository.listBetweenDates({
         userId,

@@ -38,6 +38,7 @@ describe("Service sync class observer", () => {
       patientId: "456",
       service: "testService",
       userId: "789",
+      clinicId: "clinic-1",
     };
 
     const results =
@@ -66,6 +67,7 @@ describe("Service sync class observer", () => {
       patientId: "456",
       service: "testService",
       userId: "789",
+      clinicId: "clinic-1",
     };
 
     const results =

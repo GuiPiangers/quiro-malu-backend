@@ -13,7 +13,15 @@ export class DeleteBeforeScheduleMessageUseCase {
     private appEventListener: AppEventListener,
   ) {}
 
-  async execute({ id, userId }: { id: string; userId: string }): Promise<void> {
+  async execute({
+    id,
+    userId,
+    clinicId,
+  }: {
+    id: string;
+    userId: string;
+    clinicId: string;
+  }): Promise<void> {
     const existing = await this.beforeScheduleMessageRepository.getById({
       id,
       userId,
@@ -27,8 +35,8 @@ export class DeleteBeforeScheduleMessageUseCase {
 
     this.appEventListener.emit("beforeScheduleMessageDelete", { id });
 
-    const scheduleIds = await this.schedulingRepository.listIdsByUserId({
-      userId,
+    const scheduleIds = await this.schedulingRepository.listIdsByClinicId({
+      clinicId,
     });
 
     await Promise.all(

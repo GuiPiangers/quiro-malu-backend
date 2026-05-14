@@ -14,6 +14,7 @@ import { toInternationalPhone } from "../../../utils/toInternationalPhone";
 
 export type SendBirthdayMessageJob = {
   userId: string;
+  clinicId: string;
   patientId: string;
   patientName: string;
   patientPhone: string;
@@ -66,7 +67,7 @@ export class SendBirthdayMessageUseCase {
 
     const [patient] = await this.patientRepository.getById(
       job.patientId,
-      job.userId,
+      job.clinicId,
     );
 
     if (!patient?.phone?.trim()) {
@@ -75,6 +76,7 @@ export class SendBirthdayMessageUseCase {
 
     const allowed = await this.messageSendStrategyEnforcer.isSendAllowed({
       userId: job.userId,
+      clinicId: job.clinicId,
       campaignId: job.campaignId,
       patientId: job.patientId,
     });

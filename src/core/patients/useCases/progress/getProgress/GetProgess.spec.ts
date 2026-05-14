@@ -14,24 +14,24 @@ describe("getProgressUseCase", () => {
   describe("execute", () => {
     it("should call the repository get method with the correct Params", async () => {
       const id = "test-Progress-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const patientId = "test-patient-id";
 
       mockProgressRepository.get.mockResolvedValue([{ id, patientId }]);
 
-      await getProgressUseCase.execute({ id, userId, patientId });
+      await getProgressUseCase.execute({ id, clinicId, patientId });
 
       expect(mockProgressRepository.get).toHaveBeenCalledTimes(1);
       expect(mockProgressRepository.get).toHaveBeenCalledWith({
         id,
-        userId,
+        clinicId,
         patientId,
       });
     });
 
     it("should return Progress data if it exists", async () => {
       const id = "test-Progress-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const patientId = "test-patient-id";
       const progressData = {
         patientId,
@@ -46,7 +46,7 @@ describe("getProgressUseCase", () => {
 
       const result = await getProgressUseCase.execute({
         id,
-        userId,
+        clinicId,
         patientId,
       });
 
@@ -55,14 +55,14 @@ describe("getProgressUseCase", () => {
 
     it("should throw an ApiError if progress not exists", async () => {
       const id = "test-Progress-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const patientId = "test-patient-id";
 
       mockProgressRepository.get.mockResolvedValue([]);
 
       const promiseResult = getProgressUseCase.execute({
         id,
-        userId,
+        clinicId,
         patientId,
       });
 
@@ -77,14 +77,14 @@ describe("getProgressUseCase", () => {
 
     it("should propagate an error if the repository get method throws", async () => {
       const id = "test-Progress-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const patientId = "test-patient-id";
       const errorMessage = "Failed to get Progress";
 
       mockProgressRepository.get.mockRejectedValueOnce(new Error(errorMessage));
 
       await expect(
-        getProgressUseCase.execute({ id, userId, patientId }),
+        getProgressUseCase.execute({ id, clinicId, patientId }),
       ).rejects.toThrow(errorMessage);
     });
   });

@@ -72,16 +72,18 @@ export class PatientsBirthDayQueue {
       for (const patient of birthDays) {
         if (!patient.id) continue;
         try {
-          const campaign = await this.birthdayMessageRepository.findActiveByUserId(
-            patient.userId,
-          );
+          const campaign =
+            await this.birthdayMessageRepository.findActiveCampaignForClinic(
+              patient.clinicId,
+            );
           if (!campaign) continue;
 
           const delayMs = computeDelayMsUntilSendTimeToday(campaign.sendTime);
           const jobId = `birthday-campaign-${patient.id}-${referenceDate}`;
 
           await this.birthdayMessageCampaignQueue.scheduleDelivery(jobId, {
-            userId: patient.userId,
+            userId: campaign.userId,
+            clinicId: patient.clinicId,
             patientId: patient.id,
             patientName: patient.name,
             patientPhone: patient.phone ?? "",

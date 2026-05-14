@@ -1,15 +1,15 @@
 import { FinanceDTO } from "../../core/finances/models/Finance";
 
-export type setFinanceProps = FinanceDTO & { userId: string };
-export type updateFinanceProps = FinanceDTO & { userId: string; id: string };
-export type deleteFinanceProps = { userId: string; id: string };
-export type getFinanceProps = { userId: string; id: string };
+export type setFinanceProps = FinanceDTO & { clinicId: string };
+export type updateFinanceProps = FinanceDTO & { clinicId: string; id: string };
+export type deleteFinanceProps = { clinicId: string; id: string };
+export type getFinanceProps = { clinicId: string; id: string };
 export type getBySchedulingFinanceProps = {
-  userId: string;
+  clinicId: string;
   schedulingId: string;
 };
 export type listFinanceProps = {
-  userId: string;
+  clinicId: string;
   yearAndMonth: string;
   config?: { limit: number; offSet: number };
 };

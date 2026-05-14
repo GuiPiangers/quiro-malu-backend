@@ -6,7 +6,7 @@ import { createMockLocationRepository } from "../../../../../repositories/_mocks
 
 describe("Create patients", () => {
   let createPatientUseCase: CreatePatientUseCase;
-  const userId = "userId";
+  const clinicId = "clinicId";
   const mockPatientRepository = createMockPatientRepository();
   const mockLocationRepository = createMockLocationRepository();
 
@@ -33,11 +33,11 @@ describe("Create patients", () => {
     ]);
 
     await expect(
-      createPatientUseCase.execute(patientData, userId),
+      createPatientUseCase.execute(patientData, clinicId),
     ).rejects.toThrow(ApiError);
 
     try {
-      await createPatientUseCase.execute(patientData, userId);
+      await createPatientUseCase.execute(patientData, clinicId);
     } catch (err: any) {
       expect(err).toBeInstanceOf(ApiError);
       expect(err.message).toBe("Já existe um usuário cadastrado com esse CPF");
@@ -56,11 +56,11 @@ describe("Create patients", () => {
     mockPatientRepository.getByHash.mockResolvedValue(patientData);
 
     await expect(
-      createPatientUseCase.execute(patientData, userId),
+      createPatientUseCase.execute(patientData, clinicId),
     ).rejects.toThrow(ApiError);
 
     try {
-      await createPatientUseCase.execute(patientData, userId);
+      await createPatientUseCase.execute(patientData, clinicId);
     } catch (err: any) {
       expect(err).toBeInstanceOf(ApiError);
       expect(err.message).toBe(
@@ -83,22 +83,22 @@ describe("Create patients", () => {
     mockPatientRepository.getByHash.mockResolvedValue(undefined);
     mockPatientRepository.save.mockResolvedValueOnce();
 
-    const patient = await createPatientUseCase.execute(patientData, userId);
+    const patient = await createPatientUseCase.execute(patientData, clinicId);
 
     expect(patient).toHaveProperty("id");
-    expect(mockPatientRepository.getByCpf).toHaveBeenCalledWith(cpf, userId);
+    expect(mockPatientRepository.getByCpf).toHaveBeenCalledWith(cpf, clinicId);
     expect(mockPatientRepository.save).toHaveBeenCalledWith(
       expect.objectContaining({
         name: patientData.name,
         phone: patientData.phone,
         cpf,
       }),
-      userId,
+      clinicId,
     );
     expect(mockLocationRepository.save).toHaveBeenCalledWith(
       expect.objectContaining({ address: "Rua Teste" }),
       expect.any(String),
-      userId,
+      clinicId,
     );
   });
   it("Should be able to create patient without pass a cpf", async () => {
@@ -110,7 +110,7 @@ describe("Create patients", () => {
     mockPatientRepository.getByCpf.mockResolvedValueOnce([]);
     mockPatientRepository.save.mockResolvedValueOnce();
 
-    const patient = await createPatientUseCase.execute(patientData, userId);
+    const patient = await createPatientUseCase.execute(patientData, clinicId);
 
     expect(patient).toHaveProperty("id");
     expect(mockPatientRepository.getByCpf).not.toBeCalled();
@@ -119,7 +119,7 @@ describe("Create patients", () => {
         name: patientData.name,
         phone: patientData.phone,
       }),
-      userId,
+      clinicId,
     );
   });
 
@@ -138,7 +138,7 @@ describe("Create patients", () => {
     mockPatientRepository.getByCpf.mockResolvedValueOnce([]);
     mockPatientRepository.save.mockResolvedValueOnce();
 
-    await createPatientUseCase.execute(patientData, userId);
+    await createPatientUseCase.execute(patientData, clinicId);
 
     expect(mockLocationRepository.save).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -148,7 +148,7 @@ describe("Create patients", () => {
         state: "Rio Grande do Sul",
       }),
       expect.any(String),
-      userId,
+      clinicId,
     );
   });
 
@@ -161,7 +161,7 @@ describe("Create patients", () => {
     mockPatientRepository.getByCpf.mockResolvedValueOnce([]);
     mockPatientRepository.save.mockResolvedValueOnce();
 
-    await createPatientUseCase.execute(patientData, userId);
+    await createPatientUseCase.execute(patientData, clinicId);
 
     expect(mockLocationRepository.save).not.toHaveBeenCalled();
   });

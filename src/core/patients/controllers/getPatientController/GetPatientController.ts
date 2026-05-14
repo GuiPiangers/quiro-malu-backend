@@ -14,11 +14,11 @@ export class GetPatientController {
     }
 
     try {
-      const userId = request.user.clinicId;
+      const clinicId = request.user.clinicId!;
       const { id: patientId } = parsedParams.data;
       const patients = await this.listPatientsUseCase.execute(
         patientId,
-        userId!,
+        clinicId,
       );
 
       response.json(patients);

@@ -14,6 +14,7 @@ import { toInternationalPhone } from "../../../utils/toInternationalPhone";
 
 export type SendBeforeScheduleMessageJob = {
   userId: string;
+  clinicId: string;
   patientId: string;
   schedulingId: string;
   beforeScheduleMessageId: string;
@@ -42,7 +43,7 @@ export class SendBeforeScheduleMessageUseCase {
     }
     const [scheduling] = await this.schedulingRepository.get({
       id: job.schedulingId,
-      userId: job.userId,
+      clinicId: job.clinicId,
     }) ?? [];
 
     if (scheduling?.status === "Cancelado" || scheduling?.status === "Atendido") {
@@ -64,13 +65,14 @@ export class SendBeforeScheduleMessageUseCase {
 
     const [patient] = await this.patientRepository.getById(
       scheduling.patientId,
-      job.userId,
+      job.clinicId,
     );
 
     if (!patient?.phone) return;
 
     const allowed = await this.messageSendStrategyEnforcer.isSendAllowed({
       userId: job.userId,
+      clinicId: job.clinicId,
       campaignId: job.beforeScheduleMessageId,
       patientId: scheduling.patientId,
     });

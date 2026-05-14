@@ -22,6 +22,7 @@ describe("listEventsUseCase", () => {
     it("should return the data of events", async () => {
       const date = "2025-08-27";
       const userId = "1";
+      const clinicId = "clinic-1";
       const schedules: SchedulingWithPatientDTO[] = [
         {
           id: "1",
@@ -44,7 +45,7 @@ describe("listEventsUseCase", () => {
         blockSchedules,
       );
 
-      const result = await listEventsUseCase.execute({ date, userId });
+      const result = await listEventsUseCase.execute({ date, userId, clinicId });
       const expected = [...schedules, ...blockSchedules.map((b) => b.getDTO())];
 
       expect(result.data).toEqual(expected);
@@ -52,6 +53,7 @@ describe("listEventsUseCase", () => {
 
     it("should short data of events", async () => {
       const userId = "1";
+      const clinicId = "clinic-1";
       const schedules: SchedulingWithPatientDTO[] = [
         {
           id: "1",
@@ -77,6 +79,7 @@ describe("listEventsUseCase", () => {
       const result = await listEventsUseCase.execute({
         date: "2025-08-27",
         userId,
+        clinicId,
       });
       const expected = [...blockSchedules.map((b) => b.getDTO()), ...schedules];
 
@@ -86,15 +89,16 @@ describe("listEventsUseCase", () => {
     it("should call the repositories list methods with the correct params", async () => {
       const date = "2025-08-27T10:00:00";
       const userId = "1";
+      const clinicId = "clinic-1";
       const onlyDate = date.substring(0, 10);
       const startDate = new DateTime(`${onlyDate}T00:00`);
       const endDate = new DateTime(`${onlyDate}T23:59`);
 
-      await listEventsUseCase.execute({ date, userId });
+      await listEventsUseCase.execute({ date, userId, clinicId });
 
       expect(mockSchedulingRepository.list).toHaveBeenCalledWith({
         date,
-        userId,
+        clinicId,
       });
       expect(mockBlockScheduleRepository.listBetweenDates).toHaveBeenCalledWith(
         {
@@ -108,13 +112,14 @@ describe("listEventsUseCase", () => {
     it("should propagate an error if the repository method list throws", async () => {
       const date = "2025-08-27T10:00:00";
       const userId = "1";
+      const clinicId = "clinic-1";
       const error = new Error("Error");
 
       mockSchedulingRepository.list.mockRejectedValue(error);
 
-      await expect(listEventsUseCase.execute({ date, userId })).rejects.toThrow(
-        error,
-      );
+      await expect(
+        listEventsUseCase.execute({ date, userId, clinicId }),
+      ).rejects.toThrow(error);
     });
   });
 });

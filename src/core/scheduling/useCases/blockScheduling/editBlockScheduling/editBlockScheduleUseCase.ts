@@ -13,7 +13,7 @@ export class EditBlockScheduleUseCase {
     private schedulingRepository: ISchedulingRepository,
   ) {}
 
-  async execute(dto: EditBlockScheduleDTO, userId: string) {
+  async execute(dto: EditBlockScheduleDTO, userId: string, clinicId: string) {
     const { id, date, endDate, description } = dto;
 
     const blockSchedule = await this.blockScheduleRepository.findById(
@@ -37,7 +37,7 @@ export class EditBlockScheduleUseCase {
 
     if (date || endDate) {
       const schedules = await this.schedulingRepository.listBetweenDates({
-        userId,
+        clinicId,
         startDate: newDate,
         endDate: newEndDate,
       });

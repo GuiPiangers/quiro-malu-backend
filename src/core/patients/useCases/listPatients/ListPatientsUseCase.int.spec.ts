@@ -25,7 +25,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
 
     it("lista pacientes do usuário com total e limite", async () => {
       await withRollbackTransaction(knex, async (trx) => {
-        const { userId } = await insertIntegrationUser(trx);
+        const { userId, clinicId } = await insertIntegrationUser(trx);
         const alfa = "Alfa Integração Lista";
         const beta = "Beta Integração Lista";
         await insertPatientForIntegration(trx, userId, {
@@ -39,7 +39,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
 
         const useCase = new ListPatientsUseCase(new KnexPatientRepository(trx));
         const result = await useCase.execute({
-          userId,
+          clinicId,
           page: 1,
           limit: 20,
         });

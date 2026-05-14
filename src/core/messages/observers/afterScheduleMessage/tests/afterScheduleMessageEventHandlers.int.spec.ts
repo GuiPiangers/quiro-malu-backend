@@ -22,6 +22,7 @@ import { AfterScheduleMessageEventHandlers } from "../afterScheduleMessageEventH
 
 type CreateScheduleEmitPayload = Omit<SchedulingDTO, "id"> & {
   userId: string;
+  clinicId: string;
   scheduleId: string;
 };
 
@@ -139,6 +140,7 @@ function makeSchedulePayload(
 ): CreateScheduleEmitPayload {
   return {
     userId: "user-default",
+    clinicId: "clinic-default",
     scheduleId: "sched-default",
     patientId: "pat-default",
     date: "2025-01-01T14:00",
@@ -466,7 +468,8 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
       await waitForBullJob(bullInspector, jobId);
 
       appEventListener.emit("deleteSchedule", {
-        userId: "user-del",
+        clinicId: "clinic-int",
+          userId: "user-del",
         scheduleId: "sched-del",
       });
       await flushAsyncListeners();
@@ -528,7 +531,8 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
       await waitForBullJob(bullInspector, jobIdB);
 
       appEventListener.emit("deleteSchedule", {
-        userId: "user-iso-del-a",
+        clinicId: "clinic-int",
+          userId: "user-iso-del-a",
         scheduleId: "sched-iso-del",
       });
       await flushAsyncListeners();

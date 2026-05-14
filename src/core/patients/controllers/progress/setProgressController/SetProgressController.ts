@@ -14,11 +14,11 @@ export class SetProgressController {
 
     try {
       const data = parsed.data;
-      const userId = request.user.clinicId;
+      const clinicId = request.user.clinicId!;
 
       const progress = await this.setProgressUseCase.execute({
         ...data,
-        userId: userId!,
+        clinicId,
       });
 
       response.status(201).json(progress);

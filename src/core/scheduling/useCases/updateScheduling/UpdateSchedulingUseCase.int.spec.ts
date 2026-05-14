@@ -119,6 +119,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         await useCase.execute({
           userId,
+          clinicId: userId,
           id: scheduleId,
           patientId,
           date: "2030-07-01T09:00",
@@ -143,6 +144,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await expect(
           useCase.execute({
             userId,
+            clinicId: userId,
             id: uuidv4(),
             patientId,
             date: "2030-07-02T10:00",
@@ -165,6 +167,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await expect(
           useCase.execute({
             userId,
+            clinicId: userId,
             id: "",
             patientId,
             date: "2030-07-02T10:00",
@@ -208,6 +211,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await expect(
           useCase.execute({
             userId,
+            clinicId: userId,
             id: idA,
             patientId,
             date: "2030-07-10T10:00",
@@ -250,6 +254,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         await useCase.execute({
           userId,
+          clinicId: userId,
           id: idA,
           patientId,
           date: "2030-07-11T10:00",
@@ -284,6 +289,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         await useCase.execute({
           userId,
+          clinicId: userId,
           id: idC,
           patientId,
           date: "2030-07-12T10:00",
@@ -322,6 +328,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await expect(
           useCase.execute({
             userId,
+            clinicId: userId,
             id: scheduleId,
             patientId,
             date: "2030-07-18T10:00",
@@ -360,6 +367,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         await useCase.execute({
           userId,
+          clinicId: userId,
           id: scheduleId,
           patientId,
           date: "2030-07-20T08:00",

@@ -28,6 +28,7 @@ function createMessageSendStrategyEnforcerMock() {
 
 const baseJob = {
   userId: "user-1",
+  clinicId: "clinic-1",
   patientId: "patient-1",
   patientName: "Maria",
   patientPhone: "(51) 99999 9999",
@@ -308,6 +309,7 @@ describe("SendBirthdayMessageUseCase", () => {
 
     expect(messageSendStrategyEnforcer.isSendAllowed).toHaveBeenCalledWith({
       userId: "user-1",
+      clinicId: "clinic-1",
       campaignId: "camp-1",
       patientId: "patient-1",
     });

@@ -1,11 +1,11 @@
 import { PatientDTO } from "../../core/patients/models/Patient";
 
 export interface IPatientRepository {
-  save(patient: PatientDTO, userId: string): Promise<void>;
-  saveMany(patient: (PatientDTO & { userId: string })[]): Promise<void>;
-  update(data: PatientDTO, patientId: string, userId: string): Promise<void>;
+  save(patient: PatientDTO, clinicId: string): Promise<void>;
+  saveMany(patient: (PatientDTO & { clinicId: string })[]): Promise<void>;
+  update(data: PatientDTO, patientId: string, clinicId: string): Promise<void>;
   getAll(
-    userId: string,
+    clinicId: string,
     config: {
       limit: number;
       offSet: number;
@@ -14,28 +14,28 @@ export interface IPatientRepository {
     },
   ): Promise<PatientDTO[]>;
   countAll(
-    userId: string,
+    clinicId: string,
     search?: { name?: string },
   ): Promise<[{ total: number }]>;
-  getByCpf(cpf: string, userId: string): Promise<PatientDTO[]>;
+  getByCpf(cpf: string, clinicId: string): Promise<PatientDTO[]>;
   /** Mês (1–12) e dia do mês (1–31) do aniversário, alinhado a `MONTH`/`DAY` em `dateOfBirth`. */
   getByBirthMonthAndDay(data: {
     birthMonth: number;
     birthDay: number;
-    userId?: string;
-  }): Promise<(PatientDTO & { userId: string })[]>;
-  getByHash(hash: string, userId: string): Promise<PatientDTO | undefined>;
-  getById(patientId: string, userId: string): Promise<PatientDTO[]>;
-  delete(patientId: string, userId: string): Promise<void>;
+    clinicId?: string;
+  }): Promise<(PatientDTO & { clinicId: string })[]>;
+  getByHash(hash: string, clinicId: string): Promise<PatientDTO | undefined>;
+  getById(patientId: string, clinicId: string): Promise<PatientDTO[]>;
+  delete(patientId: string, clinicId: string): Promise<void>;
 
-  getMostRecent(userId: string, limit: number): Promise<PatientDTO[]>;
+  getMostRecent(clinicId: string, limit: number): Promise<PatientDTO[]>;
   listPatientsById(data: {
-    userId: string;
+    clinicId: string;
     patientIds: string[];
   }): Promise<PatientDTO[]>;
 
   countPatientsOwnedByUser(data: {
-    userId: string;
+    clinicId: string;
     patientIds: string[];
   }): Promise<number>;
 }

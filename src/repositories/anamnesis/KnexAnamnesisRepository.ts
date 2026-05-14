@@ -10,37 +10,37 @@ export class KnexAnamnesisRepository implements IAnamnesisRepository {
 
   async save(
     { patientId, ...data }: AnamnesisDTO,
-    userId: string,
+    clinicId: string,
   ): Promise<void> {
     return await this.knex(ETableNames.ANAMNESIS).insert({
       ...data,
-      clinicId: userId,
+      clinicId: clinicId,
       patientId,
     });
   }
 
-  async saveMany(data: (AnamnesisDTO & { userId: string })[]): Promise<void> {
+  async saveMany(data: (AnamnesisDTO & { clinicId: string })[]): Promise<void> {
     await this.knex(ETableNames.ANAMNESIS).insert(
-      data.map(({ userId, ...anamnesis }) => ({
+      data.map(({ clinicId, ...anamnesis }) => ({
         ...anamnesis,
-        clinicId: userId,
+        clinicId: clinicId,
       })),
     );
   }
 
   async update(
     { patientId, ...data }: AnamnesisDTO,
-    userId: string,
+    clinicId: string,
   ): Promise<void> {
     await this.knex(ETableNames.ANAMNESIS)
       .update(data)
-      .where({ patientId, clinicId: userId });
+      .where({ patientId, clinicId: clinicId });
   }
 
-  async get(patientId: string, userId: string): Promise<AnamnesisDTO> {
+  async get(patientId: string, clinicId: string): Promise<AnamnesisDTO> {
     const result = await this.knex(ETableNames.ANAMNESIS)
       .first("*")
-      .where({ patientId, clinicId: userId });
+      .where({ patientId, clinicId: clinicId });
 
     const underwentSurgery = result ? result.underwentSurgery == 1 : undefined;
     const useMedicine = result ? result.useMedicine == 1 : undefined;

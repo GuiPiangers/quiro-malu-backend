@@ -8,16 +8,16 @@ export class GetProgressUseCase {
   async execute({
     id,
     patientId,
-    userId,
+    clinicId,
   }: {
     id: string;
     patientId: string;
-    userId: string;
+    clinicId: string;
   }) {
     const [progressData] = await this.ProgressRepository.get({
       id,
       patientId,
-      userId,
+      clinicId,
     });
 
     if (!progressData) {

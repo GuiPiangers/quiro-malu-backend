@@ -15,10 +15,10 @@ export class ListServiceController {
 
     try {
       const { page, search } = parsed.data;
-      const userId = request.user.clinicId;
+      const clinicId = request.user.clinicId;
 
       const service = await this.listServiceUseCase.execute({
-        userId: userId!,
+        clinicId: clinicId!,
         page,
         search,
       });

@@ -8,7 +8,7 @@ export class DeleteExamController {
 
   async handle(request: Request, response: Response) {
     try {
-      const { id: userId } = request.user;
+      const { id: userId, clinicId } = request.user;
       const { patientId, id } = request.params as {
         patientId: string;
         id: string;
@@ -20,6 +20,7 @@ export class DeleteExamController {
       await this.deleteExamUseCase.execute({
         patientId,
         userId,
+        clinicId: clinicId!,
         id,
       });
 

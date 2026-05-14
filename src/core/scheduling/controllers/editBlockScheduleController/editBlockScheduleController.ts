@@ -25,9 +25,10 @@ export class EditBlockScheduleController {
     try {
       const { id } = parsedParams.data;
       const userId = request.user.id;
+      const clinicId = request.user.clinicId as string;
       const data = parsedBody.data;
 
-      await this.editBlockScheduleUseCase.execute({ ...data, id }, userId!);
+      await this.editBlockScheduleUseCase.execute({ ...data, id }, userId!, clinicId);
 
       return response.status(200).json({ message: "Atualizado com sucesso!" });
     } catch (err: any) {

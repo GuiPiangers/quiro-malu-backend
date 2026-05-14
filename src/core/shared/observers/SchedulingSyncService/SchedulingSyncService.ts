@@ -8,6 +8,7 @@ export type observerParams = {
   patientId: string;
   service: string;
   userId: string;
+  clinicId: string;
 };
 
 export class SchedulingSyncService {
@@ -30,11 +31,12 @@ export class SchedulingSyncService {
     patientId,
     service,
     userId,
+    clinicId,
   }: observerParams) {
     const syncItens = this.list()
       .filter(([key]) => key !== EIdentifierObserver.SCHEDULING)
       .map(([_, values]) =>
-        values({ id: schedulingId, patientId, service, userId }),
+        values({ id: schedulingId, patientId, service, userId, clinicId }),
       );
 
     return Promise.all(syncItens);
@@ -45,11 +47,12 @@ export class SchedulingSyncService {
     patientId,
     service,
     userId,
+    clinicId,
   }: observerParams) {
     const syncItens = this.list()
       .filter(([key]) => key !== EIdentifierObserver.PROGRESS)
       .map(([_, values]) =>
-        values({ id: progressId, patientId, service, userId }),
+        values({ id: progressId, patientId, service, userId, clinicId }),
       );
 
     return Promise.all(syncItens);

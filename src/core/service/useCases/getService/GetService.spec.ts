@@ -14,7 +14,7 @@ describe("getServiceUseCase", () => {
 
   describe("execute", () => {
     it("Should return service data", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const serviceId = "test-service-id";
       const serviceData: ServiceDTO = {
         duration: 3600,
@@ -24,24 +24,24 @@ describe("getServiceUseCase", () => {
 
       mockServiceRepository.get.mockResolvedValue([serviceData]);
 
-      const result = await getServiceUseCase.execute({ id: serviceId, userId });
+      const result = await getServiceUseCase.execute({ id: serviceId, clinicId });
 
       expect(result).toEqual(serviceData);
     });
 
     it("Should call repository get method with correct arguments ", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const serviceId = "test-service-id";
 
       mockServiceRepository.get.mockResolvedValue([]);
 
       await getServiceUseCase.execute({
-        userId,
+        clinicId,
         id: serviceId,
       });
 
       expect(mockServiceRepository.get).toHaveBeenCalledWith({
-        userId,
+        clinicId,
         id: serviceId,
       });
       expect(mockServiceRepository.get).toHaveBeenCalledTimes(1);
@@ -49,14 +49,14 @@ describe("getServiceUseCase", () => {
   });
 
   it("Should throw an Error if repository get method throws", async () => {
-    const userId = "test-user-id";
+    const clinicId = "test-user-id";
     const serviceId = "test-service-id";
     const errorMessage = "Error getting service";
 
     mockServiceRepository.get.mockRejectedValue(new Error(errorMessage));
 
     await expect(
-      getServiceUseCase.execute({ id: serviceId, userId }),
+      getServiceUseCase.execute({ id: serviceId, clinicId }),
     ).rejects.toThrow(errorMessage);
   });
 });

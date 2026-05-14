@@ -29,6 +29,7 @@ export class BeforeScheduleMessageEventHandlers {
       await this.handleCreateOrUpdateSchedule({
         type: "create",
         userId: data.userId,
+        clinicId: data.clinicId,
         scheduleId: data.scheduleId,
         patientId: data.patientId,
         scheduleDate: data.date,
@@ -39,6 +40,7 @@ export class BeforeScheduleMessageEventHandlers {
       await this.handleCreateOrUpdateSchedule({
         type: "update",
         userId: data.userId,
+        clinicId: data.clinicId,
         scheduleId: data.scheduleId,
         patientId: data.patientId,
         scheduleDate: data.date,
@@ -48,6 +50,7 @@ export class BeforeScheduleMessageEventHandlers {
     this.appEventListener.on("deleteSchedule", async (data) => {
       await this.handleDeleteSchedule({
         userId: data.userId,
+        clinicId: data.clinicId,
         scheduleId: data.scheduleId,
       });
     });
@@ -75,12 +78,14 @@ export class BeforeScheduleMessageEventHandlers {
   private async handleCreateOrUpdateSchedule({
     type,
     userId,
+    clinicId,
     scheduleId,
     patientId,
     scheduleDate,
   }: {
     type: "create" | "update";
     userId: string;
+    clinicId: string;
     scheduleId: string;
     patientId: string;
     scheduleDate: string | undefined;
@@ -112,6 +117,7 @@ export class BeforeScheduleMessageEventHandlers {
           jobId,
           {
             userId,
+            clinicId,
             patientId,
             schedulingId: scheduleId,
             beforeScheduleMessageId: config.id,
@@ -124,9 +130,11 @@ export class BeforeScheduleMessageEventHandlers {
 
   private async handleDeleteSchedule({
     userId,
+    clinicId: _clinicId,
     scheduleId,
   }: {
     userId: string;
+    clinicId: string;
     scheduleId: string;
   }) {
     const configs = await this.beforeScheduleMessageRepository.listByUserId({

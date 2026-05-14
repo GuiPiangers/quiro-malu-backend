@@ -2,36 +2,42 @@ import { DiagnosticDTO } from "../../core/patients/models/Diagnostic";
 import { IDiagnosticRepository } from "./IDiagnosticRepository";
 
 export class InMemoryDiagnostic implements IDiagnosticRepository {
-  saveMany(data: (DiagnosticDTO & { userId: string })[]): Promise<void> {
+  saveMany(data: (DiagnosticDTO & { clinicId: string })[]): Promise<void> {
     throw new Error("Method not implemented.");
   }
 
   private dbLocation: (DiagnosticDTO & {
     patientId: string;
-    userId: string;
+    clinicId: string;
   })[] = [];
 
   async save(
     { patientId, ...data }: DiagnosticDTO,
-    userId: string,
+    clinicId: string,
   ): Promise<void> {
-    this.dbLocation.push({ ...data, patientId, userId });
+    this.dbLocation.push({ ...data, patientId, clinicId });
   }
 
-  async update({ patientId, ...data }: DiagnosticDTO): Promise<void> {
+  async update(
+    { patientId, ...data }: DiagnosticDTO,
+    clinicId: string,
+  ): Promise<void> {
     const index = this.dbLocation.findIndex((location) => {
-      return location.patientId === patientId;
+      return (
+        location.patientId === patientId && location.clinicId === clinicId
+      );
     });
     this.dbLocation[index] = {
       ...data,
       patientId,
-      userId: this.dbLocation[index].userId,
+      clinicId: this.dbLocation[index].clinicId,
     };
   }
 
-  async get(patientId: string): Promise<DiagnosticDTO> {
+  async get(patientId: string, clinicId: string): Promise<DiagnosticDTO> {
     const selectedUser = await this.dbLocation.find(
-      (location) => location.patientId === patientId,
+      (location) =>
+        location.patientId === patientId && location.clinicId === clinicId,
     );
 
     if (selectedUser) return selectedUser;

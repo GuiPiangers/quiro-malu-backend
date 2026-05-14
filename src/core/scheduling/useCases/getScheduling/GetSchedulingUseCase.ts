@@ -5,10 +5,10 @@ import { SchedulingWithPatient } from "../../models/SchedulingWithPatient";
 export class GetSchedulingUseCase {
   constructor(private SchedulingRepository: ISchedulingRepository) {}
 
-  async execute({ id, userId }: { id: string; userId: string }) {
+  async execute({ id, clinicId }: { id: string; clinicId: string }) {
     const [schedulingData] = await this.SchedulingRepository.get({
       id,
-      userId,
+      clinicId,
     });
 
     if (!schedulingData) throw new ApiError("Agendamento não encontrado", 404);

@@ -13,7 +13,7 @@ describe("listSchedulingUseCase", () => {
 
   describe("execute", () => {
     it("should return the data of scheduling", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-clinic-id";
       const id = "test-scheduling-id";
 
       const listSchedulingData = [
@@ -33,7 +33,7 @@ describe("listSchedulingUseCase", () => {
       mockSchedulingRepository.list.mockResolvedValue(listSchedulingData);
       mockSchedulingRepository.count.mockResolvedValue([{ total: 1 }]);
 
-      const result = await listSchedulingUseCase.execute({ userId, date });
+      const result = await listSchedulingUseCase.execute({ clinicId, date });
 
       expect(result).toEqual({
         total: 1,
@@ -43,7 +43,7 @@ describe("listSchedulingUseCase", () => {
     });
 
     it("should call the repository list method with the correct params", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-clinic-id";
       const id = "test-scheduling-id";
       const date = "2025-01-01";
       mockSchedulingRepository.list.mockResolvedValue([
@@ -56,24 +56,24 @@ describe("listSchedulingUseCase", () => {
         },
       ]);
 
-      await listSchedulingUseCase.execute({ userId, date });
+      await listSchedulingUseCase.execute({ clinicId, date });
 
       expect(mockSchedulingRepository.list).toHaveBeenCalledTimes(1);
       expect(mockSchedulingRepository.list).toHaveBeenCalledWith({
-        userId,
+        clinicId,
         date,
       });
     });
 
     it("should propagate an error if the repository method list throws", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-clinic-id";
       const date = "2025-01-01";
       const errorMessage = "Failed to listQtdSchedulesByDay";
 
       mockSchedulingRepository.list.mockRejectedValue(new Error(errorMessage));
 
       await expect(
-        listSchedulingUseCase.execute({ userId, date }),
+        listSchedulingUseCase.execute({ clinicId, date }),
       ).rejects.toThrow(errorMessage);
     });
   });

@@ -75,7 +75,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           new KnexSchedulingRepository(trx),
         );
 
-        const result = await useCase.execute({ userId, id: scheduleId });
+        const result = await useCase.execute({ clinicId: userId, id: scheduleId });
 
         expect(result.date).toBe("2030-10-05T14:25");
         expect(typeof result.date).toBe("string");
@@ -104,7 +104,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           new KnexSchedulingRepository(trx),
         );
 
-        const result = await useCase.execute({ userId, id: scheduleId });
+        const result = await useCase.execute({ clinicId: userId, id: scheduleId });
 
         expect(result.date).toBe("2031-01-01T09:00");
       });

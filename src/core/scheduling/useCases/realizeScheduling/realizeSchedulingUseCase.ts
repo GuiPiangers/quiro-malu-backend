@@ -9,18 +9,18 @@ export class RealizeSchedulingUseCase {
   ) {}
 
   async execute({
-    userId,
+    clinicId,
     patientId,
     schedulingId,
   }: {
-    userId: string;
+    clinicId: string;
     patientId: string;
     schedulingId: string;
   }) {
     const [[progress]] = await Promise.all([
       this.progressRepository.getByScheduling({
         schedulingId,
-        userId,
+        clinicId,
         patientId,
       }),
     ]);
@@ -33,7 +33,7 @@ export class RealizeSchedulingUseCase {
     }
     await this.schedulingRepository.update({
       id: schedulingId,
-      userId,
+      clinicId,
       status: "Atendido",
     });
   }

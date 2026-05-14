@@ -13,7 +13,7 @@ describe("getSchedulingUseCase", () => {
 
   describe("execute", () => {
     it("should return the data of scheduling", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-clinic-id";
       const id = "test-scheduling-id";
 
       const schedulingData: SchedulingWithPatientDTO = {
@@ -29,13 +29,13 @@ describe("getSchedulingUseCase", () => {
 
       mockSchedulingRepository.get.mockResolvedValue([schedulingData]);
 
-      const result = await getSchedulingUseCase.execute({ userId, id });
+      const result = await getSchedulingUseCase.execute({ clinicId, id });
 
       expect(result).toEqual(schedulingData);
     });
 
     it("should call the repository get method with the correct params", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-clinic-id";
       const id = "test-scheduling-id";
 
       mockSchedulingRepository.get.mockResolvedValue([
@@ -48,24 +48,24 @@ describe("getSchedulingUseCase", () => {
         },
       ]);
 
-      await getSchedulingUseCase.execute({ userId, id });
+      await getSchedulingUseCase.execute({ clinicId, id });
 
       expect(mockSchedulingRepository.get).toHaveBeenCalledTimes(1);
       expect(mockSchedulingRepository.get).toHaveBeenCalledWith({
         id,
-        userId,
+        clinicId,
       });
     });
 
     it("should propagate an error if the repository method get throws", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-clinic-id";
       const id = "test-scheduling-id";
       const errorMessage = "Failed to getQtdSchedulesByDay";
 
       mockSchedulingRepository.get.mockRejectedValue(new Error(errorMessage));
 
       await expect(
-        getSchedulingUseCase.execute({ userId, id }),
+        getSchedulingUseCase.execute({ clinicId, id }),
       ).rejects.toThrow(errorMessage);
     });
 
@@ -74,7 +74,7 @@ describe("getSchedulingUseCase", () => {
 
       await expect(
         getSchedulingUseCase.execute({
-          userId: "test-user-id",
+          clinicId: "test-clinic-id",
           id: "missing-id",
         }),
       ).rejects.toMatchObject({
@@ -91,7 +91,7 @@ describe("getSchedulingUseCase", () => {
     ])(
       "retorna a data exatamente como a string do agendamento (%s), sem reinterpretar fuso",
       async (bookedDate) => {
-        const userId = "test-user-id";
+        const clinicId = "test-clinic-id";
         const id = "test-scheduling-id";
 
         const schedulingData: SchedulingWithPatientDTO = {
@@ -107,7 +107,7 @@ describe("getSchedulingUseCase", () => {
 
         mockSchedulingRepository.get.mockResolvedValue([schedulingData]);
 
-        const result = await getSchedulingUseCase.execute({ userId, id });
+        const result = await getSchedulingUseCase.execute({ clinicId, id });
 
         expect(result.date).toBe(bookedDate);
         expect(typeof result.date).toBe("string");
@@ -116,7 +116,7 @@ describe("getSchedulingUseCase", () => {
     );
 
     it("mantém a mesma string de data que o repositório retornou (contrato do cliente)", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-clinic-id";
       const id = "test-scheduling-id";
       const clientBookedAt = "2031-03-20T16:30";
 
@@ -133,7 +133,7 @@ describe("getSchedulingUseCase", () => {
         },
       ]);
 
-      const result = await getSchedulingUseCase.execute({ userId, id });
+      const result = await getSchedulingUseCase.execute({ clinicId, id });
 
       expect(result.date).toBe(clientBookedAt);
     });

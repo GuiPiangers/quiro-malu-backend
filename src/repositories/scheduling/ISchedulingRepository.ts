@@ -6,12 +6,12 @@ import { SchedulingWithPatientDTO } from "../../core/scheduling/models/Schedulin
 import { DateTime } from "../../core/shared/Date";
 
 export type UpdateSchedulingParams = Partial<SchedulingDTO> & {
-  userId: string;
+  clinicId: string;
   id: string;
 };
 
 export type ListBetweenDatesParams = {
-  userId: string;
+  clinicId: string;
   startDate: DateTime;
   endDate: DateTime;
 };
@@ -24,39 +24,39 @@ export interface ISchedulingRepository {
   update(data: UpdateSchedulingParams): Promise<void>;
 
   list(data: {
-    userId: string;
+    clinicId: string;
     date: string;
     config?: { limit: number; offSet: number };
   }): Promise<SchedulingWithPatientDTO[]>;
 
   listBetweenDates(data: ListBetweenDatesParams): Promise<Scheduling[]>;
 
-  count(data: { userId: string; date: string }): Promise<[{ total: number }]>;
+  count(data: { clinicId: string; date: string }): Promise<[{ total: number }]>;
 
   qdtSchedulesByDay(data: {
     month: number;
     year: number;
-    userId: string;
+    clinicId: string;
   }): Promise<{ formattedDate: string; qtd: number }[]>;
 
-  get(data: { id: string; userId: string }): Promise<SchedulingWithPatientDTO[]>;
+  get(data: { id: string; clinicId: string }): Promise<SchedulingWithPatientDTO[]>;
 
-  listIdsByUserId(data: { userId: string }): Promise<string[]>;
+  listIdsByClinicId(data: { clinicId: string }): Promise<string[]>;
 
-  listPatientIdsByUserIdOrderBySchedulingCountDesc(
-    userId: string,
+  listPatientIdsByClinicIdOrderBySchedulingCountDesc(
+    clinicId: string,
     limit: number,
   ): Promise<string[]>;
 
-  delete(data: { id: string; userId: string }): Promise<void>;
+  delete(data: { id: string; clinicId: string }): Promise<void>;
 
   listFromNowWithinMinutes(data: {
-    userId: string;
+    clinicId: string;
     offsetMinutes: number;
   }): Promise<Scheduling[]>;
 
   listScheduledInMinutes(data: {
-    userId: string;
+    clinicId: string;
     offsetMinutes: number;
   }): Promise<Scheduling[]>;
 }

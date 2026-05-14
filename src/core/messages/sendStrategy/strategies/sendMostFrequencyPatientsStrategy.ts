@@ -12,8 +12,8 @@ export class SendMostFrequencyPatientsStrategy implements IMessageSendStrategy {
 
   async allowsSend(ctx: SendStrategyContext): Promise<boolean> {
     const ids =
-      await this.schedulingRepository.listPatientIdsByUserIdOrderBySchedulingCountDesc(
-        ctx.userId,
+      await this.schedulingRepository.listPatientIdsByClinicIdOrderBySchedulingCountDesc(
+        ctx.clinicId,
         this.amount,
       );
 

@@ -4,11 +4,11 @@ export class ListServiceUseCase {
   constructor(private ServiceRepository: IServiceRepository) {}
 
   async execute({
-    userId,
+    clinicId,
     page,
     search,
   }: {
-    userId: string;
+    clinicId: string;
     page?: number;
     search?: string;
   }) {
@@ -16,10 +16,10 @@ export class ListServiceUseCase {
     const offSet = page ? limit * (page - 1) : 0;
 
     const serviceData = this.ServiceRepository.list({
-      userId,
+      clinicId,
       config: page === undefined ? { search } : { limit, offSet, search },
     });
-    const totalService = this.ServiceRepository.count({ userId });
+    const totalService = this.ServiceRepository.count({ clinicId });
 
     const [services, total] = await Promise.all([serviceData, totalService]);
     return { services, total: total[0].total, limit };

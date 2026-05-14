@@ -113,6 +113,44 @@ export class BirthdayMessageRepository implements IBirthdayMessageRepository {
     }
   }
 
+  async findActiveCampaignForClinic(
+    clinicId: string,
+  ): Promise<BirthdayMessageCampaignDTO | null> {
+    try {
+      const row = await this.knex(ETableNames.BIRTHDAY_MESSAGES)
+        .join(
+          ETableNames.USERS,
+          `${ETableNames.USERS}.id`,
+          `${ETableNames.BIRTHDAY_MESSAGES}.userId`,
+        )
+        .where(`${ETableNames.USERS}.clinicId`, clinicId)
+        .where(`${ETableNames.BIRTHDAY_MESSAGES}.isActive`, true)
+        .select(
+          `${ETableNames.BIRTHDAY_MESSAGES}.id`,
+          `${ETableNames.BIRTHDAY_MESSAGES}.userId`,
+          `${ETableNames.BIRTHDAY_MESSAGES}.name`,
+          `${ETableNames.BIRTHDAY_MESSAGES}.textTemplate`,
+          `${ETableNames.BIRTHDAY_MESSAGES}.isActive`,
+          `${ETableNames.BIRTHDAY_MESSAGES}.sendTime`,
+        )
+        .orderBy(`${ETableNames.BIRTHDAY_MESSAGES}.updated_at`, "desc")
+        .first();
+
+      if (!row) return null;
+
+      return {
+        id: row.id,
+        userId: row.userId,
+        name: row.name,
+        textTemplate: row.textTemplate,
+        isActive: !!row.isActive,
+        sendTime: mapSendTimeToHhMm(row.sendTime),
+      };
+    } catch (error: any) {
+      throw new ApiError(error.message, 500);
+    }
+  }
+
   async listByUserIdPaged(
     data: ListBirthdayMessagesByUserIdProps,
   ): Promise<ListBirthdayMessagesResult> {

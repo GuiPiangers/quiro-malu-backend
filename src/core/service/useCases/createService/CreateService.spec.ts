@@ -14,7 +14,7 @@ describe("CreateServiceUseCase", () => {
 
   describe("execute", () => {
     it("Should throw an ApiError if service name already exists", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const serviceData: ServiceDTO = {
         duration: 3600,
         name: "Quiropraxia",
@@ -24,12 +24,12 @@ describe("CreateServiceUseCase", () => {
       mockServiceRepository.getByName.mockResolvedValue([serviceData]);
 
       await expect(
-        createServiceUseCase.execute({ ...serviceData, userId }),
+        createServiceUseCase.execute({ ...serviceData, clinicId }),
       ).rejects.toThrow(ApiError);
     });
 
     it("Should call repository getByName method with correct arguments ", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const serviceData: ServiceDTO = {
         duration: 3600,
         name: "Quiropraxia",
@@ -40,18 +40,18 @@ describe("CreateServiceUseCase", () => {
 
       await createServiceUseCase.execute({
         ...serviceData,
-        userId,
+        clinicId,
       });
 
       expect(mockServiceRepository.getByName).toHaveBeenCalledWith({
         name: serviceData.name,
-        userId,
+        clinicId,
       });
       expect(mockServiceRepository.getByName).toHaveBeenCalledTimes(1);
     });
 
     it("Should call repository save method with correct arguments ", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const serviceData: ServiceDTO = {
         id: "test-service-id",
         duration: 3600,
@@ -63,12 +63,12 @@ describe("CreateServiceUseCase", () => {
 
       await createServiceUseCase.execute({
         ...serviceData,
-        userId,
+        clinicId,
       });
 
       expect(mockServiceRepository.save).toHaveBeenCalledWith({
         ...serviceData,
-        userId,
+        clinicId,
       });
       expect(mockServiceRepository.save).toHaveBeenCalledTimes(1);
     });

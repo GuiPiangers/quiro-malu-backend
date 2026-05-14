@@ -14,7 +14,7 @@ describe("setProgressUseCase", () => {
   describe("execute", () => {
     it("should call the repository Save method with the correct Data if Progress does not exist", async () => {
       const patientId = "test-patient-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
 
       const progressData: ProgressDTO = {
         id: "test-progress-id",
@@ -28,19 +28,19 @@ describe("setProgressUseCase", () => {
 
       mockProgressRepository.get.mockResolvedValue([]);
 
-      await setProgressUseCase.execute({ ...progressData, userId });
+      await setProgressUseCase.execute({ ...progressData, clinicId });
 
       expect(mockProgressRepository.save).toHaveBeenCalledTimes(1);
       expect(mockProgressRepository.save).toHaveBeenCalledWith({
         ...progressData,
-        userId,
+        clinicId,
       });
       expect(mockProgressRepository.update).not.toHaveBeenCalled();
     });
 
     it("should call the repository Update method with the correct Data if Progress does not exist", async () => {
       const patientId = "test-patient-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const progressData: ProgressDTO = {
         id: "test-progress-id",
         patientId,
@@ -55,28 +55,28 @@ describe("setProgressUseCase", () => {
         { patientId, id: "progress-id" },
       ]);
 
-      await setProgressUseCase.execute({ ...progressData, userId });
+      await setProgressUseCase.execute({ ...progressData, clinicId });
 
       expect(mockProgressRepository.update).toHaveBeenCalledTimes(1);
       expect(mockProgressRepository.update).toHaveBeenCalledWith({
         ...progressData,
-        userId,
+        clinicId,
       });
     });
 
     it("should Update data if optional params were not passed", async () => {
       const patientId = "test-patient-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const progressId = "test-progress-id";
 
       mockProgressRepository.get.mockResolvedValue([{ patientId }]);
 
-      await setProgressUseCase.execute({ patientId, userId, id: progressId });
+      await setProgressUseCase.execute({ patientId, clinicId, id: progressId });
 
       expect(mockProgressRepository.update).toHaveBeenCalledTimes(1);
       expect(mockProgressRepository.update).toHaveBeenCalledWith({
         patientId,
-        userId,
+        clinicId,
         id: progressId,
         actualProblem: undefined,
         date: undefined,
@@ -88,17 +88,17 @@ describe("setProgressUseCase", () => {
 
     it("should save data if optional params were not passed", async () => {
       const patientId = "test-patient-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const progressId = "test-progress-id";
 
       mockProgressRepository.get.mockResolvedValue([]);
 
-      await setProgressUseCase.execute({ patientId, userId, id: progressId });
+      await setProgressUseCase.execute({ patientId, clinicId, id: progressId });
 
       expect(mockProgressRepository.save).toHaveBeenCalledTimes(1);
       expect(mockProgressRepository.save).toHaveBeenCalledWith({
         patientId,
-        userId,
+        clinicId,
         id: progressId,
 
         actualProblem: undefined,
@@ -111,13 +111,13 @@ describe("setProgressUseCase", () => {
 
     it("should propagate an error if the repository set method throws", async () => {
       const patientId = "test-patient-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const errorMessage = "Failed to set patient";
 
       mockProgressRepository.get.mockRejectedValueOnce(new Error(errorMessage));
 
       await expect(
-        setProgressUseCase.execute({ patientId, userId }),
+        setProgressUseCase.execute({ patientId, clinicId }),
       ).rejects.toThrow(errorMessage);
     });
   });

@@ -28,6 +28,7 @@ export class UpdateMessageSendStrategyController {
       const { id } = parsedParams.data;
       const rawBody = parsedBody.data;
       const userId = request.user.id!;
+      const clinicId = request.user.clinicId!;
 
       const body = buildValidatedUpdateMessageSendStrategyBody(
         rawBody as Pick<UpdateMessageSendStrategyDTO, "name" | "kind" | "params">,
@@ -35,6 +36,7 @@ export class UpdateMessageSendStrategyController {
 
       const res = await this.updateMessageSendStrategyUseCase.execute({
         userId,
+        clinicId,
         strategyId: id,
         ...body,
       });

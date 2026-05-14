@@ -3,10 +3,10 @@ import { IDiagnosticRepository } from "../../../../../repositories/diagnostic/ID
 export class GetDiagnosticUseCase {
   constructor(private diagnosticRepository: IDiagnosticRepository) {}
 
-  async execute(patientId: string, userId: string) {
+  async execute(patientId: string, clinicId: string) {
     const diagnosticData = await this.diagnosticRepository.get(
       patientId,
-      userId,
+      clinicId,
     );
 
     return diagnosticData ?? {};

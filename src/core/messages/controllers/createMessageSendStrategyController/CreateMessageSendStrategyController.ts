@@ -20,9 +20,11 @@ export class CreateMessageSendStrategyController {
     try {
       const body = parsed.data;
       const userId = request.user.id!;
+      const clinicId = request.user.clinicId!;
 
       const dto = buildValidatedCreateMessageSendStrategyDTO(
         userId,
+        clinicId,
         body as CreateMessageSendStrategyHttpBody,
       );
       const res = await this.createMessageSendStrategyUseCase.execute(dto);

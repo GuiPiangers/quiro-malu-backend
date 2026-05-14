@@ -68,6 +68,7 @@ describe("BeforeScheduleMessageEventHandlers", () => {
 
     appEventListener.emit("createSchedule", {
       userId: "user-1",
+      clinicId: "clinic-1",
       scheduleId: "schedule-1",
       patientId: "patient-1",
       date: "2025-01-01T14:00",
@@ -83,6 +84,7 @@ describe("BeforeScheduleMessageEventHandlers", () => {
       "before-schedule_user-1_schedule-1_cfg-1",
       {
         userId: "user-1",
+        clinicId: "clinic-1",
         patientId: "patient-1",
         schedulingId: "schedule-1",
         beforeScheduleMessageId: "cfg-1",
@@ -123,6 +125,7 @@ describe("BeforeScheduleMessageEventHandlers", () => {
 
     appEventListener.emit("createSchedule", {
       userId: "user-1",
+      clinicId: "clinic-1",
       scheduleId: "schedule-1",
       patientId: "patient-1",
       date: "2025-01-01T14:00",
@@ -169,6 +172,7 @@ describe("BeforeScheduleMessageEventHandlers", () => {
 
     appEventListener.emit("updateSchedule", {
       userId: "user-1",
+      clinicId: "clinic-1",
       scheduleId: "schedule-1",
       patientId: "patient-1",
       date: "2025-01-01T12:30",
@@ -219,6 +223,7 @@ describe("BeforeScheduleMessageEventHandlers", () => {
 
     appEventListener.emit("deleteSchedule", {
       userId: "user-1",
+      clinicId: "clinic-1",
       scheduleId: "schedule-1",
     });
 

@@ -13,23 +13,23 @@ describe("DeleteFinanceUseCase", () => {
 
   describe("execute", () => {
     it("Should call repository delete method with correct arguments ", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const FinanceId = "test-Finance-id";
 
       await deleteFinanceUseCase.execute({
-        userId,
+        clinicId,
         id: FinanceId,
       });
 
       expect(mockFinanceRepository.delete).toHaveBeenCalledWith({
         id: FinanceId,
-        userId,
+        clinicId,
       });
       expect(mockFinanceRepository.delete).toHaveBeenCalledTimes(1);
     });
 
     it("Should throw an Error if repository delete method throws ", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const FinanceId = "test-Finance-id";
       const errorMessage = "Error deleting Finance";
 
@@ -37,7 +37,7 @@ describe("DeleteFinanceUseCase", () => {
 
       await expect(
         deleteFinanceUseCase.execute({
-          userId,
+          clinicId,
           id: FinanceId,
         }),
       ).rejects.toThrow(errorMessage);

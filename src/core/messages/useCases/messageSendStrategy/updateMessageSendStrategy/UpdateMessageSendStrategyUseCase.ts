@@ -25,6 +25,7 @@ import type { ListedMessageSendStrategyDTO } from "../listMessageSendStrategy/Li
 
 export type UpdateMessageSendStrategyDTO = {
   userId: string;
+  clinicId: string;
   strategyId: string;
   name?: string;
   kind?: SendStrategyKind;
@@ -37,15 +38,15 @@ export class UpdateMessageSendStrategyUseCase {
     private readonly patientRepository: IPatientRepository,
   ) {}
 
-  private async assertAllPatientsOwnedByUser(
-    userId: string,
+  private async assertAllPatientsOwnedByClinic(
+    clinicId: string,
     patientIdList: readonly string[],
   ): Promise<void> {
     if (patientIdList.length === 0) {
       return;
     }
     const owned = await this.patientRepository.countPatientsOwnedByUser({
-      userId,
+      clinicId,
       patientIds: [...patientIdList],
     });
     if (owned !== patientIdList.length) {
@@ -107,7 +108,7 @@ export class UpdateMessageSendStrategyUseCase {
       displayName,
       patientIdList: params.patientIdList,
     });
-    await this.assertAllPatientsOwnedByUser(dto.userId, entity.patientIdList);
+    await this.assertAllPatientsOwnedByClinic(dto.clinicId, entity.patientIdList);
     return {
       kind: entity.kind,
       name: entity.displayName.value,
@@ -127,7 +128,7 @@ export class UpdateMessageSendStrategyUseCase {
       displayName,
       patientIdList: params.patientIdList,
     });
-    await this.assertAllPatientsOwnedByUser(dto.userId, entity.patientIdList);
+    await this.assertAllPatientsOwnedByClinic(dto.clinicId, entity.patientIdList);
     return {
       kind: entity.kind,
       name: entity.displayName.value,

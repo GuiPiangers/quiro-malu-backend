@@ -9,18 +9,18 @@ export class CreatePatientUseCase {
     private locationRepository: ILocationRepository,
   ) {}
 
-  async execute(data: PatientDTO, userId: string) {
+  async execute(data: PatientDTO, clinicId: string) {
     const patient = new Patient(data);
     const { location, ...patientDTO } = patient.getPatientDTO();
 
     await Promise.all([
-      this.validateCpfNotExist({ cpf: patientDTO.cpf, userId }),
-      this.validatePatientExist(patient, userId),
+      this.validateCpfNotExist({ cpf: patientDTO.cpf, clinicId }),
+      this.validatePatientExist(patient, clinicId),
     ]);
-    await this.patientRepository.save(patientDTO, userId);
+    await this.patientRepository.save(patientDTO, clinicId);
 
     if (location) {
-      await this.locationRepository.save(location, patient.id, userId);
+      await this.locationRepository.save(location, patient.id, clinicId);
     }
 
     return patientDTO;
@@ -28,13 +28,13 @@ export class CreatePatientUseCase {
 
   private async validateCpfNotExist({
     cpf,
-    userId,
+    clinicId,
   }: {
     cpf?: string;
-    userId: string;
+    clinicId: string;
   }) {
     if (cpf) {
-      const [verifyCpf] = await this.patientRepository.getByCpf(cpf, userId);
+      const [verifyCpf] = await this.patientRepository.getByCpf(cpf, clinicId);
       if (verifyCpf?.cpf === cpf)
         throw new ApiError(
           "Já existe um usuário cadastrado com esse CPF",
@@ -44,10 +44,10 @@ export class CreatePatientUseCase {
     }
   }
 
-  private async validatePatientExist(patient: Patient, userId: string) {
+  private async validatePatientExist(patient: Patient, clinicId: string) {
     const patientExists = await this.patientRepository.getByHash(
       patient.hashData,
-      userId,
+      clinicId,
     );
 
     if (patientExists?.hashData) {

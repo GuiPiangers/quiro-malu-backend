@@ -31,15 +31,15 @@ export class CreateMessageSendStrategyUseCase {
     private readonly patientRepository: IPatientRepository,
   ) {}
 
-  private async assertAllPatientsOwnedByUser(
-    userId: string,
+  private async assertAllPatientsOwnedByClinic(
+    clinicId: string,
     patientIdList: readonly string[],
   ): Promise<void> {
     if (patientIdList.length === 0) {
       return;
     }
     const owned = await this.patientRepository.countPatientsOwnedByUser({
-      userId,
+      clinicId,
       patientIds: [...patientIdList],
     });
     if (owned !== patientIdList.length) {
@@ -96,7 +96,7 @@ export class CreateMessageSendStrategyUseCase {
           displayName,
           patientIdList,
         });
-        await this.assertAllPatientsOwnedByUser(dto.userId, entity.patientIdList);
+        await this.assertAllPatientsOwnedByClinic(dto.clinicId, entity.patientIdList);
 
         await this.messageSendStrategyRepository.save({
           id: entity.id,
@@ -115,7 +115,7 @@ export class CreateMessageSendStrategyUseCase {
           displayName,
           patientIdList,
         });
-        await this.assertAllPatientsOwnedByUser(dto.userId, entity.patientIdList);
+        await this.assertAllPatientsOwnedByClinic(dto.clinicId, entity.patientIdList);
 
         await this.messageSendStrategyRepository.save({
           id: entity.id,

@@ -17,13 +17,15 @@ type AppEvents = {
 
   createSchedule: Omit<SchedulingDTO, "id"> & {
     userId: string;
+    clinicId: string;
     scheduleId: string;
   };
   updateSchedule: Omit<SchedulingDTO, "id"> & {
     scheduleId: string;
     userId: string;
+    clinicId: string;
   };
-  deleteSchedule: { scheduleId: string; userId: string };
+  deleteSchedule: { scheduleId: string; userId: string; clinicId: string };
 
   beforeScheduleMessageCreate: {
     id: string;
@@ -120,7 +122,7 @@ type AppEvents = {
 
   createExam: Omit<ExamDTO, "id"> & { userId: string; examId: string };
   updateExam: Partial<Omit<ExamDTO, "id">> & { userId: string; examId: string };
-  deleteExam: { userId: string; examId: string; patientId: string };
+  deleteExam: { userId: string; clinicId: string; examId: string; patientId: string };
 
   createBlockSchedule: BlockScheduleDto & { userId: string };
 };

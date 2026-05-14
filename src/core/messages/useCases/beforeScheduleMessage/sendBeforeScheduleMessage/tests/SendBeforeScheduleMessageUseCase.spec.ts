@@ -82,6 +82,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     );
 
     await useCase.execute({
+      clinicId: "clinic-1",
       userId: "user-1",
       patientId: "patient-1",
       schedulingId: "schedule-1",
@@ -179,6 +180,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     );
 
     await useCase.execute({
+      clinicId: "clinic-1",
       userId: "user-1",
       patientId: "patient-1",
       schedulingId: "schedule-1",
@@ -229,6 +231,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     );
 
     await useCase.execute({
+      clinicId: "clinic-1",
       userId: "user-1",
       patientId: "patient-1",
       schedulingId: "schedule-1",
@@ -295,6 +298,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     );
 
     await useCase.execute({
+      clinicId: "clinic-1",
       userId: "user-1",
       patientId: "patient-1",
       schedulingId: "schedule-1",
@@ -362,6 +366,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     );
 
     await useCase.execute({
+      clinicId: "clinic-1",
       userId: "user-1",
       patientId: "patient-1",
       schedulingId: "schedule-1",
@@ -416,6 +421,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     );
 
     await useCase.execute({
+      clinicId: "clinic-1",
       userId: "user-1",
       patientId: "patient-1",
       schedulingId: "schedule-1",
@@ -482,6 +488,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     );
 
     await useCase.execute({
+      clinicId: "clinic-1",
       userId: "user-1",
       patientId: "patient-1",
       schedulingId: "schedule-1",
@@ -490,6 +497,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
 
     expect(messageSendStrategyEnforcer.isSendAllowed).toHaveBeenCalledWith({
       userId: "user-1",
+      clinicId: "clinic-1",
       campaignId: "cfg-1",
       patientId: "patient-1",
     });
@@ -535,6 +543,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     );
 
     await useCase.execute({
+      clinicId: "clinic-1",
       userId: "user-1",
       patientId: "patient-1",
       schedulingId: "schedule-1",
@@ -591,6 +600,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     await expect(
       useCase.execute({
         userId: "user-1",
+        clinicId: "clinic-1",
         patientId: "patient-1",
         schedulingId: "schedule-1",
         beforeScheduleMessageId: "cfg-1",
@@ -649,6 +659,7 @@ describe("SendBeforeScheduleMessageUseCase", () => {
     await expect(
       useCase.execute({
         userId: "user-1",
+        clinicId: "clinic-1",
         patientId: "patient-1",
         schedulingId: "schedule-1",
         beforeScheduleMessageId: "cfg-1",

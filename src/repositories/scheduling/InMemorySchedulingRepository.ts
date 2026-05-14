@@ -12,6 +12,7 @@ import {
 
 type InMemorySchedule = SchedulingWithPatientDTO & {
   userId: string;
+  clinicId: string;
 };
 
 export class InMemorySchedulingRepository implements ISchedulingRepository {
@@ -19,21 +20,21 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
 
   async listBetweenDates(data: ListBetweenDatesParams): Promise<Scheduling[]> {
     return this.dbSchedules
-      .filter((s) => s.userId === data.userId)
+      .filter((s) => s.clinicId === data.clinicId)
       .map((s) => new Scheduling(s));
   }
 
   async qdtSchedulesByDay(data: {
     month: number;
     year: number;
-    userId: string;
+    clinicId: string;
   }): Promise<{ formattedDate: string; qtd: number }[]> {
     return [];
   }
 
-  async count(data: { userId: string; date: string }): Promise<[{ total: number }]> {
+  async count(data: { clinicId: string; date: string }): Promise<[{ total: number }]> {
     const total = this.dbSchedules.filter((s) => {
-      if (s.userId !== data.userId) return false;
+      if (s.clinicId !== data.clinicId) return false;
       if (!s.date) return false;
       return String(s.date).substring(0, 10) === data.date;
     }).length;
@@ -41,15 +42,15 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
     return [{ total }];
   }
 
-  async delete({ id, userId }: { id: string; userId: string }): Promise<void> {
+  async delete({ id, clinicId }: { id: string; clinicId: string }): Promise<void> {
     this.dbSchedules = this.dbSchedules.filter(
-      (scheduling) => !(scheduling.id === id && scheduling.userId === userId),
+      (scheduling) => !(scheduling.id === id && scheduling.clinicId === clinicId),
     );
   }
 
-  async update({ userId, ...data }: UpdateSchedulingParams): Promise<void> {
+  async update({ clinicId, ...data }: UpdateSchedulingParams): Promise<void> {
     const index = this.dbSchedules.findIndex((scheduling) => {
-      return scheduling.userId === userId && scheduling.id === data.id;
+      return scheduling.clinicId === clinicId && scheduling.id === data.id;
     });
 
     if (index === -1) return;
@@ -57,29 +58,31 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
     this.dbSchedules[index] = {
       ...(this.dbSchedules[index] as InMemorySchedule),
       ...(data as any),
-      userId,
+      clinicId,
     };
   }
 
   async save({
     userId,
+    clinicId,
     ...data
-  }: SchedulingDTO & { userId: string }): Promise<void> {
+  }: SchedulingDTO & { userId: string; clinicId: string }): Promise<void> {
     this.dbSchedules.push({
       ...(data as any),
       userId,
+      clinicId,
       patient: "",
       phone: "",
     });
   }
 
   async list(data: {
-    userId: string;
+    clinicId: string;
     date: string;
     config?: { limit: number; offSet: number };
   }): Promise<SchedulingWithPatientDTO[]> {
     const list = this.dbSchedules.filter((scheduling) => {
-      if (scheduling.userId !== data.userId) return false;
+      if (scheduling.clinicId !== data.clinicId) return false;
       if (!scheduling.date) return false;
       return String(scheduling.date).substring(0, 10) === data.date;
     });
@@ -89,11 +92,11 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
     return list.slice(data.config.offSet, data.config.offSet + data.config.limit);
   }
 
-  async listIdsByUserId({ userId }: { userId: string }): Promise<string[]> {
+  async listIdsByClinicId({ clinicId }: { clinicId: string }): Promise<string[]> {
     const now = Date.now();
     return this.dbSchedules
       .filter((s) => {
-        if (s.userId !== userId || !s.date) return false;
+        if (s.clinicId !== clinicId || !s.date) return false;
         const t = new Date(s.date).getTime();
         return !Number.isNaN(t) && t > now;
       })
@@ -101,12 +104,12 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
       .filter(Boolean);
   }
 
-  async listPatientIdsByUserIdOrderBySchedulingCountDesc(
-    userId: string,
+  async listPatientIdsByClinicIdOrderBySchedulingCountDesc(
+    clinicId: string,
     limit: number,
   ): Promise<string[]> {
     const filtered = this.dbSchedules.filter((s) => {
-      if (s.userId !== userId || !s.patientId) return false;
+      if (s.clinicId !== clinicId || !s.patientId) return false;
       if (s.status === "Cancelado") return false;
       return true;
     });
@@ -141,22 +144,23 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
 
   async get(data: {
     id: string;
-    userId: string;
+    clinicId: string;
   }): Promise<SchedulingWithPatientDTO[]> {
     return this.dbSchedules.filter(
-      (scheduling) => scheduling.id === data.id && scheduling.userId === data.userId,
+      (scheduling) =>
+        scheduling.id === data.id && scheduling.clinicId === data.clinicId,
     );
   }
 
   async listFromNowWithinMinutes(data: {
-    userId: string;
+    clinicId: string;
     offsetMinutes: number;
   }): Promise<Scheduling[]> {
     return [];
   }
 
   async listScheduledInMinutes(data: {
-    userId: string;
+    clinicId: string;
     offsetMinutes: number;
   }): Promise<Scheduling[]> {
     return [];

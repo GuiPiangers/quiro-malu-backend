@@ -49,11 +49,11 @@ export async function start() {
     } catch (error) {}
   });
 
-  appEventListener.on("deleteExam", async ({ patientId, userId, examId }) => {
+  appEventListener.on("deleteExam", async ({ patientId, userId, clinicId, examId }) => {
     try {
       if (!examId) return;
 
-      const getPatient = getPatientUseCase.execute(patientId, userId);
+      const getPatient = getPatientUseCase.execute(patientId, clinicId);
       const getExam = getExamUseCase.execute({ id: examId, patientId, userId });
 
       const [patient, exam] = await Promise.all([getPatient, getExam]);

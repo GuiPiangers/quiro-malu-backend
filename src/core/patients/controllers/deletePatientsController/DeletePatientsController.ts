@@ -13,9 +13,9 @@ export class DeletePatientsController {
     }
 
     try {
-      const userId = request.user.clinicId;
+      const clinicId = request.user.clinicId;
       const { id: patientId } = parsed.data;
-      await this.deletePatientsUseCase.execute(patientId, userId!);
+      await this.deletePatientsUseCase.execute(patientId, clinicId!);
 
       response.json({ message: "Paciente deletado com sucesso!" });
     } catch (err: any) {

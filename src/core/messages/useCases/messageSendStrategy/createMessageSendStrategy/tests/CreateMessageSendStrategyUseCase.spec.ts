@@ -26,6 +26,7 @@ describe("CreateMessageSendStrategyUseCase", () => {
     const sut = createSut(repo, patientRepo);
 
     const result = await sut.execute({
+      clinicId: "clinic-1",
       userId: "user-1",
       kind: SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
       name: "  Últimos pacientes  ",
@@ -55,6 +56,7 @@ describe("CreateMessageSendStrategyUseCase", () => {
     const sut = createSut(repo, patientRepo);
 
     const result = await sut.execute({
+      clinicId: "clinic-1",
       userId: "user-1",
       kind: SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
       name: "Mais agendamentos",
@@ -83,6 +85,7 @@ describe("CreateMessageSendStrategyUseCase", () => {
 
     const patientIdList = ["p-1", "p-2"];
     const result = await sut.execute({
+      clinicId: "clinic-1",
       userId: "user-1",
       kind: SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
       name: "Lista VIP",
@@ -90,7 +93,7 @@ describe("CreateMessageSendStrategyUseCase", () => {
     });
 
     expect(patientRepo.countPatientsOwnedByUser).toHaveBeenCalledWith({
-      userId: "user-1",
+      clinicId: "clinic-1",
       patientIds: patientIdList,
     });
     expect(repo.save).toHaveBeenCalledWith(
@@ -113,6 +116,7 @@ describe("CreateMessageSendStrategyUseCase", () => {
     const sut = createSut(repo, patientRepo);
 
     const result = await sut.execute({
+      clinicId: "clinic-1",
       userId: "user-1",
       kind: SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
       name: "Exceto ninguém",
@@ -140,6 +144,7 @@ describe("CreateMessageSendStrategyUseCase", () => {
 
     const patientIdList = ["p-1", "p-2"];
     const result = await sut.execute({
+      clinicId: "clinic-1",
       userId: "user-1",
       kind: SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
       name: "Lista de exclusão",
@@ -147,7 +152,7 @@ describe("CreateMessageSendStrategyUseCase", () => {
     });
 
     expect(patientRepo.countPatientsOwnedByUser).toHaveBeenCalledWith({
-      userId: "user-1",
+      clinicId: "clinic-1",
       patientIds: patientIdList,
     });
     expect(repo.save).toHaveBeenCalledWith(
@@ -167,6 +172,7 @@ describe("CreateMessageSendStrategyUseCase", () => {
 
     await expect(
       sut.execute({
+        clinicId: "clinic-1",
         userId: "user-1",
         kind: SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
         name: "Lista",
@@ -184,6 +190,7 @@ describe("CreateMessageSendStrategyUseCase", () => {
 
     await expect(
       sut.execute({
+        clinicId: "clinic-1",
         userId: "user-1",
         kind: SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
         name: "Lista",
@@ -200,6 +207,7 @@ describe("CreateMessageSendStrategyUseCase", () => {
 
     await expect(
       sut.execute({
+        clinicId: "clinic-1",
         userId: "user-1",
         kind: SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
         name: "   ",
@@ -216,6 +224,7 @@ describe("CreateMessageSendStrategyUseCase", () => {
 
     await expect(
       sut.execute({
+        clinicId: "clinic-1",
         userId: "user-1",
         kind: SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
         name: "Estratégia",
@@ -224,6 +233,7 @@ describe("CreateMessageSendStrategyUseCase", () => {
     ).rejects.toThrow(ApiError);
     await expect(
       sut.execute({
+        clinicId: "clinic-1",
         userId: "user-1",
         kind: SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
         name: "Estratégia",
@@ -240,6 +250,7 @@ describe("CreateMessageSendStrategyUseCase", () => {
 
     await expect(
       sut.execute({
+        clinicId: "clinic-1",
         userId: "user-1",
         kind: "strategy_kind_not_supported_yet",
         name: "Qualquer",

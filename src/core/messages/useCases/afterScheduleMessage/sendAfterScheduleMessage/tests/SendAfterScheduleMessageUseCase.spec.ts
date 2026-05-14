@@ -80,6 +80,7 @@ describe("SendAfterScheduleMessageUseCase", () => {
     );
 
     await useCase.execute({
+      clinicId: "clinic-1",
       userId: "user-1",
       patientId: "patient-1",
       schedulingId: "schedule-1",
@@ -143,6 +144,7 @@ describe("SendAfterScheduleMessageUseCase", () => {
     );
 
     await useCase.execute({
+      clinicId: "clinic-1",
       userId: "user-1",
       patientId: "patient-1",
       schedulingId: "schedule-1",
@@ -212,6 +214,7 @@ describe("SendAfterScheduleMessageUseCase", () => {
     );
 
     await useCase.execute({
+      clinicId: "clinic-1",
       userId: "user-1",
       patientId: "patient-1",
       schedulingId: "schedule-1",
@@ -278,6 +281,7 @@ describe("SendAfterScheduleMessageUseCase", () => {
     );
 
     await useCase.execute({
+      clinicId: "clinic-1",
       userId: "user-1",
       patientId: "patient-1",
       schedulingId: "schedule-1",
@@ -286,6 +290,7 @@ describe("SendAfterScheduleMessageUseCase", () => {
 
     expect(messageSendStrategyEnforcer.isSendAllowed).toHaveBeenCalledWith({
       userId: "user-1",
+      clinicId: "clinic-1",
       campaignId: "cfg-1",
       patientId: "patient-1",
     });

@@ -103,7 +103,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           new AppEventListener(),
         );
 
-        await useCase.execute({ id: scheduleId, userId });
+        await useCase.execute({ id: scheduleId, userId, clinicId: userId });
 
         const row = await trx(ETableNames.SCHEDULES)
           .where({ id: scheduleId, userId })
@@ -134,7 +134,11 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           new AppEventListener(),
         );
 
-        await useCase.execute({ id: scheduleId, userId: other.userId });
+        await useCase.execute({
+          id: scheduleId,
+          userId: other.userId,
+          clinicId: other.userId,
+        });
 
         const row = await trx(ETableNames.SCHEDULES)
           .where({ id: scheduleId, userId: owner.userId })
@@ -170,16 +174,18 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           events,
         );
 
-        await useCase.execute({ id: scheduleId, userId });
+        await useCase.execute({ id: scheduleId, userId, clinicId: userId });
 
         expect(emitSpy).toHaveBeenCalledWith("deleteSchedule", {
           scheduleId,
           userId,
+          clinicId: userId,
         });
         expect(listener).toHaveBeenCalledTimes(1);
         expect(listener).toHaveBeenCalledWith({
           scheduleId,
           userId,
+          clinicId: userId,
         });
       });
     });

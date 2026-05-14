@@ -19,10 +19,10 @@ export class GetFinanceBySchedulingController {
 
     try {
       const { schedulingId } = parsedParams.data;
-      const userId = request.user.clinicId;
+      const clinicId = request.user.clinicId;
 
       const res = await this.getFinanceUseCase.execute({
-        userId: userId!,
+        clinicId: clinicId!,
         schedulingId,
       });
 

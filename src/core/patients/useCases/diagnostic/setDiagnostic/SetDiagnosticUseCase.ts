@@ -3,12 +3,12 @@ import { IDiagnosticRepository } from "../../../../../repositories/diagnostic/ID
 
 export class SetDiagnosticUseCase {
   constructor(private DiagnosticRepository: IDiagnosticRepository) {}
-  async execute(data: DiagnosticDTO, userId: string) {
+  async execute(data: DiagnosticDTO, clinicId: string) {
     const { patientId, diagnostic, treatmentPlan } = new Diagnostic(data);
 
     const diagnosticAlreadyExist = await this.DiagnosticRepository.get(
       data.patientId,
-      userId,
+      clinicId,
     );
 
     if (diagnosticAlreadyExist) {
@@ -18,7 +18,7 @@ export class SetDiagnosticUseCase {
           diagnostic,
           treatmentPlan,
         },
-        userId,
+        clinicId,
       );
     } else {
       await this.DiagnosticRepository.save(
@@ -27,7 +27,7 @@ export class SetDiagnosticUseCase {
           diagnostic,
           treatmentPlan,
         },
-        userId,
+        clinicId,
       );
     }
     return Diagnostic;

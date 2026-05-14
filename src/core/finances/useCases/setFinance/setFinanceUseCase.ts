@@ -7,22 +7,22 @@ import { Finance } from "../../models/Finance";
 export class SetFinanceUseCase {
   constructor(private financeRepository: IFinanceRepository) {}
 
-  async execute({ userId, ...financeData }: setFinanceProps) {
+  async execute({ clinicId, ...financeData }: setFinanceProps) {
     const finance = new Finance(financeData);
     const financeDTO = finance.getDTO();
 
     const financeAlreadyExist = await this.financeRepository.get({
       id: finance.id,
-      userId,
+      clinicId,
     });
 
     if (financeAlreadyExist)
       return await this.financeRepository.update({
         ...financeDTO,
         id: finance.id,
-        userId,
+        clinicId,
       });
 
-    return await this.financeRepository.create({ ...financeDTO, userId });
+    return await this.financeRepository.create({ ...financeDTO, clinicId });
   }
 }

@@ -7,9 +7,9 @@ export class GetPatientUseCase {
     private locationRepository: ILocationRepository,
   ) {}
 
-  async execute(patientId: string, userId: string) {
-    const getPatient = this.patientRepository.getById(patientId, userId);
-    const getLocation = this.locationRepository.getLocation(patientId, userId);
+  async execute(patientId: string, clinicId: string) {
+    const getPatient = this.patientRepository.getById(patientId, clinicId);
+    const getLocation = this.locationRepository.getLocation(patientId, clinicId);
     const [[patient], [location]] = await Promise.all([
       getPatient,
       getLocation,

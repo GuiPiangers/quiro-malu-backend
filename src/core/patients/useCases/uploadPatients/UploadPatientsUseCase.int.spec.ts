@@ -34,7 +34,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
       vi.spyOn(console, "log").mockImplementation(() => {});
 
       await withRollbackTransaction(knex, async (trx) => {
-        const { userId } = await insertIntegrationUser(trx);
+        const { userId, clinicId } = await insertIntegrationUser(trx);
         const unique = uuidv4().slice(0, 8);
         // CsvStream usa delimiter ";" (ver CsvStream.ts); paciente precisa de nome composto (Patient + Name).
         const buffer = Buffer.from(
@@ -49,7 +49,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
           new KnexDiagnosticRepository(trx),
         );
 
-        const result = await useCase.execute({ buffer, userId });
+        const result = await useCase.execute({ buffer, clinicId });
 
         expect(result.fatalError).toBeUndefined();
         expect(result.successCounter).toBeGreaterThanOrEqual(1);

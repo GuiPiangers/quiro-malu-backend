@@ -13,6 +13,7 @@ describe("MessageSendStrategyEnforcer", () => {
 
     const allowed = await sut.isSendAllowed({
       userId: "user-1",
+      clinicId: "clinic-1",
       campaignId: "camp-1",
       patientId: "patient-1",
     });
@@ -56,6 +57,7 @@ describe("MessageSendStrategyEnforcer", () => {
 
     const allowed = await sut.isSendAllowed({
       userId: "user-1",
+      clinicId: "clinic-1",
       campaignId: "camp-1",
       patientId: "patient-1",
     });
@@ -100,6 +102,7 @@ describe("MessageSendStrategyEnforcer", () => {
 
     const allowed = await sut.isSendAllowed({
       userId: "user-1",
+      clinicId: "clinic-1",
       campaignId: "camp-1",
       patientId: "patient-1",
     });
@@ -108,11 +111,13 @@ describe("MessageSendStrategyEnforcer", () => {
     expect(allowsSend).toHaveBeenCalledTimes(2);
     expect(allowsSend).toHaveBeenNthCalledWith(1, {
       userId: "user-1",
+      clinicId: "clinic-1",
       patientId: "patient-1",
       campaignId: "camp-1",
     });
     expect(allowsSend).toHaveBeenNthCalledWith(2, {
       userId: "user-1",
+      clinicId: "clinic-1",
       patientId: "patient-1",
       campaignId: "camp-1",
     });
@@ -153,6 +158,7 @@ describe("MessageSendStrategyEnforcer", () => {
 
     const allowed = await sut.isSendAllowed({
       userId: "user-1",
+      clinicId: "clinic-1",
       campaignId: "camp-1",
       patientId: "patient-1",
     });

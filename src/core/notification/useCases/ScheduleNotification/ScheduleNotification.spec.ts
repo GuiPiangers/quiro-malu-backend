@@ -37,6 +37,7 @@ describe("ScheduleNotificationUseCase", () => {
     it("should not schedule if id is missing", async () => {
       await useCase.schedule({
         userId: "user1",
+        clinicId: "clinic-1",
         status: "Agendado",
         patientId: "123",
       });
@@ -51,6 +52,7 @@ describe("ScheduleNotificationUseCase", () => {
       await useCase.schedule({
         id: "123",
         userId: "user1",
+        clinicId: "clinic-1",
         status: "Agendado",
         patientId: "123",
       });
@@ -66,6 +68,7 @@ describe("ScheduleNotificationUseCase", () => {
       await useCase.schedule({
         id: "123",
         userId: "user1",
+        clinicId: "clinic-1",
         status: "Cancelado",
         patientId: "123",
       });
@@ -73,6 +76,7 @@ describe("ScheduleNotificationUseCase", () => {
       await useCase.schedule({
         id: "123",
         userId: "user1",
+        clinicId: "clinic-1",
         status: "Atendido",
         patientId: "123",
       });
@@ -88,6 +92,7 @@ describe("ScheduleNotificationUseCase", () => {
       await useCase.schedule({
         id: "123",
         userId: "user1",
+        clinicId: "clinic-1",
         date: "2025-01-01T11:15",
         status: "Agendado",
         patientId: "123",
@@ -104,6 +109,7 @@ describe("ScheduleNotificationUseCase", () => {
       await useCase.schedule({
         id: "123",
         userId: "user1",
+        clinicId: "clinic-1",
         date: "2025-01-01T12:30",
         status: "Agendado",
         patientId: "123",
@@ -137,6 +143,7 @@ describe("ScheduleNotificationUseCase", () => {
       await useCase.update({
         id: "123",
         userId: "user1",
+        clinicId: "clinic-1",
         date: "2025-01-01T12:30",
         status: "Agendado",
         patientId: "123",
@@ -149,6 +156,7 @@ describe("ScheduleNotificationUseCase", () => {
     it("should not update if id is missing", async () => {
       await useCase.update({
         userId: "user1",
+        clinicId: "clinic-1",
         status: "Agendado",
         patientId: "123",
       });

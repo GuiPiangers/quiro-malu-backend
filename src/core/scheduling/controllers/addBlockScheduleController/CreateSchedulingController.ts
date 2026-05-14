@@ -16,10 +16,12 @@ export class AddBlockScheduleController {
     try {
       const data = parsed.data;
       const userId = request.user.id as string;
+      const clinicId = request.user.clinicId as string;
 
       await this.addBlockScheduleUseCase.execute({
         ...data,
         userId,
+        clinicId,
       });
 
       response.status(201).json({ message: "Agenda bloqueada com sucesso!" });

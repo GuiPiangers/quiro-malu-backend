@@ -34,7 +34,7 @@ describe("DeleteBeforeScheduleMessageUseCase", () => {
     beforeScheduleMessageRepository.getById.mockResolvedValue(null);
 
     await expect(
-      sut.execute({ id: "msg-1", userId: "user-1" }),
+      sut.execute({ id: "msg-1", userId: "user-1", clinicId: "clinic-1" }),
     ).rejects.toThrow(ApiError);
 
     expect(beforeScheduleMessageRepository.delete).not.toHaveBeenCalled();
@@ -58,9 +58,9 @@ describe("DeleteBeforeScheduleMessageUseCase", () => {
       isActive: true,
     });
     beforeScheduleMessageRepository.delete.mockResolvedValue(undefined);
-    schedulingRepository.listIdsByUserId.mockResolvedValue(["sch-1", "sch-2"]);
+    schedulingRepository.listIdsByClinicId.mockResolvedValue(["sch-1", "sch-2"]);
 
-    await sut.execute({ id: "msg-1", userId: "user-1" });
+    await sut.execute({ id: "msg-1", userId: "user-1", clinicId: "clinic-1" });
 
     expect(beforeScheduleMessageRepository.delete).toHaveBeenCalledWith({
       id: "msg-1",
@@ -70,8 +70,8 @@ describe("DeleteBeforeScheduleMessageUseCase", () => {
       "beforeScheduleMessageDelete",
       { id: "msg-1" },
     );
-    expect(schedulingRepository.listIdsByUserId).toHaveBeenCalledWith({
-      userId: "user-1",
+    expect(schedulingRepository.listIdsByClinicId).toHaveBeenCalledWith({
+      clinicId: "clinic-1",
     });
     expect(beforeScheduleQueue.remove).toHaveBeenCalledTimes(2);
     expect(beforeScheduleQueue.remove).toHaveBeenCalledWith(

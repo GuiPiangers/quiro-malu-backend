@@ -16,6 +16,7 @@ import {
 
 export type GetMessageSendStrategyDTO = {
   userId: string;
+  clinicId: string;
   strategyId: string;
 };
 
@@ -55,34 +56,39 @@ export class GetMessageSendStrategyUseCase {
     }
 
     const strategy = toMessageSendStrategyDTO(row);
-    const patients = await this.resolvePatientsForStrategy(dto.userId, strategy);
+    const patients = await this.resolvePatientsForStrategy(
+      dto.userId,
+      dto.clinicId,
+      strategy,
+    );
 
     return { ...strategy, patients };
   }
 
   private async resolvePatientsForStrategy(
     userId: string,
+    clinicId: string,
     strategy: MessageSendStrategyDTO,
   ): Promise<GetMessageSendStrategyPatientView[]> {
     switch (strategy.kind) {
       case SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS: {
         const list = await this.patientRepository.getMostRecent(
-          userId,
+          clinicId,
           strategy.params.amount,
         );
         return list.map(patientToView);
       }
       case SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS: {
         const patientIds =
-          await this.schedulingRepository.listPatientIdsByUserIdOrderBySchedulingCountDesc(
-            userId,
+          await this.schedulingRepository.listPatientIdsByClinicIdOrderBySchedulingCountDesc(
+            clinicId,
             strategy.params.amount,
           );
         if (patientIds.length === 0) {
           return [];
         }
         const list = await this.patientRepository.listPatientsById({
-          userId,
+          clinicId,
           patientIds,
         });
         return list.map(patientToView);
@@ -90,7 +96,7 @@ export class GetMessageSendStrategyUseCase {
       case SEND_STRATEGY_KIND_SEND_SELECTED_LIST:
       case SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST: {
         const list = await this.patientRepository.listPatientsById({
-          userId,
+          clinicId,
           patientIds: strategy.params.patientIdList,
         });
         return list.map(patientToView);

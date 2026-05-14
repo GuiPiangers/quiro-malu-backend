@@ -5,11 +5,11 @@ export class ListProgressUseCase {
 
   async execute({
     patientId,
-    userId,
+    clinicId,
     page,
   }: {
     patientId: string;
-    userId: string;
+    clinicId: string;
     page?: number;
   }) {
     const limit = 10;
@@ -17,10 +17,10 @@ export class ListProgressUseCase {
 
     const progressData = this.ProgressRepository.list({
       patientId,
-      userId,
+      clinicId,
       config: { limit, offSet },
     });
-    const totalProgress = this.ProgressRepository.count({ patientId, userId });
+    const totalProgress = this.ProgressRepository.count({ patientId, clinicId });
 
     const [progress, total] = await Promise.all([progressData, totalProgress]);
     return { progress, total: total[0].total, limit };

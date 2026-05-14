@@ -13,22 +13,22 @@ describe("DeleteProgressUseCase", () => {
   describe("execute", () => {
     it("should call the repository delete method with the correct params", async () => {
       const id = "test-Progress-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const patientId = "test-patient-id";
 
-      await deleteProgressUseCase.execute({ id, userId, patientId });
+      await deleteProgressUseCase.execute({ id, clinicId, patientId });
 
       expect(mockProgressRepository.delete).toHaveBeenCalledTimes(1);
       expect(mockProgressRepository.delete).toHaveBeenCalledWith({
         id,
-        userId,
+        clinicId,
         patientId,
       });
     });
 
     it("should propagate an error if the repository delete method throws", async () => {
       const id = "test-Progress-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const patientId = "test-patient-id";
       const errorMessage = "Failed to delete Progress";
 
@@ -37,7 +37,7 @@ describe("DeleteProgressUseCase", () => {
       );
 
       await expect(
-        deleteProgressUseCase.execute({ id, userId, patientId }),
+        deleteProgressUseCase.execute({ id, clinicId, patientId }),
       ).rejects.toThrow(errorMessage);
     });
   });

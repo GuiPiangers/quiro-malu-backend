@@ -17,12 +17,19 @@ export class UpdateSchedulingUseCase {
     private readonly events: IAppEventListener = appEventListener,
   ) {}
 
-  async execute({ userId, ...data }: SchedulingDTO & { userId: string }) {
+  async execute({
+    userId,
+    clinicId,
+    ...data
+  }: SchedulingDTO & { userId: string; clinicId: string }) {
     if (!data.id)
       throw new ApiError("O id deve ser informado", 400, "Scheduling");
 
     const dataBaseStatusStrategy = new DatabaseStatusStrategy();
-    const rows = await this.SchedulingRepository.get({ id: data.id, userId });
+    const rows = await this.SchedulingRepository.get({
+      id: data.id,
+      clinicId,
+    });
     const [repositorySchedule] = rows ?? [];
 
     if (!repositorySchedule) {
@@ -37,10 +44,10 @@ export class UpdateSchedulingUseCase {
     const { id: _, ...schedulingDTO } = scheduling.getDTO();
 
     await this.validateBlockSchedules({ scheduling, userId });
-    await this.validateDate({ scheduling, userId });
+    await this.validateDate({ scheduling, clinicId });
 
     await this.SchedulingRepository.update({
-      userId,
+      clinicId,
       id: data.id,
       ...schedulingDTO,
     });
@@ -48,6 +55,7 @@ export class UpdateSchedulingUseCase {
     this.events.emit("updateSchedule", {
       ...schedulingDTO,
       userId,
+      clinicId,
       scheduleId: data.id,
     });
 
@@ -84,15 +92,15 @@ export class UpdateSchedulingUseCase {
 
   private async validateDate({
     scheduling,
-    userId,
+    clinicId,
   }: {
     scheduling: Scheduling;
-    userId: string;
+    clinicId: string;
   }) {
     if (!scheduling.date?.dateTime) return;
 
     const schedules = await this.SchedulingRepository.list({
-      userId,
+      clinicId,
       date: new DateTime(scheduling.date.dateTime).date,
     });
 

@@ -14,7 +14,7 @@ describe("getQtdSchedulesByDayUseCase", () => {
 
   describe("execute", () => {
     it("should return the data of qtdSchedulesByDay", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-clinic-id";
       const month = 1;
       const year = 2025;
 
@@ -31,7 +31,7 @@ describe("getQtdSchedulesByDayUseCase", () => {
       const result = await getQtdSchedulesByDayUseCase.execute({
         month,
         year,
-        userId,
+        clinicId,
       });
 
       expect(result).toEqual([
@@ -42,13 +42,13 @@ describe("getQtdSchedulesByDayUseCase", () => {
     });
 
     it("should call the repository qdtSchedulesByDay method with the correct params", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-clinic-id";
       const month = 1;
       const year = 2025;
 
       mockSchedulingRepository.qdtSchedulesByDay.mockResolvedValue([]);
 
-      await getQtdSchedulesByDayUseCase.execute({ month, year, userId });
+      await getQtdSchedulesByDayUseCase.execute({ month, year, clinicId });
 
       expect(mockSchedulingRepository.qdtSchedulesByDay).toHaveBeenCalledTimes(
         1,
@@ -56,12 +56,12 @@ describe("getQtdSchedulesByDayUseCase", () => {
       expect(mockSchedulingRepository.qdtSchedulesByDay).toHaveBeenCalledWith({
         month,
         year,
-        userId,
+        clinicId,
       });
     });
 
     it("should propagate an error if the repository method qdtSchedulesByDay throws", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-clinic-id";
       const errorMessage = "Failed to getQtdSchedulesByDay";
       const month = 1;
       const year = 2025;
@@ -71,7 +71,7 @@ describe("getQtdSchedulesByDayUseCase", () => {
       );
 
       await expect(
-        getQtdSchedulesByDayUseCase.execute({ month, year, userId }),
+        getQtdSchedulesByDayUseCase.execute({ month, year, clinicId }),
       ).rejects.toThrow(errorMessage);
     });
   });

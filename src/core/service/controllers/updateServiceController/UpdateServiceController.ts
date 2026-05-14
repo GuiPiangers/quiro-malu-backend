@@ -15,11 +15,11 @@ export class UpdateServiceController {
 
     try {
       const data = parsed.data;
-      const userId = request.user.clinicId;
+      const clinicId = request.user.clinicId;
 
       const service = await this.updateServiceUseCase.execute({
         ...data,
-        userId: userId!,
+        clinicId: clinicId!,
       });
       response.status(201).json(service);
     } catch (err: any) {

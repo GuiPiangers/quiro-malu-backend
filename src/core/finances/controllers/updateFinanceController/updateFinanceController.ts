@@ -15,11 +15,11 @@ export class UpdateFinanceController {
 
     try {
       const data = parsed.data;
-      const userId = request.user.clinicId;
+      const clinicId = request.user.clinicId;
 
       await this.updateFinanceUseCase.execute({
         ...data,
-        userId: userId!,
+        clinicId: clinicId!,
       });
 
       response.status(200).json({ message: "Finança atualizada com sucesso" });

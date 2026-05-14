@@ -37,6 +37,7 @@ describe("AddBlockScheduleUseCase", () => {
       endDate: "2025-01-01T11:00",
       description: "Descrição",
       userId: "userId",
+      clinicId: "clinic-1",
     };
 
     await addBlockSchedulingUseCase.execute(blockSchedulingDTO);
@@ -60,6 +61,7 @@ describe("AddBlockScheduleUseCase", () => {
       endDate: "2025-01-01T11:00",
       description: "Descrição",
       userId: "userId",
+      clinicId: "clinic-1",
     };
 
     mockSchedulingRepository.listBetweenDates.mockResolvedValue([
@@ -83,6 +85,7 @@ describe("AddBlockScheduleUseCase", () => {
       endDate: "2025-01-01T11:00",
       description: "Descrição",
       userId: "userId",
+      clinicId: "clinic-1",
     };
 
     mockSchedulingRepository.listBetweenDates.mockResolvedValue([]);

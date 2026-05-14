@@ -13,7 +13,7 @@ describe("updateServiceUseCase", () => {
   });
 
   it("Should throw an ApiError if service name already exists and service id is different", async () => {
-    const userId = "test-user-id";
+    const clinicId = "test-user-id";
     const serviceData: ServiceDTO = {
       id: "test-service-id",
       duration: 3600,
@@ -26,7 +26,7 @@ describe("updateServiceUseCase", () => {
     await expect(
       updateServiceUseCase.execute({
         ...serviceData,
-        userId,
+        clinicId,
         id: "test-service-id-2",
       }),
     ).rejects.toThrow(ApiError);
@@ -34,14 +34,14 @@ describe("updateServiceUseCase", () => {
     await expect(
       updateServiceUseCase.execute({
         ...serviceData,
-        userId,
+        clinicId,
         id: "test-service-id-2",
       }),
     ).rejects.toThrow("Já existe um serviço cadastrado com esse nome");
   });
 
   it("Should throw an ApiError if id param is not defined", async () => {
-    const userId = "test-user-id";
+    const clinicId = "test-user-id";
     const serviceData: ServiceDTO = {
       duration: 3600,
       name: "Quiropraxia",
@@ -51,16 +51,16 @@ describe("updateServiceUseCase", () => {
     mockServiceRepository.getByName.mockResolvedValue([serviceData]);
 
     await expect(
-      updateServiceUseCase.execute({ ...serviceData, userId }),
+      updateServiceUseCase.execute({ ...serviceData, clinicId }),
     ).rejects.toThrow(ApiError);
 
     await expect(
-      updateServiceUseCase.execute({ ...serviceData, userId }),
+      updateServiceUseCase.execute({ ...serviceData, clinicId }),
     ).rejects.toThrow("O id deve ser informado");
   });
 
   it("Should call repository getByName method with correct arguments", async () => {
-    const userId = "test-user-id";
+    const clinicId = "test-user-id";
     const serviceData: ServiceDTO = {
       id: "test-service-id",
       duration: 3600,
@@ -72,18 +72,18 @@ describe("updateServiceUseCase", () => {
 
     await updateServiceUseCase.execute({
       ...serviceData,
-      userId,
+      clinicId,
     });
 
     expect(mockServiceRepository.getByName).toHaveBeenCalledWith({
       name: serviceData.name,
-      userId,
+      clinicId,
     });
     expect(mockServiceRepository.getByName).toHaveBeenCalledTimes(1);
   });
 
   it("Should call repository update method with correct arguments", async () => {
-    const userId = "test-user-id";
+    const clinicId = "test-user-id";
     const serviceData: ServiceDTO = {
       id: "test-service-id",
       duration: 3600,
@@ -95,12 +95,12 @@ describe("updateServiceUseCase", () => {
 
     await updateServiceUseCase.execute({
       ...serviceData,
-      userId,
+      clinicId,
     });
 
     expect(mockServiceRepository.update).toHaveBeenCalledWith({
       ...serviceData,
-      userId,
+      clinicId,
     });
     expect(mockServiceRepository.update).toHaveBeenCalledTimes(1);
   });

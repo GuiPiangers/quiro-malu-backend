@@ -6,10 +6,10 @@ import {
 export class GetFinanceBySchedulingUseCase {
   constructor(private financeRepository: IFinanceRepository) {}
 
-  async execute({ schedulingId, userId }: getBySchedulingFinanceProps) {
+  async execute({ schedulingId, clinicId }: getBySchedulingFinanceProps) {
     const finance = await this.financeRepository.getByScheduling({
       schedulingId,
-      userId,
+      clinicId,
     });
 
     return finance;

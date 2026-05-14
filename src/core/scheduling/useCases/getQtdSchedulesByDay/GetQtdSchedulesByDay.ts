@@ -6,16 +6,16 @@ export class GetQtdSchedulesByDay {
   async execute({
     month,
     year,
-    userId,
+    clinicId,
   }: {
     month: number;
     year: number;
-    userId: string;
+    clinicId: string;
   }) {
     const qtdByDates = await this.SchedulingRepository.qdtSchedulesByDay({
       month,
       year,
-      userId,
+      clinicId,
     });
     return qtdByDates.map((data) => ({
       date: data.formattedDate,

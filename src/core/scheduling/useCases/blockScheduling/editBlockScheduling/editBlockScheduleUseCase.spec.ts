@@ -42,6 +42,7 @@ describe("EditBlockScheduleUseCase", () => {
         endDate: "2025-01-01T12:00:00",
       },
       "user-1",
+      "clinic-1",
     );
 
     expect(blockScheduleRepository.edit).toHaveBeenCalledWith(
@@ -76,6 +77,7 @@ describe("EditBlockScheduleUseCase", () => {
           endDate: "2025-01-01T12:00:00",
         },
         "user-1",
+        "clinic-1",
       ),
     ).rejects.toThrow(
       "O horário selecionado para o bloqueio está indisponível.",
@@ -109,6 +111,7 @@ describe("EditBlockScheduleUseCase", () => {
           endDate: "2025-01-01T12:00:00",
         },
         "user-1",
+        "clinic-1",
       ),
     ).rejects.toThrow(
       "O horário selecionado para o bloqueio está indisponível.",

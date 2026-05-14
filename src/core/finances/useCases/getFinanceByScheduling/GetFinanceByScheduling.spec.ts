@@ -16,7 +16,7 @@ describe("GetFinanceBySchedulingUseCase", () => {
 
   describe("execute", () => {
     it("Should return Finance data", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const schedulingId = "test-scheduling-id";
       const FinanceData: FinanceDTO = {
         description: "Quiropraxia",
@@ -31,14 +31,14 @@ describe("GetFinanceBySchedulingUseCase", () => {
 
       const result = await getFinanceBySchedulingUseCase.execute({
         schedulingId,
-        userId,
+        clinicId,
       });
 
       expect(result).toEqual(FinanceData);
     });
 
     it("Should call repository getByScheduling method with correct arguments ", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const schedulingId = "test-scheduling-id";
       const FinanceData: FinanceDTO = {
         description: "Quiropraxia",
@@ -51,12 +51,12 @@ describe("GetFinanceBySchedulingUseCase", () => {
       mockFinanceRepository.getByScheduling.mockResolvedValue(FinanceData);
 
       await getFinanceBySchedulingUseCase.execute({
-        userId,
+        clinicId,
         schedulingId,
       });
 
       expect(mockFinanceRepository.getByScheduling).toHaveBeenCalledWith({
-        userId,
+        clinicId,
         schedulingId,
       });
       expect(mockFinanceRepository.getByScheduling).toHaveBeenCalledTimes(1);
@@ -64,7 +64,7 @@ describe("GetFinanceBySchedulingUseCase", () => {
   });
 
   it("Should throw an Error if repository get method throws", async () => {
-    const userId = "test-user-id";
+    const clinicId = "test-user-id";
     const schedulingId = "test-scheduling-id";
     const errorMessage = "Error getting Finance";
 
@@ -73,7 +73,7 @@ describe("GetFinanceBySchedulingUseCase", () => {
     );
 
     await expect(
-      getFinanceBySchedulingUseCase.execute({ schedulingId, userId }),
+      getFinanceBySchedulingUseCase.execute({ schedulingId, clinicId }),
     ).rejects.toThrow(errorMessage);
   });
 });

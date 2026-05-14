@@ -11,23 +11,23 @@ describe("DeleteServiceUseCase", () => {
   });
   describe("execute", () => {
     it("Should call repository delete method with correct arguments ", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const serviceId = "test-service-id";
 
       await deleteServiceUseCase.execute({
-        userId,
+        clinicId,
         id: serviceId,
       });
 
       expect(mockServiceRepository.delete).toHaveBeenCalledWith({
         id: serviceId,
-        userId,
+        clinicId,
       });
       expect(mockServiceRepository.delete).toHaveBeenCalledTimes(1);
     });
 
     it("Should throw an Error if repository delete method throws ", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const serviceId = "test-service-id";
       const errorMessage = "Error deleting service";
 
@@ -35,7 +35,7 @@ describe("DeleteServiceUseCase", () => {
 
       await expect(
         deleteServiceUseCase.execute({
-          userId,
+          clinicId,
           id: serviceId,
         }),
       ).rejects.toThrow(errorMessage);

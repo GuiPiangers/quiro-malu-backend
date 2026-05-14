@@ -15,7 +15,7 @@ describe("listFinanceUseCase", () => {
 
   describe("execute", () => {
     it("Should return Finance data", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const yearAndMonth = "2025-01";
 
       const financeData: FinanceDTO = {
@@ -29,7 +29,7 @@ describe("listFinanceUseCase", () => {
       mockFinanceRepository.list.mockResolvedValue([financeData]);
 
       const result = await listFinancesUseCase.execute({
-        userId,
+        clinicId,
         yearAndMonth,
       });
 
@@ -37,7 +37,7 @@ describe("listFinanceUseCase", () => {
     });
 
     it("Should call repository list method with correct arguments ", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const yearAndMonth = "2025-01";
       const financeData: FinanceDTO = {
         description: "Quiropraxia",
@@ -50,12 +50,12 @@ describe("listFinanceUseCase", () => {
       mockFinanceRepository.list.mockResolvedValue([financeData]);
 
       await listFinancesUseCase.execute({
-        userId,
+        clinicId,
         yearAndMonth,
       });
 
       expect(mockFinanceRepository.list).toHaveBeenCalledWith({
-        userId,
+        clinicId,
         yearAndMonth,
       });
       expect(mockFinanceRepository.list).toHaveBeenCalledTimes(1);
@@ -63,29 +63,29 @@ describe("listFinanceUseCase", () => {
   });
 
   it("Should throw an ApiError if yearAndDate param is invalid", async () => {
-    const userId = "test-user-id";
+    const clinicId = "test-user-id";
     const yearAndMonth = "2025/01";
 
     await expect(
-      listFinancesUseCase.execute({ userId, yearAndMonth }),
+      listFinancesUseCase.execute({ clinicId, yearAndMonth }),
     ).rejects.toThrow(ApiError);
 
     await expect(
-      listFinancesUseCase.execute({ userId, yearAndMonth }),
+      listFinancesUseCase.execute({ clinicId, yearAndMonth }),
     ).rejects.toThrow(
       "Formato de yearAndMonth inválido. O formato deve ser YYYY-MM",
     );
   });
 
   it("Should throw an Error if repository list method throws", async () => {
-    const userId = "test-user-id";
+    const clinicId = "test-user-id";
     const yearAndMonth = "2025-01";
     const errorMessage = "Error listing Finance";
 
     mockFinanceRepository.list.mockRejectedValue(new Error(errorMessage));
 
     await expect(
-      listFinancesUseCase.execute({ userId, yearAndMonth }),
+      listFinancesUseCase.execute({ clinicId, yearAndMonth }),
     ).rejects.toThrow(errorMessage);
   });
 });

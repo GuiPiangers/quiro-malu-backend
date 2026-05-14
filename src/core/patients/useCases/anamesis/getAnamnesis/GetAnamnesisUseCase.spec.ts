@@ -12,7 +12,7 @@ describe("Get anamnesis use case", () => {
   });
 
   it("Should return anamnesis data when found", async () => {
-    const userId = "123";
+    const clinicId = "123";
     const patientId = "12345";
 
     const anamnesisData: AnamnesisDTO = {
@@ -31,22 +31,22 @@ describe("Get anamnesis use case", () => {
 
     mockAnamnesisRepository.get.mockResolvedValue(anamnesisData);
 
-    const result = await getAnamnesisUseCase.execute(patientId, userId);
+    const result = await getAnamnesisUseCase.execute(patientId, clinicId);
     expect(result).toEqual(anamnesisData);
     expect(mockAnamnesisRepository.get).toHaveBeenCalledTimes(1);
-    expect(mockAnamnesisRepository.get).toHaveBeenCalledWith(patientId, userId);
+    expect(mockAnamnesisRepository.get).toHaveBeenCalledWith(patientId, clinicId);
   });
 
   test("should return undefined when no anamnesis data is found", async () => {
     const patientId = "patient123";
-    const userId = "user456";
+    const clinicId = "user456";
 
     mockAnamnesisRepository.get.mockResolvedValue(undefined as any);
 
-    const result = await getAnamnesisUseCase.execute(patientId, userId);
+    const result = await getAnamnesisUseCase.execute(patientId, clinicId);
 
     expect(result).toEqual({});
     expect(mockAnamnesisRepository.get).toHaveBeenCalledTimes(1);
-    expect(mockAnamnesisRepository.get).toHaveBeenCalledWith(patientId, userId);
+    expect(mockAnamnesisRepository.get).toHaveBeenCalledWith(patientId, clinicId);
   });
 });

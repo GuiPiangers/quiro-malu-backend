@@ -11,10 +11,14 @@ describe("SendMostRecentPatientsStrategy", () => {
 
     const sut = new SendMostRecentPatientsStrategy(2, patientRepository);
 
-    const ok = await sut.allowsSend({ userId: "u-1", patientId: "p-new" });
+    const ok = await sut.allowsSend({
+      userId: "u-1",
+      clinicId: "c-1",
+      patientId: "p-new",
+    });
 
     expect(ok).toBe(true);
-    expect(patientRepository.getMostRecent).toHaveBeenCalledWith("u-1", 2);
+    expect(patientRepository.getMostRecent).toHaveBeenCalledWith("c-1", 2);
   });
 
   it("deve negar paciente fora do top N", async () => {
@@ -25,7 +29,11 @@ describe("SendMostRecentPatientsStrategy", () => {
 
     const sut = new SendMostRecentPatientsStrategy(1, patientRepository);
 
-    const ok = await sut.allowsSend({ userId: "u-1", patientId: "p-other" });
+    const ok = await sut.allowsSend({
+      userId: "u-1",
+      clinicId: "c-1",
+      patientId: "p-other",
+    });
 
     expect(ok).toBe(false);
   });

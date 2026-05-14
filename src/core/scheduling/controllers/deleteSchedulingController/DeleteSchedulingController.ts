@@ -15,9 +15,14 @@ export class DeleteSchedulingController {
 
     try {
       const userId = request.user.id;
+      const clinicId = request.user.clinicId as string;
       const { id } = parsed.data;
 
-      await this.deleteSchedulingUseCase.execute({ id, userId: userId! });
+      await this.deleteSchedulingUseCase.execute({
+        id,
+        userId: userId!,
+        clinicId,
+      });
 
       response.json({ message: "Paciente deletado com sucesso!" });
     } catch (err: any) {

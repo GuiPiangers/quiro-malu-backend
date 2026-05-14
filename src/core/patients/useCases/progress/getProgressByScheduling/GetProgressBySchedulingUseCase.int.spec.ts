@@ -60,7 +60,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         const dto = await useCase.execute({
           schedulingId,
           patientId,
-          userId,
+          clinicId: userId,
         });
 
         expect(dto.id).toBe(progressId);
@@ -83,7 +83,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
           useCase.execute({
             schedulingId: uuidv4(),
             patientId,
-            userId,
+            clinicId: userId,
           }),
         ).rejects.toBeInstanceOf(ApiError);
       });

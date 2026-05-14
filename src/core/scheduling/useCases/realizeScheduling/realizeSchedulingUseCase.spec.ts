@@ -22,7 +22,7 @@ describe("Realize scheduling use case", () => {
 
   it("Should be able to set scheduling Realized if a progress has been associated to scheduling", async () => {
     const realizeSchedulingData = {
-      userId: "userId1",
+      clinicId: "clinicId1",
       patientId: "patientId1",
       schedulingId: "schedulingId1",
     };
@@ -43,12 +43,12 @@ describe("Realize scheduling use case", () => {
     expect(mockedProgressRepository.getByScheduling).toHaveBeenCalledWith({
       schedulingId: realizeSchedulingData.schedulingId,
       patientId: realizeSchedulingData.patientId,
-      userId: realizeSchedulingData.userId,
+      clinicId: realizeSchedulingData.clinicId,
     });
 
     expect(mockSchedulingRepository.update).toHaveBeenCalledWith({
       id: realizeSchedulingData.schedulingId,
-      userId: realizeSchedulingData.userId,
+      clinicId: realizeSchedulingData.clinicId,
       status: "Atendido",
     });
 
@@ -56,7 +56,7 @@ describe("Realize scheduling use case", () => {
   });
   it("Should throw an error if try to realize a scheduling without a progress has been associated to scheduling", async () => {
     const realizeSchedulingData = {
-      userId: "userId1",
+      clinicId: "clinicId1",
       patientId: "patientId1",
       schedulingId: "schedulingId1",
     };
@@ -80,7 +80,7 @@ describe("Realize scheduling use case", () => {
   });
 
   it("should propagate an error if the scheduling repository update method throws", async () => {
-    const userId = "test-user-id";
+    const clinicId = "test-clinic-id";
     const patientId = "test-patient-id";
     const schedulingId = "test-scheduling-id";
     const errorMessage = "Failed to listQtdSchedulesByDay";
@@ -94,12 +94,12 @@ describe("Realize scheduling use case", () => {
     mockSchedulingRepository.update.mockRejectedValue(new Error(errorMessage));
 
     await expect(
-      realizeSchedulingUseCase.execute({ userId, patientId, schedulingId }),
+      realizeSchedulingUseCase.execute({ clinicId, patientId, schedulingId }),
     ).rejects.toThrow(errorMessage);
   });
 
   it("should propagate an error if the progress repository getByScheduling method throws", async () => {
-    const userId = "test-user-id";
+    const clinicId = "test-clinic-id";
     const patientId = "test-patient-id";
     const schedulingId = "test-scheduling-id";
     const errorMessage = "Failed to listQtdSchedulesByDay";
@@ -109,7 +109,7 @@ describe("Realize scheduling use case", () => {
     );
 
     await expect(
-      realizeSchedulingUseCase.execute({ userId, patientId, schedulingId }),
+      realizeSchedulingUseCase.execute({ clinicId, patientId, schedulingId }),
     ).rejects.toThrow(errorMessage);
   });
 });

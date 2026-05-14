@@ -34,13 +34,13 @@ export class UploadPatientsUseCase {
   private updateBatch = 10;
   private errorList: { error: string; patient: PatientDTO }[] = [];
   private patientsBatch: {
-    patientData: PatientDTO & { id: string; userId: string };
+    patientData: PatientDTO & { id: string; clinicId: string };
     locationData?: LocationDTO;
     anamnesisData?: Partial<AnamnesisDTO>;
     diagnosticData?: Partial<DiagnosticDTO>;
   }[] = [];
 
-  async execute({ buffer, userId }: { buffer: Buffer; userId: string }) {
+  async execute({ buffer, clinicId }: { buffer: Buffer; clinicId: string }) {
     const normalizeObject = {
       name: ["nome"],
       phone: ["telefone", "celular"],
@@ -141,22 +141,22 @@ export class UploadPatientsUseCase {
                     })
                   : {};
 
-              if (await this.validatePatientExist(patient, userId)) return;
-              await this.validateCpfNotExist({ cpf: patient.cpf, userId });
+              if (await this.validatePatientExist(patient, clinicId)) return;
+              await this.validateCpfNotExist({ cpf: patient.cpf, clinicId });
 
               const { location, ...patientDto } = patient.getPatientDTO();
 
               await this.addPatientToBatch({
                 patientDTO: {
                   ...patientDto,
-                  userId,
+                  clinicId,
                 },
                 locationDTO: location,
                 anamnesisDTO,
                 diagnosticDTO,
               });
 
-              return JSON.stringify({ ...patientDto, userId });
+              return JSON.stringify({ ...patientDto, clinicId });
             } catch (error: any) {
               this.addError({
                 error: error.message,
@@ -263,7 +263,7 @@ export class UploadPatientsUseCase {
     anamnesisDTO,
     diagnosticDTO,
   }: {
-    patientDTO: PatientDTO & { userId: string; id: string };
+    patientDTO: PatientDTO & { clinicId: string; id: string };
     locationDTO?: LocationDTO;
     anamnesisDTO?: Partial<AnamnesisDTO>;
     diagnosticDTO?: Partial<DiagnosticDTO>;
@@ -302,14 +302,14 @@ export class UploadPatientsUseCase {
         .map((data) => ({
           ...data.locationData,
           patientId: data.patientData.id,
-          userId: data.patientData.userId,
+          clinicId: data.patientData.clinicId,
         }));
 
       const anamnesisData = this.patientsBatch
         .filter((data) => getValidObjects(data.anamnesisData))
         .map((data) => ({
           ...data.anamnesisData,
-          userId: data.patientData.userId,
+          clinicId: data.patientData.clinicId,
           patientId: data.patientData.id,
         }));
 
@@ -317,7 +317,7 @@ export class UploadPatientsUseCase {
         .filter((data) => getValidObjects(data.diagnosticData))
         .map((data) => ({
           ...data.diagnosticData,
-          userId: data.patientData.userId,
+          clinicId: data.patientData.clinicId,
           patientId: data.patientData.id,
         }));
 
@@ -346,10 +346,10 @@ export class UploadPatientsUseCase {
     }
   }
 
-  private async validatePatientExist(patient: Patient, userId: string) {
+  private async validatePatientExist(patient: Patient, clinicId: string) {
     const patientExists = await this.patientRepository.getByHash(
       patient.hashData,
-      userId,
+      clinicId,
     );
 
     if (patientExists?.hashData) {
@@ -361,13 +361,13 @@ export class UploadPatientsUseCase {
 
   private async validateCpfNotExist({
     cpf,
-    userId,
+    clinicId,
   }: {
     cpf?: string;
-    userId: string;
+    clinicId: string;
   }) {
     if (cpf) {
-      const [verifyCpf] = await this.patientRepository.getByCpf(cpf, userId);
+      const [verifyCpf] = await this.patientRepository.getByCpf(cpf, clinicId);
       if (verifyCpf?.cpf === cpf)
         throw new Error("Já existe um usuário cadastrado com esse CPF");
     }

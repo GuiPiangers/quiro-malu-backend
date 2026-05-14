@@ -7,37 +7,37 @@ export class KnexDiagnosticRepository implements IDiagnosticRepository {
 
   async save(
     { patientId, ...data }: DiagnosticDTO,
-    userId: string,
+    clinicId: string,
   ): Promise<void> {
     return await this.knex(ETableNames.DIAGNOSTICS).insert({
       ...data,
-      clinicId: userId,
+      clinicId: clinicId,
       patientId,
     });
   }
 
-  async saveMany(data: (DiagnosticDTO & { userId: string })[]): Promise<void> {
+  async saveMany(data: (DiagnosticDTO & { clinicId: string })[]): Promise<void> {
     await this.knex(ETableNames.DIAGNOSTICS).insert(
-      data.map(({ userId, ...diagnostic }) => ({
+      data.map(({ clinicId, ...diagnostic }) => ({
         ...diagnostic,
-        clinicId: userId,
+        clinicId: clinicId,
       })),
     );
   }
 
   async update(
     { patientId, ...data }: DiagnosticDTO,
-    userId: string,
+    clinicId: string,
   ): Promise<void> {
     await this.knex(ETableNames.DIAGNOSTICS)
       .update(data)
-      .where({ patientId, clinicId: userId });
+      .where({ patientId, clinicId: clinicId });
   }
 
-  async get(patientId: string, userId: string): Promise<DiagnosticDTO> {
+  async get(patientId: string, clinicId: string): Promise<DiagnosticDTO> {
     const result = await this.knex(ETableNames.DIAGNOSTICS)
       .first("*")
-      .where({ patientId, clinicId: userId });
+      .where({ patientId, clinicId: clinicId });
 
     return result;
   }

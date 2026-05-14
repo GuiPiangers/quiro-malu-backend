@@ -1,25 +1,25 @@
 import { ServiceDTO } from "../../core/service/models/Service";
 
 export type listServiceProps = {
-  userId: string;
+  clinicId: string;
   config?: { limit?: number; offSet?: number; search?: string };
 };
 
 export interface IServiceRepository {
-  save(data: ServiceDTO & { userId: string }): Promise<void>;
+  save(data: ServiceDTO & { clinicId: string }): Promise<void>;
   update({
-    userId,
+    clinicId,
     id,
     ...data
-  }: ServiceDTO & { userId: string; id: string }): Promise<void>;
+  }: ServiceDTO & { clinicId: string; id: string }): Promise<void>;
   list(data: listServiceProps): Promise<ServiceDTO[]>;
   count({
-    userId,
+    clinicId,
   }: {
-    userId: string;
+    clinicId: string;
     search?: string;
   }): Promise<[{ total: number }]>;
-  get(data: { id: string; userId: string }): Promise<ServiceDTO[]>;
-  getByName(data: { name: string; userId: string }): Promise<ServiceDTO[]>;
-  delete(data: { id: string; userId: string }): Promise<void>;
+  get(data: { id: string; clinicId: string }): Promise<ServiceDTO[]>;
+  getByName(data: { name: string; clinicId: string }): Promise<ServiceDTO[]>;
+  delete(data: { id: string; clinicId: string }): Promise<void>;
 }

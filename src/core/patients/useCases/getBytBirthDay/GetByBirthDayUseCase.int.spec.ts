@@ -26,7 +26,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
 
     it("retorna pacientes com aniversário no mês e dia informados (filtrado por userId)", async () => {
       await withRollbackTransaction(knex, async (trx) => {
-        const { userId } = await insertIntegrationUser(trx);
+        const { userId, clinicId } = await insertIntegrationUser(trx);
         const other = await insertIntegrationUser(trx);
 
         await insertPatientForIntegration(trx, userId, {
@@ -46,7 +46,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         const rows = await useCase.execute({
           birthMonth: 3,
           birthDay: 15,
-          userId,
+          clinicId,
         });
 
         expect(
@@ -64,7 +64,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
           new KnexPatientRepository(trx),
         );
         await expect(
-          useCase.execute({ birthMonth: 13, birthDay: 1, userId: "any" }),
+          useCase.execute({ birthMonth: 13, birthDay: 1, clinicId: "any" }),
         ).rejects.toBeInstanceOf(ApiError);
       });
     });

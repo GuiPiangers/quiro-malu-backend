@@ -95,7 +95,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const useCase = createRealizeSchedulingUseCase(trx);
 
         await useCase.execute({
-          userId,
+          clinicId: userId,
           patientId,
           schedulingId,
         });
@@ -128,7 +128,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         await expect(
           useCase.execute({
-            userId,
+            clinicId: userId,
             patientId,
             schedulingId,
           }),
@@ -184,7 +184,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         await expect(
           useCase.execute({
-            userId,
+            clinicId: userId,
             patientId,
             schedulingId,
           }),

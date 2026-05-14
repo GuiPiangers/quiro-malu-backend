@@ -29,6 +29,7 @@ export type MessageSendStrategyCreateParamsByKind = MessageSendStrategyParamsByK
 export type CreateMessageSendStrategyDTO = {
   [K in SendStrategyKind]: {
     userId: string;
+    clinicId: string;
     kind: K;
     name: string;
     params: MessageSendStrategyCreateParamsByKind[K];

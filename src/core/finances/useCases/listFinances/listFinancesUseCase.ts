@@ -7,11 +7,11 @@ import { ApiError } from "../../../../utils/ApiError";
 export class ListFinancesUseCase {
   constructor(private financeRepository: IFinanceRepository) {}
 
-  async execute({ userId, yearAndMonth, config }: listFinanceProps) {
+  async execute({ clinicId, yearAndMonth, config }: listFinanceProps) {
     this.validateYearAndMonth(yearAndMonth);
 
     return await this.financeRepository.list({
-      userId,
+      clinicId,
       yearAndMonth,
       config,
     });

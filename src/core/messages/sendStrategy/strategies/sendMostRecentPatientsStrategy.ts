@@ -12,7 +12,7 @@ export class SendMostRecentPatientsStrategy implements IMessageSendStrategy {
 
   async allowsSend(ctx: SendStrategyContext): Promise<boolean> {
     const recent = await this.patientRepository.getMostRecent(
-      ctx.userId,
+      ctx.clinicId,
       this.amount,
     );
     const ids = new Set(recent.map((p) => p.id).filter(Boolean) as string[]);

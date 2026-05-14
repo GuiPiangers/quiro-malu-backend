@@ -1,26 +1,32 @@
 import { ProgressDTO } from "../../core/patients/models/Progress";
 import { IProgressRepository } from "./IProgressRepository";
 
-export class InMemoryLocation implements IProgressRepository {
+export class InMemoryProgress implements IProgressRepository {
   getByScheduling(data: {
     schedulingId: string;
     patientId: string;
-    userId: string;
+    clinicId: string;
   }): Promise<ProgressDTO[]> {
-    throw new Error("Method not implemented.");
+    const rows = this.dbProgress.filter(
+      (progress) =>
+        progress.schedulingId === data.schedulingId &&
+        progress.patientId === data.patientId &&
+        progress.clinicId === data.clinicId,
+    );
+    return Promise.resolve(rows);
   }
 
-  private dbProgress: (ProgressDTO & { patientId: string; userId: string })[] =
+  private dbProgress: (ProgressDTO & { patientId: string; clinicId: string })[] =
     [];
 
   async count(data: {
     patientId: string;
-    userId: string;
+    clinicId: string;
   }): Promise<[{ total: number }]> {
     const total = this.dbProgress.filter(
       (progress) =>
         progress.patientId === data.patientId &&
-        progress.userId === data.userId,
+        progress.clinicId === data.clinicId,
     ).length;
 
     return [{ total }];
@@ -28,46 +34,46 @@ export class InMemoryLocation implements IProgressRepository {
 
   async save({
     patientId,
-    userId,
+    clinicId,
     ...data
-  }: ProgressDTO & { userId: string }): Promise<void> {
-    this.dbProgress.push({ ...data, patientId, userId });
+  }: ProgressDTO & { clinicId: string }): Promise<void> {
+    this.dbProgress.push({ ...data, patientId, clinicId });
   }
 
   async update({
     id,
     patientId,
-    userId,
+    clinicId,
     ...data
-  }: ProgressDTO & { userId: string }): Promise<void> {
+  }: ProgressDTO & { clinicId: string }): Promise<void> {
     const index = this.dbProgress.findIndex((progress) => {
       return (
         progress.patientId === patientId &&
-        progress.userId === userId &&
+        progress.clinicId === clinicId &&
         progress.id === id
       );
     });
     this.dbProgress[index] = {
       ...data,
       patientId,
-      userId: this.dbProgress[index].userId,
+      clinicId: this.dbProgress[index].clinicId,
     };
   }
 
   async get({
     id,
     patientId,
-    userId,
+    clinicId,
   }: {
     id: string;
     patientId: string;
-    userId: string;
+    clinicId: string;
   }): Promise<ProgressDTO[]> {
     const selectedUser = await this.dbProgress.find(
       (progress) =>
         progress.id === id &&
         progress.patientId === patientId &&
-        progress.userId === userId,
+        progress.clinicId === clinicId,
     );
 
     if (selectedUser) return [selectedUser];
@@ -76,35 +82,41 @@ export class InMemoryLocation implements IProgressRepository {
 
   async list({
     patientId,
-    userId,
+    clinicId,
+    config,
   }: {
-    id: string;
     patientId: string;
-    userId: string;
+    clinicId: string;
+    config?: { limit: number; offSet: number };
   }): Promise<ProgressDTO[]> {
-    const selectedUser = await this.dbProgress.filter(
+    const selectedUser = this.dbProgress.filter(
       (progress) =>
-        progress.patientId === patientId && progress.userId === userId,
+        progress.patientId === patientId && progress.clinicId === clinicId,
     );
 
-    if (selectedUser) return selectedUser;
-    else return [];
+    if (config) {
+      return selectedUser.slice(config.offSet, config.offSet + config.limit);
+    }
+
+    return selectedUser;
   }
 
   async delete({
     id,
     patientId,
-    userId,
+    clinicId,
   }: {
     id: string;
     patientId: string;
-    userId: string;
+    clinicId: string;
   }): Promise<void> {
-    await this.dbProgress.find(
+    this.dbProgress = this.dbProgress.filter(
       (progress) =>
-        progress.id === id &&
-        progress.patientId === patientId &&
-        progress.userId === userId,
+        !(
+          progress.id === id &&
+          progress.patientId === patientId &&
+          progress.clinicId === clinicId
+        ),
     );
   }
 }

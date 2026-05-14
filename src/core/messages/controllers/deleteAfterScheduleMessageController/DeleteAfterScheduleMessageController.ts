@@ -17,9 +17,10 @@ export class DeleteAfterScheduleMessageController {
 
     try {
       const userId = request.user.id!;
+      const clinicId = request.user.clinicId as string;
       const { id } = parsedParams.data;
 
-      await this.deleteAfterScheduleMessageUseCase.execute({ id, userId });
+      await this.deleteAfterScheduleMessageUseCase.execute({ id, userId, clinicId });
 
       return response.status(200).json({ message: "Mensagem de agendamento deletada com sucesso" });
     } catch (err: any) {

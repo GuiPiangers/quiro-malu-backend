@@ -42,7 +42,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         });
 
         const useCase = new GetProgressUseCase(new KnexProgressRepository(trx));
-        const dto = await useCase.execute({ id: progressId, patientId, userId });
+        const dto = await useCase.execute({ id: progressId, patientId, clinicId: userId });
 
         expect(dto.id).toBe(progressId);
         expect(dto.service).toBe("Avaliação");
@@ -62,7 +62,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
           useCase.execute({
             id: uuidv4(),
             patientId,
-            userId,
+            clinicId: userId,
           }),
         ).rejects.toMatchObject({ statusCode: 404 });
       });

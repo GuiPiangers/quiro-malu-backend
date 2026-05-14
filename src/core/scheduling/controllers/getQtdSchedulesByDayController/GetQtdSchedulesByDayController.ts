@@ -15,12 +15,12 @@ export class GetQtdSchedulesByDayController {
 
     try {
       const { month, year } = parsed.data;
-      const userId = request.user.id;
+      const clinicId = request.user.clinicId as string;
 
       const qtdSchedules = await this.getQtdSchedulesUseCase.execute({
         month,
         year,
-        userId: userId!,
+        clinicId,
       });
       response.status(200).json(qtdSchedules);
     } catch (err: any) {

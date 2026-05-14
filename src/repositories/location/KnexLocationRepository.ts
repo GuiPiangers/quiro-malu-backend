@@ -10,22 +10,22 @@ export class KnexLocationRepository implements ILocationRepository {
   async save(
     data: LocationDTO,
     patientId: string,
-    userId: string,
+    clinicId: string,
   ): Promise<void> {
     return await this.knex(ETableNames.LOCATIONS).insert({
       ...data,
-      clinicId: userId,
+      clinicId: clinicId,
       patientId,
     });
   }
 
   async saveMany(
-    data: (LocationDTO & { patientId: string; userId: string })[],
+    data: (LocationDTO & { patientId: string; clinicId: string })[],
   ): Promise<void> {
     await this.knex(ETableNames.LOCATIONS).insert(
-      data.map(({ userId, ...location }) => ({
+      data.map(({ clinicId, ...location }) => ({
         ...location,
-        clinicId: userId,
+        clinicId: clinicId,
       })),
     );
   }
@@ -33,17 +33,17 @@ export class KnexLocationRepository implements ILocationRepository {
   async update(
     data: LocationDTO,
     patientId: string,
-    userId: string,
+    clinicId: string,
   ): Promise<void> {
     await this.knex(ETableNames.LOCATIONS).update(data).where({
       patientId,
-      clinicId: userId,
+      clinicId: clinicId,
     });
   }
 
-  async getLocation(patientId: string, userId: string): Promise<LocationDTO[]> {
+  async getLocation(patientId: string, clinicId: string): Promise<LocationDTO[]> {
     const result = await this.knex(ETableNames.LOCATIONS).select("*").where({
-      clinicId: userId,
+      clinicId: clinicId,
       patientId,
     });
 

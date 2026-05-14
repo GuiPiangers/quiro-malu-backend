@@ -14,11 +14,11 @@ export class ListPatientsController {
     }
 
     try {
-      const userId = request.user.clinicId;
+      const clinicId = request.user.clinicId;
       const { page, search, orderBy, limit } = parsed.data;
 
       const patients = await this.listPatientsUseCase.execute({
-        userId: userId!,
+        clinicId: clinicId!,
         page,
         search,
         orderBy,

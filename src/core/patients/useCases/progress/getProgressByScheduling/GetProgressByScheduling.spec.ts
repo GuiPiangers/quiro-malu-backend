@@ -16,7 +16,7 @@ describe("getProgressBySchedulingUseCase", () => {
   describe("execute", () => {
     it("should call the repository getByScheduling method with the correct Params", async () => {
       const schedulingId = "test-scheduling-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const patientId = "test-patient-id";
 
       mockProgressRepository.getByScheduling.mockResolvedValue([
@@ -25,14 +25,14 @@ describe("getProgressBySchedulingUseCase", () => {
 
       await getProgressBySchedulingUseCase.execute({
         schedulingId,
-        userId,
+        clinicId,
         patientId,
       });
 
       expect(mockProgressRepository.getByScheduling).toHaveBeenCalledTimes(1);
       expect(mockProgressRepository.getByScheduling).toHaveBeenCalledWith({
         schedulingId,
-        userId,
+        clinicId,
         patientId,
       });
     });
@@ -40,7 +40,7 @@ describe("getProgressBySchedulingUseCase", () => {
     it("should return Progress data if it exists", async () => {
       const id = "test-progress-id";
       const schedulingId = "test-scheduling-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const patientId = "test-patient-id";
       const progressData = {
         patientId,
@@ -55,7 +55,7 @@ describe("getProgressBySchedulingUseCase", () => {
 
       const result = await getProgressBySchedulingUseCase.execute({
         schedulingId,
-        userId,
+        clinicId,
         patientId,
       });
 
@@ -64,14 +64,14 @@ describe("getProgressBySchedulingUseCase", () => {
 
     it("should throw an ApiError if progress not exists", async () => {
       const schedulingId = "test-scheduling-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const patientId = "test-patient-id";
 
       mockProgressRepository.getByScheduling.mockResolvedValue([]);
 
       const promiseResult = getProgressBySchedulingUseCase.execute({
         schedulingId,
-        userId,
+        clinicId,
         patientId,
       });
 
@@ -86,7 +86,7 @@ describe("getProgressBySchedulingUseCase", () => {
 
     it("should propagate an error if the repository get method throws", async () => {
       const schedulingId = "test-scheduling-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const patientId = "test-patient-id";
       const errorMessage = "Failed to get Progress";
 
@@ -97,7 +97,7 @@ describe("getProgressBySchedulingUseCase", () => {
       await expect(
         getProgressBySchedulingUseCase.execute({
           schedulingId,
-          userId,
+          clinicId,
           patientId,
         }),
       ).rejects.toThrow(errorMessage);

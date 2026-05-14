@@ -15,11 +15,11 @@ export class SetFinanceController {
 
     try {
       const data = parsed.data;
-      const userId = request.user.clinicId;
+      const clinicId = request.user.clinicId;
 
       await this.setFinanceUseCase.execute({
         ...data,
-        userId: userId!,
+        clinicId: clinicId!,
       });
 
       response.status(201).json({ message: "Finance criada com sucesso" });

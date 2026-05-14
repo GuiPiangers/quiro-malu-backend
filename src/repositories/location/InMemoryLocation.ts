@@ -3,12 +3,12 @@ import { ILocationRepository } from "./ILocationRepository";
 
 export class InMemoryLocation implements ILocationRepository {
   saveMany(
-    locations: (LocationDTO & { patientId: string; userId: string })[],
+    locations: (LocationDTO & { patientId: string; clinicId: string })[],
   ): Promise<void> {
     throw new Error("Method not implemented.");
   }
 
-  private dbLocation: (LocationDTO & { patientId: string; userId: string })[] =
+  private dbLocation: (LocationDTO & { patientId: string; clinicId: string })[] =
     [];
 
   async update(data: LocationDTO, patientId: string): Promise<void> {
@@ -18,7 +18,7 @@ export class InMemoryLocation implements ILocationRepository {
     this.dbLocation[index] = {
       ...data,
       patientId,
-      userId: this.dbLocation[index].userId,
+      clinicId: this.dbLocation[index].clinicId,
     };
   }
 
@@ -34,8 +34,8 @@ export class InMemoryLocation implements ILocationRepository {
   async save(
     location: LocationDTO,
     patientId: string,
-    userId: string,
+    clinicId: string,
   ): Promise<void> {
-    this.dbLocation.push({ ...location, patientId, userId });
+    this.dbLocation.push({ ...location, patientId, clinicId });
   }
 }

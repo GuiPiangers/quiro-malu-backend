@@ -17,11 +17,13 @@ export class DeleteBeforeScheduleMessageController {
 
     try {
       const userId = request.user.id;
+      const clinicId = request.user.clinicId as string;
       const { id } = parsedParams.data;
 
       await this.deleteBeforeScheduleMessageUseCase.execute({
         id,
         userId: userId!,
+        clinicId,
       });
 
       return response.status(200).send({ message: "Before schedule message deleted successfully" });

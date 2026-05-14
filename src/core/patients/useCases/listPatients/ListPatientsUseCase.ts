@@ -5,13 +5,13 @@ export class ListPatientsUseCase {
   constructor(private patientsRepository: IPatientRepository) {}
 
   async execute({
-    userId,
+    clinicId,
     page,
     search,
     orderBy,
     limit: _limit,
   }: {
-    userId: string;
+    clinicId: string;
     page: number;
     search?: { name?: string };
     orderBy?: { field: string; orientation: "ASC" | "DESC" }[];
@@ -23,14 +23,14 @@ export class ListPatientsUseCase {
       ? `(name like "${search?.name}%")`
       : "updated_at";
 
-    const getPatients = this.patientsRepository.getAll(userId, {
+    const getPatients = this.patientsRepository.getAll(clinicId, {
       limit,
       offSet,
       search: search || { name: "" },
       orderBy: orderBy || [{ field: orderField, orientation: "DESC" }],
     });
     const countPatients = this.patientsRepository.countAll(
-      userId,
+      clinicId,
       search || { name: "" },
     );
 

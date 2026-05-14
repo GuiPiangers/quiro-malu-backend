@@ -14,11 +14,11 @@ export class ListFinancesController {
     }
 
     try {
-      const userId = request.user.clinicId;
+      const clinicId = request.user.clinicId;
       const { yearAndMonth } = parsed.data;
 
       const res = await this.listFinancesUseCase.execute({
-        userId: userId!,
+        clinicId: clinicId!,
         yearAndMonth,
       });
 

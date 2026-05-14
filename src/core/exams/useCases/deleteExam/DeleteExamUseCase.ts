@@ -9,9 +9,11 @@ export class DeleteExamUseCase {
     id,
     patientId,
     userId,
+    clinicId,
   }: {
     id: string;
     userId: string;
+    clinicId: string;
     patientId: string;
   }) {
     await this.examRepository.update({
@@ -25,6 +27,7 @@ export class DeleteExamUseCase {
     appEventListener.emit("deleteExam", {
       patientId,
       userId,
+      clinicId,
       examId: id,
     });
   }

@@ -15,11 +15,11 @@ export class GetSchedulingController {
 
     try {
       const { id } = parsedParams.data;
-      const userId = request.user.id;
+      const clinicId = request.user.clinicId as string;
 
       const scheduling = await this.getSchedulingUseCase.execute({
         id,
-        userId: userId!,
+        clinicId,
       });
       response.status(200).json(scheduling);
     } catch (err: any) {

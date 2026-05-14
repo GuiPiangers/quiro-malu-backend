@@ -52,6 +52,9 @@ export type DeleteBirthdayMessageProps = {
 export interface IBirthdayMessageRepository {
   save(data: SaveBirthdayMessageProps): Promise<void>;
   findActiveByUserId(userId: string): Promise<BirthdayMessageCampaignDTO | null>;
+  findActiveCampaignForClinic(
+    clinicId: string,
+  ): Promise<BirthdayMessageCampaignDTO | null>;
   getById(data: GetBirthdayMessageByIdProps): Promise<BirthdayMessageCampaignDTO | null>;
   update(data: UpdateBirthdayMessageProps): Promise<void>;
   delete(data: DeleteBirthdayMessageProps): Promise<void>;

@@ -15,10 +15,10 @@ export class DeleteFinanceController {
 
     try {
       const { id } = parsed.data;
-      const userId = request.user.clinicId;
+      const clinicId = request.user.clinicId;
 
       await this.deleteFinanceUseCase.execute({
-        userId: userId!,
+        clinicId: clinicId!,
         id,
       });
 

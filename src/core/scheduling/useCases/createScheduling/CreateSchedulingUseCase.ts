@@ -46,7 +46,7 @@ export class CreateSchedulingUseCase {
 
     const schedulingDTO = scheduling.getDTO();
     const schedules = await this.SchedulingRepository.list({
-      userId,
+      clinicId,
       date: new DateTime(data.date).date,
     });
 
@@ -62,6 +62,7 @@ export class CreateSchedulingUseCase {
     this.events.emit("createSchedule", {
       ...schedulingDTO,
       userId,
+      clinicId,
       scheduleId: schedulingDTO.id,
     });
 

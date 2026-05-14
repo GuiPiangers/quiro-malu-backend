@@ -67,6 +67,7 @@ describe("AfterScheduleMessageEventHandlers", () => {
 
     appEventListener.emit("createSchedule", {
       userId: "user-1",
+      clinicId: "clinic-1",
       scheduleId: "schedule-1",
       patientId: "patient-1",
       date: "2025-01-01T14:00",
@@ -112,6 +113,7 @@ describe("AfterScheduleMessageEventHandlers", () => {
 
     appEventListener.emit("updateSchedule", {
       userId: "user-1",
+      clinicId: "clinic-1",
       scheduleId: "schedule-1",
       patientId: "patient-1",
       date: "2025-01-01T14:00",
@@ -127,6 +129,7 @@ describe("AfterScheduleMessageEventHandlers", () => {
       "after-schedule_user-1_schedule-1_cfg-1",
       {
         userId: "user-1",
+        clinicId: "clinic-1",
         patientId: "patient-1",
         schedulingId: "schedule-1",
         afterScheduleMessageId: "cfg-1",
@@ -166,6 +169,7 @@ describe("AfterScheduleMessageEventHandlers", () => {
 
     appEventListener.emit("updateSchedule", {
       userId: "user-1",
+      clinicId: "clinic-1",
       scheduleId: "schedule-1",
       patientId: "patient-1",
       date: "2025-01-01T14:00",
@@ -213,6 +217,7 @@ describe("AfterScheduleMessageEventHandlers", () => {
 
     appEventListener.emit("updateSchedule", {
       userId: "user-1",
+      clinicId: "clinic-1",
       scheduleId: "schedule-1",
       patientId: "patient-1",
       date: "2025-01-01T14:00",
@@ -260,6 +265,7 @@ describe("AfterScheduleMessageEventHandlers", () => {
 
     appEventListener.emit("deleteSchedule", {
       userId: "user-1",
+      clinicId: "clinic-1",
       scheduleId: "schedule-1",
     });
 

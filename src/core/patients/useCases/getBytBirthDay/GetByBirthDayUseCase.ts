@@ -6,16 +6,16 @@ export class GetPatientsByBirthDayUseCase {
   async execute({
     birthMonth,
     birthDay,
-    userId,
+    clinicId,
   }: {
     birthMonth: number;
     birthDay: number;
-    userId?: string;
+    clinicId?: string;
   }) {
     return this.patientRepository.getByBirthMonthAndDay({
       birthMonth,
       birthDay,
-      userId,
+      clinicId,
     });
   }
 }

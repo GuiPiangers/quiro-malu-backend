@@ -8,16 +8,16 @@ export class GetProgressBySchedulingUseCase {
   async execute({
     schedulingId,
     patientId,
-    userId,
+    clinicId,
   }: {
     schedulingId: string;
     patientId: string;
-    userId: string;
+    clinicId: string;
   }) {
     const [progressData] = await this.ProgressRepository.getByScheduling({
       schedulingId,
       patientId,
-      userId,
+      clinicId,
     });
     if (!progressData) {
       throw new ApiError("Evolução não encontrada", 404);

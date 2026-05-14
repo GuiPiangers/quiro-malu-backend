@@ -13,7 +13,7 @@ describe("listProgressUseCase", () => {
   describe("execute", () => {
     it("should call the repository list and count method with the correct Params", async () => {
       const schedulingId = "test-scheduling-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const patientId = "test-patient-id";
 
       mockProgressRepository.list.mockResolvedValue([
@@ -27,7 +27,7 @@ describe("listProgressUseCase", () => {
       ]);
 
       await listProgressUseCase.execute({
-        userId,
+        clinicId,
         patientId,
         page: 1,
       });
@@ -35,20 +35,20 @@ describe("listProgressUseCase", () => {
       expect(mockProgressRepository.list).toHaveBeenCalledTimes(1);
       expect(mockProgressRepository.list).toHaveBeenCalledWith({
         patientId,
-        userId,
+        clinicId,
         config: { limit: 10, offSet: 0 },
       });
 
       expect(mockProgressRepository.count).toHaveBeenCalledTimes(1);
       expect(mockProgressRepository.count).toHaveBeenCalledWith({
         patientId,
-        userId,
+        clinicId,
       });
     });
 
     it("should update offset if page is provided", async () => {
       const schedulingId = "test-scheduling-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const patientId = "test-patient-id";
 
       mockProgressRepository.list.mockResolvedValue([
@@ -62,7 +62,7 @@ describe("listProgressUseCase", () => {
       ]);
 
       await listProgressUseCase.execute({
-        userId,
+        clinicId,
         patientId,
         page: 2,
       });
@@ -70,20 +70,20 @@ describe("listProgressUseCase", () => {
       expect(mockProgressRepository.list).toHaveBeenCalledTimes(1);
       expect(mockProgressRepository.list).toHaveBeenCalledWith({
         patientId,
-        userId,
+        clinicId,
         config: { limit: 10, offSet: 10 },
       });
 
       expect(mockProgressRepository.count).toHaveBeenCalledTimes(1);
       expect(mockProgressRepository.count).toHaveBeenCalledWith({
         patientId,
-        userId,
+        clinicId,
       });
     });
 
     it("should set offset to 0 if page is not provided", async () => {
       const schedulingId = "test-scheduling-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const patientId = "test-patient-id";
 
       mockProgressRepository.list.mockResolvedValue([
@@ -97,28 +97,28 @@ describe("listProgressUseCase", () => {
       ]);
 
       await listProgressUseCase.execute({
-        userId,
+        clinicId,
         patientId,
       });
 
       expect(mockProgressRepository.list).toHaveBeenCalledTimes(1);
       expect(mockProgressRepository.list).toHaveBeenCalledWith({
         patientId,
-        userId,
+        clinicId,
         config: { limit: 10, offSet: 0 },
       });
 
       expect(mockProgressRepository.count).toHaveBeenCalledTimes(1);
       expect(mockProgressRepository.count).toHaveBeenCalledWith({
         patientId,
-        userId,
+        clinicId,
       });
     });
 
     it("should return an object with total, limit and list of progress", async () => {
       const id = "test-progress-id";
       const schedulingId = "test-scheduling-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const patientId = "test-patient-id";
 
       const progressData = {
@@ -146,7 +146,7 @@ describe("listProgressUseCase", () => {
       ]);
 
       const result = await listProgressUseCase.execute({
-        userId,
+        clinicId,
         patientId,
       });
 
@@ -158,7 +158,7 @@ describe("listProgressUseCase", () => {
     });
 
     it("should propagate an error if the repository list method throws", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const patientId = "test-patient-id";
       const errorMessage = "Failed to list Progress";
 
@@ -168,14 +168,14 @@ describe("listProgressUseCase", () => {
 
       await expect(
         listProgressUseCase.execute({
-          userId,
+          clinicId,
           patientId,
         }),
       ).rejects.toThrow(errorMessage);
     });
 
     it("should propagate an error if the repository count method throws", async () => {
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const patientId = "test-patient-id";
       const errorMessage = "Failed to list Progress";
 
@@ -185,7 +185,7 @@ describe("listProgressUseCase", () => {
 
       await expect(
         listProgressUseCase.execute({
-          userId,
+          clinicId,
           patientId,
         }),
       ).rejects.toThrow(errorMessage);

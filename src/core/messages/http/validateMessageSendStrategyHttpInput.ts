@@ -48,6 +48,7 @@ function isPatientListStrategyKind(kind: SendStrategyKind): boolean {
 
 export function buildValidatedCreateMessageSendStrategyDTO(
   userId: string,
+  clinicId: string,
   body: CreateMessageSendStrategyHttpBody,
 ): CreateMessageSendStrategyDTO {
   const kind = body.kind ?? SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS;
@@ -60,6 +61,7 @@ export function buildValidatedCreateMessageSendStrategyDTO(
       const patientIdList = parseHttpPatientIdList(paramsBody?.patientIdList);
       return {
         userId,
+        clinicId,
         kind: SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
         name: displayName.value,
         params: { patientIdList },
@@ -70,6 +72,7 @@ export function buildValidatedCreateMessageSendStrategyDTO(
     });
     return {
       userId,
+      clinicId,
       kind: SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
       name: displayName.value,
       params: { patientIdList },
@@ -89,6 +92,7 @@ export function buildValidatedCreateMessageSendStrategyDTO(
   if (kind === SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS) {
     return {
       userId,
+      clinicId,
       kind: SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
       name: displayName.value,
       params,
@@ -97,6 +101,7 @@ export function buildValidatedCreateMessageSendStrategyDTO(
 
   return {
     userId,
+    clinicId,
     kind: SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
     name: displayName.value,
     params,

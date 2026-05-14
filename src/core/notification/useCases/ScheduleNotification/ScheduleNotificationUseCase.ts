@@ -11,7 +11,11 @@ export class ScheduleNotificationUseCase {
     private scheduleRepository: ISchedulingRepository,
   ) {}
 
-  async schedule({ userId, ...schedule }: SchedulingDTO & { userId: string }) {
+  async schedule({
+    userId,
+    clinicId,
+    ...schedule
+  }: SchedulingDTO & { userId: string; clinicId: string }) {
     try {
       if (!schedule.id) return;
       const preTimer = 15;
@@ -19,7 +23,7 @@ export class ScheduleNotificationUseCase {
 
       const [data] = await this.scheduleRepository.get({
         id: schedule.id,
-        userId,
+        clinicId,
       });
 
       if (!data || !schedule.date) return;
@@ -60,12 +64,16 @@ export class ScheduleNotificationUseCase {
     }
   }
 
-  async update({ userId, ...schedule }: SchedulingDTO & { userId: string }) {
+  async update({
+    userId,
+    clinicId,
+    ...schedule
+  }: SchedulingDTO & { userId: string; clinicId: string }) {
     try {
       if (!schedule.id) return;
 
       await this.deleteSchedule({ scheduleId: schedule.id });
-      await this.schedule({ userId, ...schedule });
+      await this.schedule({ userId, clinicId, ...schedule });
     } catch (error) {
       console.log(error);
     }

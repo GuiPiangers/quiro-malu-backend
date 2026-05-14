@@ -6,12 +6,12 @@ export class DeleteProgressUseCase {
   async execute({
     id,
     patientId,
-    userId,
+    clinicId,
   }: {
     id: string;
     patientId: string;
-    userId: string;
+    clinicId: string;
   }) {
-    await this.ProgressRepository.delete({ id, patientId, userId });
+    await this.ProgressRepository.delete({ id, patientId, clinicId });
   }
 }

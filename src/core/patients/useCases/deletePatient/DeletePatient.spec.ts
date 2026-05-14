@@ -11,22 +11,22 @@ describe("DeletePatientUseCase", () => {
   });
 
   describe("execute", () => {
-    it("should call the repository delete method with the correct patientId and userId", async () => {
+    it("should call the repository delete method with the correct patientId and clinicId", async () => {
       const patientId = "test-patient-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
 
-      await deletePatientUseCase.execute(patientId, userId);
+      await deletePatientUseCase.execute(patientId, clinicId);
 
       expect(mockPatientRepository.delete).toHaveBeenCalledTimes(1);
       expect(mockPatientRepository.delete).toHaveBeenCalledWith(
         patientId,
-        userId,
+        clinicId,
       );
     });
 
     it("should propagate an error if the repository delete method throws", async () => {
       const patientId = "test-patient-id";
-      const userId = "test-user-id";
+      const clinicId = "test-user-id";
       const errorMessage = "Failed to delete patient";
 
       mockPatientRepository.delete.mockRejectedValueOnce(
@@ -34,7 +34,7 @@ describe("DeletePatientUseCase", () => {
       );
 
       await expect(
-        deletePatientUseCase.execute(patientId, userId),
+        deletePatientUseCase.execute(patientId, clinicId),
       ).rejects.toThrow(errorMessage);
     });
   });

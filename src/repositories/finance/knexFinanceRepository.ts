@@ -3,6 +3,7 @@ import { Finance, FinanceDTO } from "../../core/finances/models/Finance";
 import { ETableNames } from "../../database/ETableNames";
 import {
   setFinanceProps,
+  updateFinanceProps,
   deleteFinanceProps,
   getFinanceProps,
   IFinanceRepository,
@@ -13,38 +14,38 @@ import {
 export class KnexFinanceRepository implements IFinanceRepository {
   constructor(private readonly knex: Knex) {}
 
-  async create({ userId, ...data }: setFinanceProps): Promise<void> {
+  async create({ clinicId, ...data }: setFinanceProps): Promise<void> {
     return await this.knex(ETableNames.FINANCES).insert({
       ...data,
-      clinicId: userId,
+      clinicId,
     });
   }
 
-  async update({ userId, id, ...data }: setFinanceProps): Promise<void> {
+  async update({ clinicId, id, ...data }: updateFinanceProps): Promise<void> {
     await this.knex(ETableNames.FINANCES)
       .update(data)
-      .where({ id, clinicId: userId });
+      .where({ id, clinicId });
   }
 
-  async delete({ userId, id }: deleteFinanceProps): Promise<void> {
+  async delete({ clinicId, id }: deleteFinanceProps): Promise<void> {
     await this.knex(ETableNames.FINANCES)
-      .where({ clinicId: userId, id })
+      .where({ clinicId, id })
       .del();
   }
 
-  async get({ id, userId }: getFinanceProps): Promise<FinanceDTO> {
+  async get({ id, clinicId }: getFinanceProps): Promise<FinanceDTO> {
     return await this.knex(ETableNames.FINANCES)
       .first(
         this.knex.raw(
           "value, description, DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date, id, patientId, type, paymentMethod",
         ),
       )
-      .where({ id, clinicId: userId });
+      .where({ id, clinicId });
   }
 
   async getByScheduling({
     schedulingId,
-    userId,
+    clinicId,
   }: getBySchedulingFinanceProps): Promise<FinanceDTO> {
     return await this.knex(ETableNames.FINANCES)
       .first(
@@ -52,11 +53,11 @@ export class KnexFinanceRepository implements IFinanceRepository {
           "value, description, DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date, id, patientId, type, paymentMethod",
         ),
       )
-      .where({ schedulingId, clinicId: userId });
+      .where({ schedulingId, clinicId });
   }
 
   async list({
-    userId,
+    clinicId,
     yearAndMonth: date,
     config,
   }: listFinanceProps): Promise<FinanceDTO[]> {
@@ -66,7 +67,7 @@ export class KnexFinanceRepository implements IFinanceRepository {
           "value, description, DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date, id, patientId, type, paymentMethod",
         ),
       )
-      .where({ clinicId: userId })
+      .where({ clinicId })
       .andWhere(this.knex.raw("date_format(date, '%Y-%m')"), "=", `${date}`)
       .orderByRaw("date");
 

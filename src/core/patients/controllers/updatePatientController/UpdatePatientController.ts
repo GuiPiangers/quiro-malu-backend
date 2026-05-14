@@ -15,12 +15,12 @@ export class UpdatePatientController {
     }
 
     try {
-      const userId = request.user.clinicId;
+      const clinicId = request.user.clinicId;
       const patientData = parsed.data;
       const patient = new Patient(patientData);
       const patientDTO = patient.getPatientDTO();
 
-      await this.updatePatientUseCase.execute(patientDTO, userId!);
+      await this.updatePatientUseCase.execute(patientDTO, clinicId!);
       response.status(201).json({ message: "Atualizado com sucesso!" });
     } catch (err: any) {
       responseError(response, err);

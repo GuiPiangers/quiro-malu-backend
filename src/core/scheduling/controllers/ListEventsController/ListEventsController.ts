@@ -16,9 +16,11 @@ export class ListEventsController {
     try {
       const { date } = parsed.data;
       const userId = request.user.id as string;
+      const clinicId = request.user.clinicId as string;
 
       const events = await this.listEventsUseCase.execute({
         date,
+        clinicId,
         userId,
       });
 

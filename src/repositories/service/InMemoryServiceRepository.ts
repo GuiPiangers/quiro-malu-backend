@@ -1,65 +1,65 @@
 import { ServiceDTO } from "../../core/service/models/Service";
-import { IServiceRepository } from "./IServiceRepository";
+import { IServiceRepository, listServiceProps } from "./IServiceRepository";
 
 interface inMemoryInterface extends ServiceDTO {
-  userId: string;
+  clinicId: string;
 }
 
 export class InMemoryServiceRepository implements IServiceRepository {
   private dbServices: inMemoryInterface[] = [];
 
-  count({ userId }: { userId: string }): Promise<[{ total: number }]> {
+  count({ clinicId }: { clinicId: string }): Promise<[{ total: number }]> {
     throw new Error("Method not implemented.");
   }
 
-  async delete({ id, userId }: { id: string; userId: string }): Promise<void> {
+  async delete({ id, clinicId }: { id: string; clinicId: string }): Promise<void> {
     this.dbServices = this.dbServices.filter(
-      (service) => service.id !== id && service.userId === userId,
+      (service) => !(service.id === id && service.clinicId === clinicId),
     );
   }
 
   async update({
-    userId,
+    clinicId,
     ...data
-  }: ServiceDTO & { userId: string }): Promise<void> {
+  }: ServiceDTO & { clinicId: string }): Promise<void> {
     const index = this.dbServices.findIndex((service) => {
-      return service.userId === userId && service.id === data.id;
+      return service.clinicId === clinicId && service.id === data.id;
     });
-    this.dbServices[index] = { ...data, userId };
+    this.dbServices[index] = { ...data, clinicId };
   }
 
   async save({
-    userId,
+    clinicId,
     ...data
-  }: ServiceDTO & { userId: string }): Promise<void> {
-    this.dbServices.push({ ...data, userId });
+  }: ServiceDTO & { clinicId: string }): Promise<void> {
+    this.dbServices.push({ ...data, clinicId });
   }
 
-  async list({ userId }: { userId: string }): Promise<ServiceDTO[]> {
-    return this.dbServices.filter((Service) => Service.userId === userId);
+  async list({ clinicId }: listServiceProps): Promise<ServiceDTO[]> {
+    return this.dbServices.filter((Service) => Service.clinicId === clinicId);
   }
 
   async get({
     id,
-    userId,
+    clinicId,
   }: {
     id: string;
-    userId: string;
+    clinicId: string;
   }): Promise<ServiceDTO[]> {
     return this.dbServices.filter((Service) => {
-      return Service.id === id && Service.userId === userId;
+      return Service.id === id && Service.clinicId === clinicId;
     });
   }
 
   async getByName({
     name,
-    userId,
+    clinicId,
   }: {
     name: string;
-    userId: string;
+    clinicId: string;
   }): Promise<ServiceDTO[]> {
     const result = this.dbServices.filter(
-      (service) => service.name === name && service.userId === userId,
+      (service) => service.name === name && service.clinicId === clinicId,
     );
     return result;
   }

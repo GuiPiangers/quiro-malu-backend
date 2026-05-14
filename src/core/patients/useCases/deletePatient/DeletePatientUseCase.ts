@@ -3,7 +3,7 @@ import { IPatientRepository } from "../../../../repositories/patient/IPatientRep
 export class DeletePatientUseCase {
   constructor(private patientRepository: IPatientRepository) {}
 
-  async execute(patientId: string, userId: string) {
-    await this.patientRepository.delete(patientId, userId);
+  async execute(patientId: string, clinicId: string) {
+    await this.patientRepository.delete(patientId, clinicId);
   }
 }

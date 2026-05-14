@@ -78,6 +78,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         await useCase.execute({
           userId,
+          clinicId: userId,
           date: "2038-02-01T08:00",
           endDate: "2038-02-01T09:00",
           description: "Treinamento",
@@ -123,6 +124,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await expect(
           useCase.execute({
             userId,
+            clinicId: userId,
             date: "2038-02-10T10:00",
             endDate: "2038-02-10T12:00",
             description: "Bloqueio",
@@ -158,6 +160,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await expect(
           useCase.execute({
             userId,
+            clinicId: userId,
             date: "2038-02-11T10:00",
             endDate: "2038-02-11T11:00",
             description: "Conflito",

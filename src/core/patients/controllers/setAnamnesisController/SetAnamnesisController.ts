@@ -14,9 +14,9 @@ export class SetAnamnesisController {
 
     try {
       const data = parsed.data;
-      const userId = request.user.clinicId;
+      const clinicId = request.user.clinicId;
 
-      await this.setAnamnesisUseCase.execute(data, userId!);
+      await this.setAnamnesisUseCase.execute(data, clinicId!);
       response.status(201).json({ message: "Criado com sucesso!" });
     } catch (err: any) {
       return responseError(response, err);

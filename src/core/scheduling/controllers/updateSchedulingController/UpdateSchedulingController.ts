@@ -16,11 +16,13 @@ export class UpdateSchedulingController {
     try {
       const data = parsed.data;
       const userId = request.user.id;
+      const clinicId = request.user.clinicId as string;
 
       const scheduling = await this.updateSchedulingUseCase.execute({
         ...data,
         userId: userId!,
-      } as SchedulingDTO & { userId: string });
+        clinicId,
+      } as SchedulingDTO & { userId: string; clinicId: string });
 
       response.status(201).json(scheduling);
     } catch (err: any) {
