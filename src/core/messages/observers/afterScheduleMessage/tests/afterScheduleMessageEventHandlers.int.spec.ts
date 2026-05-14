@@ -243,6 +243,7 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
       });
       expect(job.data).toEqual({
         userId: "user-job",
+        clinicId: "clinic-default",
         patientId: "pat-1",
         schedulingId: "sched-1",
         afterScheduleMessageId: cfg.id,
