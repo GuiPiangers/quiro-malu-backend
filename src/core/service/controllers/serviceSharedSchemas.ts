@@ -7,7 +7,7 @@ export const SERVICE_DURATION_SECONDS_DOC =
 export const CreateServiceBodySchema = z
   .object({
     name: z.string().min(1).max(200),
-    value: z.number().nonnegative(),
+    value: z.coerce.number().nonnegative(),
     duration: z
       .number()
       .int()
@@ -20,7 +20,7 @@ export const UpdateServiceBodySchema = z
   .object({
     id: z.string().min(1),
     name: z.string().min(1).max(200),
-    value: z.number().nonnegative(),
+    value: z.coerce.number().nonnegative(),
     duration: z
       .number()
       .int()

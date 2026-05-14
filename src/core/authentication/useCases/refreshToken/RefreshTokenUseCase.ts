@@ -15,7 +15,6 @@ export class RefreshTokenUseCase {
   async execute(refreshTokenId: string, fingerprint: string) {
     const refreshToken =
       await this.refreshTokenProvider.getRefreshToken(refreshTokenId);
-    console.log("REFRESH TOKEN - refreshToken", refreshToken);
     if (!refreshToken) throw new ApiError("Refresh Token inválido", 401);
 
     if (refreshToken.fingerprint !== fingerprint) {
