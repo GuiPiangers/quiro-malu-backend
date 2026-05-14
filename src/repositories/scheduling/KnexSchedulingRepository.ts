@@ -57,7 +57,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     updateAt,
     ...data
   }: UpdateSchedulingParams): Promise<void> {
-    await this.knex(ETableNames.SCHEDULES).update(data).where({ id, userId });
+    await this.knex(ETableNames.SCHEDULES).update(data).where({ id, clinicId: userId });
   }
 
   async list({

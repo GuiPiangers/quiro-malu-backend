@@ -15,10 +15,10 @@ export class RealizeSchedulingController {
 
     try {
       const data = parsed.data;
-      const userId = request.user.id;
+      const clinicId = request.user.clinicId;
 
       await this.realizeSchedulingUseCase.execute({
-        userId: userId!,
+        userId: clinicId!,
         patientId: data.patientId,
         schedulingId: data.id,
       });
