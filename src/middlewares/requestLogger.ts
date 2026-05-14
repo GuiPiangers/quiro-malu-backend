@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { randomUUID } from "crypto";
+import { NODE_ENV } from "../config/nodeEnv";
 import { logger } from "../utils/logger";
 
 type LogEvent = Record<string, unknown>;
@@ -13,7 +14,7 @@ export const requestLoggerMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {  
+) => {
   const startTime = Date.now();
   const requestId = req.get("x-request-id") ?? randomUUID();
 
@@ -39,9 +40,13 @@ export const requestLoggerMiddleware = (
     const level =
       res.statusCode >= 500 ? "error" : res.statusCode >= 400 ? "warn" : "info";
 
-      if(!isObservedRoute(event.path as string)) {
-        return;
-      }
+    if (!isObservedRoute(event.path as string)) {
+      return;
+    }
+
+    if (NODE_ENV === "development" && res.statusCode < 400) {
+      return;
+    }
 
     logger[level]({ ...event }, "request completed");
   });
