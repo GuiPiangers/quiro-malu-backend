@@ -72,6 +72,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await trx(ETableNames.SCHEDULES).insert({
           id: schedulingId,
           userId,
+          clinicId: userId,
           patientId,
           date: "2030-05-10T09:00:00",
           duration: 3600,
@@ -115,6 +116,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await trx(ETableNames.SCHEDULES).insert({
           id: schedulingId,
           userId,
+          clinicId: userId,
           patientId,
           date: "2030-05-11T10:00:00",
           duration: 3600,
@@ -160,6 +162,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await trx(ETableNames.SCHEDULES).insert({
           id: schedulingId,
           userId,
+          clinicId: userId,
           patientId,
           date: "2030-05-12T11:00:00",
           duration: 3600,

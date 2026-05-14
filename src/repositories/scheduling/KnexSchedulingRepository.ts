@@ -46,7 +46,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     createAt,
     updateAt,
     ...data
-  }: SchedulingDTO & { userId: string }): Promise<void> {
+  }: SchedulingDTO & { userId: string; clinicId: string }): Promise<void> {
     await this.knex(ETableNames.SCHEDULES).insert(data);
   }
 
@@ -72,9 +72,9 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
       const result = await this.knex(`${ETableNames.SCHEDULES} as s`)
         .leftJoin(`${ETableNames.PATIENTS} as p`, function joinPatients() {
           this.on("s.patientId", "=", "p.id").andOn(
-            "s.userId",
+            "s.clinicId",
             "=",
-            "p.userId",
+            "p.clinicId",
           );
         })
         .select(
@@ -170,7 +170,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
         .join(`${ETableNames.PATIENTS} as p`, (join) => {
           join
             .on("p.id", "=", "s.patientId")
-            .andOn("p.userId", "=", "s.userId");
+            .andOn("p.clinicId", "=", "s.clinicId");
         })
         .where("s.userId", userId)
         .where((b) => {
@@ -198,9 +198,9 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
       const result = await this.knex(`${ETableNames.SCHEDULES} as s`)
         .leftJoin(`${ETableNames.PATIENTS} as p`, function joinPatients() {
           this.on("s.patientId", "=", "p.id").andOn(
-            "s.userId",
+            "s.clinicId",
             "=",
-            "p.userId",
+            "p.clinicId",
           );
         })
         .select(

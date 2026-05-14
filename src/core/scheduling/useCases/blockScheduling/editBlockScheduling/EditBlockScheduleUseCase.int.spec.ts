@@ -123,6 +123,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await trx(ETableNames.SCHEDULES).insert({
           id: uuidv4(),
           userId,
+          clinicId: userId,
           patientId,
           date: "2038-03-05T10:30:00",
           duration: 3600,

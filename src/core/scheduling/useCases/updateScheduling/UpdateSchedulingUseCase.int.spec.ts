@@ -64,6 +64,7 @@ async function insertSchedule(
   await trx(ETableNames.SCHEDULES).insert({
     id: row.id,
     userId: row.userId,
+    clinicId: row.userId,
     patientId: row.patientId,
     date: row.date,
     duration: row.duration,

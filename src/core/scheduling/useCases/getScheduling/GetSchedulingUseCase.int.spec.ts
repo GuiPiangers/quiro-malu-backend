@@ -63,6 +63,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await trx(ETableNames.SCHEDULES).insert({
           id: scheduleId,
           userId,
+          clinicId: userId,
           patientId,
           date: storedLocalDateTime,
           duration: 3600,
@@ -91,6 +92,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await trx(ETableNames.SCHEDULES).insert({
           id: scheduleId,
           userId,
+          clinicId: userId,
           patientId,
           date: storedLocalDateTime,
           duration: 1800,

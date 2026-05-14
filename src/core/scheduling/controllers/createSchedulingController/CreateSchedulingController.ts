@@ -16,10 +16,12 @@ export class CreateSchedulingController {
     try {
       const data = parsed.data;
       const userId = request.user.id as string;
+      const clinicId = request.user.clinicId as string;
 
       const scheduling = await this.createScheduleUseCase.execute({
         ...data,
         userId,
+        clinicId,
       });
       response.status(201).json(scheduling);
     } catch (err: any) {

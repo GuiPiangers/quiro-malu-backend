@@ -17,7 +17,9 @@ export type ListBetweenDatesParams = {
 };
 
 export interface ISchedulingRepository {
-  save(data: SchedulingDTO & { userId: string }): Promise<void>;
+  save(
+    data: SchedulingDTO & { userId: string; clinicId: string },
+  ): Promise<void>;
 
   update(data: UpdateSchedulingParams): Promise<void>;
 

@@ -85,6 +85,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         await useCase.execute({
           userId,
+          clinicId: userId,
           patientId,
           id: schedulingId,
           date: "2030-06-15T10:00",
@@ -112,6 +113,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await trx(ETableNames.SCHEDULES).insert({
           id: existingId,
           userId,
+          clinicId: userId,
           patientId,
           date: "2030-06-15T10:30:00",
           duration: 3600,
@@ -124,6 +126,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await expect(
           useCase.execute({
             userId,
+            clinicId: userId,
             patientId,
             id: uuidv4(),
             date: "2030-06-15T10:00",
@@ -149,6 +152,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await trx(ETableNames.SCHEDULES).insert({
           id: uuidv4(),
           userId,
+          clinicId: userId,
           patientId,
           date: "2030-06-15T10:30:00",
           duration: 3600,
@@ -161,6 +165,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const newId = uuidv4();
         await useCase.execute({
           userId,
+          clinicId: userId,
           patientId,
           id: newId,
           date: "2030-06-15T10:00",
@@ -180,6 +185,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await trx(ETableNames.SCHEDULES).insert({
           id: uuidv4(),
           userId,
+          clinicId: userId,
           patientId,
           date: "2030-06-15T10:30:00",
           duration: 3600,
@@ -191,6 +197,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         await useCase.execute({
           userId,
+          clinicId: userId,
           patientId,
           id: uuidv4(),
           date: "2030-06-15T10:00",
@@ -221,6 +228,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await expect(
           useCase.execute({
             userId,
+            clinicId: userId,
             patientId,
             id: uuidv4(),
             date: "2030-06-15T10:00",
@@ -249,6 +257,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         await useCase.execute({
           userId,
+          clinicId: userId,
           patientId,
           id: schedulingId,
           date: "2030-06-20T11:00",

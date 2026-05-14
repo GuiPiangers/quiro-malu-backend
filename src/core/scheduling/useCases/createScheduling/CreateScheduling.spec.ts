@@ -32,8 +32,13 @@ describe("createSchedulingUseCase", () => {
     it("should call the repository create method with the correct Data", async () => {
       const patientId = "test-patient-id";
 
-      const schedulingData: SchedulingDTO & { userId: string; date: string } = {
+      const schedulingData: SchedulingDTO & {
+        userId: string;
+        clinicId: string;
+        date: string;
+      } = {
         userId: "test-user-id",
+        clinicId: "test-clinic-id",
         id: "test-Scheduling-id",
         patientId,
         date: "2025-01-10T00:00",
@@ -55,8 +60,13 @@ describe("createSchedulingUseCase", () => {
     it("should call the repository create method with status param equal Atrasado if date is in the past and status is Agendado, Atrasado or undefined", async () => {
       const patientId = "test-patient-id";
 
-      const schedulingData: SchedulingDTO & { userId: string; date: string } = {
+      const schedulingData: SchedulingDTO & {
+        userId: string;
+        clinicId: string;
+        date: string;
+      } = {
         userId: "test-user-id",
+        clinicId: "test-clinic-id",
         id: "test-Scheduling-id",
         patientId,
         date: "2025-01-11T00:00",
@@ -87,8 +97,13 @@ describe("createSchedulingUseCase", () => {
     it("should call the repository create method with status param equal Agendado if date is in the past and status is Agendado, Atrasado or undefined", async () => {
       const patientId = "test-patient-id";
 
-      const schedulingData: SchedulingDTO & { userId: string; date: string } = {
+      const schedulingData: SchedulingDTO & {
+        userId: string;
+        clinicId: string;
+        date: string;
+      } = {
         userId: "test-user-id",
+        clinicId: "test-clinic-id",
         id: "test-Scheduling-id",
         patientId,
         date: "2025-01-09T00:00",
@@ -118,8 +133,13 @@ describe("createSchedulingUseCase", () => {
     it("should throw an ApiError if scheduling are not available", async () => {
       const patientId = "test-patient-id";
 
-      const schedulingData: SchedulingDTO & { userId: string; date: string } = {
+      const schedulingData: SchedulingDTO & {
+        userId: string;
+        clinicId: string;
+        date: string;
+      } = {
         userId: "test-user-id",
+        clinicId: "test-clinic-id",
         id: "test-Scheduling-id",
         patientId,
         date: "2025-01-10T14:00",
@@ -148,8 +168,13 @@ describe("createSchedulingUseCase", () => {
     it("should save when overlapping scheduling is Atendido", async () => {
       const patientId = "test-patient-id";
 
-      const schedulingData: SchedulingDTO & { userId: string; date: string } = {
+      const schedulingData: SchedulingDTO & {
+        userId: string;
+        clinicId: string;
+        date: string;
+      } = {
         userId: "test-user-id",
+        clinicId: "test-clinic-id",
         id: "test-Scheduling-id",
         patientId,
         date: "2025-01-10T14:00",
@@ -187,8 +212,13 @@ describe("createSchedulingUseCase", () => {
         blockScheduling,
       ]);
 
-      const schedulingData: SchedulingDTO & { userId: string; date: string } = {
+      const schedulingData: SchedulingDTO & {
+        userId: string;
+        clinicId: string;
+        date: string;
+      } = {
         userId: "test-user-id",
+        clinicId: "test-clinic-id",
         id: "test-Scheduling-id",
         patientId,
         date: "2025-01-10T14:00",
@@ -221,6 +251,7 @@ describe("createSchedulingUseCase", () => {
         createSchedulingUseCase.execute({
           patientId,
           userId,
+          clinicId: "test-clinic-id",
           date: "2025-01-10T00:00",
           duration: 3600,
         }),

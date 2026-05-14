@@ -17,9 +17,10 @@ export class CreateSchedulingUseCase {
   ) {}
 
   async execute({
+    clinicId,
     userId,
     ...data
-  }: SchedulingDTO & { userId: string; date: string }) {
+  }: SchedulingDTO & { userId: string; clinicId: string; date: string }) {
     const dataBaseStatusStrategy = new DatabaseStatusStrategy();
     const scheduling = new Scheduling(data, dataBaseStatusStrategy);
 
@@ -52,7 +53,11 @@ export class CreateSchedulingUseCase {
     if (scheduling.notAvailableDate(schedules))
       throw new ApiError("Horário indisponível", 400, "date");
 
-    await this.SchedulingRepository.save({ ...schedulingDTO, userId });
+    await this.SchedulingRepository.save({
+      ...schedulingDTO,
+      userId,
+      clinicId,
+    });
 
     this.events.emit("createSchedule", {
       ...schedulingDTO,
