@@ -15,7 +15,7 @@ export const SetFinanceBodySchema = z
     description: z.string().min(1),
     type: FinanceTypeSchema,
     paymentMethod: z.string().min(1),
-    value: z.number(),
+    value: z.coerce.number(),
     patientId: z.string().optional(),
     schedulingId: z.string().optional(),
     service: z.string().optional(),
