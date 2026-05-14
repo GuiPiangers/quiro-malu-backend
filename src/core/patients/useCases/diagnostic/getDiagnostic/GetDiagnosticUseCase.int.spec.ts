@@ -49,6 +49,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         await trx(ETableNames.DIAGNOSTICS).insert({
           patientId,
           userId,
+          clinicId: userId,
           diagnostic: "Escoliose",
           treatmentPlan: "Pilates",
         });

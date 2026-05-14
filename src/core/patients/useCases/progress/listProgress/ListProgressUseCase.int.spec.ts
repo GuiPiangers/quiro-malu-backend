@@ -35,6 +35,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
           id: uuidv4(),
           patientId,
           userId,
+          clinicId: userId,
           service: "Sessão 1",
           date: "2038-04-01 08:00:00",
         });
@@ -42,6 +43,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
           id: uuidv4(),
           patientId,
           userId,
+          clinicId: userId,
           service: "Sessão 2",
           date: "2038-04-02 08:00:00",
         });

@@ -38,7 +38,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         );
 
         const row = await trx(ETableNames.ANAMNESIS)
-          .where({ patientId, userId })
+          .where({ patientId, clinicId: userId })
           .first();
         expect(row?.mainProblem).toBe("Queixa principal");
       });
@@ -54,6 +54,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         await trx(ETableNames.ANAMNESIS).insert({
           patientId,
           userId,
+          clinicId: userId,
           mainProblem: "Antigo",
         });
 
@@ -64,7 +65,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         );
 
         const row = await trx(ETableNames.ANAMNESIS)
-          .where({ patientId, userId })
+          .where({ patientId, clinicId: userId })
           .first();
         expect(row?.mainProblem).toBe("Atualizado");
       });

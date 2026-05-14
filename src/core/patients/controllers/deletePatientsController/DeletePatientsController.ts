@@ -13,7 +13,7 @@ export class DeletePatientsController {
     }
 
     try {
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
       const { id: patientId } = parsed.data;
       await this.deletePatientsUseCase.execute(patientId, userId!);
 

@@ -15,7 +15,7 @@ export class UpdateFinanceController {
 
     try {
       const data = parsed.data;
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
 
       await this.updateFinanceUseCase.execute({
         ...data,

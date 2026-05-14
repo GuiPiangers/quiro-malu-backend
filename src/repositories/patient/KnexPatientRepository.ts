@@ -44,7 +44,7 @@ export class KnexPatientRepository implements IPatientRepository {
         ]);
 
       if (userId) {
-        q = q.andWhere({ userId });
+        q = q.andWhere({ clinicId: userId });
       }
 
       return await q;
@@ -58,7 +58,7 @@ export class KnexPatientRepository implements IPatientRepository {
     try {
       await this.knex(ETableNames.PATIENTS).insert({
         ...data,
-        userId,
+        clinicId: userId,
       });
     } catch (error: any) {
       throw new ApiError(error.message, 500);
@@ -67,7 +67,12 @@ export class KnexPatientRepository implements IPatientRepository {
 
   async saveMany(data: (PatientDTO & { userId: string })[]): Promise<void> {
     try {
-      await this.knex(ETableNames.PATIENTS).insert(data);
+      await this.knex(ETableNames.PATIENTS).insert(
+        data.map(({ userId, ...patient }) => ({
+          ...patient,
+          clinicId: userId,
+        })),
+      );
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }
@@ -81,7 +86,7 @@ export class KnexPatientRepository implements IPatientRepository {
     try {
       await this.knex(ETableNames.PATIENTS)
         .update(data)
-        .where({ id: patientId, userId });
+        .where({ id: patientId, clinicId: userId });
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }
@@ -98,7 +103,7 @@ export class KnexPatientRepository implements IPatientRepository {
   ): Promise<PatientDTO[]> {
     const query = this.knex(ETableNames.PATIENTS)
       .select("*")
-      .where({ userId })
+      .where({ clinicId: userId })
       .andWhere("name", "like", `%${config?.search?.name ?? ""}%`);
 
     const orderBy = config.orderBy?.length
@@ -139,7 +144,7 @@ export class KnexPatientRepository implements IPatientRepository {
     try {
       const [result] = await this.knex(ETableNames.PATIENTS)
         .count("id as total")
-        .where({ userId })
+        .where({ clinicId: userId })
         .andWhere("name", "like", `%${search?.name}%`);
 
       return [result] as [{ total: number }];
@@ -152,7 +157,7 @@ export class KnexPatientRepository implements IPatientRepository {
     try {
       const result = await this.knex(ETableNames.PATIENTS)
         .select("*")
-        .where({ cpf, userId });
+        .where({ cpf, clinicId: userId });
 
       return result;
     } catch (error: any) {
@@ -164,7 +169,7 @@ export class KnexPatientRepository implements IPatientRepository {
     try {
       const result = await this.knex(ETableNames.PATIENTS)
         .first("*")
-        .where({ hashData, userId });
+        .where({ hashData, clinicId: userId });
 
       return result;
     } catch (error: any) {
@@ -177,7 +182,7 @@ export class KnexPatientRepository implements IPatientRepository {
 
     return await this.knex(ETableNames.PATIENTS)
       .select("*")
-      .where({ userId })
+      .where({ clinicId: userId })
       .orderBy("created_at", "desc")
       .limit(safeLimit);
   }
@@ -192,7 +197,7 @@ export class KnexPatientRepository implements IPatientRepository {
 
     const rows = await this.knex(ETableNames.PATIENTS)
       .select("*")
-      .where({ userId: data.userId })
+      .where({ clinicId: data.userId })
       .whereIn("id", data.patientIds);
 
     const orderIndex = new Map(
@@ -216,7 +221,7 @@ export class KnexPatientRepository implements IPatientRepository {
 
     try {
       const [row] = await this.knex(ETableNames.PATIENTS)
-        .where({ userId: data.userId })
+        .where({ clinicId: data.userId })
         .whereIn("id", data.patientIds)
         .count("id as total");
 
@@ -230,14 +235,16 @@ export class KnexPatientRepository implements IPatientRepository {
   async getById(patientId: string, userId: string): Promise<PatientDTO[]> {
     const result: PatientDTO = await this.knex(ETableNames.PATIENTS)
       .first("*", "created_at AS createAt")
-      .where({ id: patientId, userId });
+      .where({ id: patientId, clinicId: userId });
 
     return [result];
   }
 
   async delete(patientId: string, userId: string): Promise<void> {
     try {
-      await this.knex(ETableNames.PATIENTS).where({ id: patientId, userId }).del();
+      await this.knex(ETableNames.PATIENTS)
+        .where({ id: patientId, clinicId: userId })
+        .del();
     } catch (error: any) {
       throw new ApiError(error.message, 500);
     }

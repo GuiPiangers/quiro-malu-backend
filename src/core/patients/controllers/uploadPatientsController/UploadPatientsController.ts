@@ -7,7 +7,7 @@ export class UploadPatientsController {
   async handle(request: Request, response: Response) {
     try {
       const { file } = request;
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
       if (file?.buffer && userId) {
         const result = await this.uploadPatientUseCase.execute({
           buffer: file.buffer,

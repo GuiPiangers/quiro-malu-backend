@@ -7,6 +7,7 @@ interface ProgressWithPainScaleRow {
   id: string;
   patientId: string;
   userId: string;
+  clinicId: string;
   service: string;
   actualProblem?: string;
   procedures?: string;
@@ -36,7 +37,7 @@ export class KnexProgressRepository implements IProgressRepository {
       .column(
         "p.id",
         "p.patientId",
-        "p.userId",
+        "p.clinicId",
         "p.service",
         "p.actualProblem",
         "p.procedures",
@@ -50,7 +51,7 @@ export class KnexProgressRepository implements IProgressRepository {
       .where({
         "p.schedulingId": schedulingId,
         "p.patientId": patientId,
-        "p.userId": userId,
+        "p.clinicId": userId,
       });
 
     return this.groupProgressPainScales(rows);
@@ -66,7 +67,7 @@ export class KnexProgressRepository implements IProgressRepository {
       await trx(ETableNames.PROGRESS).insert(
         {
           ...data,
-          userId,
+          clinicId: userId,
           patientId,
         },
         ["id"],
@@ -95,7 +96,7 @@ export class KnexProgressRepository implements IProgressRepository {
     await this.knex.transaction(async (trx) => {
       await trx(ETableNames.PROGRESS)
         .update(data)
-        .where({ id, patientId, userId });
+        .where({ id, patientId, clinicId: userId });
 
       if (painScales) {
         await trx(ETableNames.PAIN_SCALES).where({ progressId: id }).del();
@@ -130,7 +131,7 @@ export class KnexProgressRepository implements IProgressRepository {
       .column(
         "p.id",
         "p.patientId",
-        "p.userId",
+        "p.clinicId",
         "p.service",
         "p.actualProblem",
         "p.procedures",
@@ -144,7 +145,7 @@ export class KnexProgressRepository implements IProgressRepository {
       .where({
         "p.id": id,
         "p.patientId": patientId,
-        "p.userId": userId,
+        "p.clinicId": userId,
       });
 
     const result = this.groupProgressPainScales(rows);
@@ -166,7 +167,7 @@ export class KnexProgressRepository implements IProgressRepository {
       .column(
         "p.id",
         "p.patientId",
-        "p.userId",
+        "p.clinicId",
         "p.service",
         "p.actualProblem",
         "p.procedures",
@@ -179,7 +180,7 @@ export class KnexProgressRepository implements IProgressRepository {
       .select()
       .where({
         "p.patientId": patientId,
-        "p.userId": userId,
+        "p.clinicId": userId,
       })
       .orderBy("date", "desc");
 
@@ -203,7 +204,7 @@ export class KnexProgressRepository implements IProgressRepository {
   }): Promise<[{ total: number }]> {
     const [result] = await this.knex(ETableNames.PROGRESS)
       .count("id as total")
-      .where({ userId, patientId });
+      .where({ clinicId: userId, patientId });
 
     return [result] as [{ total: number }];
   }
@@ -217,7 +218,9 @@ export class KnexProgressRepository implements IProgressRepository {
     patientId: string;
     userId: string;
   }): Promise<void> {
-    await this.knex(ETableNames.PROGRESS).where({ id, patientId, userId }).del();
+    await this.knex(ETableNames.PROGRESS)
+      .where({ id, patientId, clinicId: userId })
+      .del();
   }
 
   private groupProgressPainScales(rows: ProgressWithPainScaleRow[]) {

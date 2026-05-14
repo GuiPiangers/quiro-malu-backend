@@ -14,7 +14,7 @@ export class CreateServiceController {
 
     try {
       const data = parsed.data;
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
 
       const service = await this.createServiceUseCase.execute({
         ...data,

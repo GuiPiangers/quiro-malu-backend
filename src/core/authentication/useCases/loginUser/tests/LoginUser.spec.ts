@@ -9,6 +9,7 @@ import { LoginUserUseCase } from "../LoginUserUseCase";
 import type { Mock } from "vitest";
 
 const stubFingerprint = "stub-fingerprint-hash";
+const clinicId = "00000000-0000-4000-8000-000000000001";
 
 describe("Login user", () => {
   let userRepository: IUserRepository;
@@ -38,6 +39,7 @@ describe("Login user", () => {
       password,
       name: "Guilherme Eduardo",
       phone: "(51) 99999 9999",
+      clinicId,
     };
 
     const user = new User(userData);
@@ -74,6 +76,7 @@ describe("Login user", () => {
       password: "Senha123",
       name: "Guilherme Eduardo",
       phone: "(51) 99999 9999",
+      clinicId,
     };
 
     const user = new User(userData);

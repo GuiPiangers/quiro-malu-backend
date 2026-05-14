@@ -3,11 +3,13 @@ import { IRefreshTokenProvider } from "../../../../repositories/token/IRefreshTo
 import { IGenerateTokenProvider } from "../../../../repositories/token/IGenerateTokenProvider";
 import { RefreshToken } from "../../models/RefreshToken";
 import { ApiError } from "../../../../utils/ApiError";
+import { IUserRepository } from "../../../../repositories/user/IUserRepository";
 
 export class RefreshTokenUseCase {
   constructor(
     private refreshTokenProvider: IRefreshTokenProvider,
     private generateTokenProvider: IGenerateTokenProvider,
+    private userRepository: IUserRepository,
   ) {}
 
   async execute(refreshTokenId: string, fingerprint: string) {
@@ -37,7 +39,13 @@ export class RefreshTokenUseCase {
 
     await this.refreshTokenProvider.markAsUsed(refreshTokenId);
 
-    const token = await this.generateTokenProvider.execute(refreshToken.userId);
+    const [user] = await this.userRepository.getById(refreshToken.userId);
+    if (!user?.clinicId) throw new ApiError("Usuário não encontrado", 401);
+
+    const token = await this.generateTokenProvider.execute({
+      userId: refreshToken.userId,
+      clinicId: user.clinicId,
+    });
 
     const newExpiresIn = dayjs().add(15, "days").unix();
     const newRefreshToken = new RefreshToken({

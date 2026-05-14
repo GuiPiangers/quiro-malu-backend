@@ -56,12 +56,12 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         );
 
         const row = await trx(ETableNames.PATIENTS)
-          .where({ id: patientId, userId })
+          .where({ id: patientId, clinicId: userId })
           .first();
         expect(row?.name).toBe(expectedPatientDisplayName(newName));
 
         const loc = await trx(ETableNames.LOCATIONS)
-          .where({ patientId, userId })
+          .where({ patientId, clinicId: userId })
           .first();
         expect(loc?.address).toBe(expectedLocationDisplayField(newAddress));
       });

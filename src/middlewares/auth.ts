@@ -9,6 +9,7 @@ dotenv.config();
 
 type JwtPayload = {
   id: string;
+  clinicId: string;
 };
 
 export const authMiddleware = async (
@@ -26,7 +27,8 @@ export const authMiddleware = async (
     request.user = verifyToken as unknown as JwtPayload;
 
     const userId = (request.user as JwtPayload).id;
-    if (!userId) {
+    const clinicId = (request.user as JwtPayload).clinicId;
+    if (!userId || !clinicId) {
       throw new ApiError("Acesso não autorizado", 401);
     }
 

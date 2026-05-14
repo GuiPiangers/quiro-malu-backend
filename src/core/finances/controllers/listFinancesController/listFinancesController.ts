@@ -14,7 +14,7 @@ export class ListFinancesController {
     }
 
     try {
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
       const { yearAndMonth } = parsed.data;
 
       const res = await this.listFinancesUseCase.execute({

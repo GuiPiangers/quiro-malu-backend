@@ -4,14 +4,17 @@ import dayjs from "dayjs";
 import {
   createMockGenerateTokenProvider,
   createMockRefreshTokenProvider,
+  createMockUserRepository,
 } from "../../../../repositories/_mocks/UserRepositoryMock";
 import { RefreshTokenUseCase } from "./RefreshTokenUseCase";
 
 const mockRefreshTokenProvider = createMockRefreshTokenProvider();
 
 const mockGenerateTokenProvider = createMockGenerateTokenProvider();
+const mockUserRepository = createMockUserRepository();
 
 const fingerprint = "device-fingerprint";
+const clinicId = "00000000-0000-4000-8000-000000000001";
 
 describe("RefreshTokenUseCase", () => {
   let refreshTokenUseCase: RefreshTokenUseCase;
@@ -21,6 +24,7 @@ describe("RefreshTokenUseCase", () => {
     refreshTokenUseCase = new RefreshTokenUseCase(
       mockRefreshTokenProvider,
       mockGenerateTokenProvider,
+      mockUserRepository,
     );
   });
 
@@ -66,6 +70,16 @@ describe("RefreshTokenUseCase", () => {
       mockRefreshTokenProvider.getRefreshToken.mockResolvedValueOnce(
         validRefreshToken.getDTO(),
       );
+      vi.mocked(mockUserRepository.getById).mockResolvedValueOnce([
+        {
+          id: mockUserId,
+          name: "User Test",
+          email: "user@test.com",
+          phone: "(51) 99999 9999",
+          password: "hash",
+          clinicId,
+        },
+      ]);
       mockGenerateTokenProvider.execute.mockResolvedValueOnce(mockToken);
 
       const result = await refreshTokenUseCase.execute(
@@ -84,6 +98,10 @@ describe("RefreshTokenUseCase", () => {
       expect(mockRefreshTokenProvider.delete).toHaveBeenCalledWith(
         validRefreshToken.id,
       );
+      expect(mockGenerateTokenProvider.execute).toHaveBeenCalledWith({
+        userId: mockUserId,
+        clinicId,
+      });
     });
 
     it("should throw when refresh token is expired", async () => {

@@ -36,6 +36,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         await trx(ETableNames.LOCATIONS).insert({
           patientId,
           userId,
+          clinicId: userId,
           address: "Rua X",
           city: "POA",
           state: "RS",

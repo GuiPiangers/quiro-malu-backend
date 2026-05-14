@@ -17,7 +17,7 @@ export class GetProgressBySchedulingController {
 
     try {
       const { schedulingId, patientId } = parsedParams.data;
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
 
       const progress = await this.getProgressUseCase.execute({
         schedulingId,

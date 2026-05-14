@@ -20,6 +20,7 @@ export class CreateUserController {
         name: created.name,
         email: created.email,
         phone: created.phone,
+        clinicId: created.clinicId,
       });
     } catch (err: any) {
       return responseError(response, err);

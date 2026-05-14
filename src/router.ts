@@ -95,6 +95,7 @@ import { getWhatsAppQrCodeController } from "./core/whatsapp/controllers/getWhat
 import { getWhatsAppStatusController } from "./core/whatsapp/controllers/getWhatsAppStatusController";
 import { disconnectWhatsAppController } from "./core/whatsapp/controllers/disconnectWhatsAppController";
 import { whatsAppWebhookController } from "./core/whatsapp/controllers/whatsappWebhookController";
+import { createClinicController } from "./core/clinics/controllers/createClinicController";
 
 const router = Router();
 const multerConfig = multer({
@@ -130,6 +131,9 @@ router.post("/logout", (request, response) => {
 });
 router.post("/refresh-token", (request, response) => {
   refreshTokenController.handle(request, response);
+});
+router.post("/clinics", (request, response) => {
+  createClinicController.handle(request, response);
 });
 router.get("/profile", authMiddleware, (request, response) => {
   getUserProfileController.handle(request, response);

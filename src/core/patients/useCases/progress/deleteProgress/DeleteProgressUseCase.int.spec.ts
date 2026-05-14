@@ -36,6 +36,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
           id: progressId,
           patientId,
           userId,
+          clinicId: userId,
           service: "Remover",
           date: "2038-05-01 09:00:00",
         });
@@ -46,7 +47,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         await useCase.execute({ id: progressId, patientId, userId });
 
         const row = await trx(ETableNames.PROGRESS)
-          .where({ id: progressId, patientId, userId })
+          .where({ id: progressId, patientId, clinicId: userId })
           .first();
         expect(row).toBeUndefined();
       });

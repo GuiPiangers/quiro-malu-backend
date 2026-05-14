@@ -14,26 +14,33 @@ export class KnexAnamnesisRepository implements IAnamnesisRepository {
   ): Promise<void> {
     return await this.knex(ETableNames.ANAMNESIS).insert({
       ...data,
-      userId,
+      clinicId: userId,
       patientId,
     });
   }
 
   async saveMany(data: (AnamnesisDTO & { userId: string })[]): Promise<void> {
-    await this.knex(ETableNames.ANAMNESIS).insert(data);
+    await this.knex(ETableNames.ANAMNESIS).insert(
+      data.map(({ userId, ...anamnesis }) => ({
+        ...anamnesis,
+        clinicId: userId,
+      })),
+    );
   }
 
   async update(
     { patientId, ...data }: AnamnesisDTO,
     userId: string,
   ): Promise<void> {
-    await this.knex(ETableNames.ANAMNESIS).update(data).where({ patientId, userId });
+    await this.knex(ETableNames.ANAMNESIS)
+      .update(data)
+      .where({ patientId, clinicId: userId });
   }
 
   async get(patientId: string, userId: string): Promise<AnamnesisDTO> {
     const result = await this.knex(ETableNames.ANAMNESIS)
       .first("*")
-      .where({ patientId, userId });
+      .where({ patientId, clinicId: userId });
 
     const underwentSurgery = result ? result.underwentSurgery == 1 : undefined;
     const useMedicine = result ? result.useMedicine == 1 : undefined;

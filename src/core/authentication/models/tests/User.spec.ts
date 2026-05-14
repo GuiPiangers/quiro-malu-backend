@@ -7,6 +7,7 @@ describe("User (integration)", () => {
       email: "john.doe@example.com",
       phone: "(51) 98765 4321",
       password: "plainPassword!",
+      clinicId: "clinic-id",
     };
 
     const user = new User(userData);
@@ -26,6 +27,7 @@ describe("User (integration)", () => {
       email: "jane.doe@example.com",
       phone: "(51) 98765 4321",
       password: "securePassword!",
+      clinicId: "clinic-id",
     };
 
     const user = new User(userData);
@@ -37,6 +39,7 @@ describe("User (integration)", () => {
       password: expect.any(String),
       name: "Jane Doe",
       phone: "(51) 98765 4321",
+      clinicId: "clinic-id",
     });
 
     expect(userDTO.password).not.toBe("securePassword!");
@@ -49,6 +52,7 @@ describe("User (integration)", () => {
       email: "invalid-email",
       phone: "(51) 98765 4321",
       password: "password",
+      clinicId: "clinic-id",
     };
 
     expect(() => new User(userData)).toThrow("email inválido");
@@ -60,6 +64,7 @@ describe("User (integration)", () => {
       email: "user@example.com",
       phone: "invalid-phone",
       password: "password",
+      clinicId: "clinic-id",
     };
 
     expect(() => new User(userData)).toThrow(

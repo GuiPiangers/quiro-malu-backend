@@ -14,7 +14,7 @@ export class GetAnamnesisController {
     }
 
     try {
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
       const { patientId } = parsedParams.data;
 
       const anamnesisData = await this.listAnamnesisUseCase.execute(

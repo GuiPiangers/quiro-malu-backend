@@ -36,6 +36,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
           id: progressId,
           patientId,
           userId,
+          clinicId: userId,
           service: "Avaliação",
           date: "2038-03-05 11:00:00",
         });

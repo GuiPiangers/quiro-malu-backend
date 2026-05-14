@@ -35,7 +35,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         await useCase.execute(patientId, userId);
 
         const row = await trx(ETableNames.PATIENTS)
-          .where({ id: patientId, userId })
+          .where({ id: patientId, clinicId: userId })
           .first();
         expect(row).toBeUndefined();
       });

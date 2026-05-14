@@ -15,7 +15,7 @@ export class UpdatePatientController {
     }
 
     try {
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
       const patientData = parsed.data;
       const patient = new Patient(patientData);
       const patientDTO = patient.getPatientDTO();

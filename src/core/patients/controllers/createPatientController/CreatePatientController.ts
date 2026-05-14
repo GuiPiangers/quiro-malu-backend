@@ -15,7 +15,7 @@ export class CreatePatientController {
 
     try {
       const data = parsed.data;
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
 
       const res = await this.createPatientUseCase.execute(data, userId!);
       response.status(201).json(res);

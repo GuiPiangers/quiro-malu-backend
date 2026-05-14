@@ -13,7 +13,7 @@ export class DeleteProgressController {
     }
 
     try {
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
       const { id, patientId } = parsed.data;
       await this.deleteProgressUseCase.execute({
         id,

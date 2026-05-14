@@ -45,7 +45,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         });
 
         const row = await trx(ETableNames.PROGRESS)
-          .where({ id: progressId, patientId, userId })
+          .where({ id: progressId, patientId, clinicId: userId })
           .first();
         expect(row?.service).toBe("Quiropraxia");
         expect(row?.actualProblem).toBe("Dor");
@@ -64,6 +64,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
           id: progressId,
           patientId,
           userId,
+          clinicId: userId,
           service: "Massagem",
           date: "2038-02-01 10:00:00",
         });
@@ -78,7 +79,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         });
 
         const row = await trx(ETableNames.PROGRESS)
-          .where({ id: progressId, patientId, userId })
+          .where({ id: progressId, patientId, clinicId: userId })
           .first();
         expect(row?.actualProblem).toBe("Atualizado");
       });

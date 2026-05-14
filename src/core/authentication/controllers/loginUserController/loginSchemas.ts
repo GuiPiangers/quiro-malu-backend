@@ -11,6 +11,7 @@ export const LoginUserSummarySchema = z
   .object({
     email: z.string().email(),
     name: z.string(),
+    clinicId: z.string().uuid(),
   })
   .openapi("LoginUserSummary");
 

@@ -34,15 +34,21 @@ export function shouldRunPatientIntegrationSuite(): boolean {
 
 export async function insertIntegrationUser(
   trx: Knex.Transaction,
-): Promise<{ userId: string }> {
+): Promise<{ userId: string; clinicId: string }> {
   const userId = uuidv4();
+  const clinicId = userId;
+  await trx(ETableNames.CLINICS).insert({
+    id: clinicId,
+    name: `Clinic ${clinicId}`,
+  });
   await trx(ETableNames.USERS).insert({
     id: userId,
+    clinicId,
     name: "Integration user",
     email: `${userId}@integration.test`,
     password: "not-used",
   });
-  return { userId };
+  return { userId, clinicId };
 }
 
 /** Insere paciente com `hashData` coerente ao modelo de domínio. */
@@ -70,6 +76,7 @@ export async function insertPatientForIntegration(
   await trx(ETableNames.PATIENTS).insert({
     id: patientId,
     userId,
+    clinicId: userId,
     name: dto.name,
     phone: dto.phone,
     hashData: dto.hashData,

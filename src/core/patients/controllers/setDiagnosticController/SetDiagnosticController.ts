@@ -14,7 +14,7 @@ export class SetDiagnosticController {
 
     try {
       const data = parsed.data;
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
 
       await this.setDiagnosticUseCase.execute(data, userId!);
       response.status(201).json({ message: "Criado com sucesso!" });

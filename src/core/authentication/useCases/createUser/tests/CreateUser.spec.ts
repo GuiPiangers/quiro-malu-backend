@@ -1,16 +1,25 @@
 import { UserDTO } from "../../../models/User"
 import { IUserRepository } from "../../../../../repositories/user/IUserRepository"
 import { InMemoryUserRepository } from "../../../../../repositories/user/inMemory/InMemoryUserRepository"
+import { createMockClinicRepository } from "../../../../../repositories/_mocks/ClinicRepositoryMock"
 import { CreateUserUseCase } from "../CreateUserUseCase"
 
 describe("Create user", () => {
 
     let userRepository: IUserRepository
     let createUserUseCase: CreateUserUseCase
+    const clinicId = "00000000-0000-4000-8000-000000000001"
+    const clinicRepository = createMockClinicRepository()
 
-    beforeAll(() => {
+    beforeEach(() => {
+        vi.clearAllMocks()
         userRepository = new InMemoryUserRepository()
-        createUserUseCase = new CreateUserUseCase(userRepository)
+        clinicRepository.findById.mockResolvedValue({
+            id: clinicId,
+            name: "Clínica Teste",
+            getDTO: () => ({ id: clinicId, name: "Clínica Teste" }),
+        } as any)
+        createUserUseCase = new CreateUserUseCase(userRepository, clinicRepository)
     })
 
     it("Should be able to create user", async () => {
@@ -18,7 +27,8 @@ describe("Create user", () => {
             email: 'guilherme@gmail.com',
             password: 'Senha123',
             name: 'Guilherme Eduardo',
-            phone: '(51) 99999 9999'
+            phone: '(51) 99999 9999',
+            clinicId,
         }
 
         const user = await createUserUseCase.execute(userData)
@@ -30,7 +40,8 @@ describe("Create user", () => {
             email: 'existingUser@gmail.com',
             password: 'Senha123',
             name: 'nm',
-            phone: '(51) 99999 9999'
+            phone: '(51) 99999 9999',
+            clinicId,
         }
 
         await expect(createUserUseCase.execute(user)).rejects.toThrow(
@@ -42,7 +53,8 @@ describe("Create user", () => {
             email: 'existingUser@gmail.com',
             password: 'Senha123',
             name: 'nmqwertyuiopasdfghjklçzxcvbnmqwertyuiopasdfghjklzxcvbnm asdqwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjkl asdqwertyuioqwrtypdsad asd',
-            phone: '(51) 99999 9999'
+            phone: '(51) 99999 9999',
+            clinicId,
         }
 
         await expect(createUserUseCase.execute(user)).rejects.toThrow(
@@ -54,7 +66,8 @@ describe("Create user", () => {
             email: 'existingUser',
             password: 'Senha123',
             name: 'Guilherme Piangers',
-            phone: '(51) 99999 9999'
+            phone: '(51) 99999 9999',
+            clinicId,
         }
 
         await expect(createUserUseCase.execute(user)).rejects.toThrow(
@@ -66,7 +79,8 @@ describe("Create user", () => {
             email: 'existingUser@gmail',
             password: 'Senha123',
             name: 'Guilherme Piangers',
-            phone: '(51) 99999 9999'
+            phone: '(51) 99999 9999',
+            clinicId,
         }
 
         await expect(createUserUseCase.execute(user)).rejects.toThrow(
@@ -78,7 +92,8 @@ describe("Create user", () => {
             email: 'existingUser@gmail.com',
             password: 'Senha123',
             name: 'Guilherme Piangers',
-            phone: '51 99999 9999'
+            phone: '51 99999 9999',
+            clinicId,
         }
 
         await expect(createUserUseCase.execute(user)).rejects.toThrow(
@@ -90,7 +105,8 @@ describe("Create user", () => {
             email: 'existingUser@gmail.com',
             password: 'Senha',
             name: 'Guilherme Piangers',
-            phone: '(51) 99999 9999'
+            phone: '(51) 99999 9999',
+            clinicId,
         }
 
         await expect(createUserUseCase.execute(user)).rejects.toThrow(
@@ -102,7 +118,8 @@ describe("Create user", () => {
             email: 'existingUser@gmail.com',
             password: 'Sen1',
             name: 'Guilherme Piangers',
-            phone: '(51) 99999 9999'
+            phone: '(51) 99999 9999',
+            clinicId,
         }
 
         await expect(createUserUseCase.execute(user)).rejects.toThrow(
@@ -114,7 +131,8 @@ describe("Create user", () => {
             email: 'existingUser@gmail.com',
             password: 'senha123',
             name: 'Guilherme Piangers',
-            phone: '(51) 99999 9999'
+            phone: '(51) 99999 9999',
+            clinicId,
         }
 
         await expect(createUserUseCase.execute(user)).rejects.toThrow(
@@ -126,13 +144,25 @@ describe("Create user", () => {
             email: 'existingUser@gmail.com',
             password: 'Senha123',
             name: 'Existing User Name',
-            phone: '(51) 99999 9999'
+            phone: '(51) 99999 9999',
+            clinicId,
         }
 
         await createUserUseCase.execute(user)
         await expect(createUserUseCase.execute(user)).rejects.toThrow(
             "Usuário já cadastrado",
         );
+    })
+    it("Should not create user without an existing clinic", async () => {
+        clinicRepository.findById.mockResolvedValue(null)
+
+        await expect(createUserUseCase.execute({
+            email: 'clinicMissing@gmail.com',
+            password: 'Senha123',
+            name: 'Clinic Missing',
+            phone: '(51) 99999 9999',
+            clinicId,
+        })).rejects.toThrow("Clínica não encontrada")
     })
 })
 

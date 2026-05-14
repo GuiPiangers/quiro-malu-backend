@@ -15,7 +15,7 @@ export class DeleteFinanceController {
 
     try {
       const { id } = parsed.data;
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
 
       await this.deleteFinanceUseCase.execute({
         userId: userId!,

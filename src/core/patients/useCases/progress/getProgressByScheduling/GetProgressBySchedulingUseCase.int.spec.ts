@@ -47,6 +47,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
           id: progressId,
           patientId,
           userId,
+          clinicId: userId,
           service: "Evolução agenda",
           schedulingId,
           date: "2038-06-01 11:00:00",

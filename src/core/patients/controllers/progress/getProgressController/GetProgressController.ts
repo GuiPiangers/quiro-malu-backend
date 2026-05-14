@@ -14,7 +14,7 @@ export class GetProgressController {
 
     try {
       const { id, patientId } = parsedParams.data;
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
 
       const progress = await this.getProgressUseCase.execute({
         id,

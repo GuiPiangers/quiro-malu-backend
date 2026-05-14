@@ -14,7 +14,7 @@ export class GetDiagnosticController {
     }
 
     try {
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
       const { patientId } = parsedParams.data;
       const { diagnostic, treatmentPlan } =
         await this.listDiagnosticUseCase.execute(patientId, userId!);

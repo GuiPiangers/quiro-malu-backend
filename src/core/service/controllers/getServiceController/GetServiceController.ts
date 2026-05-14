@@ -15,7 +15,7 @@ export class GetServiceController {
 
     try {
       const { id } = parsedParams.data;
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
 
       const Service = await this.getServiceUseCase.execute({
         id,

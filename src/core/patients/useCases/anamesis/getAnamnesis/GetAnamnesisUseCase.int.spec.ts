@@ -47,6 +47,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         await trx(ETableNames.ANAMNESIS).insert({
           patientId,
           userId,
+          clinicId: userId,
           mainProblem: "Dor lombar",
           currentIllness: "Há 2 meses",
         });

@@ -20,7 +20,7 @@ export class ListProgressController {
     try {
       const { patientId } = parsedParams.data;
       const { page } = parsedQuery.data;
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
 
       const progress = await this.listProgressUseCase.execute({
         patientId,

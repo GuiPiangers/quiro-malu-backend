@@ -15,7 +15,7 @@ export class UpdateServiceController {
 
     try {
       const data = parsed.data;
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
 
       const service = await this.updateServiceUseCase.execute({
         ...data,

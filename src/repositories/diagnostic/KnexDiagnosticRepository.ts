@@ -11,13 +11,18 @@ export class KnexDiagnosticRepository implements IDiagnosticRepository {
   ): Promise<void> {
     return await this.knex(ETableNames.DIAGNOSTICS).insert({
       ...data,
-      userId,
+      clinicId: userId,
       patientId,
     });
   }
 
   async saveMany(data: (DiagnosticDTO & { userId: string })[]): Promise<void> {
-    await this.knex(ETableNames.DIAGNOSTICS).insert(data);
+    await this.knex(ETableNames.DIAGNOSTICS).insert(
+      data.map(({ userId, ...diagnostic }) => ({
+        ...diagnostic,
+        clinicId: userId,
+      })),
+    );
   }
 
   async update(
@@ -26,13 +31,13 @@ export class KnexDiagnosticRepository implements IDiagnosticRepository {
   ): Promise<void> {
     await this.knex(ETableNames.DIAGNOSTICS)
       .update(data)
-      .where({ patientId, userId });
+      .where({ patientId, clinicId: userId });
   }
 
   async get(patientId: string, userId: string): Promise<DiagnosticDTO> {
     const result = await this.knex(ETableNames.DIAGNOSTICS)
       .first("*")
-      .where({ patientId, userId });
+      .where({ patientId, clinicId: userId });
 
     return result;
   }

@@ -30,7 +30,10 @@ export class LoginUserUseCase {
       fpHash: fingerprintHash,
     });
 
-    const token = await this.generateTokenProvider.execute(user.id);
+    const token = await this.generateTokenProvider.execute({
+      userId: user.id,
+      clinicId: user.clinicId,
+    });
     const expiresIn = dayjs().add(15, "days").unix();
     const refreshToken = new RefreshToken({
       userId: user.id,
@@ -46,6 +49,7 @@ export class LoginUserUseCase {
       user: {
         email: user.email,
         name: user.name,
+        clinicId: user.clinicId,
       },
     };
   }

@@ -110,6 +110,7 @@ Este plano segue os guias do projeto para **Entity / UseCase / Repository / Cont
    - ajustar unicidade/consultas para escopo da clínica.
 2. Controllers:
    - parametrize use cases com `request.user.clinicId`.
+   - continuar incluindo o `request.user.userId` para validar autenticação
 3. Rotas/docs:
    - manter contrato externo estável quando possível.
    - atualizar OpenAPI em mudanças de request/response.
@@ -125,7 +126,8 @@ Este plano segue os guias do projeto para **Entity / UseCase / Repository / Cont
 2. Revisar middlewares/autorização para evitar acesso cruzado entre clínicas.
 3. Adicionar testes de segurança:
    - usuário da clínica A não acessa dados da clínica B.
-
+4. Adicionar ao payload de GenerateTokenProvider o clinicId para a identificação da clinica no token
+5. Validar no authMiddleware a existência do clinicId no payload do token
 ---
 
 ## Fase 7 — Testes (unitário, integração e regressão)

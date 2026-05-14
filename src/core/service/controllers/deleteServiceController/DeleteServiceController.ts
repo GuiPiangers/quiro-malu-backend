@@ -14,7 +14,7 @@ export class DeleteServiceController {
     }
 
     try {
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
       const { id } = parsed.data;
       await this.deleteServiceUseCase.execute({ id, userId: userId! });
 

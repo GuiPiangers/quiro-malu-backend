@@ -55,7 +55,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         expect(result.successCounter).toBeGreaterThanOrEqual(1);
 
         const row = await trx(ETableNames.PATIENTS)
-          .where({ userId })
+          .where({ clinicId: userId })
           .where("name", "like", `%${unique}%`)
           .first();
         expect(row).toBeDefined();

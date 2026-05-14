@@ -44,7 +44,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         );
 
         const row = await trx(ETableNames.DIAGNOSTICS)
-          .where({ patientId, userId })
+          .where({ patientId, clinicId: userId })
           .first();
         expect(row?.diagnostic).toBe("Hernia discal");
       });
@@ -60,6 +60,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         await trx(ETableNames.DIAGNOSTICS).insert({
           patientId,
           userId,
+          clinicId: userId,
           diagnostic: "Antigo",
           treatmentPlan: "Antigo plano",
         });
@@ -77,7 +78,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         );
 
         const row = await trx(ETableNames.DIAGNOSTICS)
-          .where({ patientId, userId })
+          .where({ patientId, clinicId: userId })
           .first();
         expect(row?.diagnostic).toBe("Novo quadro");
         expect(row?.treatmentPlan).toBe("Fisioterapia");

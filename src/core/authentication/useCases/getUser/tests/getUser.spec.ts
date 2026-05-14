@@ -19,6 +19,7 @@ describe("get user", () => {
       password: "Senha123",
       name: "Existing User Name",
       phone: "(51) 99999 9999",
+      clinicId: "00000000-0000-4000-8000-000000000001",
     };
 
     userRepository.save(userData);

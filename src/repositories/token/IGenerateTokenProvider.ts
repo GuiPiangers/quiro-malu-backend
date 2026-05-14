@@ -1,3 +1,3 @@
 export interface IGenerateTokenProvider {
-  execute(userId: string): Promise<string>;
+  execute(data: { userId: string; clinicId: string }): Promise<string>;
 }

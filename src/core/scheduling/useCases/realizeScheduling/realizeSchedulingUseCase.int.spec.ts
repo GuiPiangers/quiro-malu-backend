@@ -23,8 +23,13 @@ const shouldRunIntegrationSuite = integrationEnvReady && runIntegrationTests;
 async function insertUserAndPatient(trx: Knex.Transaction) {
   const userId = uuidv4();
   const patientId = uuidv4();
+  await trx(ETableNames.CLINICS).insert({
+    id: userId,
+    name: `Clinic ${userId}`,
+  });
   await trx(ETableNames.USERS).insert({
     id: userId,
+    clinicId: userId,
     name: "Integration user",
     email: `${userId}@integration.test`,
     password: "not-used",
@@ -33,6 +38,7 @@ async function insertUserAndPatient(trx: Knex.Transaction) {
     id: patientId,
     name: "Integration patient",
     userId,
+    clinicId: userId,
   });
   return { userId, patientId };
 }
@@ -76,6 +82,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await trx(ETableNames.PROGRESS).insert({
           id: progressId,
           userId,
+          clinicId: userId,
           patientId,
           service: "Consulta",
           schedulingId,
@@ -144,6 +151,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           id: otherPatientId,
           name: "Outro paciente",
           userId,
+          clinicId: userId,
         });
 
         const schedulingId = uuidv4();
@@ -162,6 +170,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await trx(ETableNames.PROGRESS).insert({
           id: progressId,
           userId,
+          clinicId: userId,
           patientId: otherPatientId,
           service: "Consulta",
           schedulingId,

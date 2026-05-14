@@ -14,7 +14,7 @@ export class SetProgressController {
 
     try {
       const data = parsed.data;
-      const userId = request.user.id;
+      const userId = request.user.clinicId;
 
       const progress = await this.setProgressUseCase.execute({
         ...data,

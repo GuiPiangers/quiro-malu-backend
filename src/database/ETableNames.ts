@@ -1,4 +1,5 @@
 export enum ETableNames {
+  CLINICS = "clinics",
   USERS = "users",
   USER_FINGERPRINTS = "user_fingerprints",
   PATIENTS = "patients",
