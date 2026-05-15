@@ -5,7 +5,6 @@ import { IBlockScheduleRepository } from "../../../../repositories/blockSchedule
 import { DateTime } from "../../../shared/Date";
 import { BlockScheduleDto } from "../../models/dtos/BlockSchedule.dto";
 
-/** Escopo por clínica: ver `docs/PROJECT_GUIDE.md` (Escopo por clínica). */
 export interface IListEventsUseCaseRequest {
   date: string;
   clinicId: string;

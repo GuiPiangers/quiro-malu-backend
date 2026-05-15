@@ -10,6 +10,12 @@
 - Dentro da pasta `src/core` contém a lógica principal da aplicação, a arquitetura está dividida em módulos e dentro de cada módulo possui uma pasta `src/core/[modulo]/controllers` (que contém os controllers do módulo), `src/core/[modulo]/models` (que contém as entidades e classes com a lógica principal do módulo) e `src/core/[modulo]/useCases` (que contém os casos de uso do módulo)
 - Dentro de `src/core/shared` tem classes e funções comuns entre módulos, como classes de Design Patterns, utility classes e tiny classes
 
+## Escopo por clínica (multi-tenant)
+
+- Operações que só devem valer para a **clínica da sessão** não precisam de um passo extra no caso de uso para “provar” que o alvo pertence à clínica (ex.: chamar RBAC `findUserClinicId` só para comparar com o `clinicId` do token).
+- **Prefira** expor no repositório métodos que já filtrem por **`clinicId` confiável** (normalmente o do JWT) junto com identificadores do recurso (`id`, `userId` alvo, etc.) no `WHERE`. Quem está fora do escopo vira **zero linhas afetadas** ou lista vazia; o use case pode traduzir isso em `404` ou resposta vazia, sem duplicar regra de pertencimento.
+- Mantenha no use case apenas **regras de negócio** que não sejam só consequência desse filtro (ex.: não permitir que o usuário apague a si mesmo).
+
 ## Lançamento de erros
 
 - Utilize a classe `ApiError` de `src/utils/ApiError.ts` ao lançar um novo erro, ao invés de lançar um `Error` padrão
