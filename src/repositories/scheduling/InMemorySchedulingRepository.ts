@@ -79,10 +79,13 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
   async list(data: {
     clinicId: string;
     date: string;
+    userId?: string;
     config?: { limit: number; offSet: number };
   }): Promise<SchedulingWithPatientDTO[]> {
     const list = this.dbSchedules.filter((scheduling) => {
       if (scheduling.clinicId !== data.clinicId) return false;
+      if (data.userId !== undefined && data.userId !== "" && scheduling.userId !== data.userId)
+        return false;
       if (!scheduling.date) return false;
       return String(scheduling.date).substring(0, 10) === data.date;
     });

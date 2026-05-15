@@ -82,6 +82,13 @@ export const ListEventsQuerySchema = z
   })
   .openapi("ListEventsQuery");
 
+export const ListEventsByUserBodySchema = z
+  .object({
+    userId: z.string().min(1),
+    date: z.string().min(1).describe(SCHEDULING_DATE_ONLY_QUERY_DOC),
+  })
+  .openapi("ListEventsByUserBody");
+
 export const ListEventSuggestionsQuerySchema = z
   .object({
     filter: z.string().optional(),

@@ -63,13 +63,15 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
   async list({
     clinicId,
     date,
+    userId,
   }: {
     clinicId: string;
     date: string;
+    userId?: string;
     config?: { limit: number; offSet: number };
   }): Promise<SchedulingWithPatientDTO[]> {
     try {
-      const result = await this.knex(`${ETableNames.SCHEDULES} as s`)
+      const query = this.knex(`${ETableNames.SCHEDULES} as s`)
         .leftJoin(`${ETableNames.PATIENTS} as p`, function joinPatients() {
           this.on("s.patientId", "=", "p.id").andOn(
             "s.clinicId",
@@ -94,10 +96,19 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
         )
         .where("s.clinicId", clinicId)
         .andWhereRaw("date_format(s.date, '%Y-%m-%d') = ?", [date])
+        .modify((qb) => {
+          if (userId !== undefined && userId !== "") {
+            qb.andWhere("s.userId", userId);
+          }
+        })
         .orderBy("s.updated_at", "desc");
 
-      return result.map((scheduling) =>
-        getValidObjectValues(scheduling as SchedulingWithPatientDTO),
+      const result = await query;
+
+      return result.map((scheduling: SchedulingWithPatientDTO) =>
+        getValidObjectValues(
+          scheduling,
+        ),
       );
     } catch {
       throw new ApiError("Não foi possível realizar a busca", 500);

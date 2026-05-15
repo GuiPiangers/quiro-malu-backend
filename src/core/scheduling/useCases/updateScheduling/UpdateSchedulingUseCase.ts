@@ -44,7 +44,7 @@ export class UpdateSchedulingUseCase {
     const { id: _, ...schedulingDTO } = scheduling.getDTO();
 
     await this.validateBlockSchedules({ scheduling, userId });
-    await this.validateDate({ scheduling, clinicId });
+    await this.validateDate({ scheduling, clinicId, userId });
 
     await this.SchedulingRepository.update({
       clinicId,
@@ -93,15 +93,18 @@ export class UpdateSchedulingUseCase {
   private async validateDate({
     scheduling,
     clinicId,
+    userId,
   }: {
     scheduling: Scheduling;
     clinicId: string;
+    userId: string;
   }) {
     if (!scheduling.date?.dateTime) return;
 
     const schedules = await this.SchedulingRepository.list({
       clinicId,
       date: new DateTime(scheduling.date.dateTime).date,
+      userId,
     });
 
     if (scheduling.notAvailableDate(schedules))

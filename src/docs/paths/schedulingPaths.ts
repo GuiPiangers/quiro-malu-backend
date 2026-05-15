@@ -18,6 +18,7 @@ import {
   DeleteSchedulingBodySchema,
   ListEventSuggestionsQuerySchema,
   ListEventsQuerySchema,
+  ListEventsByUserBodySchema,
   ListSchedulesQuerySchema,
   MessageResponseSchema,
   QtdSchedulesQuerySchema,
@@ -291,6 +292,37 @@ openApiRegistry.registerPath({
     },
     400: { description: "Query inválida (Zod)" },
     401: { description: "Não autenticado" },
+  },
+});
+
+openApiRegistry.registerPath({
+  method: "post",
+  path: "/events/by-user",
+  tags: ["Scheduling"],
+  summary: "Lista eventos do dia para um userId (corpo)",
+  description:
+    "Mesmo payload que `GET /events`, porém `userId` vem no JSON (ex.: ver agenda de outro profissional). O `clinicId` é sempre o da sessão; agendamentos são filtrados por `clinicId` + `userId` no repositório.",
+  security: bearer,
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: ListEventsByUserBodySchema,
+          example: { userId: "00000000-0000-4000-8000-0000000000aa", date: "2026-05-14" },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Eventos",
+      content: {
+        "application/json": { schema: ListEventsResponseSchema },
+      },
+    },
+    400: { description: "Corpo inválido (Zod)" },
+    401: { description: "Não autenticado" },
+    403: { description: "Sem permissão `events:read`" },
   },
 });
 

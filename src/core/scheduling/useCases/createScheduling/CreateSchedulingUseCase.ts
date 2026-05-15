@@ -48,6 +48,7 @@ export class CreateSchedulingUseCase {
     const schedules = await this.SchedulingRepository.list({
       clinicId,
       date: new DateTime(data.date).date,
+      userId,
     });
 
     if (scheduling.notAvailableDate(schedules))

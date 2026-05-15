@@ -87,6 +87,7 @@ import { deleteManyNotificationsController } from "./core/notification/controlle
 import { addBlockSchedulingController } from "./core/scheduling/controllers/addBlockScheduleController";
 import { listBlockSchedulingController } from "./core/scheduling/controllers/ListBlockScheduleController";
 import { listEventsController } from "./core/scheduling/controllers/ListEventsController";
+import { listEventsByUserController } from "./core/scheduling/controllers/ListEventsByUserController";
 import { editBlockScheduleController } from "./core/scheduling/controllers/editBlockScheduleController";
 import { deleteBlockScheduleController } from "./core/scheduling/controllers/deleteBlockScheduleController";
 import { listEventSuggestionsController } from "./core/scheduling/controllers/listEventSuggestionsController";
@@ -341,6 +342,9 @@ router.delete("/blockSchedules/:id", authMiddleware, authorize("block_schedules:
 
 router.get("/events", authMiddleware, authorize("events:read"), (request, response) => {
   listEventsController.handle(request, response);
+});
+router.post("/events/by-user", authMiddleware, authorize("events:read"), (request, response) => {
+  listEventsByUserController.handle(request, response);
 });
 
 router.get("/event-suggestions", authMiddleware, authorize("events:read"), (request, response) => {

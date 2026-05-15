@@ -99,6 +99,7 @@ describe("listEventsUseCase", () => {
       expect(mockSchedulingRepository.list).toHaveBeenCalledWith({
         date,
         clinicId,
+        userId,
       });
       expect(mockBlockScheduleRepository.listBetweenDates).toHaveBeenCalledWith(
         {

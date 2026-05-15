@@ -11,4 +11,4 @@ const listEventsUseCase = new ListEventsUseCase(
 );
 const listEventsController = new ListEventsController(listEventsUseCase);
 
-export { listEventsController };
+export { listEventsController, listEventsUseCase };

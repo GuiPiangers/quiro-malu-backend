@@ -26,6 +26,8 @@ export interface ISchedulingRepository {
   list(data: {
     clinicId: string;
     date: string;
+    /** Quando informado, restringe aos agendamentos desse profissional. */
+    userId?: string;
     config?: { limit: number; offSet: number };
   }): Promise<SchedulingWithPatientDTO[]>;
 
