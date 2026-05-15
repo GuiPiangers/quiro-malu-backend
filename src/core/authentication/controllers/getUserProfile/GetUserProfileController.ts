@@ -10,11 +10,15 @@ export class GetUserProfileController {
   async handle(request: Request, response: Response): Promise<Response> {
     try {
       const userId = request.user.id;
-      if (!userId?.trim()) {
+      const clinicId = request.user.clinicId;
+      if (!userId?.trim() || !clinicId?.trim()) {
         throw new ApiError("Acesso não autorizado", 401, "unauthorized");
       }
 
-      const user = await this.getUserProfileUseCase.execute(userId);
+      const user = await this.getUserProfileUseCase.execute({
+        userId,
+        clinicId,
+      });
       const { password: _password, ...profile } = user;
 
       const body: GetUserProfileResponse = profile;

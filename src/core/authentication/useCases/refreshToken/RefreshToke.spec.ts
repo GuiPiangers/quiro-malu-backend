@@ -44,6 +44,7 @@ describe("RefreshTokenUseCase", () => {
       const validRefreshToken = new RefreshToken({
         id: "00000000-0000-4000-8000-000000000001",
         userId: mockUserId,
+        clinicId,
         fingerprint: "other-fp",
         expiresIn: dayjs().add(1, "hour").unix(),
       });
@@ -63,6 +64,7 @@ describe("RefreshTokenUseCase", () => {
       const validRefreshToken = new RefreshToken({
         id: "00000000-0000-4000-8000-000000000001",
         userId: mockUserId,
+        clinicId,
         fingerprint,
         expiresIn: dayjs().add(1, "hour").unix(),
       });
@@ -91,6 +93,10 @@ describe("RefreshTokenUseCase", () => {
         token: mockToken,
         refreshToken: expect.any(String),
       });
+      expect(mockUserRepository.getById).toHaveBeenCalledWith({
+        userId: mockUserId,
+        clinicId,
+      });
       expect(mockRefreshTokenProvider.markAsUsed).toHaveBeenCalledWith(
         validRefreshToken.id,
       );
@@ -108,6 +114,7 @@ describe("RefreshTokenUseCase", () => {
       const expiredRefreshToken = new RefreshToken({
         id: "00000000-0000-4000-8000-000000000003",
         userId: mockUserId,
+        clinicId,
         fingerprint,
         expiresIn: dayjs().subtract(1, "hour").unix(),
       });

@@ -17,8 +17,14 @@ export class InMemoryUserRepository implements IUserRepository {
     else return [];
   }
 
-  async getById(id: string): Promise<UserDTO[]> {
-    const selectedUser = await this.dbUsers.find((user) => user.id === id);
+  async getById(params: {
+    userId: string;
+    clinicId: string;
+  }): Promise<UserDTO[]> {
+    const selectedUser = await this.dbUsers.find(
+      (user) =>
+        user.id === params.userId && user.clinicId === params.clinicId,
+    );
 
     if (selectedUser) return [selectedUser];
     else return [];

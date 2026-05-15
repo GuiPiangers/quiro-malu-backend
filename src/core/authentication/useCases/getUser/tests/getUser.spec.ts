@@ -23,14 +23,20 @@ describe("get user", () => {
     };
 
     userRepository.save(userData);
-    const user = await getUserProfileUseCase.execute("fakeId");
+    const user = await getUserProfileUseCase.execute({
+      userId: "fakeId",
+      clinicId: userData.clinicId,
+    });
 
     expect(user).toEqual(userData);
   });
 
   it("Should not be get an user that not exist", async () => {
     await expect(
-      getUserProfileUseCase.execute("notExistingId"),
+      getUserProfileUseCase.execute({
+        userId: "notExistingId",
+        clinicId: "00000000-0000-4000-8000-000000000001",
+      }),
     ).rejects.toThrow("Usuário não encontrado");
   });
 });

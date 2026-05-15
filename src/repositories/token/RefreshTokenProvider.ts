@@ -20,6 +20,7 @@ function rowToDTO(row: Record<string, unknown>): RefreshTokenDTO {
   return {
     id: String(row.id),
     userId: String(row.userId),
+    clinicId: String(row.clinicId),
     fingerprint: String(row.fingerprint),
     expiresIn: Number(row.expiresIn),
     lastUsedAt: mapLastUsedAt(row.lastUsedAt),
@@ -54,6 +55,7 @@ export class RefreshTokenProvider implements IRefreshTokenProvider {
     await this.knex(ETableNames.REFRESH_TOKEN).insert({
       id: refreshToken.id!,
       userId: refreshToken.userId,
+      clinicId: refreshToken.clinicId,
       fingerprint: refreshToken.fingerprint,
       expiresIn: refreshToken.expiresIn,
     });

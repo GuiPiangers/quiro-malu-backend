@@ -3,6 +3,7 @@ import { Entity } from "../../shared/Entity";
 export type RefreshTokenDTO = {
   id?: string;
   userId: string;
+  clinicId: string;
   fingerprint: string;
   expiresIn: number;
   lastUsedAt?: string;
@@ -10,6 +11,7 @@ export type RefreshTokenDTO = {
 
 export class RefreshToken extends Entity {
   readonly userId: string;
+  readonly clinicId: string;
   readonly fingerprint: string;
   readonly expiresIn: number;
   readonly lastUsedAt?: string;
@@ -17,6 +19,7 @@ export class RefreshToken extends Entity {
   constructor(props: RefreshTokenDTO) {
     super(props.id);
     this.userId = props.userId;
+    this.clinicId = props.clinicId;
     this.fingerprint = props.fingerprint;
     this.expiresIn = props.expiresIn;
     this.lastUsedAt = props.lastUsedAt;
@@ -26,6 +29,7 @@ export class RefreshToken extends Entity {
     return {
       id: this.id,
       userId: this.userId,
+      clinicId: this.clinicId,
       fingerprint: this.fingerprint,
       expiresIn: this.expiresIn,
       lastUsedAt: this.lastUsedAt,

@@ -20,8 +20,13 @@ export class KnexUserRepository implements IUserRepository {
     }));
   }
 
-  async getById(id: string): Promise<UserDTO[]> {
-    return await this.knex(ETableNames.USERS).select("*").where({ id });
+  async getById(params: {
+    userId: string;
+    clinicId: string;
+  }): Promise<UserDTO[]> {
+    return await this.knex(ETableNames.USERS)
+      .select("*")
+      .where({ id: params.userId, clinicId: params.clinicId });
   }
 
   async getByEmail(email: string): Promise<UserDTO[]> {

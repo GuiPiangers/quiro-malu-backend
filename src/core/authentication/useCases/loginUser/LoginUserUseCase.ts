@@ -37,6 +37,7 @@ export class LoginUserUseCase {
     const expiresIn = dayjs().add(15, "days").unix();
     const refreshToken = new RefreshToken({
       userId: user.id,
+      clinicId: user.clinicId,
       fingerprint: fingerprintHash,
       expiresIn,
     });

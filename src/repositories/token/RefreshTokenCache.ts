@@ -18,7 +18,11 @@ export class RefreshTokenCache implements IRefreshTokenProvider {
   async getRefreshToken(id: string): Promise<RefreshTokenDTO | null> {
     const refreshTokenStringCached = await redis.get(`refresh-token:${id}`);
     if (refreshTokenStringCached) {
-      return JSON.parse(refreshTokenStringCached) as RefreshTokenDTO;
+      const parsed = JSON.parse(refreshTokenStringCached) as RefreshTokenDTO;
+      if (parsed.clinicId?.trim()) {
+        return parsed;
+      }
+      await redis.del(`refresh-token:${id}`);
     }
     return await this.refreshTokenProvider.getRefreshToken(id);
   }

@@ -36,9 +36,16 @@ export class RefreshTokenUseCase {
       throw new ApiError("Sessão expirada, faça login novamente", 401);
     }
 
+    if (!refreshToken.clinicId?.trim()) {
+      throw new ApiError("Sessão expirada, faça login novamente", 401);
+    }
+
     await this.refreshTokenProvider.markAsUsed(refreshTokenId);
 
-    const [user] = await this.userRepository.getById(refreshToken.userId);
+    const [user] = await this.userRepository.getById({
+      userId: refreshToken.userId,
+      clinicId: refreshToken.clinicId,
+    });
     if (!user?.clinicId) throw new ApiError("Usuário não encontrado", 401);
 
     const token = await this.generateTokenProvider.execute({
@@ -49,6 +56,7 @@ export class RefreshTokenUseCase {
     const newExpiresIn = dayjs().add(15, "days").unix();
     const newRefreshToken = new RefreshToken({
       userId: refreshToken.userId,
+      clinicId: refreshToken.clinicId,
       fingerprint: refreshToken.fingerprint,
       expiresIn: newExpiresIn,
     });
