@@ -19,8 +19,8 @@ export class PatchUserRoleController {
     try {
       const clinicId = request.user.clinicId!;
       await this.useCase.execute({
-        actingClinicId: clinicId,
-        targetUserId: parsedParams.data.id,
+        clinicId: clinicId,
+        userId: parsedParams.data.id,
         roleId: parsedBody.data.roleId,
       });
       return response.status(204).send();

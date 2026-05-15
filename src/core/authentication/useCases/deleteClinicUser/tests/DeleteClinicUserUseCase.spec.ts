@@ -16,7 +16,7 @@ describe("DeleteClinicUserUseCase", () => {
 
     await useCase.execute({
       actingUserId: "actor",
-      actingClinicId: "clinic-1",
+      clinicId: "clinic-1",
       targetUserId: "target",
     });
 
@@ -30,7 +30,7 @@ describe("DeleteClinicUserUseCase", () => {
     await expect(
       useCase.execute({
         actingUserId: "same",
-        actingClinicId: "clinic-1",
+        clinicId: "clinic-1",
         targetUserId: "same",
       }),
     ).rejects.toThrow(ApiError);
@@ -43,7 +43,7 @@ describe("DeleteClinicUserUseCase", () => {
     await expect(
       useCase.execute({
         actingUserId: "actor",
-        actingClinicId: "clinic-1",
+        clinicId: "clinic-1",
         targetUserId: "missing",
       }),
     ).rejects.toThrow(ApiError);

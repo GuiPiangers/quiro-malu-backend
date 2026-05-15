@@ -7,7 +7,7 @@ export class DeleteClinicUserUseCase {
 
   async execute(data: {
     actingUserId: string;
-    actingClinicId: string;
+    clinicId: string;
     targetUserId: string;
   }): Promise<void> {
     if (data.targetUserId === data.actingUserId) {
@@ -20,7 +20,7 @@ export class DeleteClinicUserUseCase {
 
     const deleted = await this.userRepository.deleteByIdForClinic({
       id: data.targetUserId,
-      clinicId: data.actingClinicId,
+      clinicId: data.clinicId,
     });
     if (deleted === 0) {
       throw new ApiError("Usuário não encontrado", 404, "user");

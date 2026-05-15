@@ -14,10 +14,10 @@ export class DeleteClinicUserController {
     }
     try {
       const actingUserId = request.user.id!;
-      const actingClinicId = request.user.clinicId!;
+      const clinicId = request.user.clinicId!;
       await this.deleteClinicUserUseCase.execute({
         actingUserId,
-        actingClinicId,
+        clinicId,
         targetUserId: parsedParams.data.id,
       });
       return response.status(204).send();
