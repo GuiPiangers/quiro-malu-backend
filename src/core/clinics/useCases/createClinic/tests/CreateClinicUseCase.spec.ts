@@ -6,9 +6,16 @@ describe("CreateClinicUseCase", () => {
   const clinicRepository = createMockClinicRepository();
   let createClinicUseCase: CreateClinicUseCase;
 
+  const rbacRepository = {
+    ensureSystemAdminRoleForClinic: vi.fn().mockResolvedValue("role-id"),
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
-    createClinicUseCase = new CreateClinicUseCase(clinicRepository);
+    createClinicUseCase = new CreateClinicUseCase(
+      clinicRepository,
+      rbacRepository as any,
+    );
   });
 
   it("should create clinic", async () => {
@@ -20,6 +27,7 @@ describe("CreateClinicUseCase", () => {
 
     expect(clinic).toHaveProperty("id");
     expect(clinicRepository.save).toHaveBeenCalledTimes(1);
+    expect(rbacRepository.ensureSystemAdminRoleForClinic).toHaveBeenCalledTimes(1);
   });
 
   it("should reject duplicated clinic name", async () => {

@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { generateRequestFingerprint } from "../core/authentication/utils/generateRequestFingerprint";
 import { validateUserFingerprintUseCase } from "../core/authentication/useCases/userFingerprint";
+import { knexRbacRepository } from "../repositories/rbac/knexInstances";
 import { ApiError } from "../utils/ApiError";
 import { responseError } from "../utils/ResponseError";
 import * as dotenv from "dotenv";
@@ -24,10 +25,10 @@ export const authMiddleware = async (
     if (!token) throw new ApiError("Acesso não autorizado", 401);
 
     const verifyToken = await jwt.verify(token, process.env.JWT_SECRET!);
-    request.user = verifyToken as unknown as JwtPayload;
+    const payload = verifyToken as unknown as JwtPayload;
 
-    const userId = (request.user as JwtPayload).id;
-    const clinicId = (request.user as JwtPayload).clinicId;
+    const userId = payload.id;
+    const clinicId = payload.clinicId;
     if (!userId || !clinicId) {
       throw new ApiError("Acesso não autorizado", 401);
     }
@@ -40,6 +41,17 @@ export const authMiddleware = async (
     if (!fingerprintOk) {
       throw new ApiError("Dispositivo não reconhecido", 418);
     }
+
+    const permissions = await knexRbacRepository.findResolvedPermissionsByUser({
+      userId,
+      clinicId,
+    });
+
+    request.user = {
+      id: userId,
+      clinicId,
+      permissions,
+    };
 
     return next();
   } catch (err: any) {

@@ -21,6 +21,7 @@ export class CreateUserController {
         email: created.email,
         phone: created.phone,
         clinicId: created.clinicId,
+        roleId: created.roleId,
       });
     } catch (err: any) {
       return responseError(response, err);

@@ -3,6 +3,7 @@ import { createUserController } from "./core/authentication/controllers/createUs
 import { loginUserController } from "./core/authentication/controllers/loginUserController";
 import { refreshTokenController } from "./core/authentication/controllers/refreshTokenController";
 import { authMiddleware } from "./middlewares/auth";
+import { authorize } from "./middlewares/authorize.middleware";
 import { getUserProfileController } from "./core/authentication/controllers/getUserProfile";
 import { createPatientController } from "./core/patients/controllers/createPatientController";
 import { listPatientsController } from "./core/patients/controllers/listPatientsController";
@@ -96,6 +97,16 @@ import { getWhatsAppStatusController } from "./core/whatsapp/controllers/getWhat
 import { disconnectWhatsAppController } from "./core/whatsapp/controllers/disconnectWhatsAppController";
 import { whatsAppWebhookController } from "./core/whatsapp/controllers/whatsappWebhookController";
 import { createClinicController } from "./core/clinics/controllers/createClinicController";
+import {
+  createRoleController,
+  deleteRoleController,
+  listRolePermissionsController,
+  listRolesController,
+  listSystemPermissionsController,
+  patchUserRoleController,
+  replaceRolePermissionsController,
+  updateRoleController,
+} from "./core/rbac/controllers";
 
 const router = Router();
 const multerConfig = multer({
@@ -139,54 +150,106 @@ router.get("/profile", authMiddleware, (request, response) => {
   getUserProfileController.handle(request, response);
 });
 
-router.post("/patients", authMiddleware, (request, response) => {
+router.get(
+  "/roles",
+  authMiddleware,
+  authorize("users:read"),
+  (request, response) => listRolesController.handle(request, response),
+);
+router.post(
+  "/roles",
+  authMiddleware,
+  authorize("users:write"),
+  (request, response) => createRoleController.handle(request, response),
+);
+router.patch(
+  "/roles/:id",
+  authMiddleware,
+  authorize("users:write"),
+  (request, response) => updateRoleController.handle(request, response),
+);
+router.delete(
+  "/roles/:id",
+  authMiddleware,
+  authorize("users:write"),
+  (request, response) => deleteRoleController.handle(request, response),
+);
+router.get(
+  "/roles/:id/permissions",
+  authMiddleware,
+  authorize("users:read"),
+  (request, response) => listRolePermissionsController.handle(request, response),
+);
+router.put(
+  "/roles/:id/permissions",
+  authMiddleware,
+  authorize("users:write"),
+  (request, response) => replaceRolePermissionsController.handle(request, response),
+);
+router.get(
+  "/permissions",
+  authMiddleware,
+  authorize("users:read"),
+  (request, response) => listSystemPermissionsController.handle(request, response),
+);
+router.patch(
+  "/users/:id/role",
+  authMiddleware,
+  authorize("users:write"),
+  (request, response) => patchUserRoleController.handle(request, response),
+);
+
+router.post("/patients", authMiddleware, authorize("patients:write"), (request, response) => {
   createPatientController.handle(request, response);
 });
-router.get("/patients", authMiddleware, (request, response) => {
+router.get("/patients", authMiddleware, authorize("patients:read"), (request, response) => {
   listPatientsController.handle(request, response);
 });
-router.get("/patients/:id", authMiddleware, (request, response) => {
+router.get("/patients/:id", authMiddleware, authorize("patients:read"), (request, response) => {
   getPatientController.handle(request, response);
 });
-router.patch("/patients", authMiddleware, (request, response) => {
+router.patch("/patients", authMiddleware, authorize("patients:write"), (request, response) => {
   updatePatientController.handle(request, response);
 });
-router.delete("/patients", authMiddleware, (request, response) => {
+router.delete("/patients", authMiddleware, authorize("patients:write"), (request, response) => {
   deletePatientController.handle(request, response);
 });
 
 router.get(
   "/patients/anamnesis/:patientId",
   authMiddleware,
+  authorize("patients:read"),
   (request, response) => {
     getAnamnesisController.handle(request, response);
   },
 );
-router.put("/patients/anamnesis", authMiddleware, (request, response) => {
+router.put("/patients/anamnesis", authMiddleware, authorize("patients:write"), (request, response) => {
   setAnamnesisController.handle(request, response);
 });
 
 router.get(
   "/patients/diagnostic/:patientId",
   authMiddleware,
+  authorize("patients:read"),
   (request, response) => {
     getDiagnosticController.handle(request, response);
   },
 );
-router.put("/patients/diagnostic", authMiddleware, (request, response) => {
+router.put("/patients/diagnostic", authMiddleware, authorize("patients:write"), (request, response) => {
   setDiagnosticController.handle(request, response);
 });
 
-router.put("/patients/progress", authMiddleware, (request, response) => {
+router.put("/patients/progress", authMiddleware, authorize("patients:write"), (request, response) => {
   setProgressController.handle(request, response);
 });
-router.delete("/patients/progress", authMiddleware, (request, response) => {
+router.delete("/patients/progress", authMiddleware, authorize("patients:write"), (request, response) => {
   deleteProgressController.handle(request, response);
 });
 
 router.get(
   "/patients/progress/:patientId",
   authMiddleware,
+  authorize("patients:read"),
   (request, response) => {
     listProgressController.handle(request, response);
   },
@@ -194,6 +257,7 @@ router.get(
 router.get(
   "/patients/progress/:patientId/:id",
   authMiddleware,
+  authorize("patients:read"),
   (request, response) => {
     getProgressController.handle(request, response);
   },
@@ -201,129 +265,133 @@ router.get(
 router.get(
   "/patients/progress/scheduling/:patientId/:schedulingId",
   authMiddleware,
+  authorize("patients:read"),
   (request, response) => {
     getProgressBySchedulingController.handle(request, response);
   },
 );
 
-router.get("/services", authMiddleware, (request, response) => {
+router.get("/services", authMiddleware, authorize("services:read"), (request, response) => {
   listServiceController.handle(request, response);
 });
-router.get("/services/:id", authMiddleware, (request, response) => {
+router.get("/services/:id", authMiddleware, authorize("services:read"), (request, response) => {
   getServiceController.handle(request, response);
 });
-router.post("/services", authMiddleware, (request, response) => {
+router.post("/services", authMiddleware, authorize("services:write"), (request, response) => {
   createServiceController.handle(request, response);
 });
-router.patch("/services", authMiddleware, (request, response) => {
+router.patch("/services", authMiddleware, authorize("services:write"), (request, response) => {
   updateServiceController.handle(request, response);
 });
-router.delete("/services", authMiddleware, (request, response) => {
+router.delete("/services", authMiddleware, authorize("services:write"), (request, response) => {
   deleteServiceController.handle(request, response);
 });
 
-router.get("/schedules", authMiddleware, (request, response) => {
+router.get("/schedules", authMiddleware, authorize("schedules:read"), (request, response) => {
   listSchedulingController.handle(request, response);
 });
-router.get("/schedules/qtd", authMiddleware, (request, response) => {
+router.get("/schedules/qtd", authMiddleware, authorize("schedules:read"), (request, response) => {
   qtdSchedulesController.handle(request, response);
 });
-router.get("/schedules/:id", authMiddleware, (request, response) => {
+router.get("/schedules/:id", authMiddleware, authorize("schedules:read"), (request, response) => {
   getSchedulingController.handle(request, response);
 });
-router.post("/schedules", authMiddleware, (request, response) => {
+router.post("/schedules", authMiddleware, authorize("schedules:write"), (request, response) => {
   createSchedulingController.handle(request, response);
 });
-router.patch("/schedules", authMiddleware, (request, response) => {
+router.patch("/schedules", authMiddleware, authorize("schedules:write"), (request, response) => {
   updateSchedulingController.handle(request, response);
 });
-router.post("/realizeScheduling", authMiddleware, (request, response) => {
+router.post("/realizeScheduling", authMiddleware, authorize("schedules:write"), (request, response) => {
   realizeSchedulingController.handle(request, response);
 });
-router.delete("/schedules", authMiddleware, (request, response) => {
+router.delete("/schedules", authMiddleware, authorize("schedules:write"), (request, response) => {
   deleteSchedulingController.handle(request, response);
 });
 
-router.post("/blockSchedules", authMiddleware, (request, response) => {
+router.post("/blockSchedules", authMiddleware, authorize("block_schedules:write"), (request, response) => {
   addBlockSchedulingController.handle(request, response);
 });
-router.get("/blockSchedules", authMiddleware, (request, response) => {
+router.get("/blockSchedules", authMiddleware, authorize("block_schedules:read"), (request, response) => {
   listBlockSchedulingController.handle(request, response);
 });
 
-router.patch("/blockSchedules/:id", authMiddleware, (request, response) => {
+router.patch("/blockSchedules/:id", authMiddleware, authorize("block_schedules:write"), (request, response) => {
   editBlockScheduleController.handle(request, response);
 });
 
-router.delete("/blockSchedules/:id", authMiddleware, (request, response) => {
+router.delete("/blockSchedules/:id", authMiddleware, authorize("block_schedules:write"), (request, response) => {
   deleteBlockScheduleController.handle(request, response);
 });
 
-router.get("/events", authMiddleware, (request, response) => {
+router.get("/events", authMiddleware, authorize("events:read"), (request, response) => {
   listEventsController.handle(request, response);
 });
 
-router.get("/event-suggestions", authMiddleware, (request, response) => {
+router.get("/event-suggestions", authMiddleware, authorize("events:read"), (request, response) => {
   listEventSuggestionsController.handle(request, response);
 });
 
-router.put("/calendar-configuration", authMiddleware, (request, response) => {
+router.put("/calendar-configuration", authMiddleware, authorize("schedules:write"), (request, response) => {
   saveCalendarConfigurationController.handle(request, response);
 });
 
-router.get("/calendar-configuration", authMiddleware, (request, response) => {
+router.get("/calendar-configuration", authMiddleware, authorize("schedules:read"), (request, response) => {
   getCalendarConfigurationController.handle(request, response);
 });
 
 router.post(
   "/uploadPatients",
   authMiddleware,
+  authorize("patients:write"),
   multerConfig.single("file"),
   (request, response) => {
     uploadPatientsController.handle(request, response);
   },
 );
 
-router.post("/finance", authMiddleware, (request, response) => {
+router.post("/finance", authMiddleware, authorize("finance:write"), (request, response) => {
   setFinanceController.handle(request, response);
 });
-router.get("/finance/:id", authMiddleware, (request, response) => {
+router.get("/finance/:id", authMiddleware, authorize("finance:read"), (request, response) => {
   getFinanceController.handle(request, response);
 });
-router.get("/finance", authMiddleware, (request, response) => {
+router.get("/finance", authMiddleware, authorize("finance:read"), (request, response) => {
   listFinanceController.handle(request, response);
 });
 router.get(
   "/finance/scheduling/:schedulingId",
   authMiddleware,
+  authorize("finance:read"),
   (request, response) => {
     getFinanceBySchedulingController.handle(request, response);
   },
 );
-router.patch("/finance", authMiddleware, (request, response) => {
+router.patch("/finance", authMiddleware, authorize("finance:write"), (request, response) => {
   updateFinanceController.handle(request, response);
 });
-router.delete("/finance", authMiddleware, (request, response) => {
+router.delete("/finance", authMiddleware, authorize("finance:write"), (request, response) => {
   deleteFinanceController.handle(request, response);
 });
 
 router.post(
   "/exams/:patientId",
   authMiddleware,
+  authorize("patients:write"),
   multerConfig.single("file"),
   (request, response) => {
     saveExamController.handle(request, response);
   },
 );
 
-router.delete("/exams/:patientId/:id", authMiddleware, (request, response) => {
+router.delete("/exams/:patientId/:id", authMiddleware, authorize("patients:write"), (request, response) => {
   deleteExamController.handle(request, response);
 });
 
-router.post("/exams/:patientId/:id", authMiddleware, (request, response) => {
+router.post("/exams/:patientId/:id", authMiddleware, authorize("patients:write"), (request, response) => {
   restoreExamController.handle(request, response);
 });
-router.get("/exams/:patientId", authMiddleware, (request, response) => {
+router.get("/exams/:patientId", authMiddleware, authorize("patients:read"), (request, response) => {
   listExamController.handle(request, response);
 });
 
@@ -404,73 +472,74 @@ router.post("/notify", authMiddleware, async (req, res) => {
   }
 });
 
-router.post("/beforeScheduleMessages", authMiddleware, async (request, response) => {
+router.post("/beforeScheduleMessages", authMiddleware, authorize("messages:write"), async (request, response) => {
   return await createBeforeScheduleMessageController.handle(request, response);
 });
 
-router.get("/beforeScheduleMessages", authMiddleware, async (request, response) => {
+router.get("/beforeScheduleMessages", authMiddleware, authorize("messages:read"), async (request, response) => {
   return await listBeforeScheduleMessagesController.handle(request, response);
 });
 
-router.get("/beforeScheduleMessages/:id", authMiddleware, async (request, response) => {
+router.get("/beforeScheduleMessages/:id", authMiddleware, authorize("messages:read"), async (request, response) => {
   return await getBeforeScheduleMessageController.handle(request, response);
 });
 
-router.patch("/beforeScheduleMessages/:id", authMiddleware, async (request, response) => {
+router.patch("/beforeScheduleMessages/:id", authMiddleware, authorize("messages:write"), async (request, response) => {
   return await updateBeforeScheduleMessageController.handle(request, response);
 });
 
-router.delete("/beforeScheduleMessages/:id", authMiddleware, async (request, response) => {
+router.delete("/beforeScheduleMessages/:id", authMiddleware, authorize("messages:write"), async (request, response) => {
   return await deleteBeforeScheduleMessageController.handle(request, response);
 });
 
-router.post("/afterScheduleMessages", authMiddleware, async (request, response) => {
+router.post("/afterScheduleMessages", authMiddleware, authorize("messages:write"), async (request, response) => {
   return await createAfterScheduleMessageController.handle(request, response);
 });
 
-router.get("/afterScheduleMessages", authMiddleware, async (request, response) => {
+router.get("/afterScheduleMessages", authMiddleware, authorize("messages:read"), async (request, response) => {
   return await listAfterScheduleMessagesController.handle(request, response);
 });
 
-router.get("/afterScheduleMessages/:id", authMiddleware, async (request, response) => {
+router.get("/afterScheduleMessages/:id", authMiddleware, authorize("messages:read"), async (request, response) => {
   return await getAfterScheduleMessageController.handle(request, response);
 });
 
-router.patch("/afterScheduleMessages/:id", authMiddleware, async (request, response) => {
+router.patch("/afterScheduleMessages/:id", authMiddleware, authorize("messages:write"), async (request, response) => {
   return await updateAfterScheduleMessageController.handle(request, response);
 });
 
-router.delete("/afterScheduleMessages/:id", authMiddleware, async (request, response) => {
+router.delete("/afterScheduleMessages/:id", authMiddleware, authorize("messages:write"), async (request, response) => {
   return await deleteAfterScheduleMessageController.handle(request, response);
 });
 
-router.post("/birthdayMessages", authMiddleware, async (request, response) => {
+router.post("/birthdayMessages", authMiddleware, authorize("messages:write"), async (request, response) => {
   return await createBirthdayMessageController.handle(request, response);
 });
 
-router.get("/birthdayMessages", authMiddleware, async (request, response) => {
+router.get("/birthdayMessages", authMiddleware, authorize("messages:read"), async (request, response) => {
   return await listBirthdayMessagesController.handle(request, response);
 });
 
-router.get("/birthdayMessages/:id", authMiddleware, async (request, response) => {
+router.get("/birthdayMessages/:id", authMiddleware, authorize("messages:read"), async (request, response) => {
   return await getBirthdayMessageController.handle(request, response);
 });
 
-router.patch("/birthdayMessages/:id", authMiddleware, async (request, response) => {
+router.patch("/birthdayMessages/:id", authMiddleware, authorize("messages:write"), async (request, response) => {
   return await updateBirthdayMessageController.handle(request, response);
 });
 
-router.delete("/birthdayMessages/:id", authMiddleware, async (request, response) => {
+router.delete("/birthdayMessages/:id", authMiddleware, authorize("messages:write"), async (request, response) => {
   return await deleteBirthdayMessageController.handle(request, response);
 });
 
-router.get("/messageSendStrategies", authMiddleware, async (request, response) => {
+router.get("/messageSendStrategies", authMiddleware, authorize("messages:read"), async (request, response) => {
   return await listMessageSendStrategyController.handle(request, response);
 });
 
 router.get(
   "/messageSendStrategies/by-campaign/:campaignId",
   authMiddleware,
+  authorize("messages:read"),
   async (request, response) => {
     return await getMessageSendStrategyByCampaignIdController.handle(
       request,
@@ -482,6 +551,7 @@ router.get(
 router.delete(
   "/messageSendStrategies/campaigns/:campaignId",
   authMiddleware,
+  authorize("messages:write"),
   async (request, response) => {
     return await unbindMessageSendStrategyCampaignController.handle(
       request,
@@ -490,33 +560,34 @@ router.delete(
   },
 );
 
-router.get("/messageSendStrategies/:id", authMiddleware, async (request, response) => {
+router.get("/messageSendStrategies/:id", authMiddleware, authorize("messages:read"), async (request, response) => {
   return await getMessageSendStrategyController.handle(request, response);
 });
 
-router.patch("/messageSendStrategies/:id", authMiddleware, async (request, response) => {
+router.patch("/messageSendStrategies/:id", authMiddleware, authorize("messages:write"), async (request, response) => {
   return await updateMessageSendStrategyController.handle(request, response);
 });
 
-router.post("/messageSendStrategies", authMiddleware, async (request, response) => {
+router.post("/messageSendStrategies", authMiddleware, authorize("messages:write"), async (request, response) => {
   return await createMessageSendStrategyController.handle(request, response);
 });
 
-router.put("/messageSendStrategies/campaigns/:campaignId", authMiddleware, async (request, response) => {
+router.put("/messageSendStrategies/campaigns/:campaignId", authMiddleware, authorize("messages:write"), async (request, response) => {
   return await bindMessageSendStrategyCampaignsController.handle(request, response);
 });
 
-router.delete("/messageSendStrategies/:id", authMiddleware, async (request, response) => {
+router.delete("/messageSendStrategies/:id", authMiddleware, authorize("messages:write"), async (request, response) => {
   return await deleteMessageSendStrategyController.handle(request, response);
 });
 
-router.get("/messages/logs/summary", authMiddleware, async (request, response) => {
+router.get("/messages/logs/summary", authMiddleware, authorize("message_logs:read"), async (request, response) => {
   return await getWhatsAppMessageLogsSummaryController.handle(request, response);
 });
 
 router.get(
   "/messages/logs/patient/:patientId",
   authMiddleware,
+  authorize("message_logs:read"),
   async (request, response) => {
     return await listWhatsAppMessageLogsByPatientController.handle(
       request,
@@ -525,23 +596,23 @@ router.get(
   },
 );
 
-router.get("/messages/logs", authMiddleware, async (request, response) => {
+router.get("/messages/logs", authMiddleware, authorize("message_logs:read"), async (request, response) => {
   return await listWhatsAppMessageLogsController.handle(request, response);
 });
 
-router.post("/whatsapp/register", authMiddleware, async (request, response) => {
+router.post("/whatsapp/register", authMiddleware, authorize("messages:write"), async (request, response) => {
   return await registerWhatsAppController.handle(request, response);
 });
 
-router.get("/whatsapp/qrcode", authMiddleware, async (request, response) => {
+router.get("/whatsapp/qrcode", authMiddleware, authorize("messages:read"), async (request, response) => {
   return await getWhatsAppQrCodeController.handle(request, response);
 });
 
-router.get("/whatsapp/status", authMiddleware, async (request, response) => {
+router.get("/whatsapp/status", authMiddleware, authorize("messages:read"), async (request, response) => {
   return await getWhatsAppStatusController.handle(request, response);
 });
 
-router.delete("/whatsapp/disconnect", authMiddleware, async (request, response) => {
+router.delete("/whatsapp/disconnect", authMiddleware, authorize("messages:write"), async (request, response) => {
   return await disconnectWhatsAppController.handle(request, response);
 });
 

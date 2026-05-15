@@ -11,12 +11,14 @@ export interface UserDTO {
   phone: string;
   password: string;
   clinicId: string;
+  roleId?: string;
 }
 
 export class User extends Entity {
   readonly name: Name;
   readonly password: Password;
   readonly clinicId: string;
+  readonly roleId?: string;
   private _email: Email;
   private _phone: Phone;
 
@@ -27,6 +29,7 @@ export class User extends Entity {
     this._phone = new Phone(props.phone);
     this.password = new Password(props.password);
     this.clinicId = props.clinicId;
+    this.roleId = props.roleId;
   }
 
   get email() {
@@ -45,6 +48,7 @@ export class User extends Entity {
       name: this.name.value,
       phone: this.phone,
       clinicId: this.clinicId,
+      roleId: this.roleId,
     };
   }
 }

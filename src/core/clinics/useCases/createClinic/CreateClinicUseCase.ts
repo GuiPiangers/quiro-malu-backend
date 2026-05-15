@@ -1,9 +1,13 @@
 import { Clinic, ClinicDTO } from "../../models/Clinic";
 import { IClinicRepository } from "../../../../repositories/clinic/IClinicRepository";
+import type { IRbacRepository } from "../../../../repositories/rbac/IRbacRepository";
 import { ApiError } from "../../../../utils/ApiError";
 
 export class CreateClinicUseCase {
-  constructor(private clinicRepository: IClinicRepository) {}
+  constructor(
+    private clinicRepository: IClinicRepository,
+    private rbacRepository: IRbacRepository,
+  ) {}
 
   async execute(data: ClinicDTO): Promise<ClinicDTO> {
     const clinicAlreadyExists = await this.clinicRepository.findByName(
@@ -15,6 +19,7 @@ export class CreateClinicUseCase {
 
     const clinic = new Clinic(data);
     await this.clinicRepository.save(clinic);
+    await this.rbacRepository.createClinicAdminRole(clinic.id);
 
     return clinic.getDTO();
   }

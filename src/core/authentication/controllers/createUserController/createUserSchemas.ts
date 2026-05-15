@@ -23,6 +23,7 @@ export const CreateUserBodySchema = z
       .regex(phoneBrPattern, "Telefone no formato (DD) NNNNN NNNN"),
     password: passwordBodySchema,
     clinicId: z.string().uuid(),
+    roleId: z.string().uuid(),
   })
   .openapi("CreateUserBody");
 
@@ -33,6 +34,7 @@ export const CreateUserResponseSchema = z
     email: z.string().email(),
     phone: z.string(),
     clinicId: z.string().uuid(),
+    roleId: z.string().uuid(),
   })
   .openapi("CreateUserResponse");
 

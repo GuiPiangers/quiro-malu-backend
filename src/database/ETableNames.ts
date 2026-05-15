@@ -25,4 +25,7 @@ export enum ETableNames {
   USER_MESSAGE_SEND_STRATEGY = "user_message_send_strategy",
   /** Campanhas com regra “único por paciente” (sem FK para `message_send_strategies`). */
   USER_CAMPAIGN_UNIQUE_SEND_STRATEGY = "user_campaign_unique_send_strategy",
+  PERMISSIONS = "permissions",
+  ROLES = "roles",
+  ROLE_PERMISSIONS = "role_permissions",
 }
