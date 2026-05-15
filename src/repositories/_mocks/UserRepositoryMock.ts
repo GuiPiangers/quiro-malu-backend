@@ -3,10 +3,11 @@ import { IRefreshTokenProvider } from "../token/IRefreshTokenProvider";
 import { IUserRepository } from "../user/IUserRepository";
 import type { Mocked } from "vitest";
 
-export const createMockUserRepository = (): IUserRepository => ({
+export const createMockUserRepository = (): Mocked<IUserRepository> => ({
   getByEmail: vi.fn(),
   getById: vi.fn(),
   save: vi.fn(),
+  listByClinicId: vi.fn(),
 });
 
 export const createMockRefreshTokenProvider =

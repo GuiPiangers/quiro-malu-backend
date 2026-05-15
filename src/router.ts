@@ -5,6 +5,7 @@ import { refreshTokenController } from "./core/authentication/controllers/refres
 import { authMiddleware } from "./middlewares/auth";
 import { authorize } from "./middlewares/authorize.middleware";
 import { getUserProfileController } from "./core/authentication/controllers/getUserProfile";
+import { listClinicUsersController } from "./core/authentication/controllers/listClinicUsersController";
 import { createPatientController } from "./core/patients/controllers/createPatientController";
 import { listPatientsController } from "./core/patients/controllers/listPatientsController";
 import { getPatientController } from "./core/patients/controllers/getPatientController";
@@ -197,6 +198,12 @@ router.patch(
   authMiddleware,
   authorize("users:write"),
   (request, response) => patchUserRoleController.handle(request, response),
+);
+router.get(
+  "/users",
+  authMiddleware,
+  authorize("users:read"),
+  (request, response) => listClinicUsersController.handle(request, response),
 );
 
 router.post("/patients", authMiddleware, authorize("patients:write"), (request, response) => {

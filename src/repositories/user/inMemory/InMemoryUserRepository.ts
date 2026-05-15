@@ -1,5 +1,5 @@
 import { UserDTO } from "../../../core/authentication/models/User";
-import { IUserRepository } from "../IUserRepository";
+import type { ClinicUserListItem, IUserRepository } from "../IUserRepository";
 
 export class InMemoryUserRepository implements IUserRepository {
   private dbUsers: UserDTO[] = [];
@@ -22,5 +22,21 @@ export class InMemoryUserRepository implements IUserRepository {
 
     if (selectedUser) return [selectedUser];
     else return [];
+  }
+
+  async listByClinicId(params: {
+    clinicId: string;
+  }): Promise<ClinicUserListItem[]> {
+    return this.dbUsers
+      .filter((u) => u.clinicId === params.clinicId)
+      .map((u) => ({
+        id: u.id!,
+        name: u.name,
+        email: u.email,
+        phone: u.phone,
+        clinicId: u.clinicId,
+        roleId: u.roleId ?? null,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
   }
 }

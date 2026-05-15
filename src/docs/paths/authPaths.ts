@@ -6,6 +6,7 @@ import {
   RefreshTokenResponseSchema,
 } from "../../core/authentication/controllers/refreshTokenController/refreshTokenSchemas";
 import { GetUserProfileResponseSchema } from "../../core/authentication/controllers/getUserProfile/getUserProfileSchemas";
+import { ListClinicUsersResponseSchema } from "../../core/authentication/controllers/listClinicUsersController/listClinicUsersSchemas";
 import { openApiRegistry } from "../registry";
 
 const bearer = [{ bearerAuth: [] }];
@@ -147,5 +148,24 @@ openApiRegistry.registerPath({
     },
     401: { description: "Não autenticado ou token sem identificação de usuário" },
     404: { description: "Usuário não encontrado" },
+  },
+});
+
+openApiRegistry.registerPath({
+  method: "get",
+  path: "/users",
+  tags: ["Auth"],
+  summary:
+    "Lista usuários da clínica do token (sem senha). Requer permissão `users:read`.",
+  security: bearer,
+  responses: {
+    200: {
+      description: "Lista de usuários",
+      content: {
+        "application/json": { schema: ListClinicUsersResponseSchema },
+      },
+    },
+    401: { description: "Não autenticado" },
+    403: { description: "Sem permissão `users:read`" },
   },
 });
