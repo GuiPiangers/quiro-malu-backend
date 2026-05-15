@@ -3,6 +3,11 @@ import { DateTime } from "../../../shared/Date";
 import { SchedulingWithPatient } from "../../models/SchedulingWithPatient";
 import ClientStatusStrategy from "../../models/status/ClientStatusStrategy";
 
+/**
+ * @deprecated Fluxo legado ligado a `GET /schedules`. O produto usa `ListEventsUseCase` com
+ * `GET /events`, que retorna agendamentos e bloqueios no mesmo payload. Não usar em features novas de calendário.
+ * @see docs/SCHEDULING_EVENTS.md
+ */
 export class ListSchedulingUseCase {
   constructor(private SchedulingRepository: ISchedulingRepository) {}
 

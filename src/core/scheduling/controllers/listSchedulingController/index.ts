@@ -2,6 +2,7 @@ import { ListSchedulingUseCase } from "../../useCases/listScheduling/ListSchedul
 import { ListSchedulingController } from "./ListSchedulingController";
 import { knexSchedulingRepository } from "../../../../repositories/scheduling/knexInstances";
 
+/** Instância legada para `GET /schedules`; calendário atual → `listEventsController` / `GET /events`. Ver docs/SCHEDULING_EVENTS.md */
 const schedulingRepository = knexSchedulingRepository;
 const listSchedulingUseCase = new ListSchedulingUseCase(schedulingRepository);
 const listSchedulingController = new ListSchedulingController(

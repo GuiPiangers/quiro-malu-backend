@@ -4,6 +4,11 @@ import { responseError } from "../../../../utils/ResponseError";
 import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
 import { ListSchedulesQuerySchema } from "../schedulingSharedSchemas";
 
+/**
+ * @deprecated Handler de `GET /schedules`. Preferir `ListEventsController` + `GET /events`
+ * (use case `ListEventsUseCase`), que já retorna agendamentos com eventos de bloqueio juntos.
+ * @see docs/SCHEDULING_EVENTS.md
+ */
 export class ListSchedulingController {
   constructor(private listSchedulingUseCase: ListSchedulingUseCase) {}
   async handle(request: Request, response: Response) {

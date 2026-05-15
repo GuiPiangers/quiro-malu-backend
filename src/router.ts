@@ -301,6 +301,7 @@ router.delete("/services", authMiddleware, authorize("services:write"), (request
   deleteServiceController.handle(request, response);
 });
 
+// GET /schedules: legado (ListScheduling*) — calendário atual: GET /events + listEventsController (docs/SCHEDULING_EVENTS.md)
 router.get("/schedules", authMiddleware, authorize("schedules:read"), (request, response) => {
   listSchedulingController.handle(request, response);
 });
