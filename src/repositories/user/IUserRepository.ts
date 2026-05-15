@@ -14,4 +14,6 @@ export interface IUserRepository {
   getByEmail(email: string): Promise<UserDTO[]>;
   getById(id: string): Promise<UserDTO[]>;
   listByClinicId(params: { clinicId: string }): Promise<ClinicUserListItem[]>;
+  /** Retorna quantidade de linhas removidas (0 ou 1). */
+  deleteByIdForClinic(params: { id: string; clinicId: string }): Promise<number>;
 }

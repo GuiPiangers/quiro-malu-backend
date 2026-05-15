@@ -8,6 +8,7 @@ export const createMockUserRepository = (): Mocked<IUserRepository> => ({
   getById: vi.fn(),
   save: vi.fn(),
   listByClinicId: vi.fn(),
+  deleteByIdForClinic: vi.fn(),
 });
 
 export const createMockRefreshTokenProvider =

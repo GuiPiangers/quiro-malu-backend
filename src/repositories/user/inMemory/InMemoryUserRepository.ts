@@ -39,4 +39,16 @@ export class InMemoryUserRepository implements IUserRepository {
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
   }
+
+  async deleteByIdForClinic(params: {
+    id: string;
+    clinicId: string;
+  }): Promise<number> {
+    const idx = this.dbUsers.findIndex(
+      (u) => u.id === params.id && u.clinicId === params.clinicId,
+    );
+    if (idx === -1) return 0;
+    this.dbUsers.splice(idx, 1);
+    return 1;
+  }
 }

@@ -203,3 +203,23 @@ openApiRegistry.registerPath({
     404: { description: "Usuário ou papel não encontrado" },
   },
 });
+
+openApiRegistry.registerPath({
+  method: "delete",
+  path: "/users/{id}",
+  tags: ["RBAC"],
+  summary: "Remove usuário da clínica",
+  description:
+    "Exclui o registro do usuário na clínica do token. Agendamentos ligados a esse usuário mantêm a linha com `userId` nulo (FK `schedules.userId` ON DELETE SET NULL). Requer `users:write`.",
+  security: bearer,
+  request: {
+    params: UserIdParamsSchema,
+  },
+  responses: {
+    204: { description: "Usuário removido" },
+    400: { description: "Tentativa de remover a si mesmo ou usuário de outra clínica" },
+    401: { description: "Não autenticado" },
+    403: { description: "Sem permissão `users:write`" },
+    404: { description: "Usuário não encontrado" },
+  },
+});

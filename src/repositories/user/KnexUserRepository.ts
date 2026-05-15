@@ -31,4 +31,13 @@ export class KnexUserRepository implements IUserRepository {
   async save(data: UserDTO): Promise<void> {
     return await this.knex(ETableNames.USERS).insert(data);
   }
+
+  async deleteByIdForClinic(params: {
+    id: string;
+    clinicId: string;
+  }): Promise<number> {
+    return await this.knex(ETableNames.USERS)
+      .where({ id: params.id, clinicId: params.clinicId })
+      .del();
+  }
 }
