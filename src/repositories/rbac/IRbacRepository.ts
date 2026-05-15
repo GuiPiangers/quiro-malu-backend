@@ -69,8 +69,6 @@ export interface IRbacRepository {
     roleId: string;
   }): Promise<void>;
 
-  findUserClinicId(userId: string): Promise<string | null>;
-
   /** Garante o papel de sistema (Administrador) com todas as permissões para a clínica. */
   createClinicAdminRole(clinicId: string): Promise<string>;
 }

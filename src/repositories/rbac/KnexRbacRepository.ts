@@ -221,13 +221,6 @@ export class KnexRbacRepository implements IRbacRepository {
     }
   }
 
-  async findUserClinicId(userId: string): Promise<string | null> {
-    const row = await this.knex(ETableNames.USERS)
-      .first<{ clinicId: string }>("clinicId")
-      .where({ id: userId });
-    return row?.clinicId ?? null;
-  }
-
   async createClinicAdminRole(clinicId: string): Promise<string> {
     const existing = await this.knex(ETableNames.ROLES)
       .first<{ id: string }>("id")

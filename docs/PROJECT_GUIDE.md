@@ -12,7 +12,7 @@
 
 ## Escopo por clínica (multi-tenant)
 
-- Operações que só devem valer para a **clínica da sessão** não precisam de um passo extra no caso de uso para “provar” que o alvo pertence à clínica (ex.: chamar RBAC `findUserClinicId` só para comparar com o `clinicId` do token).
+- Operações que só devem valer para a **clínica da sessão** não precisam de um passo extra no caso de uso para “provar” que o alvo pertence à clínica
 - **Prefira** expor no repositório métodos que já filtrem por **`clinicId` confiável** (normalmente o do JWT) junto com identificadores do recurso (`id`, `userId` alvo, etc.) no `WHERE`. Quem está fora do escopo vira **zero linhas afetadas** ou lista vazia; o use case pode traduzir isso em `404` ou resposta vazia, sem duplicar regra de pertencimento.
 - Mantenha no use case apenas **regras de negócio** que não sejam só consequência desse filtro (ex.: não permitir que o usuário apague a si mesmo).
 
