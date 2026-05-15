@@ -40,7 +40,8 @@ openApiRegistry.registerPath({
   path: "/users/{id}/role",
   tags: ["Users"],
   summary: "Define o papel do usuário na clínica",
-  description: "O usuário alvo deve pertencer à mesma clínica do token.",
+  description:
+    "Atualiza `roleId` apenas se o usuário existir com `clinicId` igual ao da sessão (filtro no repositório). Ver `docs/PROJECT_GUIDE.md` (Escopo por clínica).",
   security: bearer,
   request: {
     params: UserIdParamsSchema,
@@ -57,7 +58,7 @@ openApiRegistry.registerPath({
   },
   responses: {
     204: { description: "Papel atualizado" },
-    400: { description: "Corpo inválido ou usuário de outra clínica" },
+    400: { description: "Corpo ou parâmetros inválidos (Zod)" },
     401: { description: "Não autenticado" },
     403: { description: "Sem permissão `users:write`" },
     404: { description: "Usuário ou papel não encontrado" },
@@ -77,7 +78,7 @@ openApiRegistry.registerPath({
   },
   responses: {
     204: { description: "Usuário removido" },
-    400: { description: "Tentativa de remover a si mesmo ou usuário de outra clínica" },
+    400: { description: "Tentativa de remover a si mesmo" },
     401: { description: "Não autenticado" },
     403: { description: "Sem permissão `users:write`" },
     404: { description: "Usuário não encontrado" },

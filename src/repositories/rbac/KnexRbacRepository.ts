@@ -212,14 +212,13 @@ export class KnexRbacRepository implements IRbacRepository {
     if (!role) {
       throw new ApiError("Papel não encontrado nesta clínica.", 404, "role");
     }
-    const userClinicId = await this.findUserClinicId(data.userId);
-    if (userClinicId !== data.clinicId) {
-      throw new ApiError("Usuário não pertence a esta clínica.", 400, "user");
-    }
 
-    await this.knex(ETableNames.USERS)
+    const updated = await this.knex(ETableNames.USERS)
       .update({ roleId: data.roleId })
       .where({ id: data.userId, clinicId: data.clinicId });
+    if (updated === 0) {
+      throw new ApiError("Usuário não encontrado", 404, "user");
+    }
   }
 
   async findUserClinicId(userId: string): Promise<string | null> {
