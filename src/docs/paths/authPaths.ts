@@ -5,7 +5,10 @@ import {
   RefreshTokenBodySchema,
   RefreshTokenResponseSchema,
 } from "../../core/authentication/controllers/refreshTokenController/refreshTokenSchemas";
+import { GetUserProfileResponseSchema } from "../../core/authentication/controllers/getUserProfile/getUserProfileSchemas";
 import { openApiRegistry } from "../registry";
+
+const bearer = [{ bearerAuth: [] }];
 
 openApiRegistry.registerPath({
   method: "post",
@@ -126,5 +129,23 @@ openApiRegistry.registerPath({
       },
     },
     400: { description: "Corpo inválido" },
+  },
+});
+
+openApiRegistry.registerPath({
+  method: "get",
+  path: "/profile",
+  tags: ["Auth"],
+  summary: "Perfil do usuário autenticado",
+  security: bearer,
+  responses: {
+    200: {
+      description: "Dados do usuário (sem senha)",
+      content: {
+        "application/json": { schema: GetUserProfileResponseSchema },
+      },
+    },
+    401: { description: "Não autenticado ou token sem identificação de usuário" },
+    404: { description: "Usuário não encontrado" },
   },
 });

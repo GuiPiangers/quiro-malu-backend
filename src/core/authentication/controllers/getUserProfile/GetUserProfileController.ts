@@ -1,21 +1,26 @@
 import { Request, Response } from "express";
-import { GetUserProfileUseCase } from "../../useCases/getUser/GetUserProfileUseCase";
+import { ApiError } from "../../../../utils/ApiError";
 import { responseError } from "../../../../utils/ResponseError";
+import type { GetUserProfileResponse } from "./getUserProfileSchemas";
+import { GetUserProfileUseCase } from "../../useCases/getUser/GetUserProfileUseCase";
 
 export class GetUserProfileController {
-    constructor(private getUserProfileUseCase: GetUserProfileUseCase) { }
+  constructor(private readonly getUserProfileUseCase: GetUserProfileUseCase) {}
 
-    async handle(request: Request, response: Response) {
+  async handle(request: Request, response: Response): Promise<Response> {
+    try {
+      const userId = request.user.id;
+      if (!userId?.trim()) {
+        throw new ApiError("Acesso não autorizado", 401, "unauthorized");
+      }
 
-        try {
-            const id = request.user.id
+      const user = await this.getUserProfileUseCase.execute(userId);
+      const { password: _password, ...profile } = user;
 
-            const user = await this.getUserProfileUseCase.execute(id!)
-            const { password: _, ...loggedUser } = user
-
-            return response.json(loggedUser)
-        } catch (err: any) {
-            return responseError(response, err)
-        }
+      const body: GetUserProfileResponse = profile;
+      return response.status(200).json(body);
+    } catch (err: unknown) {
+      return responseError(response, err);
     }
+  }
 }
