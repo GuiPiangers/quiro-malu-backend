@@ -1,20 +1,19 @@
 import { createMockClinicRepository } from "../../../../../repositories/_mocks/ClinicRepositoryMock";
+import { createMockRbacRepository } from "../../../../../repositories/_mocks/RbacRepositoryMock";
 import { ApiError } from "../../../../../utils/ApiError";
 import { CreateClinicUseCase } from "../CreateClinicUseCase";
 
 describe("CreateClinicUseCase", () => {
   const clinicRepository = createMockClinicRepository();
+  const rbacRepository = createMockRbacRepository();
   let createClinicUseCase: CreateClinicUseCase;
-
-  const rbacRepository = {
-    ensureSystemAdminRoleForClinic: vi.fn().mockResolvedValue("role-id"),
-  };
 
   beforeEach(() => {
     vi.clearAllMocks();
+    rbacRepository.createClinicAdminRole.mockResolvedValue("role-id");
     createClinicUseCase = new CreateClinicUseCase(
       clinicRepository,
-      rbacRepository as any,
+      rbacRepository,
     );
   });
 
@@ -27,7 +26,7 @@ describe("CreateClinicUseCase", () => {
 
     expect(clinic).toHaveProperty("id");
     expect(clinicRepository.save).toHaveBeenCalledTimes(1);
-    expect(rbacRepository.ensureSystemAdminRoleForClinic).toHaveBeenCalledTimes(1);
+    expect(rbacRepository.createClinicAdminRole).toHaveBeenCalledTimes(1);
   });
 
   it("should reject duplicated clinic name", async () => {
