@@ -4,6 +4,7 @@ import {
 } from "../../core/clinics/controllers/createClinicController/createClinicSchemas";
 import { openApiRegistry } from "../registry";
 
+/** Onboarding: criar clínica antes do cadastro de usuário (ver `Auth` / `register`). */
 openApiRegistry.registerPath({
   method: "post",
   path: "/clinics",

@@ -1,3 +1,4 @@
+import { ListClinicUsersResponseSchema } from "../../core/authentication/controllers/listClinicUsersController/listClinicUsersSchemas";
 import {
   CreateRoleBodySchema,
   ListPermissionCatalogResponseSchema,
@@ -14,6 +15,76 @@ import { openApiRegistry } from "../registry";
 
 const bearer = [{ bearerAuth: [] }];
 
+/** Usuários da clínica (agrupado para teste no Swagger, logo após Auth). */
+openApiRegistry.registerPath({
+  method: "get",
+  path: "/users",
+  tags: ["Users"],
+  summary:
+    "Lista usuários da clínica do token (sem senha). Requer permissão `users:read`.",
+  security: bearer,
+  responses: {
+    200: {
+      description: "Lista de usuários",
+      content: {
+        "application/json": { schema: ListClinicUsersResponseSchema },
+      },
+    },
+    401: { description: "Não autenticado" },
+    403: { description: "Sem permissão `users:read`" },
+  },
+});
+
+openApiRegistry.registerPath({
+  method: "patch",
+  path: "/users/{id}/role",
+  tags: ["Users"],
+  summary: "Define o papel do usuário na clínica",
+  description: "O usuário alvo deve pertencer à mesma clínica do token.",
+  security: bearer,
+  request: {
+    params: UserIdParamsSchema,
+    body: {
+      content: {
+        "application/json": {
+          schema: PatchUserRoleBodySchema,
+          example: {
+            roleId: "bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbbb",
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    204: { description: "Papel atualizado" },
+    400: { description: "Corpo inválido ou usuário de outra clínica" },
+    401: { description: "Não autenticado" },
+    403: { description: "Sem permissão `users:write`" },
+    404: { description: "Usuário ou papel não encontrado" },
+  },
+});
+
+openApiRegistry.registerPath({
+  method: "delete",
+  path: "/users/{id}",
+  tags: ["Users"],
+  summary: "Remove usuário da clínica",
+  description:
+    "Exclui o registro do usuário na clínica do token. Agendamentos ligados a esse usuário mantêm a linha com `userId` nulo (FK `schedules.userId` ON DELETE SET NULL). Requer `users:write`.",
+  security: bearer,
+  request: {
+    params: UserIdParamsSchema,
+  },
+  responses: {
+    204: { description: "Usuário removido" },
+    400: { description: "Tentativa de remover a si mesmo ou usuário de outra clínica" },
+    401: { description: "Não autenticado" },
+    403: { description: "Sem permissão `users:write`" },
+    404: { description: "Usuário não encontrado" },
+  },
+});
+
+/** Catálogo de permissões e papéis (RBAC). */
 openApiRegistry.registerPath({
   method: "get",
   path: "/permissions",
@@ -172,54 +243,5 @@ openApiRegistry.registerPath({
     401: { description: "Não autenticado" },
     403: { description: "Sem permissão `users:write`" },
     404: { description: "Papel não encontrado" },
-  },
-});
-
-openApiRegistry.registerPath({
-  method: "patch",
-  path: "/users/{id}/role",
-  tags: ["RBAC"],
-  summary: "Define o papel do usuário na clínica",
-  description: "O usuário alvo deve pertencer à mesma clínica do token.",
-  security: bearer,
-  request: {
-    params: UserIdParamsSchema,
-    body: {
-      content: {
-        "application/json": {
-          schema: PatchUserRoleBodySchema,
-          example: {
-            roleId: "bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbbb",
-          },
-        },
-      },
-    },
-  },
-  responses: {
-    204: { description: "Papel atualizado" },
-    400: { description: "Corpo inválido ou usuário de outra clínica" },
-    401: { description: "Não autenticado" },
-    403: { description: "Sem permissão `users:write`" },
-    404: { description: "Usuário ou papel não encontrado" },
-  },
-});
-
-openApiRegistry.registerPath({
-  method: "delete",
-  path: "/users/{id}",
-  tags: ["RBAC"],
-  summary: "Remove usuário da clínica",
-  description:
-    "Exclui o registro do usuário na clínica do token. Agendamentos ligados a esse usuário mantêm a linha com `userId` nulo (FK `schedules.userId` ON DELETE SET NULL). Requer `users:write`.",
-  security: bearer,
-  request: {
-    params: UserIdParamsSchema,
-  },
-  responses: {
-    204: { description: "Usuário removido" },
-    400: { description: "Tentativa de remover a si mesmo ou usuário de outra clínica" },
-    401: { description: "Não autenticado" },
-    403: { description: "Sem permissão `users:write`" },
-    404: { description: "Usuário não encontrado" },
   },
 });

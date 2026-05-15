@@ -6,11 +6,11 @@ import {
   RefreshTokenResponseSchema,
 } from "../../core/authentication/controllers/refreshTokenController/refreshTokenSchemas";
 import { GetUserProfileResponseSchema } from "../../core/authentication/controllers/getUserProfile/getUserProfileSchemas";
-import { ListClinicUsersResponseSchema } from "../../core/authentication/controllers/listClinicUsersController/listClinicUsersSchemas";
 import { openApiRegistry } from "../registry";
 
 const bearer = [{ bearerAuth: [] }];
 
+/** Sessão e perfil: ordem pensada para teste no Swagger (cadastro → login → token → perfil). */
 openApiRegistry.registerPath({
   method: "post",
   path: "/register",
@@ -41,36 +41,6 @@ openApiRegistry.registerPath({
       },
     },
     400: { description: "Corpo inválido ou regra de negócio (ex.: email já cadastrado)" },
-  },
-});
-
-openApiRegistry.registerPath({
-  method: "post",
-  path: "/refresh-token",
-  tags: ["Auth"],
-  summary:
-    "Renova access token (rotação de refresh). O fingerprint do dispositivo deve ser o mesmo do login (header x-device-id).",
-  request: {
-    body: {
-      content: {
-        "application/json": {
-          schema: RefreshTokenBodySchema,
-          example: {
-            refreshTokenId: "00000000-0000-4000-8000-000000000001",
-          },
-        },
-      },
-    },
-  },
-  responses: {
-    200: {
-      description: "Novo access token e novo refresh token",
-      content: {
-        "application/json": { schema: RefreshTokenResponseSchema },
-      },
-    },
-    400: { description: "Corpo inválido" },
-    401: { description: "Refresh token inválido, expirado ou dispositivo incorreto" },
   },
 });
 
@@ -134,6 +104,36 @@ openApiRegistry.registerPath({
 });
 
 openApiRegistry.registerPath({
+  method: "post",
+  path: "/refresh-token",
+  tags: ["Auth"],
+  summary:
+    "Renova access token (rotação de refresh). O fingerprint do dispositivo deve ser o mesmo do login (header x-device-id).",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: RefreshTokenBodySchema,
+          example: {
+            refreshTokenId: "00000000-0000-4000-8000-000000000001",
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Novo access token e novo refresh token",
+      content: {
+        "application/json": { schema: RefreshTokenResponseSchema },
+      },
+    },
+    400: { description: "Corpo inválido" },
+    401: { description: "Refresh token inválido, expirado ou dispositivo incorreto" },
+  },
+});
+
+openApiRegistry.registerPath({
   method: "get",
   path: "/profile",
   tags: ["Auth"],
@@ -148,24 +148,5 @@ openApiRegistry.registerPath({
     },
     401: { description: "Não autenticado ou token sem identificação de usuário" },
     404: { description: "Usuário não encontrado" },
-  },
-});
-
-openApiRegistry.registerPath({
-  method: "get",
-  path: "/users",
-  tags: ["Auth"],
-  summary:
-    "Lista usuários da clínica do token (sem senha). Requer permissão `users:read`.",
-  security: bearer,
-  responses: {
-    200: {
-      description: "Lista de usuários",
-      content: {
-        "application/json": { schema: ListClinicUsersResponseSchema },
-      },
-    },
-    401: { description: "Não autenticado" },
-    403: { description: "Sem permissão `users:read`" },
   },
 });
