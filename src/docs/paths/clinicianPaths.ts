@@ -6,6 +6,11 @@ import {
   CreateClinicianBodySchema,
   CreateClinicianResponseSchema,
 } from "../../core/clinician/controllers/createClinicianController/createClinicianSchemas";
+import {
+  SetClinicianServicesBodySchema,
+  SetClinicianServicesResponseSchema,
+} from "../../core/clinician/controllers/setClinicianServicesController/setClinicianServicesSchemas";
+import { UserIdParamsSchema } from "../../core/rbac/schemas/rbacSchemas";
 import { openApiRegistry } from "../registry";
 
 const bearer = [{ bearerAuth: [] }];
@@ -62,5 +67,42 @@ openApiRegistry.registerPath({
     401: { description: "Não autenticado" },
     403: { description: "Sem permissão" },
     404: { description: "Clínica não encontrada" },
+  },
+});
+
+openApiRegistry.registerPath({
+  method: "put",
+  path: "/clinicians/{id}/services",
+  tags: ["Users"],
+  summary: "Substituir serviços vinculados ao clínico",
+  description:
+    "Remove todos os vínculos atuais em `clinician_services` e recria a lista informada. Lista vazia remove todos os serviços. Requer `users:write`.",
+  security: bearer,
+  request: {
+    params: UserIdParamsSchema,
+    body: {
+      content: {
+        "application/json": {
+          schema: SetClinicianServicesBodySchema,
+          example: {
+            services: [
+              { serviceId: "00000000-0000-4000-8000-000000000002" },
+            ],
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Clínico com serviços atualizados",
+      content: {
+        "application/json": { schema: SetClinicianServicesResponseSchema },
+      },
+    },
+    400: { description: "Corpo inválido ou serviço inexistente na clínica" },
+    401: { description: "Não autenticado" },
+    403: { description: "Sem permissão" },
+    404: { description: "Clínico não encontrado" },
   },
 });

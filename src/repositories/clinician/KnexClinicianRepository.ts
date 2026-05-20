@@ -148,4 +148,26 @@ export class KnexClinicianRepository implements IClinicianRepository {
       }
     });
   }
+
+  async setServices(params: {
+    id: string;
+    clinicId: string;
+    services: ServiceDTO[];
+  }): Promise<void> {
+    await this.knex.transaction(async (trx) => {
+      await trx(ETableNames.CLINICIAN_SERVICES)
+        .where({ clinicianId: params.id })
+        .del();
+
+      if (params.services.length > 0) {
+        await trx(ETableNames.CLINICIAN_SERVICES).insert(
+          params.services.map((s) => ({
+            id: randomUUID(),
+            clinicianId: params.id,
+            serviceId: s.id!,
+          })),
+        );
+      }
+    });
+  }
 }

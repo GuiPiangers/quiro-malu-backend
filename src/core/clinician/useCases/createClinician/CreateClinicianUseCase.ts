@@ -1,7 +1,7 @@
 import type { ClinicianPublicDTO } from "../../clinicianPublicDto";
 import { toClinicianPublicDTO } from "../../clinicianPublicDto";
 import { Clinician } from "../../models/Clinician";
-import type { ServiceDTO } from "../../../service/models/Service";
+import { resolveClinicianServices } from "../../resolveClinicianServices";
 import type { IClinicianRepository } from "../../../../repositories/clinician/IClinicianRepository";
 import type { IClinicRepository } from "../../../../repositories/clinic/IClinicRepository";
 import type { IRbacRepository } from "../../../../repositories/rbac/IRbacRepository";
@@ -53,29 +53,11 @@ export class CreateClinicianUseCase {
       throw new ApiError("Usuário já cadastrado");
     }
 
-    const serviceRefs = data.services ?? [];
-    const uniqueServiceIds = [
-      ...new Set(serviceRefs.map((ref) => ref.serviceId)),
-    ];
-
-    const services = await Promise.all(
-      uniqueServiceIds.map(async (serviceId) => ({
-        serviceId,
-        service: await this.serviceRepository.get({ id: serviceId, clinicId }),
-      })),
+    const resolvedServices = await resolveClinicianServices(
+      this.serviceRepository,
+      data.services ?? [],
+      clinicId,
     );
-
-    const resolvedServices: ServiceDTO[] = [];
-    for (const { serviceId, service } of services) {
-      if (!service) {
-        throw new ApiError(
-          `Serviço não encontrado na clínica`,
-          400,
-          "services",
-        );
-      }
-      resolvedServices.push(service);
-    }
 
     const clinician = new Clinician({
       name: data.name,
