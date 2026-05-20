@@ -45,10 +45,11 @@ export class InMemoryServiceRepository implements IServiceRepository {
   }: {
     id: string;
     clinicId: string;
-  }): Promise<ServiceDTO[]> {
-    return this.dbServices.filter((Service) => {
-      return Service.id === id && Service.clinicId === clinicId;
-    });
+  }): Promise<ServiceDTO | null> {
+    const service = this.dbServices.find(
+      (s) => s.id === id && s.clinicId === clinicId,
+    );
+    return service ?? null;
   }
 
   async getByName({

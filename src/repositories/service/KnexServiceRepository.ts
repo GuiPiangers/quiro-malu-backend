@@ -62,10 +62,13 @@ export class KnexServiceRepository implements IServiceRepository {
   }: {
     id: string;
     clinicId: string;
-  }): Promise<ServiceDTO[]> {
-    return await this.knex(ETableNames.SERVICES)
+  }): Promise<ServiceDTO | null> {
+    const row = await this.knex(ETableNames.SERVICES)
       .select("*")
-      .where({ clinicId, id });
+      .where({ clinicId, id })
+      .first();
+
+    return row ?? null;
   }
 
   async getByName({

@@ -19,7 +19,7 @@ export interface IServiceRepository {
     clinicId: string;
     search?: string;
   }): Promise<[{ total: number }]>;
-  get(data: { id: string; clinicId: string }): Promise<ServiceDTO[]>;
+  get(data: { id: string; clinicId: string }): Promise<ServiceDTO | null>;
   getByName(data: { name: string; clinicId: string }): Promise<ServiceDTO[]>;
   delete(data: { id: string; clinicId: string }): Promise<void>;
 }

@@ -28,4 +28,6 @@ export enum ETableNames {
   PERMISSIONS = "permissions",
   ROLES = "roles",
   ROLE_PERMISSIONS = "role_permissions",
+  CLINICIANS = "clinicians",
+  CLINICIAN_SERVICES = "clinician_services",
 }

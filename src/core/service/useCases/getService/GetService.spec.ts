@@ -22,7 +22,7 @@ describe("getServiceUseCase", () => {
         value: 100,
       };
 
-      mockServiceRepository.get.mockResolvedValue([serviceData]);
+      mockServiceRepository.get.mockResolvedValue(serviceData);
 
       const result = await getServiceUseCase.execute({ id: serviceId, clinicId });
 
@@ -33,7 +33,12 @@ describe("getServiceUseCase", () => {
       const clinicId = "test-user-id";
       const serviceId = "test-service-id";
 
-      mockServiceRepository.get.mockResolvedValue([]);
+      mockServiceRepository.get.mockResolvedValue({
+        id: serviceId,
+        duration: 3600,
+        name: "Quiropraxia",
+        value: 100,
+      });
 
       await getServiceUseCase.execute({
         clinicId,

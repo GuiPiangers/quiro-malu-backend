@@ -24,7 +24,7 @@ export class CreateUserUseCase {
       clinicId: data.clinicId,
     });
     if (!role) {
-      throw new ApiError("Papel inválido ou não pertence à clínica", 400, "roleId");
+      throw new ApiError("Papel inválido", 400, "roleId");
     }
 
     const [userAlreadyExist] = await this.userRepository.getByEmail(data.email);

@@ -1,0 +1,111 @@
+import { Clinician } from "../../models/Clinician";
+import type { ServiceDTO } from "../../../service/models/Service";
+import type { IClinicianRepository } from "../../../../repositories/clinician/IClinicianRepository";
+import type { IClinicRepository } from "../../../../repositories/clinic/IClinicRepository";
+import type { IRbacRepository } from "../../../../repositories/rbac/IRbacRepository";
+import type { IServiceRepository } from "../../../../repositories/service/IServiceRepository";
+import type { IUserRepository } from "../../../../repositories/user/IUserRepository";
+import { ApiError } from "../../../../utils/ApiError";
+
+export type CreateClinicianInputDTO = {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  roleId: string;
+  services?: { serviceId: string }[];
+};
+
+export type CreateClinicianResultDTO = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  clinicId: string;
+  roleId?: string;
+  services: ServiceDTO[];
+};
+
+export class CreateClinicianUseCase {
+  constructor(
+    private readonly clinicianRepository: IClinicianRepository,
+    private readonly userRepository: IUserRepository,
+    private readonly clinicRepository: IClinicRepository,
+    private readonly rbacRepository: IRbacRepository,
+    private readonly serviceRepository: IServiceRepository,
+  ) {}
+
+  async execute(
+    data: CreateClinicianInputDTO,
+    clinicId: string,
+  ): Promise<CreateClinicianResultDTO> {
+    const clinic = await this.clinicRepository.findById(clinicId);
+    if (!clinic) {
+      throw new ApiError("Clínica não encontrada", 404, "clinicId");
+    }
+
+    if (!data.roleId?.trim()) {
+      throw new ApiError("roleId é obrigatório", 400, "roleId");
+    }
+
+    const role = await this.rbacRepository.findRoleByIdForClinic({
+      id: data.roleId,
+      clinicId,
+    });
+    if (!role) {
+      throw new ApiError("Papel inválido", 400, "roleId");
+    }
+
+    const [userAlreadyExist] = await this.userRepository.getByEmail(data.email);
+    if (userAlreadyExist) {
+      throw new ApiError("Usuário já cadastrado");
+    }
+
+    const serviceRefs = data.services ?? [];
+    const uniqueServiceIds = [
+      ...new Set(serviceRefs.map((ref) => ref.serviceId)),
+    ];
+
+    const services = await Promise.all(
+      uniqueServiceIds.map(async (serviceId) => ({
+        serviceId,
+        service: await this.serviceRepository.get({ id: serviceId, clinicId }),
+      })),
+    );
+
+    const resolvedServices: ServiceDTO[] = [];
+    for (const { serviceId, service } of services) {
+      if (!service) {
+        throw new ApiError(
+          `Serviço não encontrado na clínica`,
+          400,
+          "services",
+        );
+      }
+      resolvedServices.push(service);
+    }
+
+    const clinician = new Clinician({
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      password: data.password,
+      clinicId,
+      roleId: data.roleId,
+      services: resolvedServices,
+    });
+
+    await this.clinicianRepository.save(clinician);
+
+    const dto = clinician.toClinicianDTO();
+    return {
+      id: clinician.id,
+      name: dto.name,
+      email: dto.email,
+      phone: dto.phone,
+      clinicId: dto.clinicId,
+      roleId: dto.roleId,
+      services: dto.services ?? [],
+    };
+  }
+}

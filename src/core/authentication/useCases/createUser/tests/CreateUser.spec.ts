@@ -202,7 +202,7 @@ describe("Create user", () => {
         clinicId,
         roleId,
       }),
-    ).rejects.toThrow("Papel inválido ou não pertence à clínica");
+    ).rejects.toThrow("Papel inválido");
   });
 });
 

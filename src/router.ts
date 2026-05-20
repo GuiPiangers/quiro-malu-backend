@@ -7,6 +7,7 @@ import { authorize } from "./middlewares/authorize.middleware";
 import { getUserProfileController } from "./core/authentication/controllers/getUserProfile";
 import { listClinicUsersController } from "./core/authentication/controllers/listClinicUsersController";
 import { deleteClinicUserController } from "./core/authentication/controllers/deleteClinicUserController";
+import { createClinicianController } from "./core/clinician/controllers/createClinicianController";
 import { createPatientController } from "./core/patients/controllers/createPatientController";
 import { listPatientsController } from "./core/patients/controllers/listPatientsController";
 import { getPatientController } from "./core/patients/controllers/getPatientController";
@@ -212,6 +213,12 @@ router.delete(
   authMiddleware,
   authorize("users:write"),
   (request, response) => deleteClinicUserController.handle(request, response),
+);
+router.post(
+  "/clinicians",
+  authMiddleware,
+  authorize("users:write"),
+  (request, response) => createClinicianController.handle(request, response),
 );
 
 router.post("/patients", authMiddleware, authorize("patients:write"), (request, response) => {
