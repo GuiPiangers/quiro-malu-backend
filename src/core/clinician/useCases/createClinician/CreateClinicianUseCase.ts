@@ -1,3 +1,5 @@
+import type { ClinicianPublicDTO } from "../../clinicianPublicDto";
+import { toClinicianPublicDTO } from "../../clinicianPublicDto";
 import { Clinician } from "../../models/Clinician";
 import type { ServiceDTO } from "../../../service/models/Service";
 import type { IClinicianRepository } from "../../../../repositories/clinician/IClinicianRepository";
@@ -16,16 +18,6 @@ export type CreateClinicianInputDTO = {
   services?: { serviceId: string }[];
 };
 
-export type CreateClinicianResultDTO = {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  clinicId: string;
-  roleId?: string;
-  services: ServiceDTO[];
-};
-
 export class CreateClinicianUseCase {
   constructor(
     private readonly clinicianRepository: IClinicianRepository,
@@ -38,7 +30,7 @@ export class CreateClinicianUseCase {
   async execute(
     data: CreateClinicianInputDTO,
     clinicId: string,
-  ): Promise<CreateClinicianResultDTO> {
+  ): Promise<ClinicianPublicDTO> {
     const clinic = await this.clinicRepository.findById(clinicId);
     if (!clinic) {
       throw new ApiError("Clínica não encontrada", 404, "clinicId");
@@ -97,15 +89,6 @@ export class CreateClinicianUseCase {
 
     await this.clinicianRepository.save(clinician);
 
-    const dto = clinician.toClinicianDTO();
-    return {
-      id: clinician.id,
-      name: dto.name,
-      email: dto.email,
-      phone: dto.phone,
-      clinicId: dto.clinicId,
-      roleId: dto.roleId,
-      services: dto.services ?? [],
-    };
+    return toClinicianPublicDTO(clinician);
   }
 }

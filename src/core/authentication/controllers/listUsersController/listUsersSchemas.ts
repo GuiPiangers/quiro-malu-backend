@@ -1,6 +1,6 @@
 import { z } from "../../../../schemas/zodOpenApi";
 
-export const ListClinicUsersItemSchema = z
+export const UserItemSchema = z
   .object({
     id: z.string(),
     name: z.string(),
@@ -9,8 +9,8 @@ export const ListClinicUsersItemSchema = z
     clinicId: z.string(),
     roleId: z.string().nullable(),
   })
-  .openapi("ListClinicUsersItem");
+  .openapi("UserItem");
 
-export const ListClinicUsersResponseSchema = z
-  .array(ListClinicUsersItemSchema)
-  .openapi("ListClinicUsersResponse");
+export const ListUsersResponseSchema = z
+  .array(UserItemSchema)
+  .openapi("ListUsersResponse");

@@ -1,10 +1,10 @@
 import { z } from "../../../../schemas/zodOpenApi";
 import { CreateUserBodySchema } from "../../../authentication/controllers/createUserController/createUserSchemas";
-import { ServiceItemSchema } from "../../../service/controllers/serviceResponseSchemas";
+import { ClinicianItemSchema } from "../clinicianResponseSchemas";
 
 const ClinicianServiceRefSchema = z
   .object({
-    serviceId: z.string().uuid(),
+    serviceId: z.string(),
   })
   .openapi("ClinicianServiceRef");
 
@@ -16,16 +16,8 @@ export const CreateClinicianBodySchema = CreateUserBodySchema.omit({
   })
   .openapi("CreateClinicianBody");
 
-export const CreateClinicianResponseSchema = z
-  .object({
-    id: z.string().uuid(),
-    name: z.string(),
-    email: z.string().email(),
-    phone: z.string(),
-    clinicId: z.string().uuid(),
-    roleId: z.string().uuid().optional(),
-    services: z.array(ServiceItemSchema),
-  })
-  .openapi("CreateClinicianResponse");
+export const CreateClinicianResponseSchema = ClinicianItemSchema.openapi(
+  "CreateClinicianResponse",
+);
 
 export type CreateClinicianBody = z.infer<typeof CreateClinicianBodySchema>;

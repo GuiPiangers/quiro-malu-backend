@@ -12,3 +12,4 @@ import "./paths/servicePaths";
 import "./paths/financePaths";
 import "./paths/messagesPaths";
 import "./paths/rbacPaths";
+import "./paths/clinicianPaths";

@@ -1,5 +1,5 @@
 import { GetUserProfileController } from "./GetUserProfileController";
-import { GetUserProfileUseCase } from "../../useCases/getUser/GetUserProfileUseCase";
+import { GetUserProfileUseCase } from "../../useCases/getUserProfile/GetUserProfileUseCase";
 import { knexUserRepository } from "../../../../repositories/user/knexInstances";
 
 const getProfileUseCase = new GetUserProfileUseCase(knexUserRepository);

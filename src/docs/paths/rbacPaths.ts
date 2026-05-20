@@ -1,4 +1,8 @@
-import { ListClinicUsersResponseSchema } from "../../core/authentication/controllers/listClinicUsersController/listClinicUsersSchemas";
+import { UserDetailSchema } from "../../core/authentication/controllers/getUserController/userDetailSchemas";
+import {
+  ListUsersResponseSchema,
+  UserItemSchema,
+} from "../../core/authentication/controllers/listUsersController/listUsersSchemas";
 import {
   CreateRoleBodySchema,
   ListPermissionCatalogResponseSchema,
@@ -27,11 +31,35 @@ openApiRegistry.registerPath({
     200: {
       description: "Lista de usuários",
       content: {
-        "application/json": { schema: ListClinicUsersResponseSchema },
+        "application/json": { schema: ListUsersResponseSchema },
       },
     },
     401: { description: "Não autenticado" },
     403: { description: "Sem permissão `users:read`" },
+  },
+});
+
+openApiRegistry.registerPath({
+  method: "get",
+  path: "/users/{id}",
+  tags: ["Users"],
+  summary: "Buscar usuário da clínica por id",
+  description:
+    "Retorna usuário comum (`kind: user`) ou clínico (`kind: clinician` + `services`) conforme existir perfil em `clinicians`. Sem senha. Requer `users:read`.",
+  security: bearer,
+  request: {
+    params: UserIdParamsSchema,
+  },
+  responses: {
+    200: {
+      description: "Usuário encontrado",
+      content: {
+        "application/json": { schema: UserDetailSchema },
+      },
+    },
+    401: { description: "Não autenticado" },
+    403: { description: "Sem permissão `users:read`" },
+    404: { description: "Usuário não encontrado" },
   },
 });
 

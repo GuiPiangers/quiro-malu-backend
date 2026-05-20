@@ -5,9 +5,11 @@ import { refreshTokenController } from "./core/authentication/controllers/refres
 import { authMiddleware } from "./middlewares/auth";
 import { authorize } from "./middlewares/authorize.middleware";
 import { getUserProfileController } from "./core/authentication/controllers/getUserProfile";
-import { listClinicUsersController } from "./core/authentication/controllers/listClinicUsersController";
+import { listUsersController } from "./core/authentication/controllers/listUsersController";
 import { deleteClinicUserController } from "./core/authentication/controllers/deleteClinicUserController";
+import { getUserController } from "./core/authentication/controllers/getUserController";
 import { createClinicianController } from "./core/clinician/controllers/createClinicianController";
+import { listClinicianUsersController } from "./core/clinician/controllers/listClinicianUsersController";
 import { createPatientController } from "./core/patients/controllers/createPatientController";
 import { listPatientsController } from "./core/patients/controllers/listPatientsController";
 import { getPatientController } from "./core/patients/controllers/getPatientController";
@@ -206,13 +208,25 @@ router.get(
   "/users",
   authMiddleware,
   authorize("users:read"),
-  (request, response) => listClinicUsersController.handle(request, response),
+  (request, response) => listUsersController.handle(request, response),
+);
+router.get(
+  "/users/:id",
+  authMiddleware,
+  authorize("users:read"),
+  (request, response) => getUserController.handle(request, response),
 );
 router.delete(
   "/users/:id",
   authMiddleware,
   authorize("users:write"),
   (request, response) => deleteClinicUserController.handle(request, response),
+);
+router.get(
+  "/clinicians",
+  authMiddleware,
+  authorize("users:read"),
+  (request, response) => listClinicianUsersController.handle(request, response),
 );
 router.post(
   "/clinicians",

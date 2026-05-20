@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { ApiError } from "../../../../utils/ApiError";
 import { responseError } from "../../../../utils/ResponseError";
 import type { GetUserProfileResponse } from "./getUserProfileSchemas";
-import { GetUserProfileUseCase } from "../../useCases/getUser/GetUserProfileUseCase";
+import { GetUserProfileUseCase } from "../../useCases/getUserProfile/GetUserProfileUseCase";
 
 export class GetUserProfileController {
   constructor(private readonly getUserProfileUseCase: GetUserProfileUseCase) {}

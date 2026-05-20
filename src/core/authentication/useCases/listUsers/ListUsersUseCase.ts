@@ -3,7 +3,7 @@ import type {
   IUserRepository,
 } from "../../../../repositories/user/IUserRepository";
 
-export class ListClinicUsersUseCase {
+export class ListUsersUseCase {
   constructor(private readonly userRepository: IUserRepository) {}
 
   async execute(clinicId: string): Promise<ClinicUserListItem[]> {
