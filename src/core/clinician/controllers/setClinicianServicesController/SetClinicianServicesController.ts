@@ -20,6 +20,9 @@ export class SetClinicianServicesController {
       SetClinicianServicesBodySchema,
       request.body,
     );
+
+    console.log("parsedBody", parsedBody);
+
     if (!parsedBody.success) {
       return sendZodBadRequest(response, parsedBody.error);
     }

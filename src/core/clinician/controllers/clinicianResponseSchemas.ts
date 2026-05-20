@@ -3,12 +3,12 @@ import { ServiceItemSchema } from "../../service/controllers/serviceResponseSche
 
 export const ClinicianItemSchema = z
   .object({
-    id: z.string().uuid(),
+    id: z.string(),
     name: z.string(),
     email: z.string().email(),
     phone: z.string(),
-    clinicId: z.string().uuid(),
-    roleId: z.string().uuid().optional(),
+    clinicId: z.string(),
+    roleId: z.string().optional(),
     services: z.array(ServiceItemSchema),
   })
   .openapi("ClinicianItem");

@@ -9,16 +9,16 @@ export const LoginBodySchema = z
 
 export const LoginUserSummarySchema = z
   .object({
-    email: z.string().email(),
+    email: z.email(),
     name: z.string(),
-    clinicId: z.string().uuid(),
+    clinicId: z.string(),
   })
   .openapi("LoginUserSummary");
 
 export const LoginResponseSchema = z
   .object({
     token: z.string(),
-    refreshToken: z.string().uuid(),
+    refreshToken: z.string(),
     user: LoginUserSummarySchema,
   })
   .openapi("LoginResponse");

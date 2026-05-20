@@ -8,7 +8,7 @@ export const CreateClinicBodySchema = z
 
 export const CreateClinicResponseSchema = z
   .object({
-    id: z.string().uuid(),
+    id: z.string(),
     name: z.string(),
   })
   .openapi("CreateClinicResponse");

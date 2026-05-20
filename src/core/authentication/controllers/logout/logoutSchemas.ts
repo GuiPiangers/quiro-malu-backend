@@ -2,7 +2,7 @@ import { z } from "../../../../schemas/zodOpenApi";
 
 export const LogoutBodySchema = z
   .object({
-    refreshTokenId: z.string().uuid(),
+    refreshTokenId: z.string(),
   })
   .openapi("LogoutBody");
 

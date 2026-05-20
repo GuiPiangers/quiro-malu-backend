@@ -3,7 +3,7 @@ import { ClinicianItemSchema } from "../clinicianResponseSchemas";
 
 const ClinicianServiceRefSchema = z
   .object({
-    serviceId: z.string().uuid(),
+    serviceId: z.string(),
   })
   .openapi("SetClinicianServiceRef");
 

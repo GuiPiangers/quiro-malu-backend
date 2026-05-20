@@ -22,19 +22,19 @@ export const CreateUserBodySchema = z
       .string()
       .regex(phoneBrPattern, "Telefone no formato (DD) NNNNN NNNN"),
     password: passwordBodySchema,
-    clinicId: z.string().uuid(),
-    roleId: z.string().uuid(),
+    clinicId: z.string(),
+    roleId: z.string(),
   })
   .openapi("CreateUserBody");
 
 export const CreateUserResponseSchema = z
   .object({
-    id: z.string().uuid().optional(),
+    id: z.string().optional(),
     name: z.string(),
     email: z.string().email(),
     phone: z.string(),
-    clinicId: z.string().uuid(),
-    roleId: z.string().uuid(),
+    clinicId: z.string(),
+    roleId: z.string(),
   })
   .openapi("CreateUserResponse");
 
