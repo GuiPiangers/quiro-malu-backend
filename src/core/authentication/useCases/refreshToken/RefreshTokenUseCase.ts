@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { IRefreshTokenProvider } from "../../../../repositories/token/IRefreshTokenProvider";
 import { IGenerateTokenProvider } from "../../../../repositories/token/IGenerateTokenProvider";
+import type { IRbacRepository } from "../../../../repositories/rbac/IRbacRepository";
 import { RefreshToken } from "../../models/RefreshToken";
 import { ApiError } from "../../../../utils/ApiError";
 import { IUserRepository } from "../../../../repositories/user/IUserRepository";
@@ -10,6 +11,7 @@ export class RefreshTokenUseCase {
     private refreshTokenProvider: IRefreshTokenProvider,
     private generateTokenProvider: IGenerateTokenProvider,
     private userRepository: IUserRepository,
+    private rbacRepository: IRbacRepository,
   ) {}
 
   async execute(refreshTokenId: string, fingerprint: string) {
@@ -48,9 +50,15 @@ export class RefreshTokenUseCase {
     });
     if (!user?.clinicId) throw new ApiError("Usuário não encontrado", 401);
 
+    const permissions = await this.rbacRepository.findResolvedPermissionsByUser({
+      userId: refreshToken.userId,
+      clinicId: user.clinicId,
+    });
+
     const token = await this.generateTokenProvider.execute({
       userId: refreshToken.userId,
       clinicId: user.clinicId,
+      permissions,
     });
 
     const newExpiresIn = dayjs().add(15, "days").unix();

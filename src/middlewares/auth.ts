@@ -3,7 +3,9 @@ import jwt from "jsonwebtoken";
 import { generateRequestFingerprint } from "../core/authentication/utils/generateRequestFingerprint";
 import { validateUserFingerprintUseCase } from "../core/authentication/useCases/userFingerprint";
 import { knexRbacRepository } from "../repositories/rbac/knexInstances";
+import type { ResolvedPermission } from "../types/permissions";
 import { ApiError } from "../utils/ApiError";
+import { parseJwtPermissions } from "../utils/parseJwtPermissions";
 import { responseError } from "../utils/ResponseError";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -11,6 +13,7 @@ dotenv.config();
 type JwtPayload = {
   id: string;
   clinicId: string;
+  permissions?: unknown;
 };
 
 export const authMiddleware = async (
@@ -42,10 +45,13 @@ export const authMiddleware = async (
       throw new ApiError("Dispositivo não reconhecido", 418);
     }
 
-    const permissions = await knexRbacRepository.findResolvedPermissionsByUser({
-      userId,
-      clinicId,
-    });
+    const permissionsFromJwt = parseJwtPermissions(payload.permissions);
+    const permissions: ResolvedPermission[] =
+      permissionsFromJwt ??
+      (await knexRbacRepository.findResolvedPermissionsByUser({
+        userId,
+        clinicId,
+      }));
 
     request.user = {
       id: userId,

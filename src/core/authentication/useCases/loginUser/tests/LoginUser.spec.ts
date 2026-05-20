@@ -6,27 +6,35 @@ import { InMemoryRefreshToken } from "../../../../../repositories/token/inMemory
 import { IUserRepository } from "../../../../../repositories/user/IUserRepository";
 import { InMemoryUserRepository } from "../../../../../repositories/user/inMemory/InMemoryUserRepository";
 import { LoginUserUseCase } from "../LoginUserUseCase";
+import { createMockRbacRepository } from "../../../../../repositories/_mocks/RbacRepositoryMock";
 import type { Mock } from "vitest";
 
 const stubFingerprint = "stub-fingerprint-hash";
 const clinicId = "00000000-0000-4000-8000-000000000001";
+const mockPermissions = [{ key: "patients:read", scope: { type: "all" as const } }];
 
 describe("Login user", () => {
   let userRepository: IUserRepository;
   let loginUserUseCase: LoginUserUseCase;
   let refreshToken: IRefreshTokenProvider;
   let generateToken: IGenerateTokenProvider;
+  let rbacRepository: ReturnType<typeof createMockRbacRepository>;
   let registerUserFingerprint: { execute: Mock };
 
   beforeAll(() => {
     userRepository = new InMemoryUserRepository();
     refreshToken = new InMemoryRefreshToken();
     generateToken = new InMemoryGenerateToken();
+    rbacRepository = createMockRbacRepository();
+    rbacRepository.findResolvedPermissionsByUser.mockResolvedValue(
+      mockPermissions,
+    );
     registerUserFingerprint = { execute: vi.fn().mockResolvedValue(undefined) };
     loginUserUseCase = new LoginUserUseCase(
       userRepository,
       refreshToken,
       generateToken,
+      rbacRepository,
       registerUserFingerprint as any,
     );
   });
@@ -58,6 +66,11 @@ describe("Login user", () => {
       userId: userDTO.id,
       fpHash: stubFingerprint,
     });
+    expect(rbacRepository.findResolvedPermissionsByUser).toHaveBeenCalledWith({
+      userId: userDTO.id,
+      clinicId,
+    });
+    expect(resolve.token).toContain(`token-${userDTO.id}-${clinicId}-1`);
   });
 
   it("Should not be able to login if email is not corrected", async () => {

@@ -6,25 +6,32 @@ import {
   createMockRefreshTokenProvider,
   createMockUserRepository,
 } from "../../../../repositories/_mocks/UserRepositoryMock";
+import { createMockRbacRepository } from "../../../../repositories/_mocks/RbacRepositoryMock";
 import { RefreshTokenUseCase } from "./RefreshTokenUseCase";
 
 const mockRefreshTokenProvider = createMockRefreshTokenProvider();
 
 const mockGenerateTokenProvider = createMockGenerateTokenProvider();
 const mockUserRepository = createMockUserRepository();
+const mockRbacRepository = createMockRbacRepository();
 
 const fingerprint = "device-fingerprint";
 const clinicId = "00000000-0000-4000-8000-000000000001";
+const mockPermissions = [{ key: "patients:read", scope: { type: "all" as const } }];
 
 describe("RefreshTokenUseCase", () => {
   let refreshTokenUseCase: RefreshTokenUseCase;
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockRbacRepository.findResolvedPermissionsByUser.mockResolvedValue(
+      mockPermissions,
+    );
     refreshTokenUseCase = new RefreshTokenUseCase(
       mockRefreshTokenProvider,
       mockGenerateTokenProvider,
       mockUserRepository,
+      mockRbacRepository,
     );
   });
 
@@ -104,9 +111,14 @@ describe("RefreshTokenUseCase", () => {
       expect(mockRefreshTokenProvider.delete).toHaveBeenCalledWith(
         validRefreshToken.id,
       );
+      expect(mockRbacRepository.findResolvedPermissionsByUser).toHaveBeenCalledWith({
+        userId: mockUserId,
+        clinicId,
+      });
       expect(mockGenerateTokenProvider.execute).toHaveBeenCalledWith({
         userId: mockUserId,
         clinicId,
+        permissions: mockPermissions,
       });
     });
 
