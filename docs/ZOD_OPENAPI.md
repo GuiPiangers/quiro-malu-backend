@@ -41,6 +41,19 @@ if (!parsed.success) {
 await this.meuUseCase.execute(parsed.data);
 ```
 
+## Identificadores (`id`, `userId`, `serviceId`, etc.)
+
+Nos schemas de request/response, **não** use `z.string().uuid()` para ids de entidades ou campos de referência. Valide apenas como **string** (com `min(1)` quando o campo for obrigatório):
+
+```typescript
+id: z.string().min(1),
+serviceId: z.string().min(1),
+```
+
+**Por quê:** nem todas as tabelas do projeto usam UUID como identificador; algumas usam outros formatos de string. Exigir UUID no Zod rejeitaria ids válidos e desalinha a documentação do que o banco realmente aceita.
+
+**OpenAPI:** o mesmo critério vale nos exemplos e nos schemas expostos na spec — descreva `id` como `string`, não como `format: uuid`, salvo exceção explícita de contrato legado.
+
 ## Documentação Swagger / OpenAPI
 
 1. No arquivo de schemas da rota (ou em `src/schemas` se for transversal), exporte os `z.object(...).openapi(...)`.
