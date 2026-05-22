@@ -21,6 +21,10 @@ export const MessageResponseSchema = z
 
 export const CreateSchedulingBodySchema = z
   .object({
+    userId: z
+      .string()
+      .min(1)
+      .describe("Usuário (profissional) dono do agendamento na clínica"),
     patientId: z.string().min(1),
     date: z.string().min(1).describe(SCHEDULING_DATE_TIME_WRITE_DOC),
     duration: z.number().positive(),

@@ -14,12 +14,11 @@ export class CreateSchedulingController {
     }
 
     try {
-      const data = parsed.data;
-      const userId = request.user.id as string;
+      const { userId, ...schedulingInput } = parsed.data;
       const clinicId = request.user.clinicId as string;
 
       const scheduling = await this.createScheduleUseCase.execute({
-        ...data,
+        ...schedulingInput,
         userId,
         clinicId,
       });

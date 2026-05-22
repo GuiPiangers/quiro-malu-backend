@@ -92,11 +92,23 @@ openApiRegistry.registerPath({
   path: "/schedules",
   tags: ["Scheduling"],
   summary: "Cria agendamento",
+  description:
+    "O `userId` no corpo identifica o profissional dono do horário (não o usuário autenticado). `clinicId` vem do token.",
   security: bearer,
   request: {
     body: {
       content: {
-        "application/json": { schema: CreateSchedulingBodySchema },
+        "application/json": {
+          schema: CreateSchedulingBodySchema,
+          example: {
+            userId: "00000000-0000-4000-8000-000000000010",
+            patientId: "00000000-0000-4000-8000-000000000020",
+            date: "2026-05-06T14:30",
+            duration: 3600,
+            service: "Sessão",
+            status: "Agendado",
+          },
+        },
       },
     },
   },
