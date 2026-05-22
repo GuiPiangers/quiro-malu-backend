@@ -45,6 +45,7 @@ export class PainScale extends Entity {
 }
 export interface ProgressDTO {
   id?: string;
+  userId: string;
   schedulingId?: string;
   patientId: string;
   service?: string;
@@ -58,6 +59,7 @@ export interface ProgressDTO {
 
 export class Progress extends Entity {
   readonly date?: DateTime;
+  readonly userId: string;
   readonly patientId: string;
   readonly service?: string;
   readonly actualProblem?: string;
@@ -67,6 +69,7 @@ export class Progress extends Entity {
 
   constructor({
     id,
+    userId,
     service,
     actualProblem,
     date,
@@ -76,6 +79,13 @@ export class Progress extends Entity {
     painScales,
   }: ProgressDTO) {
     super(id || `${Date.now()}`);
+    if (!userId?.trim()) {
+      throw new ApiError(
+        "O clínico (userId) é obrigatório para registrar a evolução",
+        400,
+      );
+    }
+    this.userId = userId;
     this.patientId = patientId;
     this.service = service;
     this.actualProblem = actualProblem;
@@ -88,6 +98,7 @@ export class Progress extends Entity {
   getDTO() {
     return {
       id: this.id,
+      userId: this.userId,
       patientId: this.patientId,
       service: this.service,
       actualProblem: this.actualProblem,

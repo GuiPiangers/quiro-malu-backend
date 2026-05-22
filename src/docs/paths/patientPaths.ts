@@ -275,6 +275,15 @@ openApiRegistry.registerPath({
       content: {
         "application/json": {
           schema: SetProgressBodySchema,
+          example: {
+            userId: "00000000-0000-4000-8000-000000000010",
+            patientId: "00000000-0000-4000-8000-000000000020",
+            schedulingId: "00000000-0000-4000-8000-000000000030",
+            service: "Sessão",
+            actualProblem: "Dor lombar",
+            date: "2026-05-06T14:30",
+            procedures: "Ajuste",
+          },
         },
       },
     },

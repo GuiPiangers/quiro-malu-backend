@@ -16,8 +16,10 @@ describe("setProgressUseCase", () => {
       const patientId = "test-patient-id";
       const clinicId = "test-user-id";
 
+      const userId = "test-clinician-id";
       const progressData: ProgressDTO = {
         id: "test-progress-id",
+        userId,
         patientId,
         actualProblem: "actualProblem",
         date: "2025-01-10T00:00",
@@ -41,8 +43,10 @@ describe("setProgressUseCase", () => {
     it("should call the repository Update method with the correct Data if Progress does not exist", async () => {
       const patientId = "test-patient-id";
       const clinicId = "test-user-id";
+      const userId = "test-clinician-id";
       const progressData: ProgressDTO = {
         id: "test-progress-id",
+        userId,
         patientId,
         actualProblem: "actualProblem",
         date: "2025-01-10T00:00",
@@ -52,7 +56,7 @@ describe("setProgressUseCase", () => {
       };
 
       mockProgressRepository.get.mockResolvedValue([
-        { patientId, id: "progress-id" },
+        { patientId, id: "progress-id", userId },
       ]);
 
       await setProgressUseCase.execute({ ...progressData, clinicId });
@@ -69,15 +73,24 @@ describe("setProgressUseCase", () => {
       const clinicId = "test-user-id";
       const progressId = "test-progress-id";
 
-      mockProgressRepository.get.mockResolvedValue([{ patientId }]);
+      const userId = "test-clinician-id";
+      mockProgressRepository.get.mockResolvedValue([
+        { patientId, id: progressId, userId },
+      ]);
 
-      await setProgressUseCase.execute({ patientId, clinicId, id: progressId });
+      await setProgressUseCase.execute({
+        patientId,
+        clinicId,
+        id: progressId,
+        userId,
+      });
 
       expect(mockProgressRepository.update).toHaveBeenCalledTimes(1);
       expect(mockProgressRepository.update).toHaveBeenCalledWith({
         patientId,
         clinicId,
         id: progressId,
+        userId,
         actualProblem: undefined,
         date: undefined,
         procedures: undefined,
@@ -93,20 +106,16 @@ describe("setProgressUseCase", () => {
 
       mockProgressRepository.get.mockResolvedValue([]);
 
-      await setProgressUseCase.execute({ patientId, clinicId, id: progressId });
+      await expect(
+        setProgressUseCase.execute({
+          patientId,
+          clinicId,
+          id: progressId,
+          userId: "",
+        }),
+      ).rejects.toThrow("O clínico (userId) é obrigatório");
 
-      expect(mockProgressRepository.save).toHaveBeenCalledTimes(1);
-      expect(mockProgressRepository.save).toHaveBeenCalledWith({
-        patientId,
-        clinicId,
-        id: progressId,
-
-        actualProblem: undefined,
-        date: undefined,
-        procedures: undefined,
-        schedulingId: undefined,
-        service: undefined,
-      });
+      expect(mockProgressRepository.save).not.toHaveBeenCalled();
     });
 
     it("should propagate an error if the repository set method throws", async () => {
@@ -117,7 +126,11 @@ describe("setProgressUseCase", () => {
       mockProgressRepository.get.mockRejectedValueOnce(new Error(errorMessage));
 
       await expect(
-        setProgressUseCase.execute({ patientId, clinicId }),
+        setProgressUseCase.execute({
+          patientId,
+          clinicId,
+          userId: "test-clinician-id",
+        }),
       ).rejects.toThrow(errorMessage);
     });
   });

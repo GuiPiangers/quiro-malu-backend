@@ -48,6 +48,7 @@ export const GetDiagnosticResponseSchema = z
 export const ProgressDTOSchema = z
   .object({
     id: z.string().optional(),
+    userId: z.string(),
     patientId: z.string(),
     schedulingId: z.string().optional(),
     service: z.string().optional(),

@@ -6,6 +6,7 @@ describe("Progress", () => {
   it("should create a Progress instance with valid data, including a valid DateTime", () => {
     const progressData: ProgressDTO = {
       id: "1",
+      userId: "clinician-1",
       patientId: "patient-1",
       service: "Consultation",
       actualProblem: "Headache",
@@ -32,9 +33,27 @@ describe("Progress", () => {
     expect(progress.painScales).toHaveLength(1);
   });
 
+  it("should throw an error if userId is missing", () => {
+    expect(
+      () =>
+        new Progress({
+          patientId: "patient-1",
+          userId: "",
+        }),
+    ).toThrow(ApiError);
+    expect(
+      () =>
+        new Progress({
+          patientId: "patient-1",
+          userId: "",
+        }),
+    ).toThrow("O clínico (userId) é obrigatório");
+  });
+
   it("should throw an error if date is invalid", () => {
     const invalidProgressData: ProgressDTO = {
       id: "2",
+      userId: "clinician-2",
       patientId: "patient-2",
       service: "Consultation",
       actualProblem: "Fever",
@@ -50,6 +69,7 @@ describe("Progress", () => {
   it("should throw an error if painLevel is less than 0", () => {
     const progressData: ProgressDTO = {
       id: "1",
+      userId: "clinician-1",
       patientId: "patient-1",
       service: "Consultation",
       actualProblem: "Headache",
@@ -73,6 +93,7 @@ describe("Progress", () => {
   it("should throw an error if painLevel is greater than 10", () => {
     const progressData: ProgressDTO = {
       id: "1",
+      userId: "clinician-1",
       patientId: "patient-1",
       service: "Consultation",
       actualProblem: "Headache",
@@ -96,6 +117,7 @@ describe("Progress", () => {
   it("should return correct DTO with date formatted correctly", () => {
     const progressData: ProgressDTO = {
       id: "4",
+      userId: "clinician-4",
       patientId: "patient-4",
       service: "Check-up",
       actualProblem: "Routine check",
@@ -117,6 +139,7 @@ describe("Progress", () => {
 
     expect(progressDTO).toEqual({
       id: "4",
+      userId: "clinician-4",
       patientId: "patient-4",
       service: "Check-up",
       actualProblem: "Routine check",

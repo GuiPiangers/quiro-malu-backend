@@ -5,6 +5,7 @@ import type { Knex } from "knex";
 
 interface ProgressWithPainScaleRow {
   id: string;
+  userId: string;
   patientId: string;
   clinicId: string;
   service: string;
@@ -35,6 +36,7 @@ export class KnexProgressRepository implements IProgressRepository {
       .leftJoin(`${ETableNames.PAIN_SCALES} as ps`, "p.id", "ps.progressId")
       .column(
         "p.id",
+        "p.userId",
         "p.patientId",
         "p.clinicId",
         "p.service",
@@ -129,6 +131,7 @@ export class KnexProgressRepository implements IProgressRepository {
       .leftJoin(`${ETableNames.PAIN_SCALES} as ps`, "p.id", "ps.progressId")
       .column(
         "p.id",
+        "p.userId",
         "p.patientId",
         "p.clinicId",
         "p.service",
@@ -165,6 +168,7 @@ export class KnexProgressRepository implements IProgressRepository {
       .leftJoin(`${ETableNames.PAIN_SCALES} as ps`, "p.id", "ps.progressId")
       .column(
         "p.id",
+        "p.userId",
         "p.patientId",
         "p.clinicId",
         "p.service",
@@ -229,6 +233,7 @@ export class KnexProgressRepository implements IProgressRepository {
       if (!progress) {
         progress = {
           id: row.id,
+          userId: row.userId,
           patientId: row.patientId,
           service: row.service,
           actualProblem: row.actualProblem,

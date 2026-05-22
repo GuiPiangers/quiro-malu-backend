@@ -17,7 +17,9 @@ describe("getProgressUseCase", () => {
       const clinicId = "test-user-id";
       const patientId = "test-patient-id";
 
-      mockProgressRepository.get.mockResolvedValue([{ id, patientId }]);
+      mockProgressRepository.get.mockResolvedValue([
+        { id, patientId, userId: "test-clinician-id" },
+      ]);
 
       await getProgressUseCase.execute({ id, clinicId, patientId });
 
@@ -35,6 +37,7 @@ describe("getProgressUseCase", () => {
       const patientId = "test-patient-id";
       const progressData = {
         patientId,
+        userId: "test-clinician-id",
         id,
         actualProblem: "actualProblem",
         date: "2024-12-20T10:00",

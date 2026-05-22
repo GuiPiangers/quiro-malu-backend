@@ -36,6 +36,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         const useCase = new SetProgressUseCase(new KnexProgressRepository(trx));
         await useCase.execute({
           id: progressId,
+          userId,
           patientId,
           clinicId: userId,
           service: "Quiropraxia",
@@ -72,6 +73,7 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         const useCase = new SetProgressUseCase(new KnexProgressRepository(trx));
         await useCase.execute({
           id: progressId,
+          userId,
           patientId,
           clinicId: userId,
           service: "Massagem",

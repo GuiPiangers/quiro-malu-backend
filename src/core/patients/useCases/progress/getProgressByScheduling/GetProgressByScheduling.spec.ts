@@ -20,7 +20,7 @@ describe("getProgressBySchedulingUseCase", () => {
       const patientId = "test-patient-id";
 
       mockProgressRepository.getByScheduling.mockResolvedValue([
-        { schedulingId, patientId },
+        { schedulingId, patientId, userId: "test-clinician-id" },
       ]);
 
       await getProgressBySchedulingUseCase.execute({
@@ -44,6 +44,7 @@ describe("getProgressBySchedulingUseCase", () => {
       const patientId = "test-patient-id";
       const progressData = {
         patientId,
+        userId: "test-clinician-id",
         schedulingId,
         id,
         actualProblem: "actualProblem",

@@ -11,6 +11,10 @@ export const PainScaleItemSchema = z
 export const SetProgressBodySchema = z
   .object({
     id: z.string().optional(),
+    userId: z
+      .string()
+      .min(1)
+      .describe("Id do clínico (usuário) responsável pela evolução"),
     schedulingId: z.string().optional(),
     patientId: z.string().min(1),
     service: z.string().optional(),

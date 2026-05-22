@@ -22,11 +22,12 @@ schedulingSyncService.addObserver(
 
 schedulingSyncService.addObserver(
   EIdentifierObserver.PROGRESS,
-  async ({ id, patientId, service, clinicId }) => {
+  async ({ id, patientId, service, userId, clinicId }) => {
     return await setProgressUseCaseFactory().execute({
       id,
       patientId,
       service,
+      userId,
       clinicId,
     });
   },

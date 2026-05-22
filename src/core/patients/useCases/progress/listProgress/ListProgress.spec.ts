@@ -123,6 +123,7 @@ describe("listProgressUseCase", () => {
 
       const progressData = {
         patientId,
+        userId: "test-clinician-id",
         schedulingId,
         id,
         actualProblem: "actualProblem",
