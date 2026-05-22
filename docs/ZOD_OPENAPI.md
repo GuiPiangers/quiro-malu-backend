@@ -63,6 +63,12 @@ serviceId: z.string().min(1),
 
 Regra de ouro: **um schema, duas leituras** — o controller valida com ele e o OpenAPI descreve o contrato com o mesmo objeto Zod, evitando divergência entre código e documentação.
 
+## Respostas de listagem (response schemas)
+
+- Schemas de resposta de rotas que **listam** itens devem usar `z.object({ result: z.array(ItemSchema) })`, não `z.array(ItemSchema)` na raiz.
+- Nomeie o schema com sufixo `*Response` (ex.: `ListClinicianUsersResponseSchema`) e registre em `src/docs/paths/*Paths.ts` o mesmo objeto.
+- Paginação futura: acrescente `page`, `limit`, `total`, etc. no mesmo `z.object`, mantendo `result` para a coleção.
+
 5. Para **Try it out** no Swagger, prefira o **Example** gerado (JSON em uma linha). Evite colar senhas com **Enter no meio do campo** — isso gera JSON inválido (`SyntaxError: Bad control character in string literal` no `body-parser`).
 
 ## POST /login, /register e /logout (corpo JSON)

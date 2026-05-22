@@ -32,6 +32,13 @@
 
 - Criar todas as pastas e arquivos da aplicação utilizando o padrão camelCase. Exemplo: `exemploDeNome`
 
+## Respostas de listagem (GET que retorna coleção)
+
+- Use cases e controllers de **listagem** devem retornar um **objeto** com a propriedade **`result`** contendo o array, nunca o array solto na raiz do JSON.
+- Formato mínimo: `{ result: ItemDTO[] }`. Campos futuros (`page`, `limit`, `total`, etc.) entram no mesmo objeto, ao lado de `result`.
+- O schema Zod/OpenAPI da rota deve espelhar esse formato (`z.object({ result: z.array(...) })`).
+- Exceções legadas (outro envelope, ex. `{ services, total, limit }`) só permanecem até migração explícita; novos endpoints seguem `{ result }`.
+
 ## Testes
 
 - Utilize o padrão `[nome_do_teste].spec.ts` para indicar um teste

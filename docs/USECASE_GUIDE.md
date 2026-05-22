@@ -25,6 +25,7 @@
 5. **Consultar repositório** quando necessário (ex: verificar duplicidade).  
 6. **Persistir dados** usando o método adequado do repositório (`save`, `list`, etc.).  
 7. **Retornar objeto de saída sempre como um DTO**.  
+8. Em casos de uso de **listagem**, retornar `{ result: ItemDTO[] }` (e metadados de paginação no mesmo objeto quando existirem), nunca só o array — ver `docs/PROJECT_GUIDE.md` (Respostas de listagem).
 
 ## Exemplo (CreatePatientUseCase)
 ```ts

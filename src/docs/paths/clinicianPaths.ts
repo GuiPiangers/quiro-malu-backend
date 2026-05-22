@@ -23,7 +23,7 @@ openApiRegistry.registerPath({
   security: bearer,
   responses: {
     200: {
-      description: "Lista de clínicos (sem senha)",
+      description: "Lista de clínicos (sem senha). Corpo: `{ result: ClinicianItem[] }`.",
       content: {
         "application/json": { schema: ListClinicianUsersResponseSchema },
       },

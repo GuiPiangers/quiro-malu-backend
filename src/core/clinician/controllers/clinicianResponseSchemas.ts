@@ -14,5 +14,7 @@ export const ClinicianItemSchema = z
   .openapi("ClinicianItem");
 
 export const ListClinicianUsersResponseSchema = z
-  .array(ClinicianItemSchema)
+  .object({
+    result: z.array(ClinicianItemSchema),
+  })
   .openapi("ListClinicianUsersResponse");

@@ -17,6 +17,7 @@
   - Encapsular erros com `try/catch` 
   - Enviar a response como um Objeto JSON.
   - Utilizar a função `responseError` de `src/utils/ResponseError.ts` para enviar uma resposta de erro padrão no catch do `try/catch`
+  - Em rotas de **listagem**, repassar o objeto retornado pelo use case (`response.status(200).json(payload)`) com `{ result: [...] }` — ver `docs/PROJECT_GUIDE.md` (Respostas de listagem).
 
 ### Validação de entrada (contrato com use cases e entidades)
 - O **controller** é responsável por garantir que o payload e os parâmetros de rota estão **completos e coerentes** antes de chamar o caso de uso: campos obrigatórios, tipos aceitáveis para a API, normalização (ex.: `trim`), e rejeição com `400` quando faltar algo essencial.

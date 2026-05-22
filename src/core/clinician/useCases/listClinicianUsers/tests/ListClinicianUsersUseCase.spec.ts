@@ -25,7 +25,7 @@ describe("ListClinicianUsersUseCase", () => {
 
     clinicianRepository.findByClinic.mockResolvedValue([clinician]);
 
-    const result = await useCase.execute(clinicId);
+    const { result } = await useCase.execute(clinicId);
 
     expect(result).toHaveLength(1);
     expect(result[0]).toEqual({
@@ -44,7 +44,7 @@ describe("ListClinicianUsersUseCase", () => {
   it("returns empty list when clinic has no clinicians", async () => {
     clinicianRepository.findByClinic.mockResolvedValue([]);
 
-    const result = await useCase.execute(clinicId);
+    const { result } = await useCase.execute(clinicId);
 
     expect(result).toEqual([]);
   });
