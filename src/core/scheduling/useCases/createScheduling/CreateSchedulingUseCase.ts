@@ -8,11 +8,13 @@ import {
   IAppEventListener,
 } from "../../../shared/observers/EventListener";
 import { IBlockScheduleRepository } from "../../../../repositories/blockScheduleRepository/IBlockScheduleRepository";
+import type { IClinicianRepository } from "../../../../repositories/clinician/IClinicianRepository";
 
 export class CreateSchedulingUseCase {
   constructor(
     private SchedulingRepository: ISchedulingRepository,
     private BlockSchedulingRepository: IBlockScheduleRepository,
+    private readonly clinicianRepository: IClinicianRepository,
     private readonly events: IAppEventListener = appEventListener,
   ) {}
 
@@ -21,6 +23,18 @@ export class CreateSchedulingUseCase {
     userId,
     ...data
   }: SchedulingDTO & { userId: string; clinicId: string; date: string }) {
+    const clinician = await this.clinicianRepository.findById({
+      id: userId,
+      clinicId,
+    });
+    if (!clinician) {
+      throw new ApiError(
+        "O usuário informado não é um clínico",
+        400,
+        "userId",
+      );
+    }
+
     const dataBaseStatusStrategy = new DatabaseStatusStrategy();
     const scheduling = new Scheduling(data, dataBaseStatusStrategy);
 

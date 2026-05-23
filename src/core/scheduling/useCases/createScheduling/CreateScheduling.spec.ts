@@ -5,12 +5,15 @@ import { DateTime } from "../../../shared/Date";
 import { BlockSchedule } from "../../models/BlockSchedule";
 import { SchedulingDTO } from "../../models/Scheduling";
 import { IAppEventListener } from "../../../shared/observers/EventListener";
+import type { Clinician } from "../../../clinician/models/Clinician";
+import { createMockClinicianRepository } from "../../../../repositories/_mocks/ClinicianRepositoryMock";
 import { CreateSchedulingUseCase } from "./CreateSchedulingUseCase";
 
 describe("createSchedulingUseCase", () => {
   let createSchedulingUseCase: CreateSchedulingUseCase;
   const mockSchedulingRepository = createMockSchedulingRepository();
   const mockBlockScheduleRepository = createMockBlockScheduleRepository();
+  const mockClinicianRepository = createMockClinicianRepository();
   const eventsStub: IAppEventListener = { emit: vi.fn() };
 
   beforeAll(() => {
@@ -25,8 +28,10 @@ describe("createSchedulingUseCase", () => {
       createSchedulingUseCase = new CreateSchedulingUseCase(
         mockSchedulingRepository,
         mockBlockScheduleRepository,
+        mockClinicianRepository,
         eventsStub,
       );
+      mockClinicianRepository.findById.mockResolvedValue({} as Clinician);
     });
 
     it("should call the repository create method with the correct Data", async () => {
@@ -236,6 +241,27 @@ describe("createSchedulingUseCase", () => {
         `O horário informado está bloqueado por um evento ${blockScheduling.description}`,
       );
       expect(mockSchedulingRepository.save).not.toHaveBeenCalled();
+    });
+
+    it("should throw ApiError when userId is not a clinician", async () => {
+      mockClinicianRepository.findById.mockResolvedValueOnce(null);
+
+      await expect(
+        createSchedulingUseCase.execute({
+          userId: "not-a-clinician",
+          clinicId: "test-clinic-id",
+          patientId: "test-patient-id",
+          date: "2025-01-10T00:00",
+          duration: 3600,
+        }),
+      ).rejects.toMatchObject({
+        message: "O usuário informado não é um clínico",
+        statusCode: 400,
+        type: "userId",
+      });
+
+      expect(mockSchedulingRepository.save).not.toHaveBeenCalled();
+      expect(mockSchedulingRepository.list).not.toHaveBeenCalled();
     });
 
     it("should propagate an error if the repository create method throws", async () => {

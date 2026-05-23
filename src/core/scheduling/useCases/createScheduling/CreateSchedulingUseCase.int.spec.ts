@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { ETableNames } from "../../../../database/ETableNames";
 import { BlockScheduleRepository } from "../../../../repositories/blockScheduleRepository/BlockScheduleRepository";
+import { KnexClinicianRepository } from "../../../../repositories/clinician/KnexClinicianRepository";
 import { KnexSchedulingRepository } from "../../../../repositories/scheduling/KnexSchedulingRepository";
 import { ApiError } from "../../../../utils/ApiError";
 import { createKnexForIntegrationTests } from "../../../../test/integration/knexTestConnection";
@@ -38,8 +39,10 @@ async function insertUserAndPatient(trx: Knex.Transaction) {
     clinicId: userId,
     name: "Integration user",
     email: `${userId}@integration.test`,
+    phone: "(51) 99999 9999",
     password: "not-used",
   });
+  await trx(ETableNames.CLINICIANS).insert({ id: userId });
   await trx(ETableNames.PATIENTS).insert({
     id: patientId,
     name: "Integration patient",
@@ -56,6 +59,7 @@ function createCreateSchedulingUseCase(
   return new CreateSchedulingUseCase(
     new KnexSchedulingRepository(trx),
     new BlockScheduleRepository(trx),
+    new KnexClinicianRepository(trx),
     events,
   );
 }
