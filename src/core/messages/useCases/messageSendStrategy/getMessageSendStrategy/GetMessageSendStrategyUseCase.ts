@@ -15,19 +15,19 @@ import {
 } from '../../../sendStrategy/sendStrategyKind'
 
 export type GetMessageSendStrategyDTO = {
-  userId: string;
-  clinicId: string;
-  strategyId: string;
+  userId: string
+  clinicId: string
+  strategyId: string
 }
 
 export type GetMessageSendStrategyPatientView = {
-  name: string;
-  phone: string;
-  cpf?: string;
+  name: string
+  phone: string
+  cpf?: string
 }
 
 export type GetMessageSendStrategyOutput = MessageSendStrategyDTO & {
-  patients: GetMessageSendStrategyPatientView[];
+  patients: GetMessageSendStrategyPatientView[]
 }
 
 function patientToView(patient: PatientDTO): GetMessageSendStrategyPatientView {
@@ -45,7 +45,9 @@ export class GetMessageSendStrategyUseCase {
     private readonly schedulingRepository: ISchedulingRepository,
   ) {}
 
-  async execute(dto: GetMessageSendStrategyDTO): Promise<GetMessageSendStrategyOutput> {
+  async execute(
+    dto: GetMessageSendStrategyDTO,
+  ): Promise<GetMessageSendStrategyOutput> {
     const row = await this.messageSendStrategyRepository.findByIdAndUserId(
       dto.strategyId,
       dto.userId,

@@ -1,9 +1,10 @@
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
 import {
-  CreateAfterScheduleMessageUseCase,
-} from '../../useCases/afterScheduleMessage/createAfterScheduleMessage/CreateAfterScheduleMessageUseCase'
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
+import { CreateAfterScheduleMessageUseCase } from '../../useCases/afterScheduleMessage/createAfterScheduleMessage/CreateAfterScheduleMessageUseCase'
 import { CreateAfterScheduleMessageBodySchema } from '../scheduledMessageSchemas'
 
 export class CreateAfterScheduleMessageController {
@@ -12,7 +13,10 @@ export class CreateAfterScheduleMessageController {
   ) {}
 
   async handle(request: Request, response: Response) {
-    const parsed = parseWithSchema(CreateAfterScheduleMessageBodySchema, request.body)
+    const parsed = parseWithSchema(
+      CreateAfterScheduleMessageBodySchema,
+      request.body,
+    )
     if (!parsed.success) {
       return sendZodBadRequest(response, parsed.error)
     }

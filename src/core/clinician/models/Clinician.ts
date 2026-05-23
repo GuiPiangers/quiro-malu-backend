@@ -3,7 +3,7 @@ import { Service, ServiceDTO } from '../../service/models/Service'
 import { ApiError } from '../../../utils/ApiError'
 
 export interface ClinicianDTO extends UserDTO {
-  services?: ServiceDTO[];
+  services?: ServiceDTO[]
 }
 
 export class Clinician extends User {

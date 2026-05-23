@@ -37,10 +37,10 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 type UniqueSendBindingRow = {
-  userId: string;
-  campaignId: string;
-  created_at: Date;
-  updated_at: Date;
+  userId: string
+  campaignId: string
+  created_at: Date
+  updated_at: Date
 }
 
 export async function down(knex: Knex): Promise<void> {
@@ -57,9 +57,14 @@ export async function down(knex: Knex): Promise<void> {
     return
   }
 
-  const existsStrategy = await knex(STRATEGIES).where({ id: UNIQUE_STRATEGY_ID }).first()
+  const existsStrategy = await knex(STRATEGIES)
+    .where({ id: UNIQUE_STRATEGY_ID })
+    .first()
   if (!existsStrategy) {
-    const firstUser = await knex(ETableNames.USERS).select('id').limit(1).first()
+    const firstUser = await knex(ETableNames.USERS)
+      .select('id')
+      .limit(1)
+      .first()
     if (!firstUser?.id) {
       throw new Error(
         'Rollback exige um usuário em `users` para recriar a linha template `unique-user-strategy`.',

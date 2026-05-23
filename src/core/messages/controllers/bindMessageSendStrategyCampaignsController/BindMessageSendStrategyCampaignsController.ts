@@ -1,6 +1,9 @@
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { BindMessageSendStrategyCampaignsUseCase } from '../../useCases/messageSendStrategy/bindMessageSendStrategyCampaigns/BindMessageSendStrategyCampaignsUseCase'
 import { BindCampaignStrategiesBodySchema } from '../messageSendStrategyHttpSchemas'
 import { CampaignIdParamSchema } from '../messagesCommonSchemas'
@@ -15,7 +18,10 @@ export class BindMessageSendStrategyCampaignsController {
     if (!parsedParams.success) {
       return sendZodBadRequest(response, parsedParams.error)
     }
-    const parsedBody = parseWithSchema(BindCampaignStrategiesBodySchema, request.body)
+    const parsedBody = parseWithSchema(
+      BindCampaignStrategiesBodySchema,
+      request.body,
+    )
     if (!parsedBody.success) {
       return sendZodBadRequest(response, parsedBody.error)
     }

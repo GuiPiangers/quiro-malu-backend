@@ -1,7 +1,10 @@
 import { Request, Response } from 'express'
 import { DeletePatientUseCase } from '../../useCases/deletePatient/DeletePatientUseCase'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { DeletePatientBodySchema } from './deletePatientsSchemas'
 
 export class DeletePatientsController {

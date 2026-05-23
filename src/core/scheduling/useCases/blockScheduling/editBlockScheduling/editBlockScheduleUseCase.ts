@@ -25,12 +25,8 @@ export class EditBlockScheduleUseCase {
       throw new ApiError('Agendamento não encontrado')
     }
 
-    const newDate = date
-      ? new DateTime(date)
-      : blockSchedule.date
-    const newEndDate = endDate
-      ? new DateTime(endDate)
-      : blockSchedule.endDate
+    const newDate = date ? new DateTime(date) : blockSchedule.date
+    const newEndDate = endDate ? new DateTime(endDate) : blockSchedule.endDate
 
     const updatedBlockSchedule = new BlockSchedule({
       id,

@@ -10,12 +10,14 @@ export class RestoreExamController {
     try {
       const { id: userId } = request.user
       const { patientId, id } = request.params as {
-        patientId: string;
-        id: string;
+        patientId: string
+        id: string
       }
 
       if (!userId) throw new ApiError('Acesso não autorizado', 401)
-      if (!patientId || !id) { throw new ApiError('id ou patientId não estão definidos', 400) }
+      if (!patientId || !id) {
+        throw new ApiError('id ou patientId não estão definidos', 400)
+      }
 
       await this.restoreExamUseCase.execute({
         patientId,

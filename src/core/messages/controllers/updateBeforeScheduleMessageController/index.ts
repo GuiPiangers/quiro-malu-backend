@@ -3,13 +3,13 @@ import { UpdateBeforeScheduleMessageUseCase } from '../../useCases/beforeSchedul
 import { UpdateBeforeScheduleMessageController } from './UpdateBeforeScheduleMessageController'
 import { beforeScheduleMessageRepository } from '../../../../repositories/messages/knexInstances'
 
-const updateBeforeScheduleMessageUseCase = new UpdateBeforeScheduleMessageUseCase(
-  beforeScheduleMessageRepository,
-  appEventListener,
-)
+const updateBeforeScheduleMessageUseCase =
+  new UpdateBeforeScheduleMessageUseCase(
+    beforeScheduleMessageRepository,
+    appEventListener,
+  )
 
-const updateBeforeScheduleMessageController = new UpdateBeforeScheduleMessageController(
-  updateBeforeScheduleMessageUseCase,
-)
+const updateBeforeScheduleMessageController =
+  new UpdateBeforeScheduleMessageController(updateBeforeScheduleMessageUseCase)
 
 export { updateBeforeScheduleMessageController }

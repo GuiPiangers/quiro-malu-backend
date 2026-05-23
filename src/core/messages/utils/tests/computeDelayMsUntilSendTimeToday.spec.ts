@@ -8,7 +8,9 @@ describe('computeDelayMsUntilSendTimeToday', () => {
       { zone: 'America/Sao_Paulo' },
     )
     const delay = computeDelayMsUntilSendTimeToday('10:30', ref)
-    expect(delay).toBe(ref.set({ hour: 10, minute: 30, second: 0 }).diff(ref).as('milliseconds'))
+    expect(delay).toBe(
+      ref.set({ hour: 10, minute: 30, second: 0 }).diff(ref).as('milliseconds'),
+    )
   })
 
   it('deve retornar 0 quando o horário de envio já passou', () => {

@@ -7,8 +7,8 @@ export class InMemoryDiagnostic implements IDiagnosticRepository {
   }
 
   private dbLocation: (DiagnosticDTO & {
-    patientId: string;
-    clinicId: string;
+    patientId: string
+    clinicId: string
   })[] = []
 
   async save(
@@ -23,9 +23,7 @@ export class InMemoryDiagnostic implements IDiagnosticRepository {
     clinicId: string,
   ): Promise<void> {
     const index = this.dbLocation.findIndex((location) => {
-      return (
-        location.patientId === patientId && location.clinicId === clinicId
-      )
+      return location.patientId === patientId && location.clinicId === clinicId
     })
     this.dbLocation[index] = {
       ...data,

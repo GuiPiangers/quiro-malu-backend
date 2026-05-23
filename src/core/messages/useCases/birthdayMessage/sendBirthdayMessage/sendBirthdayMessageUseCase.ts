@@ -13,20 +13,23 @@ import { getConnectedWhatsAppInstance } from '../../../utils/getConnectedWhatsAp
 import { toInternationalPhone } from '../../../utils/toInternationalPhone'
 
 export type SendBirthdayMessageJob = {
-  userId: string;
-  clinicId: string;
-  patientId: string;
-  patientName: string;
-  patientPhone: string;
-  patientDateOfBirth: string;
-  campaignId: string;
-  campaignName: string;
-  textTemplate: string;
+  userId: string
+  clinicId: string
+  patientId: string
+  patientName: string
+  patientPhone: string
+  patientDateOfBirth: string
+  campaignId: string
+  campaignName: string
+  textTemplate: string
 }
 
 const BIRTHDAY_LOG_SCHEDULING_PLACEHOLDER = ''
 
-export function buildBirthdayMessageLogId(ymdDate: string, patientId: string): string {
+export function buildBirthdayMessageLogId(
+  ymdDate: string,
+  patientId: string,
+): string {
   return Crypto.createFixedHash(`${ymdDate}${patientId}`)
 }
 
@@ -52,9 +55,8 @@ export class SendBirthdayMessageUseCase {
 
     const todayYmd = DateTime.now().date
     const messageLogId = buildBirthdayMessageLogId(todayYmd, job.patientId)
-    const existingLog = await this.whatsAppMessageLogRepository.findById(
-      messageLogId,
-    )
+    const existingLog =
+      await this.whatsAppMessageLogRepository.findById(messageLogId)
     if (existingLog) {
       return
     }
@@ -88,7 +90,9 @@ export class SendBirthdayMessageUseCase {
       id: campaign.id,
       name: campaign.name,
       sendTime: campaign.sendTime,
-      messageTemplate: new MessageTemplate({ textTemplate: campaign.textTemplate }),
+      messageTemplate: new MessageTemplate({
+        textTemplate: campaign.textTemplate,
+      }),
       isActive: campaign.isActive,
     })
 

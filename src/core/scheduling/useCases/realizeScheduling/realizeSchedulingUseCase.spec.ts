@@ -36,9 +36,7 @@ describe('Realize scheduling use case', () => {
 
     mockSchedulingRepository.update.mockResolvedValue(undefined)
 
-    const result = await realizeSchedulingUseCase.execute(
-      realizeSchedulingData,
-    )
+    const result = await realizeSchedulingUseCase.execute(realizeSchedulingData)
 
     expect(mockedProgressRepository.getByScheduling).toHaveBeenCalledWith({
       schedulingId: realizeSchedulingData.schedulingId,

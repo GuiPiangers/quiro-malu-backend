@@ -11,92 +11,94 @@ export type ScheduleMessageType =
   | 'birthday'
 
 export type SaveWhatsAppMessageLogProps = {
-  id: string;
-  userId: string;
-  patientId: string;
-  schedulingId: string;
-  scheduleMessageType: ScheduleMessageType;
-  scheduleMessageConfigId: string;
-  message: string;
-  toPhone: string;
-  instanceName: string;
-  status: WhatsAppMessageLogStatus;
-  providerMessageId: string | null;
-  errorMessage?: string | null;
+  id: string
+  userId: string
+  patientId: string
+  schedulingId: string
+  scheduleMessageType: ScheduleMessageType
+  scheduleMessageConfigId: string
+  message: string
+  toPhone: string
+  instanceName: string
+  status: WhatsAppMessageLogStatus
+  providerMessageId: string | null
+  errorMessage?: string | null
 }
 
 export type UpdateWhatsAppMessageLogByProviderIdProps = {
-  providerMessageId: string;
-  status: WhatsAppMessageLogStatus;
-  errorMessage?: string | null;
-  deliveredAt?: string | null;
-  readAt?: string | null;
+  providerMessageId: string
+  status: WhatsAppMessageLogStatus
+  errorMessage?: string | null
+  deliveredAt?: string | null
+  readAt?: string | null
 }
 
 export type WhatsAppMessageLogDTO = {
-  id: string;
-  userId: string;
-  patientId: string;
-  schedulingId: string;
-  scheduleMessageType: ScheduleMessageType;
-  scheduleMessageConfigId: string;
-  message: string;
-  toPhone: string;
-  instanceName: string;
-  status: WhatsAppMessageLogStatus;
-  providerMessageId: string | null;
-  errorMessage: string | null;
-  sentAt: string | null;
-  deliveredAt: string | null;
-  readAt: string | null;
-  createdAt: string;
-  updatedAt: string;
+  id: string
+  userId: string
+  patientId: string
+  schedulingId: string
+  scheduleMessageType: ScheduleMessageType
+  scheduleMessageConfigId: string
+  message: string
+  toPhone: string
+  instanceName: string
+  status: WhatsAppMessageLogStatus
+  providerMessageId: string | null
+  errorMessage: string | null
+  sentAt: string | null
+  deliveredAt: string | null
+  readAt: string | null
+  createdAt: string
+  updatedAt: string
 }
 
 export type ListWhatsAppMessageLogsFilter = {
-  userId: string;
-  patientId?: string;
-  scheduleMessageType?: ScheduleMessageType;
-  scheduleMessageConfigId?: string;
+  userId: string
+  patientId?: string
+  scheduleMessageType?: ScheduleMessageType
+  scheduleMessageConfigId?: string
 
-  status?: WhatsAppMessageLogStatus;
-  limit: number;
-  offset: number;
+  status?: WhatsAppMessageLogStatus
+  limit: number
+  offset: number
 }
 
 export type ListWhatsAppMessageLogsResult = {
-  items: WhatsAppMessageLogDTO[];
-  total: number;
+  items: WhatsAppMessageLogDTO[]
+  total: number
 }
 
 export type GetBySchedulingAndCampaignIdProps = {
-  schedulingId: string;
-  campaignId: string;
+  schedulingId: string
+  campaignId: string
 }
 
 export type WhatsAppMessageLogsSummaryDTO = {
-  total: number;
-  byStatus: Record<WhatsAppMessageLogStatus, number>;
-  deliveryRate: number | null;
-  readRate: number | null;
+  total: number
+  byStatus: Record<WhatsAppMessageLogStatus, number>
+  deliveryRate: number | null
+  readRate: number | null
 }
 
 export interface IWhatsAppMessageLogRepository {
-  save(data: SaveWhatsAppMessageLogProps): Promise<void>;
-  findById(id: string): Promise<WhatsAppMessageLogDTO | null>;
-  getBySchedulingAndCampaignId(props: GetBySchedulingAndCampaignIdProps): Promise<WhatsAppMessageLogDTO | null>;
+  save(data: SaveWhatsAppMessageLogProps): Promise<void>
+  findById(id: string): Promise<WhatsAppMessageLogDTO | null>
+  getBySchedulingAndCampaignId(
+    props: GetBySchedulingAndCampaignIdProps,
+  ): Promise<WhatsAppMessageLogDTO | null>
   updateByProviderMessageId(
     data: UpdateWhatsAppMessageLogByProviderIdProps,
-  ): Promise<void>;
+  ): Promise<void>
   listByUserId(
     filter: ListWhatsAppMessageLogsFilter,
-  ): Promise<ListWhatsAppMessageLogsResult>;
+  ): Promise<ListWhatsAppMessageLogsResult>
   summaryByUserId(
     userId: string,
     filter?: {
-      patientId?: string;
-      scheduleMessageType?: ScheduleMessageType;
-      scheduleMessageConfigId?: string;
+      patientId?: string
+      scheduleMessageType?: ScheduleMessageType
+      scheduleMessageConfigId?: string
     },
-  ): Promise<WhatsAppMessageLogsSummaryDTO>;
+  ): Promise<WhatsAppMessageLogsSummaryDTO>
 }

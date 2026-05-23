@@ -4,11 +4,11 @@ export enum EIdentifierObserver {
 }
 
 export type observerParams = {
-  id: string;
-  patientId: string;
-  service: string;
-  userId: string;
-  clinicId: string;
+  id: string
+  patientId: string
+  service: string
+  userId: string
+  clinicId: string
 }
 
 export class SchedulingSyncService {

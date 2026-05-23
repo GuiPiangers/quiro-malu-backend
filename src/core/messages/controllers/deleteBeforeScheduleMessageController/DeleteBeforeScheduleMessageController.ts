@@ -1,6 +1,9 @@
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { DeleteBeforeScheduleMessageUseCase } from '../../useCases/beforeScheduleMessage/deleteBeforeScheduleMessage/DeleteBeforeScheduleMessageUseCase'
 import { MessageEntityIdParamSchema } from '../messagesCommonSchemas'
 
@@ -10,7 +13,10 @@ export class DeleteBeforeScheduleMessageController {
   ) {}
 
   async handle(request: Request, response: Response) {
-    const parsedParams = parseWithSchema(MessageEntityIdParamSchema, request.params)
+    const parsedParams = parseWithSchema(
+      MessageEntityIdParamSchema,
+      request.params,
+    )
     if (!parsedParams.success) {
       return sendZodBadRequest(response, parsedParams.error)
     }
@@ -26,7 +32,9 @@ export class DeleteBeforeScheduleMessageController {
         clinicId,
       })
 
-      return response.status(200).send({ message: 'Before schedule message deleted successfully' })
+      return response
+        .status(200)
+        .send({ message: 'Before schedule message deleted successfully' })
     } catch (err: any) {
       return responseError(response, err)
     }

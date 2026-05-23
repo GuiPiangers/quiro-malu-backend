@@ -4,127 +4,132 @@ import { BlockScheduleDto } from '../../scheduling/models/dtos/BlockSchedule.dto
 import { SchedulingDTO } from '../../scheduling/models/Scheduling'
 
 type AppEvents = {
-  createPatient: Omit<PatientDTO, 'id'> & { userId: string; patientId: string };
+  createPatient: Omit<PatientDTO, 'id'> & { userId: string; patientId: string }
   updatePatient: Partial<Omit<PatientDTO, 'id'>> & {
-    patientId: string;
-    userId: string;
-  };
-  deletePatient: { userId: string; patientId: string };
+    patientId: string
+    userId: string
+  }
+  deletePatient: { userId: string; patientId: string }
   patientBirthDay: Omit<PatientDTO, 'id'> & {
-    userId: string;
-    patientId: string;
-  };
+    userId: string
+    patientId: string
+  }
 
   createSchedule: Omit<SchedulingDTO, 'id'> & {
-    userId: string;
-    clinicId: string;
-    scheduleId: string;
-  };
+    userId: string
+    clinicId: string
+    scheduleId: string
+  }
   updateSchedule: Omit<SchedulingDTO, 'id'> & {
-    scheduleId: string;
-    userId: string;
-    clinicId: string;
-  };
-  deleteSchedule: { scheduleId: string; userId: string; clinicId: string };
+    scheduleId: string
+    userId: string
+    clinicId: string
+  }
+  deleteSchedule: { scheduleId: string; userId: string; clinicId: string }
 
   beforeScheduleMessageCreate: {
-    id: string;
-    userId: string;
-    name: string;
-    minutesBeforeSchedule: number;
-    isActive: boolean;
-  };
+    id: string
+    userId: string
+    name: string
+    minutesBeforeSchedule: number
+    isActive: boolean
+  }
 
   beforeScheduleMessageUpdate: {
-    id: string;
-    userId: string;
-    name: string;
-    minutesBeforeSchedule: number;
-    isActive: boolean;
-  };
+    id: string
+    userId: string
+    name: string
+    minutesBeforeSchedule: number
+    isActive: boolean
+  }
 
   beforeScheduleMessageDelete: {
-    id: string;
-  };
+    id: string
+  }
 
   // Fired after successful WhatsApp send and log persistence.
   beforeScheduleMessageSend: {
-    userId: string;
-    patientId: string;
-    schedulingId: string;
-    beforeScheduleMessageId: string;
-    instanceName: string;
-    toPhone: string;
-    providerMessageId: string | null;
-    messageLogId: string;
-  };
+    userId: string
+    patientId: string
+    schedulingId: string
+    beforeScheduleMessageId: string
+    instanceName: string
+    toPhone: string
+    providerMessageId: string | null
+    messageLogId: string
+  }
 
   afterScheduleMessageCreate: {
-    id: string;
-    userId: string;
-    name: string;
-    minutesAfterSchedule: number;
-    isActive: boolean;
-  };
+    id: string
+    userId: string
+    name: string
+    minutesAfterSchedule: number
+    isActive: boolean
+  }
 
   afterScheduleMessageUpdate: {
-    id: string;
-    userId: string;
-    name: string;
-    minutesAfterSchedule: number;
-    isActive: boolean;
-  };
+    id: string
+    userId: string
+    name: string
+    minutesAfterSchedule: number
+    isActive: boolean
+  }
 
   afterScheduleMessageDelete: {
-    id: string;
-  };
+    id: string
+  }
 
   birthdayMessageCreate: {
-    id: string;
-    userId: string;
-    name: string;
-    isActive: boolean;
-    sendTime: string;
-  };
+    id: string
+    userId: string
+    name: string
+    isActive: boolean
+    sendTime: string
+  }
 
   birthdayMessageUpdate: {
-    id: string;
-    userId: string;
-    name: string;
-    isActive: boolean;
-    sendTime: string;
-  };
+    id: string
+    userId: string
+    name: string
+    isActive: boolean
+    sendTime: string
+  }
 
   birthdayMessageDelete: {
-    id: string;
-  };
+    id: string
+  }
 
   birthdayMessageSend: {
-    userId: string;
-    patientId: string;
-    birthdayMessageId: string;
-    instanceName: string;
-    toPhone: string;
-    providerMessageId: string | null;
-    messageLogId: string;
-  };
+    userId: string
+    patientId: string
+    birthdayMessageId: string
+    instanceName: string
+    toPhone: string
+    providerMessageId: string | null
+    messageLogId: string
+  }
 
   afterScheduleMessageSend: {
-    userId: string;
-    patientId: string;
-    schedulingId: string;
-    afterScheduleMessageId: string;
-    instanceName: string;
-    toPhone: string;
-    providerMessageId: string | null;
-    messageLogId: string;
-  };
+    userId: string
+    patientId: string
+    schedulingId: string
+    afterScheduleMessageId: string
+    instanceName: string
+    toPhone: string
+    providerMessageId: string | null
+    messageLogId: string
+  }
 
-  createExam: Omit<ExamDTO, 'id'> & { userId: string; examId: string };
-  updateExam: Partial<Omit<ExamDTO, 'id'>> & { userId: string; examId: string };
-  deleteExam: { userId: string; clinicId: string; examId: string; patientId: string };
+  createExam: Omit<ExamDTO, 'id'> & { userId: string; examId: string }
+  updateExam: Partial<Omit<ExamDTO, 'id'>> & { userId: string; examId: string }
+  deleteExam: {
+    userId: string
+    clinicId: string
+    examId: string
+    patientId: string
+  }
 
-  createBlockSchedule: BlockScheduleDto & { userId: string };
+  createBlockSchedule: BlockScheduleDto & { userId: string }
 }
 
 type Listener<T> = (data: T) => Promise<void>

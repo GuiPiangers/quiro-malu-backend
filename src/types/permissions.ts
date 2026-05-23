@@ -6,6 +6,6 @@ export type PermissionScope =
   | { type: 'list'; userIds: string[] }
 
 export interface ResolvedPermission {
-  key: PermissionKey;
-  scope: PermissionScope | null;
+  key: PermissionKey
+  scope: PermissionScope | null
 }

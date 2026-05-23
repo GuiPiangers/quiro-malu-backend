@@ -3,9 +3,9 @@ import { IMessageSendStrategyRepository } from '../../../../../repositories/mess
 import { UNIQUE_USER_STRATEGY_ID } from '../../../sendStrategy/sendStrategyKind'
 
 export type BindMessageSendStrategyCampaignsDTO = {
-  userId: string;
-  campaignId: string;
-  strategyIds: string[];
+  userId: string
+  campaignId: string
+  strategyIds: string[]
 }
 
 export class BindMessageSendStrategyCampaignsUseCase {
@@ -36,10 +36,11 @@ export class BindMessageSendStrategyCampaignsUseCase {
       if (strategyId === UNIQUE_USER_STRATEGY_ID) {
         continue
       }
-      const strategy = await this.messageSendStrategyRepository.findByIdAndUserId(
-        strategyId,
-        dto.userId,
-      )
+      const strategy =
+        await this.messageSendStrategyRepository.findByIdAndUserId(
+          strategyId,
+          dto.userId,
+        )
       if (!strategy) {
         throw new ApiError('Estratégia não encontrada', 404)
       }

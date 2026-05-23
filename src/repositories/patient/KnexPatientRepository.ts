@@ -8,9 +8,7 @@ const SIMPLE_IDENTIFIER_REGEX =
   /^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*$/
 
 function normalizeOrientation(orientation: string) {
-  return `${orientation}`.toUpperCase() === 'DESC'
-    ? 'DESC'
-    : 'ASC'
+  return `${orientation}`.toUpperCase() === 'DESC' ? 'DESC' : 'ASC'
 }
 
 export class KnexPatientRepository implements IPatientRepository {
@@ -21,9 +19,9 @@ export class KnexPatientRepository implements IPatientRepository {
     birthDay,
     clinicId,
   }: {
-    birthMonth: number;
-    birthDay: number;
-    clinicId?: string;
+    birthMonth: number
+    birthDay: number
+    clinicId?: string
   }) {
     if (
       !Number.isInteger(birthMonth) ||
@@ -97,10 +95,10 @@ export class KnexPatientRepository implements IPatientRepository {
   async getAll(
     clinicId: string,
     config: {
-      limit: number;
-      offSet: number;
-      search?: { name?: string };
-      orderBy?: { field: string; orientation: 'ASC' | 'DESC' }[];
+      limit: number
+      offSet: number
+      search?: { name?: string }
+      orderBy?: { field: string; orientation: 'ASC' | 'DESC' }[]
     },
   ): Promise<PatientDTO[]> {
     const query = this.knex(ETableNames.PATIENTS)
@@ -190,8 +188,8 @@ export class KnexPatientRepository implements IPatientRepository {
   }
 
   async listPatientsById(data: {
-    clinicId: string;
-    patientIds: string[];
+    clinicId: string
+    patientIds: string[]
   }): Promise<PatientDTO[]> {
     if (data.patientIds.length === 0) {
       return []
@@ -202,24 +200,18 @@ export class KnexPatientRepository implements IPatientRepository {
       .where({ clinicId: data.clinicId })
       .whereIn('id', data.patientIds)
 
-    const orderIndex = new Map(
-      data.patientIds.map((id, index) => [id, index]),
-    )
+    const orderIndex = new Map(data.patientIds.map((id, index) => [id, index]))
 
     return (rows as PatientDTO[]).sort((a, b) => {
-      const ia = a.id !== undefined
-        ? orderIndex.get(a.id) ?? 0
-        : 0
-      const ib = b.id !== undefined
-        ? orderIndex.get(b.id) ?? 0
-        : 0
+      const ia = a.id !== undefined ? (orderIndex.get(a.id) ?? 0) : 0
+      const ib = b.id !== undefined ? (orderIndex.get(b.id) ?? 0) : 0
       return ia - ib
     })
   }
 
   async countPatientsOwnedByUser(data: {
-    clinicId: string;
-    patientIds: string[];
+    clinicId: string
+    patientIds: string[]
   }): Promise<number> {
     if (data.patientIds.length === 0) {
       return 0
@@ -232,9 +224,7 @@ export class KnexPatientRepository implements IPatientRepository {
         .count('id as total')
 
       const n = Number((row as { total?: number | string })?.total ?? 0)
-      return Number.isFinite(n)
-        ? n
-        : 0
+      return Number.isFinite(n) ? n : 0
     } catch (error: any) {
       throw new ApiError(error.message, 500)
     }

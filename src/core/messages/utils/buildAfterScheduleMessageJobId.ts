@@ -5,9 +5,9 @@ export function buildAfterScheduleMessageJobId({
   scheduleId,
   afterScheduleMessageId,
 }: {
-  userId: string;
-  scheduleId: string;
-  afterScheduleMessageId: string;
+  userId: string
+  scheduleId: string
+  afterScheduleMessageId: string
 }): string {
   return buildScheduleMessageJobId({
     prefix: 'after-schedule',

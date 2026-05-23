@@ -92,7 +92,9 @@ describe('Create user', () => {
       roleId,
     }
 
-    await expect(createUserUseCase.execute(user)).rejects.toThrow('email inválido')
+    await expect(createUserUseCase.execute(user)).rejects.toThrow(
+      'email inválido',
+    )
   })
   it('The email should not be invalid', async () => {
     const user: UserDTO = {
@@ -104,7 +106,9 @@ describe('Create user', () => {
       roleId,
     }
 
-    await expect(createUserUseCase.execute(user)).rejects.toThrow('email inválido')
+    await expect(createUserUseCase.execute(user)).rejects.toThrow(
+      'email inválido',
+    )
   })
   it('The phone should not be different than pattern', async () => {
     const user: UserDTO = {
@@ -173,7 +177,9 @@ describe('Create user', () => {
     }
 
     await createUserUseCase.execute(user)
-    await expect(createUserUseCase.execute(user)).rejects.toThrow('Usuário já cadastrado')
+    await expect(createUserUseCase.execute(user)).rejects.toThrow(
+      'Usuário já cadastrado',
+    )
   })
   it('Should not create user without an existing clinic', async () => {
     clinicRepository.findById.mockResolvedValue(null)

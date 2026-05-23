@@ -10,7 +10,9 @@ export const PatientSavedSchema = PatientWriteBodySchema.extend({
   id: z.string().optional(),
   hashData: z.string().optional(),
   createAt: z.string().optional(),
-}).passthrough().openapi('PatientSavedDTO')
+})
+  .passthrough()
+  .openapi('PatientSavedDTO')
 
 export const ListPatientsResponseSchema = z
   .object({

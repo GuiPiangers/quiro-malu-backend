@@ -1,7 +1,10 @@
 import { CreateServiceUseCase } from '../../useCases/createService/CreateServiceUseCase'
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { CreateServiceBodySchema } from '../serviceSharedSchemas'
 
 export class CreateServiceController {

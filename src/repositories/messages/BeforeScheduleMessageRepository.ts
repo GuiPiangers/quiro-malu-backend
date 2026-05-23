@@ -13,8 +13,7 @@ import {
   UpdateBeforeScheduleMessageProps,
 } from './IBeforeScheduleMessageRepository'
 
-export class BeforeScheduleMessageRepository
-implements IBeforeScheduleMessageRepository {
+export class BeforeScheduleMessageRepository implements IBeforeScheduleMessageRepository {
   constructor(private readonly knex: Knex) {}
 
   async save(data: SaveBeforeScheduleMessageProps): Promise<void> {
@@ -40,9 +39,15 @@ implements IBeforeScheduleMessageRepository {
       const updateData: Record<string, unknown> = {}
 
       if (data.name !== undefined) updateData.name = data.name
-      if (data.minutesBeforeSchedule !== undefined) { updateData.minutesBeforeSchedule = data.minutesBeforeSchedule }
-      if (data.textTemplate !== undefined) { updateData.textTemplate = data.textTemplate }
-      if (data.isActive !== undefined) { updateData.isActive = data.isActive }
+      if (data.minutesBeforeSchedule !== undefined) {
+        updateData.minutesBeforeSchedule = data.minutesBeforeSchedule
+      }
+      if (data.textTemplate !== undefined) {
+        updateData.textTemplate = data.textTemplate
+      }
+      if (data.isActive !== undefined) {
+        updateData.isActive = data.isActive
+      }
 
       await this.knex(ETableNames.BEFORE_SCHEDULE_MESSAGES)
         .where({ id: data.id, userId: data.userId })
@@ -109,9 +114,7 @@ implements IBeforeScheduleMessageRepository {
 
       const countRows = await base().clone().count('* as total')
       const total = Number(
-        (Array.isArray(countRows)
-          ? countRows[0]
-          : countRows)?.total ?? 0,
+        (Array.isArray(countRows) ? countRows[0] : countRows)?.total ?? 0,
       )
 
       const rows = await base()

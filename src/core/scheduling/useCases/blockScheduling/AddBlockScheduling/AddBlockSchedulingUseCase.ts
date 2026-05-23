@@ -9,11 +9,11 @@ import {
 import { BlockSchedule } from '../../../models/BlockSchedule'
 
 export interface AddBlockSchedulingDTO {
-  description?: string;
-  date: string;
-  endDate: string;
-  userId: string;
-  clinicId: string;
+  description?: string
+  date: string
+  endDate: string
+  userId: string
+  clinicId: string
 }
 
 export class AddBlockSchedulingUseCase {

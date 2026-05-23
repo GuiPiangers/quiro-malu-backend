@@ -77,10 +77,10 @@ export async function up(knex: Knex): Promise<void> {
     })
   }
 
-  const permCountRow = await knex(ETableNames.PERMISSIONS).count<{ c: string }>('* as c').first()
-  const permCount = permCountRow
-    ? Number(permCountRow.c)
-    : 0
+  const permCountRow = await knex(ETableNames.PERMISSIONS)
+    .count<{ c: string }>('* as c')
+    .first()
+  const permCount = permCountRow ? Number(permCountRow.c) : 0
   if (permCount === 0) {
     const rows = SYSTEM_PERMISSIONS.map((p) => ({
       id: randomUUID(),
@@ -93,9 +93,11 @@ export async function up(knex: Knex): Promise<void> {
   }
 
   const allPermIds = (await knex(ETableNames.PERMISSIONS).select('id')) as {
-    id: string;
+    id: string
   }[]
-  const clinics = (await knex(ETableNames.CLINICS).select('id')) as { id: string }[]
+  const clinics = (await knex(ETableNames.CLINICS).select('id')) as {
+    id: string
+  }[]
 
   for (const { id: clinicId } of clinics) {
     let existingSystem = await knex(ETableNames.ROLES)

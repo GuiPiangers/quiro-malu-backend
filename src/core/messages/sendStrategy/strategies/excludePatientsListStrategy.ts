@@ -1,4 +1,7 @@
-import { IMessageSendStrategy, SendStrategyContext } from '../IMessageSendStrategy'
+import {
+  IMessageSendStrategy,
+  SendStrategyContext,
+} from '../IMessageSendStrategy'
 import { SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST } from '../sendStrategyKind'
 
 export class ExcludePatientsListStrategy implements IMessageSendStrategy {

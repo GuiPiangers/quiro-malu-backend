@@ -14,7 +14,8 @@ export class GroqTranscriptionAdapter implements ITranscriptionService {
     const transcription = await groq.audio.transcriptions.create({
       file: audioFile,
       model: 'whisper-large-v3',
-      prompt: 'Evolução clínica de paciente em clínica de quiropraxia. Termos comuns: subluxação, ajuste, manipulação vertebral, coluna cervical, torácica, lombar, sacro, pelve, nervo ciático, hérnia de disco, escoliose, cifose, lordose, tensão muscular, amplitude de movimento',
+      prompt:
+        'Evolução clínica de paciente em clínica de quiropraxia. Termos comuns: subluxação, ajuste, manipulação vertebral, coluna cervical, torácica, lombar, sacro, pelve, nervo ciático, hérnia de disco, escoliose, cifose, lordose, tensão muscular, amplitude de movimento',
       response_format: 'text',
       language: 'pt',
       temperature: 0.0,

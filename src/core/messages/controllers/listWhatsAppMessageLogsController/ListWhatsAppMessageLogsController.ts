@@ -1,6 +1,9 @@
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { ListWhatsAppMessageLogsUseCase } from '../../useCases/whatsAppMessageLogs/listWhatsAppMessageLogs/ListWhatsAppMessageLogsUseCase'
 import { ListWhatsAppMessageLogsQuerySchema } from '../whatsAppMessageLogsSchemas'
 
@@ -10,7 +13,10 @@ export class ListWhatsAppMessageLogsController {
   ) {}
 
   async handle(request: Request, response: Response) {
-    const parsed = parseWithSchema(ListWhatsAppMessageLogsQuerySchema, request.query)
+    const parsed = parseWithSchema(
+      ListWhatsAppMessageLogsQuerySchema,
+      request.query,
+    )
     if (!parsed.success) {
       return sendZodBadRequest(response, parsed.error)
     }

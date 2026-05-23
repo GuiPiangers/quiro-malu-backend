@@ -24,9 +24,7 @@ export function parseJwtPermissions(
     if (!isResolvedPermission(item)) return null
     permissions.push({
       key: item.key as PermissionKey,
-      scope: isPermissionScope(item.scope)
-        ? item.scope
-        : null,
+      scope: isPermissionScope(item.scope) ? item.scope : null,
     })
   }
   return permissions

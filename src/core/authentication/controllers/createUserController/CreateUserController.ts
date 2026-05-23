@@ -1,7 +1,10 @@
 import { Request, Response } from 'express'
 import { CreateUserBodySchema } from './createUserSchemas'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { CreateUserUseCase } from '../../useCases/createUser/CreateUserUseCase'
 
 export class CreateUserController {

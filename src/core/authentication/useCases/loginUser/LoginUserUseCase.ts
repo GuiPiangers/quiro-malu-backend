@@ -32,10 +32,12 @@ export class LoginUserUseCase {
       fpHash: fingerprintHash,
     })
 
-    const permissions = await this.rbacRepository.findResolvedPermissionsByUser({
-      userId: user.id,
-      clinicId: user.clinicId,
-    })
+    const permissions = await this.rbacRepository.findResolvedPermissionsByUser(
+      {
+        userId: user.id,
+        clinicId: user.clinicId,
+      },
+    )
 
     const token = await this.generateTokenProvider.execute({
       userId: user.id,

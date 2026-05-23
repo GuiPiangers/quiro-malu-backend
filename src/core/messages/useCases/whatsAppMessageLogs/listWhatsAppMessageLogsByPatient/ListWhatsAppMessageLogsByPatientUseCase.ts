@@ -6,10 +6,10 @@ import {
 } from '../listWhatsAppMessageLogs/ListWhatsAppMessageLogsUseCase'
 
 export type ListWhatsAppMessageLogsByPatientInput = {
-  userId: string;
-  patientId: string;
-  page?: number;
-  limit?: number;
+  userId: string
+  patientId: string
+  page?: number
+  limit?: number
 }
 
 export class ListWhatsAppMessageLogsByPatientUseCase {

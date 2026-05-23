@@ -10,8 +10,8 @@ import { RealizeSchedulingUseCase } from './realizeSchedulingUseCase'
 
 const integrationEnvReady = Boolean(
   process.env.DB_HOST &&
-    process.env.MYSQL_ROOT_USER &&
-    process.env.MYSQL_DATABASE,
+  process.env.MYSQL_ROOT_USER &&
+  process.env.MYSQL_DATABASE,
 )
 
 const runIntegrationTests = ['1', 'true', 'yes'].includes(

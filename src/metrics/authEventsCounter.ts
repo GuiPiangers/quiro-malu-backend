@@ -10,7 +10,12 @@ const authEventsCounter = new client.Counter({
 register.registerMetric(authEventsCounter)
 
 export const trackAuthEvent = (
-  eventType: 'login' | 'logout' | 'register' | 'password_reset' | 'token_refresh',
+  eventType:
+    | 'login'
+    | 'logout'
+    | 'register'
+    | 'password_reset'
+    | 'token_refresh',
   status: 'success' | 'failure',
 ) => {
   authEventsCounter.inc({ event_type: eventType, status })

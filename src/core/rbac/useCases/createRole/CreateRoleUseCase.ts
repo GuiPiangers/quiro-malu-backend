@@ -6,9 +6,9 @@ export class CreateRoleUseCase {
   constructor(private rbac: IRbacRepository) {}
 
   async execute(data: {
-    clinicId: string;
-    name: string;
-    description?: string;
+    clinicId: string
+    name: string
+    description?: string
   }): Promise<RoleRow> {
     const existing = await this.rbac.listRolesByClinic(data.clinicId)
     const normalized = data.name.trim().toLowerCase()

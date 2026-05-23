@@ -11,13 +11,13 @@ import {
 import { MessageTemplate } from '../../../models/MessageTemplate'
 
 export type CreateAfterScheduleMessageDTO = {
-  userId: string;
-  name: string;
-  minutesAfterSchedule: number;
-  isActive?: boolean;
+  userId: string
+  name: string
+  minutesAfterSchedule: number
+  isActive?: boolean
   messageTemplate: {
-    textTemplate: string;
-  };
+    textTemplate: string
+  }
 }
 
 export class CreateAfterScheduleMessageUseCase {
@@ -26,10 +26,10 @@ export class CreateAfterScheduleMessageUseCase {
     private appEventListener: AppEventListener,
   ) {}
 
-  async execute(dto: CreateAfterScheduleMessageDTO): Promise<AfterScheduleMessageDTO> {
-    const name = typeof dto.name === 'string'
-      ? dto.name.trim()
-      : ''
+  async execute(
+    dto: CreateAfterScheduleMessageDTO,
+  ): Promise<AfterScheduleMessageDTO> {
+    const name = typeof dto.name === 'string' ? dto.name.trim() : ''
 
     const messageTemplate = new MessageTemplate({
       textTemplate: dto.messageTemplate.textTemplate,

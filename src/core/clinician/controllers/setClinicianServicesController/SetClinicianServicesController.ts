@@ -1,7 +1,10 @@
 import { Request, Response } from 'express'
 import { UserIdParamsSchema } from '../../../rbac/schemas/rbacSchemas'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { SetClinicianServicesUseCase } from '../../useCases/setClinicianServices/SetClinicianServicesUseCase'
 import { SetClinicianServicesBodySchema } from './setClinicianServicesSchemas'
 

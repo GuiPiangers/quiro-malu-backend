@@ -34,8 +34,8 @@ describe('Password', () => {
 
   it('should generate a hash for a valid password', async () => {
     const password = new Password('Abcd1!')
-    const fakeHash = 'hashedpassword123';
-    (Crypto.createRandomHash as Mock).mockResolvedValue(fakeHash)
+    const fakeHash = 'hashedpassword123'
+    ;(Crypto.createRandomHash as Mock).mockResolvedValue(fakeHash)
 
     const hash = await password.getHash()
 

@@ -1,11 +1,16 @@
 import { Request, Response } from 'express'
 import { UserIdParamsSchema } from '../../../rbac/schemas/rbacSchemas'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { responseError } from '../../../../utils/ResponseError'
 import { DeleteClinicUserUseCase } from '../../useCases/deleteClinicUser/DeleteClinicUserUseCase'
 
 export class DeleteClinicUserController {
-  constructor(private readonly deleteClinicUserUseCase: DeleteClinicUserUseCase) {}
+  constructor(
+    private readonly deleteClinicUserUseCase: DeleteClinicUserUseCase,
+  ) {}
 
   async handle(request: Request, response: Response): Promise<Response> {
     const parsedParams = parseWithSchema(UserIdParamsSchema, request.params)

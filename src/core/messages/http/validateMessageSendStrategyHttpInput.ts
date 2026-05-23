@@ -28,9 +28,7 @@ function assertAmountInRange(n: number): number {
 }
 
 function parseHttpAmount(raw: unknown): number {
-  const n = typeof raw === 'number'
-    ? raw
-    : Number(raw)
+  const n = typeof raw === 'number' ? raw : Number(raw)
   return assertAmountInRange(n)
 }
 
@@ -54,9 +52,7 @@ export function buildValidatedCreateMessageSendStrategyDTO(
   body: CreateMessageSendStrategyHttpBody,
 ): CreateMessageSendStrategyDTO {
   const kind = body.kind ?? SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS
-  const nameRaw = typeof body.name === 'string'
-    ? body.name
-    : ''
+  const nameRaw = typeof body.name === 'string' ? body.name : ''
 
   if (isPatientListStrategyKind(kind)) {
     const displayName = new MessageSendStrategyDisplayName(nameRaw)

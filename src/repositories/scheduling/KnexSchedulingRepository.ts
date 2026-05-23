@@ -26,9 +26,9 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
         'id',
         'userId',
         'patientId',
-        this.knex.raw('DATE_FORMAT(date, \'%Y-%m-%dT%H:%i\') as date'),
+        this.knex.raw("DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date"),
         this.knex.raw(
-          'DATE_FORMAT(reminderSentAt, \'%Y-%m-%dT%H:%i\') as reminderSentAt',
+          "DATE_FORMAT(reminderSentAt, '%Y-%m-%dT%H:%i') as reminderSentAt",
         ),
         'duration',
         'status',
@@ -65,10 +65,10 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     date,
     userId,
   }: {
-    clinicId: string;
-    date: string;
-    userId?: string;
-    config?: { limit: number; offSet: number };
+    clinicId: string
+    date: string
+    userId?: string
+    config?: { limit: number; offSet: number }
   }): Promise<SchedulingWithPatientDTO[]> {
     try {
       const query = this.knex(`${ETableNames.SCHEDULES} as s`)
@@ -84,9 +84,9 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
           's.patientId',
           this.knex.raw('p.name as patient'),
           'p.phone',
-          this.knex.raw('DATE_FORMAT(s.date, \'%Y-%m-%dT%H:%i\') as date'),
+          this.knex.raw("DATE_FORMAT(s.date, '%Y-%m-%dT%H:%i') as date"),
           this.knex.raw(
-            'DATE_FORMAT(s.reminderSentAt, \'%Y-%m-%dT%H:%i\') as reminderSentAt',
+            "DATE_FORMAT(s.reminderSentAt, '%Y-%m-%dT%H:%i') as reminderSentAt",
           ),
           's.duration',
           's.service',
@@ -106,9 +106,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
       const result = await query
 
       return result.map((scheduling: SchedulingWithPatientDTO) =>
-        getValidObjectValues(
-          scheduling,
-        ),
+        getValidObjectValues(scheduling),
       )
     } catch {
       throw new ApiError('Não foi possível realizar a busca', 500)
@@ -119,8 +117,8 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     date,
     clinicId,
   }: {
-    date: string;
-    clinicId: string;
+    date: string
+    clinicId: string
   }): Promise<[{ total: number }]> {
     try {
       const [result] = await this.knex(ETableNames.SCHEDULES)
@@ -140,9 +138,9 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     year,
     clinicId,
   }: {
-    month: number;
-    year: number;
-    clinicId: string;
+    month: number
+    year: number
+    clinicId: string
   }): Promise<{ formattedDate: string; qtd: number }[]> {
     try {
       const result = await this.knex(ETableNames.SCHEDULES)
@@ -163,7 +161,11 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     }
   }
 
-  async listIdsByClinicId({ clinicId }: { clinicId: string }): Promise<string[]> {
+  async listIdsByClinicId({
+    clinicId,
+  }: {
+    clinicId: string
+  }): Promise<string[]> {
     const rows = await this.knex(ETableNames.SCHEDULES)
       .select('id')
       .where({ clinicId })
@@ -202,8 +204,8 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     id,
     clinicId,
   }: {
-    id: string;
-    clinicId: string;
+    id: string
+    clinicId: string
   }): Promise<SchedulingWithPatientDTO[]> {
     try {
       const result = await this.knex(`${ETableNames.SCHEDULES} as s`)
@@ -219,9 +221,9 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
           's.patientId',
           this.knex.raw('p.name as patient'),
           'p.phone',
-          this.knex.raw('DATE_FORMAT(s.date, \'%Y-%m-%dT%H:%i\') as date'),
+          this.knex.raw("DATE_FORMAT(s.date, '%Y-%m-%dT%H:%i') as date"),
           this.knex.raw(
-            'DATE_FORMAT(s.reminderSentAt, \'%Y-%m-%dT%H:%i\') as reminderSentAt',
+            "DATE_FORMAT(s.reminderSentAt, '%Y-%m-%dT%H:%i') as reminderSentAt",
           ),
           's.duration',
           's.service',
@@ -239,7 +241,13 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     }
   }
 
-  async delete({ id, clinicId }: { id: string; clinicId: string }): Promise<void> {
+  async delete({
+    id,
+    clinicId,
+  }: {
+    id: string
+    clinicId: string
+  }): Promise<void> {
     await this.knex(ETableNames.SCHEDULES).where({ id, clinicId }).del()
   }
 }

@@ -38,7 +38,9 @@ describe('BeforeScheduleMessageEventHandlers', () => {
 
   it('should schedule a BullMQ job on createSchedule for active configs', async () => {
     vi.setSystemTime(
-      Luxon.fromISO('2025-01-01T12:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+      Luxon.fromISO('2025-01-01T12:00', {
+        zone: 'America/Sao_Paulo',
+      }).toMillis(),
     )
 
     const beforeScheduleQueue = {
@@ -95,7 +97,9 @@ describe('BeforeScheduleMessageEventHandlers', () => {
 
   it('should not schedule a job when config is inactive', async () => {
     vi.setSystemTime(
-      Luxon.fromISO('2025-01-01T12:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+      Luxon.fromISO('2025-01-01T12:00', {
+        zone: 'America/Sao_Paulo',
+      }).toMillis(),
     )
 
     const beforeScheduleQueue = {
@@ -142,7 +146,9 @@ describe('BeforeScheduleMessageEventHandlers', () => {
 
   it('should remove the job on updateSchedule when target time is in the past', async () => {
     vi.setSystemTime(
-      Luxon.fromISO('2025-01-01T12:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+      Luxon.fromISO('2025-01-01T12:00', {
+        zone: 'America/Sao_Paulo',
+      }).toMillis(),
     )
 
     const beforeScheduleQueue = {
@@ -239,7 +245,9 @@ describe('BeforeScheduleMessageEventHandlers', () => {
   })
 
   it('should log on beforeScheduleMessageSend', async () => {
-    const infoSpy = vi.spyOn(logger, 'info').mockImplementation(() => logger as any)
+    const infoSpy = vi
+      .spyOn(logger, 'info')
+      .mockImplementation(() => logger as any)
 
     const beforeScheduleQueue = {
       upsert: vi.fn(),

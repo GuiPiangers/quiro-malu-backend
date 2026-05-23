@@ -5,9 +5,9 @@ import type { MessageSendStrategyDTOForKind } from '../sendStrategy/messageSendS
 import { MessageSendStrategyDisplayName } from './MessageSendStrategyDisplayName'
 
 export type SendMostRecentPatientsMessageSendStrategyDTO = {
-  id?: string;
-  displayName: MessageSendStrategyDisplayName;
-  amount: number;
+  id?: string
+  displayName: MessageSendStrategyDisplayName
+  amount: number
 }
 
 export class SendMostRecentPatientsMessageSendStrategy extends Entity {
@@ -17,7 +17,9 @@ export class SendMostRecentPatientsMessageSendStrategy extends Entity {
   constructor(dto: SendMostRecentPatientsMessageSendStrategyDTO) {
     super(dto.id)
     this.displayName = dto.displayName
-    this.amount = SendMostRecentPatientsMessageSendStrategy.parseAmount(dto.amount)
+    this.amount = SendMostRecentPatientsMessageSendStrategy.parseAmount(
+      dto.amount,
+    )
   }
 
   private static assertAmountInRange(n: number, field: string): number {
@@ -36,9 +38,7 @@ export class SendMostRecentPatientsMessageSendStrategy extends Entity {
 
   static amountFromPersistedParams(params: Record<string, unknown>): number {
     const raw = params.amount
-    const n = typeof raw === 'number'
-      ? raw
-      : Number(raw)
+    const n = typeof raw === 'number' ? raw : Number(raw)
     return SendMostRecentPatientsMessageSendStrategy.assertAmountInRange(
       n,
       'params.amount',
@@ -50,6 +50,11 @@ export class SendMostRecentPatientsMessageSendStrategy extends Entity {
   }
 
   getDTO() {
-    return { id: this.id, name: this.displayName.value, kind: this.kind, params: { amount: this.amount } }
+    return {
+      id: this.id,
+      name: this.displayName.value,
+      kind: this.kind,
+      params: { amount: this.amount },
+    }
   }
 }

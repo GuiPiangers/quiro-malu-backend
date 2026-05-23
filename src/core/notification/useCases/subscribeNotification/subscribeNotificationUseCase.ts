@@ -10,8 +10,8 @@ export class SubscribeNotificationUseCase {
     subscription,
     userId,
   }: {
-    userId: string;
-    subscription: Subscription;
+    userId: string
+    subscription: Subscription
   }) {
     const { subscriptions } =
       (await this.pushNotificationProvider.getAllowedSubscriptions({

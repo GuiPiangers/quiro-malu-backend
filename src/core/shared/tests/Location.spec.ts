@@ -16,10 +16,16 @@ describe('Location', () => {
   })
 
   test('should create Location with valid values', () => {
-    MockedCep.mockImplementation(function (this: { value: string }, cep: string) {
+    MockedCep.mockImplementation(function (
+      this: { value: string },
+      cep: string,
+    ) {
       this.value = cep
     } as any)
-    MockedName.mockImplementation(function (this: { value: string }, name: string) {
+    MockedName.mockImplementation(function (
+      this: { value: string },
+      name: string,
+    ) {
       this.value = name
     } as any)
 
@@ -41,10 +47,16 @@ describe('Location', () => {
   })
 
   test('should return correct LocationDTO', () => {
-    MockedCep.mockImplementation(function (this: { value: string }, cep: string) {
+    MockedCep.mockImplementation(function (
+      this: { value: string },
+      cep: string,
+    ) {
       this.value = cep
     } as any)
-    MockedName.mockImplementation(function (this: { value: string }, name: string) {
+    MockedName.mockImplementation(function (
+      this: { value: string },
+      name: string,
+    ) {
       this.value = name
     } as any)
 

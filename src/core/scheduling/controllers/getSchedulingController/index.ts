@@ -4,6 +4,8 @@ import { knexSchedulingRepository } from '../../../../repositories/scheduling/kn
 
 const schedulingRepository = knexSchedulingRepository
 const getSchedulingUseCase = new GetSchedulingUseCase(schedulingRepository)
-const getSchedulingController = new GetSchedulingController(getSchedulingUseCase)
+const getSchedulingController = new GetSchedulingController(
+  getSchedulingUseCase,
+)
 
 export { getSchedulingController }

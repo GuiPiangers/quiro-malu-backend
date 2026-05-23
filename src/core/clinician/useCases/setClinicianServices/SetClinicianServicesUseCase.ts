@@ -6,8 +6,8 @@ import type { IServiceRepository } from '../../../../repositories/service/IServi
 import { ApiError } from '../../../../utils/ApiError'
 
 export type SetClinicianServicesInputDTO = {
-  clinicianId: string;
-  services: { serviceId: string }[];
+  clinicianId: string
+  services: { serviceId: string }[]
 }
 
 export class SetClinicianServicesUseCase {

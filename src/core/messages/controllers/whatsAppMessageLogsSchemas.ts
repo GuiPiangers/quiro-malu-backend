@@ -30,9 +30,7 @@ export const ListWhatsAppMessageLogsQuerySchema = z
     scheduleMessageConfigId: emptyQueryToUndefined(z.string().min(1)),
     status: z.preprocess((val) => {
       if (val === '' || val === null || val === undefined) return undefined
-      return typeof val === 'string'
-        ? val.trim().toUpperCase()
-        : val
+      return typeof val === 'string' ? val.trim().toUpperCase() : val
     }, WhatsAppLogStatusSchema.optional()),
   })
   .openapi('ListWhatsAppMessageLogsQuery')

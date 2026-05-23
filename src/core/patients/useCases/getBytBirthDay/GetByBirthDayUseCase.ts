@@ -8,9 +8,9 @@ export class GetPatientsByBirthDayUseCase {
     birthDay,
     clinicId,
   }: {
-    birthMonth: number;
-    birthDay: number;
-    clinicId?: string;
+    birthMonth: number
+    birthDay: number
+    clinicId?: string
   }) {
     return this.patientRepository.getByBirthMonthAndDay({
       birthMonth,

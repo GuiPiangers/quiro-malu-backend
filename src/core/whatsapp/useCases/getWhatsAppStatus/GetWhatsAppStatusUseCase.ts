@@ -3,11 +3,11 @@ import { IWhatsAppInstanceRepository } from '../../../../repositories/whatsapp/I
 import { WhatsAppInstance } from '../../models/WhatsAppInstance'
 
 export type GetWhatsAppStatusDTO = {
-  userId: string;
+  userId: string
 }
 
 export type GetWhatsAppStatusResult = {
-  status: 'NOT_REGISTERED' | 'CONNECTED' | 'CONNECTING' | 'DISCONNECTED';
+  status: 'NOT_REGISTERED' | 'CONNECTED' | 'CONNECTING' | 'DISCONNECTED'
 }
 
 const providerStateMap = {
@@ -22,8 +22,11 @@ export class GetWhatsAppStatusUseCase {
     private whatsAppProvider: IWhatsAppProvider,
   ) {}
 
-  async execute({ userId }: GetWhatsAppStatusDTO): Promise<GetWhatsAppStatusResult> {
-    const instanceDTO = await this.whatsAppInstanceRepository.getByUserId(userId)
+  async execute({
+    userId,
+  }: GetWhatsAppStatusDTO): Promise<GetWhatsAppStatusResult> {
+    const instanceDTO =
+      await this.whatsAppInstanceRepository.getByUserId(userId)
 
     if (!instanceDTO) {
       return { status: 'NOT_REGISTERED' }

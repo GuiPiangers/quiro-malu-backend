@@ -3,6 +3,5 @@ import { knexWhatsAppMessageLogRepository } from '../../../../../repositories/wh
 
 const whatsAppMessageLogRepository = knexWhatsAppMessageLogRepository
 
-export const listWhatsAppMessageLogsUseCase = new ListWhatsAppMessageLogsUseCase(
-  whatsAppMessageLogRepository,
-)
+export const listWhatsAppMessageLogsUseCase =
+  new ListWhatsAppMessageLogsUseCase(whatsAppMessageLogRepository)

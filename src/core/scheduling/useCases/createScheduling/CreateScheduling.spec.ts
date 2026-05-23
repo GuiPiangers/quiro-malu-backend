@@ -17,9 +17,7 @@ describe('createSchedulingUseCase', () => {
   const eventsStub: IAppEventListener = { emit: vi.fn() }
 
   beforeAll(() => {
-    vi
-      .useFakeTimers()
-      .setSystemTime(new Date('2025-01-10T12:00:00Z').getTime())
+    vi.useFakeTimers().setSystemTime(new Date('2025-01-10T12:00:00Z').getTime())
   })
 
   describe('execute', () => {
@@ -38,9 +36,9 @@ describe('createSchedulingUseCase', () => {
       const patientId = 'test-patient-id'
 
       const schedulingData: SchedulingDTO & {
-        userId: string;
-        clinicId: string;
-        date: string;
+        userId: string
+        clinicId: string
+        date: string
       } = {
         userId: 'test-user-id',
         clinicId: 'test-clinic-id',
@@ -57,18 +55,16 @@ describe('createSchedulingUseCase', () => {
       await createSchedulingUseCase.execute(schedulingData)
 
       expect(mockSchedulingRepository.save).toHaveBeenCalledTimes(1)
-      expect(mockSchedulingRepository.save).toHaveBeenCalledWith(
-        schedulingData,
-      )
+      expect(mockSchedulingRepository.save).toHaveBeenCalledWith(schedulingData)
     })
 
     it('should call the repository create method with status param equal Atrasado if date is in the past and status is Agendado, Atrasado or undefined', async () => {
       const patientId = 'test-patient-id'
 
       const schedulingData: SchedulingDTO & {
-        userId: string;
-        clinicId: string;
-        date: string;
+        userId: string
+        clinicId: string
+        date: string
       } = {
         userId: 'test-user-id',
         clinicId: 'test-clinic-id',
@@ -103,9 +99,9 @@ describe('createSchedulingUseCase', () => {
       const patientId = 'test-patient-id'
 
       const schedulingData: SchedulingDTO & {
-        userId: string;
-        clinicId: string;
-        date: string;
+        userId: string
+        clinicId: string
+        date: string
       } = {
         userId: 'test-user-id',
         clinicId: 'test-clinic-id',
@@ -139,9 +135,9 @@ describe('createSchedulingUseCase', () => {
       const patientId = 'test-patient-id'
 
       const schedulingData: SchedulingDTO & {
-        userId: string;
-        clinicId: string;
-        date: string;
+        userId: string
+        clinicId: string
+        date: string
       } = {
         userId: 'test-user-id',
         clinicId: 'test-clinic-id',
@@ -174,9 +170,9 @@ describe('createSchedulingUseCase', () => {
       const patientId = 'test-patient-id'
 
       const schedulingData: SchedulingDTO & {
-        userId: string;
-        clinicId: string;
-        date: string;
+        userId: string
+        clinicId: string
+        date: string
       } = {
         userId: 'test-user-id',
         clinicId: 'test-clinic-id',
@@ -218,9 +214,9 @@ describe('createSchedulingUseCase', () => {
       ])
 
       const schedulingData: SchedulingDTO & {
-        userId: string;
-        clinicId: string;
-        date: string;
+        userId: string
+        clinicId: string
+        date: string
       } = {
         userId: 'test-user-id',
         clinicId: 'test-clinic-id',

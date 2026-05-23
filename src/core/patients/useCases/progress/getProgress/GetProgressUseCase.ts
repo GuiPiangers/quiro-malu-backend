@@ -10,9 +10,9 @@ export class GetProgressUseCase {
     patientId,
     clinicId,
   }: {
-    id: string;
-    patientId: string;
-    clinicId: string;
+    id: string
+    patientId: string
+    clinicId: string
   }) {
     const [progressData] = await this.ProgressRepository.get({
       id,

@@ -2,11 +2,11 @@ import { Cep } from '../shared/Cep'
 import { Name } from '../shared/Name'
 
 export interface LocationDTO {
-  cep?: string;
-  state?: string;
-  city?: string;
-  neighborhood?: string;
-  address?: string;
+  cep?: string
+  state?: string
+  city?: string
+  neighborhood?: string
+  address?: string
 }
 
 export class Location {
@@ -19,21 +19,11 @@ export class Location {
   constructor(props: LocationDTO) {
     const { cep, state, city, address, neighborhood } = props
 
-    this._state = state
-      ? new Name(state)
-      : undefined
-    this._cep = cep
-      ? new Cep(cep)
-      : undefined
-    this._city = city
-      ? new Name(city)
-      : undefined
-    this._address = address
-      ? new Name(address)
-      : undefined
-    this._neighborhood = neighborhood
-      ? new Name(neighborhood)
-      : undefined
+    this._state = state ? new Name(state) : undefined
+    this._cep = cep ? new Cep(cep) : undefined
+    this._city = city ? new Name(city) : undefined
+    this._address = address ? new Name(address) : undefined
+    this._neighborhood = neighborhood ? new Name(neighborhood) : undefined
   }
 
   get state() {

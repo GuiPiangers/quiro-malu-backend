@@ -3,7 +3,9 @@ import { z } from '../../../../schemas/zodOpenApi'
 export const ListPatientsQuerySchema = z
   .object({
     page: z.coerce.number().int().min(1),
-    limit: z.union([z.literal('all'), z.coerce.number().int().positive()]).optional(),
+    limit: z
+      .union([z.literal('all'), z.coerce.number().int().positive()])
+      .optional(),
     search: z
       .string()
       .describe(

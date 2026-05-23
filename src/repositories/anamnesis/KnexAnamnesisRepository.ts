@@ -42,12 +42,8 @@ export class KnexAnamnesisRepository implements IAnamnesisRepository {
       .first('*')
       .where({ patientId, clinicId })
 
-    const underwentSurgery = result
-      ? result.underwentSurgery == 1
-      : undefined
-    const useMedicine = result
-      ? result.useMedicine == 1
-      : undefined
+    const underwentSurgery = result ? result.underwentSurgery == 1 : undefined
+    const useMedicine = result ? result.useMedicine == 1 : undefined
 
     return getValidObjectValues({
       ...result,

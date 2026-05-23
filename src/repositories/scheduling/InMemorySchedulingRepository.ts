@@ -11,8 +11,8 @@ import {
 } from './ISchedulingRepository'
 
 type InMemorySchedule = SchedulingWithPatientDTO & {
-  userId: string;
-  clinicId: string;
+  userId: string
+  clinicId: string
 }
 
 export class InMemorySchedulingRepository implements ISchedulingRepository {
@@ -25,14 +25,17 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
   }
 
   async qdtSchedulesByDay(data: {
-    month: number;
-    year: number;
-    clinicId: string;
+    month: number
+    year: number
+    clinicId: string
   }): Promise<{ formattedDate: string; qtd: number }[]> {
     return []
   }
 
-  async count(data: { clinicId: string; date: string }): Promise<[{ total: number }]> {
+  async count(data: {
+    clinicId: string
+    date: string
+  }): Promise<[{ total: number }]> {
     const total = this.dbSchedules.filter((s) => {
       if (s.clinicId !== data.clinicId) return false
       if (!s.date) return false
@@ -42,9 +45,16 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
     return [{ total }]
   }
 
-  async delete({ id, clinicId }: { id: string; clinicId: string }): Promise<void> {
+  async delete({
+    id,
+    clinicId,
+  }: {
+    id: string
+    clinicId: string
+  }): Promise<void> {
     this.dbSchedules = this.dbSchedules.filter(
-      (scheduling) => !(scheduling.id === id && scheduling.clinicId === clinicId),
+      (scheduling) =>
+        !(scheduling.id === id && scheduling.clinicId === clinicId),
     )
   }
 
@@ -77,24 +87,37 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
   }
 
   async list(data: {
-    clinicId: string;
-    date: string;
-    userId?: string;
-    config?: { limit: number; offSet: number };
+    clinicId: string
+    date: string
+    userId?: string
+    config?: { limit: number; offSet: number }
   }): Promise<SchedulingWithPatientDTO[]> {
     const list = this.dbSchedules.filter((scheduling) => {
       if (scheduling.clinicId !== data.clinicId) return false
-      if (data.userId !== undefined && data.userId !== '' && scheduling.userId !== data.userId) { return false }
+      if (
+        data.userId !== undefined &&
+        data.userId !== '' &&
+        scheduling.userId !== data.userId
+      ) {
+        return false
+      }
       if (!scheduling.date) return false
       return String(scheduling.date).substring(0, 10) === data.date
     })
 
     if (!data.config) return list
 
-    return list.slice(data.config.offSet, data.config.offSet + data.config.limit)
+    return list.slice(
+      data.config.offSet,
+      data.config.offSet + data.config.limit,
+    )
   }
 
-  async listIdsByClinicId({ clinicId }: { clinicId: string }): Promise<string[]> {
+  async listIdsByClinicId({
+    clinicId,
+  }: {
+    clinicId: string
+  }): Promise<string[]> {
     const now = Date.now()
     return this.dbSchedules
       .filter((s) => {
@@ -116,18 +139,13 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
       return true
     })
 
-    const byPatient = new Map<
-      string,
-      { count: number; tieBreak: string }
-    >()
+    const byPatient = new Map<string, { count: number; tieBreak: string }>()
 
     for (const s of filtered) {
       const pid = String(s.patientId)
       const cur = byPatient.get(pid) ?? { count: 0, tieBreak: '' }
       cur.count += 1
-      const schedCreated = s.createAt
-        ? String(s.createAt)
-        : ''
+      const schedCreated = s.createAt ? String(s.createAt) : ''
       if (schedCreated > cur.tieBreak) {
         cur.tieBreak = schedCreated
       }
@@ -147,8 +165,8 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
   }
 
   async get(data: {
-    id: string;
-    clinicId: string;
+    id: string
+    clinicId: string
   }): Promise<SchedulingWithPatientDTO[]> {
     return this.dbSchedules.filter(
       (scheduling) =>

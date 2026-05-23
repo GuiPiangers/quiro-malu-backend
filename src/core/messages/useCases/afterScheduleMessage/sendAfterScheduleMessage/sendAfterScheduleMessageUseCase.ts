@@ -13,11 +13,11 @@ import { getConnectedWhatsAppInstance } from '../../../utils/getConnectedWhatsAp
 import { toInternationalPhone } from '../../../utils/toInternationalPhone'
 
 export type SendAfterScheduleMessageJob = {
-  userId: string;
-  clinicId: string;
-  patientId: string;
-  schedulingId: string;
-  afterScheduleMessageId: string;
+  userId: string
+  clinicId: string
+  patientId: string
+  schedulingId: string
+  afterScheduleMessageId: string
 }
 
 export class SendAfterScheduleMessageUseCase {
@@ -33,19 +33,21 @@ export class SendAfterScheduleMessageUseCase {
   ) {}
 
   async execute(job: SendAfterScheduleMessageJob): Promise<void> {
-    const messageAlreadySent = await this.whatsAppMessageLogRepository.getBySchedulingAndCampaignId({
-      schedulingId: job.schedulingId,
-      campaignId: job.afterScheduleMessageId,
-    })
+    const messageAlreadySent =
+      await this.whatsAppMessageLogRepository.getBySchedulingAndCampaignId({
+        schedulingId: job.schedulingId,
+        campaignId: job.afterScheduleMessageId,
+      })
 
     if (messageAlreadySent) {
       return
     }
 
-    const [scheduling] = await this.schedulingRepository.get({
-      id: job.schedulingId,
-      clinicId: job.clinicId,
-    }) ?? []
+    const [scheduling] =
+      (await this.schedulingRepository.get({
+        id: job.schedulingId,
+        clinicId: job.clinicId,
+      })) ?? []
 
     if (scheduling?.status !== 'Atendido') {
       return
@@ -85,7 +87,9 @@ export class SendAfterScheduleMessageUseCase {
       id: config.id,
       name: config.name,
       minutesAfterSchedule: config.minutesAfterSchedule,
-      messageTemplate: new MessageTemplate({ textTemplate: config.textTemplate }),
+      messageTemplate: new MessageTemplate({
+        textTemplate: config.textTemplate,
+      }),
       isActive: config.isActive,
     })
 

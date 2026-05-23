@@ -13,9 +13,9 @@ export class SaveExamUseCase {
     patientId,
     userId,
   }: {
-    file: Express.Multer.File;
-    patientId: string;
-    userId: string;
+    file: Express.Multer.File
+    patientId: string
+    userId: string
   }) {
     const fileName = file.originalname
     const fileSize = file.size

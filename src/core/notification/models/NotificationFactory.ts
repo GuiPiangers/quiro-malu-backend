@@ -10,9 +10,9 @@ import {
 import { NotificationUndoExamParams } from './NotificationUndoExam'
 
 export type notificationsTablesParams = {
-  default: undefined;
-  sendMessage: NotificationSendMessageParams;
-  undoExam: NotificationUndoExamParams;
+  default: undefined
+  sendMessage: NotificationSendMessageParams
+  undoExam: NotificationUndoExamParams
 }
 
 export type notificationTypes = keyof notificationsTablesParams
@@ -20,7 +20,7 @@ export type notificationTypes = keyof notificationsTablesParams
 export function notificationFactory<T extends notificationTypes>(
   type: T,
   data: (NotificationDTO | NotificationDTO<notificationsTablesParams[T]>) & {
-    type: T;
+    type: T
   },
 ): Notification | ComplexNotification<T> {
   if (data.params) {

@@ -12,9 +12,9 @@ export class ListExamUseCase {
     userId,
     page = 1,
   }: {
-    userId: string;
-    patientId: string;
-    page?: number;
+    userId: string
+    patientId: string
+    page?: number
   }) {
     if (page < 1) page = 1
     const limit = 5
@@ -57,10 +57,10 @@ export class ListExamUseCase {
     userId,
     originalName,
   }: {
-    id: string;
-    userId: string;
-    patientId: string;
-    originalName: string;
+    id: string
+    userId: string
+    patientId: string
+    originalName: string
   }) {
     const url = await this.examFileStorage.get({
       id,

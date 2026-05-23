@@ -1,6 +1,9 @@
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { GetWhatsAppMessageLogsSummaryUseCase } from '../../useCases/whatsAppMessageLogs/getWhatsAppMessageLogsSummary/GetWhatsAppMessageLogsSummaryUseCase'
 import { GetWhatsAppMessageLogsSummaryQuerySchema } from '../whatsAppMessageLogsSchemas'
 
@@ -10,7 +13,10 @@ export class GetWhatsAppMessageLogsSummaryController {
   ) {}
 
   async handle(request: Request, response: Response) {
-    const parsed = parseWithSchema(GetWhatsAppMessageLogsSummaryQuerySchema, request.query)
+    const parsed = parseWithSchema(
+      GetWhatsAppMessageLogsSummaryQuerySchema,
+      request.query,
+    )
     if (!parsed.success) {
       return sendZodBadRequest(response, parsed.error)
     }

@@ -31,7 +31,9 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
           phone: '(51) 97777 0001',
         })
 
-        const useCase = new SetAnamnesisUseCase(new KnexAnamnesisRepository(trx))
+        const useCase = new SetAnamnesisUseCase(
+          new KnexAnamnesisRepository(trx),
+        )
         await useCase.execute(
           { patientId, mainProblem: 'Queixa principal' },
           userId,
@@ -58,11 +60,10 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
           mainProblem: 'Antigo',
         })
 
-        const useCase = new SetAnamnesisUseCase(new KnexAnamnesisRepository(trx))
-        await useCase.execute(
-          { patientId, mainProblem: 'Atualizado' },
-          userId,
+        const useCase = new SetAnamnesisUseCase(
+          new KnexAnamnesisRepository(trx),
         )
+        await useCase.execute({ patientId, mainProblem: 'Atualizado' }, userId)
 
         const row = await trx(ETableNames.ANAMNESIS)
           .where({ patientId, clinicId: userId })

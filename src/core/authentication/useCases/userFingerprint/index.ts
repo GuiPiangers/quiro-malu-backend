@@ -4,13 +4,11 @@ import { knexUserFingerprintRepository } from '../../../../repositories/userFing
 
 const userFingerprintRepository = knexUserFingerprintRepository
 
-export const validateUserFingerprintUseCase = new ValidateUserFingerprintUseCase(
-  userFingerprintRepository,
-)
+export const validateUserFingerprintUseCase =
+  new ValidateUserFingerprintUseCase(userFingerprintRepository)
 
-export const registerUserFingerprintUseCase = new RegisterUserFingerprintUseCase(
-  userFingerprintRepository,
-)
+export const registerUserFingerprintUseCase =
+  new RegisterUserFingerprintUseCase(userFingerprintRepository)
 
 export { RegisterUserFingerprintUseCase } from './RegisterUserFingerprintUseCase'
 export { ValidateUserFingerprintUseCase } from './ValidateUserFingerprintUseCase'

@@ -1,7 +1,10 @@
 import { GetQtdSchedulesByDay } from '../../useCases/getQtdSchedulesByDay/GetQtdSchedulesByDay'
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { QtdSchedulesQuerySchema } from '../schedulingSharedSchemas'
 
 export class GetQtdSchedulesByDayController {

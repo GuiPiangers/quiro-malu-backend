@@ -12,5 +12,8 @@ export const ClinicianUserDetailSchema = UserItemSchema.extend({
 }).openapi('ClinicianUserDetail')
 
 export const UserDetailSchema = z
-  .discriminatedUnion('kind', [StandardUserDetailSchema, ClinicianUserDetailSchema])
+  .discriminatedUnion('kind', [
+    StandardUserDetailSchema,
+    ClinicianUserDetailSchema,
+  ])
   .openapi('UserDetail')

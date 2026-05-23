@@ -1,7 +1,10 @@
 import { Request, Response } from 'express'
 import { DeleteSchedulingUseCase } from '../../useCases/deleteScheduling/DeleteSchedulingUseCase'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { DeleteSchedulingBodySchema } from '../schedulingSharedSchemas'
 
 export class DeleteSchedulingController {

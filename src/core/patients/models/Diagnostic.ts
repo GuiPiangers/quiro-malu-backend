@@ -1,7 +1,7 @@
 export interface DiagnosticDTO {
-  patientId: string;
-  diagnostic?: string;
-  treatmentPlan?: string;
+  patientId: string
+  diagnostic?: string
+  treatmentPlan?: string
 }
 
 export class Diagnostic {

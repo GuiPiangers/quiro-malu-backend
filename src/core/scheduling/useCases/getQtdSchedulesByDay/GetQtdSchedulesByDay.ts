@@ -8,9 +8,9 @@ export class GetQtdSchedulesByDay {
     year,
     clinicId,
   }: {
-    month: number;
-    year: number;
-    clinicId: string;
+    month: number
+    year: number
+    clinicId: string
   }) {
     const qtdByDates = await this.SchedulingRepository.qdtSchedulesByDay({
       month,

@@ -1,7 +1,13 @@
 import { Request, Response } from 'express'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { responseError } from '../../../../utils/ResponseError'
-import { RoleIdParamsSchema, UpdateRoleBodySchema } from '../../schemas/rbacSchemas'
+import {
+  RoleIdParamsSchema,
+  UpdateRoleBodySchema,
+} from '../../schemas/rbacSchemas'
 import { UpdateRoleUseCase } from '../../useCases/updateRole/UpdateRoleUseCase'
 
 export class UpdateRoleController {

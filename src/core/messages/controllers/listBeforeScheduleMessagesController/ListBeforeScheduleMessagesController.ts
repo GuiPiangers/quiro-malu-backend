@@ -1,11 +1,16 @@
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { ListBeforeScheduleMessagesUseCase } from '../../useCases/beforeScheduleMessage/listBeforeScheduleMessages/ListBeforeScheduleMessagesUseCase'
 import { ListPageLimitQuerySchema } from '../messagesCommonSchemas'
 
 export class ListBeforeScheduleMessagesController {
-  constructor(private listBeforeScheduleMessagesUseCase: ListBeforeScheduleMessagesUseCase) {}
+  constructor(
+    private listBeforeScheduleMessagesUseCase: ListBeforeScheduleMessagesUseCase,
+  ) {}
 
   async handle(request: Request, response: Response) {
     const parsed = parseWithSchema(ListPageLimitQuerySchema, request.query)

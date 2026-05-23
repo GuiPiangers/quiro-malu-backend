@@ -28,11 +28,7 @@ export class CreateSchedulingUseCase {
       clinicId,
     })
     if (!clinician) {
-      throw new ApiError(
-        'O usuário informado não é um clínico',
-        400,
-        'userId',
-      )
+      throw new ApiError('O usuário informado não é um clínico', 400, 'userId')
     }
 
     const dataBaseStatusStrategy = new DatabaseStatusStrategy()
@@ -41,10 +37,10 @@ export class CreateSchedulingUseCase {
     const blockSchedules =
       scheduling.date && scheduling.endDate
         ? await this.BlockSchedulingRepository.listBetweenDates({
-          userId,
-          endDate: scheduling.date,
-          startDate: scheduling.endDate,
-        })
+            userId,
+            endDate: scheduling.date,
+            startDate: scheduling.endDate,
+          })
         : []
 
     blockSchedules?.forEach((blockSchedule) => {
@@ -66,7 +62,9 @@ export class CreateSchedulingUseCase {
       userId,
     })
 
-    if (scheduling.notAvailableDate(schedules)) { throw new ApiError('Horário indisponível', 400, 'date') }
+    if (scheduling.notAvailableDate(schedules)) {
+      throw new ApiError('Horário indisponível', 400, 'date')
+    }
 
     await this.SchedulingRepository.save({
       ...schedulingDTO,

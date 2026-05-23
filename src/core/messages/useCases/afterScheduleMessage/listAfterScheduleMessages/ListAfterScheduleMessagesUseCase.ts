@@ -1,18 +1,21 @@
 import { IAfterScheduleMessageRepository } from '../../../../../repositories/messages/IAfterScheduleMessageRepository'
-import { AfterScheduleMessageDTO, AfterScheduleMessage } from '../../../models/AfterScheduleMessage'
+import {
+  AfterScheduleMessageDTO,
+  AfterScheduleMessage,
+} from '../../../models/AfterScheduleMessage'
 import { MessageTemplate } from '../../../models/MessageTemplate'
 
 export type ListAfterScheduleMessagesDTO = {
-  userId: string;
-  page?: number;
-  limit?: number;
+  userId: string
+  page?: number
+  limit?: number
 }
 
 export type ListAfterScheduleMessagesOutput = {
-  items: AfterScheduleMessageDTO[];
-  total: number;
-  page: number;
-  limit: number;
+  items: AfterScheduleMessageDTO[]
+  total: number
+  page: number
+  limit: number
 }
 
 export class ListAfterScheduleMessagesUseCase {

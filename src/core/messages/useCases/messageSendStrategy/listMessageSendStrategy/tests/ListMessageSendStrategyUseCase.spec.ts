@@ -87,7 +87,10 @@ describe('ListMessageSendStrategyUseCase', () => {
 
   it('deve aplicar page e limit e limitar máximo a 100', async () => {
     const repo = createMockMessageSendStrategyRepository()
-    repo.findByIdAndUserId.mockResolvedValue({ ...virtualRow, campaignBindingsCount: 0 })
+    repo.findByIdAndUserId.mockResolvedValue({
+      ...virtualRow,
+      campaignBindingsCount: 0,
+    })
     repo.listByUserIdPaged
       .mockResolvedValueOnce({ items: [], total: 200 })
       .mockResolvedValueOnce({ items: [], total: 200 })
@@ -109,7 +112,10 @@ describe('ListMessageSendStrategyUseCase', () => {
 
   it('deve retornar apenas a estratégia virtual unique quando não há estratégias persistidas', async () => {
     const repo = createMockMessageSendStrategyRepository()
-    repo.findByIdAndUserId.mockResolvedValue({ ...virtualRow, campaignBindingsCount: 0 })
+    repo.findByIdAndUserId.mockResolvedValue({
+      ...virtualRow,
+      campaignBindingsCount: 0,
+    })
     repo.listByUserIdPaged
       .mockResolvedValueOnce({ items: [], total: 0 })
       .mockResolvedValueOnce({ items: [], total: 0 })

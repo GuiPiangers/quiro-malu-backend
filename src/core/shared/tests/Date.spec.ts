@@ -17,9 +17,7 @@ describe('DateTime', () => {
       const invalidDateStr2 = '1999-00-00'
       const timezone = 'Etc/UTC'
 
-      expect(() => new DateTime(invalidDateStr, {}, timezone)).toThrow(
-        ApiError,
-      )
+      expect(() => new DateTime(invalidDateStr, {}, timezone)).toThrow(ApiError)
       expect(() => new DateTime(invalidDateStr, {}, timezone)).toThrow(
         'A data informada não é válida',
       )

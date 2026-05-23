@@ -8,9 +8,9 @@ export async function getConnectedWhatsAppInstance({
   whatsAppInstanceRepository,
   whatsAppProvider,
 }: {
-  userId: string;
-  whatsAppInstanceRepository: IWhatsAppInstanceRepository;
-  whatsAppProvider: IWhatsAppProvider;
+  userId: string
+  whatsAppInstanceRepository: IWhatsAppInstanceRepository
+  whatsAppProvider: IWhatsAppProvider
 }): Promise<WhatsAppInstance> {
   const instanceDTO = await whatsAppInstanceRepository.getByUserId(userId)
 

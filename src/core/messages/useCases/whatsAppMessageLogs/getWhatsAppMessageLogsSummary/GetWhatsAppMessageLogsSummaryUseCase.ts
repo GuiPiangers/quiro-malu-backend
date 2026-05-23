@@ -4,10 +4,10 @@ import {
 } from '../../../../../repositories/whatsapp/IWhatsAppMessageLogRepository'
 
 export type GetWhatsAppMessageLogsSummaryInput = {
-  userId: string;
-  patientId?: string;
-  scheduleMessageType?: ScheduleMessageType;
-  scheduleMessageConfigId?: string;
+  userId: string
+  patientId?: string
+  scheduleMessageType?: ScheduleMessageType
+  scheduleMessageConfigId?: string
 }
 
 export class GetWhatsAppMessageLogsSummaryUseCase {

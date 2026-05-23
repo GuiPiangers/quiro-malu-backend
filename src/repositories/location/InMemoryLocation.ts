@@ -8,8 +8,10 @@ export class InMemoryLocation implements ILocationRepository {
     throw new Error('Method not implemented.')
   }
 
-  private dbLocation: (LocationDTO & { patientId: string; clinicId: string })[] =
-    []
+  private dbLocation: (LocationDTO & {
+    patientId: string
+    clinicId: string
+  })[] = []
 
   async update(data: LocationDTO, patientId: string): Promise<void> {
     const index = this.dbLocation.findIndex((location) => {

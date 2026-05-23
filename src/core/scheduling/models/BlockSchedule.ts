@@ -4,10 +4,10 @@ import { BlockScheduleDto } from './dtos/BlockSchedule.dto'
 import { Scheduling } from './Scheduling'
 
 export type BlockScheduleParams = {
-  id?: string;
-  date: DateTime;
-  endDate: DateTime;
-  description?: string;
+  id?: string
+  date: DateTime
+  endDate: DateTime
+  description?: string
 }
 
 export class BlockSchedule extends Entity {
@@ -59,8 +59,8 @@ export class BlockSchedule extends Entity {
     endDate,
     startDate,
   }: {
-    startDate: DateTime;
-    endDate: DateTime;
+    startDate: DateTime
+    endDate: DateTime
   }): boolean {
     const unavailableStartDate =
       this.date.dateTime <= startDate.dateTime &&

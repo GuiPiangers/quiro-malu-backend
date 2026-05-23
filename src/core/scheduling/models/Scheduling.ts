@@ -11,15 +11,15 @@ export type SchedulingStatus =
   | 'Cancelado'
 
 export interface SchedulingDTO {
-  id?: string;
-  patientId: string;
-  date?: string;
-  duration?: number;
-  service?: string;
-  status?: SchedulingStatus;
-  reminderSentAt?: string | null;
-  createAt?: string;
-  updateAt?: string;
+  id?: string
+  patientId: string
+  date?: string
+  duration?: number
+  service?: string
+  status?: SchedulingStatus
+  reminderSentAt?: string | null
+  createAt?: string
+  updateAt?: string
 }
 
 export class Scheduling extends Entity {
@@ -50,9 +50,7 @@ export class Scheduling extends Entity {
     super(id || `${Date.now()}`)
     this.statusStrategy = statusStrategy || new ClientStatusStrategy()
     this.patientId = patientId
-    this.date = date
-      ? new DateTime(date)
-      : undefined
+    this.date = date ? new DateTime(date) : undefined
     this.service = service
     this.duration = duration
     this._status = status
@@ -70,9 +68,7 @@ export class Scheduling extends Entity {
   }
 
   get endDate(): DateTime | undefined {
-    const durationInMinutes = this.duration
-      ? this.duration / 60
-      : 0
+    const durationInMinutes = this.duration ? this.duration / 60 : 0
     const endDate = this.date?.setMinutes(durationInMinutes)
 
     return endDate ?? this.date

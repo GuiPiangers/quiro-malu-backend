@@ -1,7 +1,10 @@
 import { ListSchedulingUseCase } from '../../useCases/listScheduling/ListSchedulingUseCase'
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { ListSchedulesQuerySchema } from '../schedulingSharedSchemas'
 
 /**

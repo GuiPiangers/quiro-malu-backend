@@ -8,8 +8,8 @@ export class SetReadNotificationsUseCase {
     notificationsId,
     userId,
   }: {
-    userId: string;
-    notificationsId: { id: string }[];
+    userId: string
+    notificationsId: { id: string }[]
   }) {
     const setNotificationsRead = notificationsId.map(({ id }) =>
       this.notificationRepository.update({ id, userId, read: true }),

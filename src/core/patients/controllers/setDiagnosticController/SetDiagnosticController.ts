@@ -1,7 +1,10 @@
 import { SetDiagnosticUseCase } from '../../useCases/diagnostic/setDiagnostic/SetDiagnosticUseCase'
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { SetDiagnosticBodySchema } from './diagnosticBodySchemas'
 
 export class SetDiagnosticController {

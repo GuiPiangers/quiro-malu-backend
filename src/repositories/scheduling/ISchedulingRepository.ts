@@ -6,49 +6,52 @@ import { SchedulingWithPatientDTO } from '../../core/scheduling/models/Schedulin
 import { DateTime } from '../../core/shared/Date'
 
 export type UpdateSchedulingParams = Partial<SchedulingDTO> & {
-  clinicId: string;
-  id: string;
+  clinicId: string
+  id: string
 }
 
 export type ListBetweenDatesParams = {
-  clinicId: string;
-  startDate: DateTime;
-  endDate: DateTime;
+  clinicId: string
+  startDate: DateTime
+  endDate: DateTime
 }
 
 export interface ISchedulingRepository {
   save(
     data: SchedulingDTO & { userId: string; clinicId: string },
-  ): Promise<void>;
+  ): Promise<void>
 
-  update(data: UpdateSchedulingParams): Promise<void>;
+  update(data: UpdateSchedulingParams): Promise<void>
 
   list(data: {
-    clinicId: string;
-    date: string;
+    clinicId: string
+    date: string
     /** Quando informado, restringe aos agendamentos desse profissional. */
-    userId?: string;
-    config?: { limit: number; offSet: number };
-  }): Promise<SchedulingWithPatientDTO[]>;
+    userId?: string
+    config?: { limit: number; offSet: number }
+  }): Promise<SchedulingWithPatientDTO[]>
 
-  listBetweenDates(data: ListBetweenDatesParams): Promise<Scheduling[]>;
+  listBetweenDates(data: ListBetweenDatesParams): Promise<Scheduling[]>
 
-  count(data: { clinicId: string; date: string }): Promise<[{ total: number }]>;
+  count(data: { clinicId: string; date: string }): Promise<[{ total: number }]>
 
   qdtSchedulesByDay(data: {
-    month: number;
-    year: number;
-    clinicId: string;
-  }): Promise<{ formattedDate: string; qtd: number }[]>;
+    month: number
+    year: number
+    clinicId: string
+  }): Promise<{ formattedDate: string; qtd: number }[]>
 
-  get(data: { id: string; clinicId: string }): Promise<SchedulingWithPatientDTO[]>;
+  get(data: {
+    id: string
+    clinicId: string
+  }): Promise<SchedulingWithPatientDTO[]>
 
-  listIdsByClinicId(data: { clinicId: string }): Promise<string[]>;
+  listIdsByClinicId(data: { clinicId: string }): Promise<string[]>
 
   listPatientIdsByClinicIdOrderBySchedulingCountDesc(
     clinicId: string,
     limit: number,
-  ): Promise<string[]>;
+  ): Promise<string[]>
 
-  delete(data: { id: string; clinicId: string }): Promise<void>;
+  delete(data: { id: string; clinicId: string }): Promise<void>
 }

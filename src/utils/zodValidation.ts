@@ -10,9 +10,7 @@ export function zodFieldErrors(error: ZodError): ZodFieldErrors {
 export function parseWithSchema<T>(
   schema: ZodSchema<T>,
   data: unknown,
-):
-  | { success: true; data: T }
-  | { success: false; error: ZodError } {
+): { success: true; data: T } | { success: false; error: ZodError } {
   const result = schema.safeParse(data)
   if (result.success) {
     return { success: true, data: result.data }

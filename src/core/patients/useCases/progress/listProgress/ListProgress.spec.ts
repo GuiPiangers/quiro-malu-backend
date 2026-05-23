@@ -163,9 +163,7 @@ describe('listProgressUseCase', () => {
       const patientId = 'test-patient-id'
       const errorMessage = 'Failed to list Progress'
 
-      mockProgressRepository.list.mockRejectedValueOnce(
-        new Error(errorMessage),
-      )
+      mockProgressRepository.list.mockRejectedValueOnce(new Error(errorMessage))
 
       await expect(
         listProgressUseCase.execute({

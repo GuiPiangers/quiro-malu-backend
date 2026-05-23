@@ -18,9 +18,9 @@ export class DeleteAfterScheduleMessageUseCase {
     userId,
     clinicId,
   }: {
-    id: string;
-    userId: string;
-    clinicId: string;
+    id: string
+    userId: string
+    clinicId: string
   }): Promise<void> {
     const existing = await this.afterScheduleMessageRepository.getById({
       id,

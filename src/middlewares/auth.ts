@@ -11,9 +11,9 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 type JwtPayload = {
-  id: string;
-  clinicId: string;
-  permissions?: unknown;
+  id: string
+  clinicId: string
+  permissions?: unknown
 }
 
 export const authMiddleware = async (

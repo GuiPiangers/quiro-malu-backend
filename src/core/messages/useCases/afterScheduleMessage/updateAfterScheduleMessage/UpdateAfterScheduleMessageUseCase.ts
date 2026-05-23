@@ -8,14 +8,14 @@ import {
 import { MessageTemplate } from '../../../models/MessageTemplate'
 
 export type UpdateAfterScheduleMessageDTO = {
-  id: string;
-  userId: string;
-  name?: string;
-  minutesAfterSchedule?: number;
-  isActive?: boolean;
+  id: string
+  userId: string
+  name?: string
+  minutesAfterSchedule?: number
+  isActive?: boolean
   messageTemplate?: {
-    textTemplate: string;
-  };
+    textTemplate: string
+  }
 }
 
 export class UpdateAfterScheduleMessageUseCase {
@@ -24,7 +24,9 @@ export class UpdateAfterScheduleMessageUseCase {
     private appEventListener: AppEventListener,
   ) {}
 
-  async execute(dto: UpdateAfterScheduleMessageDTO): Promise<AfterScheduleMessageDTO> {
+  async execute(
+    dto: UpdateAfterScheduleMessageDTO,
+  ): Promise<AfterScheduleMessageDTO> {
     const existing = await this.afterScheduleMessageRepository.getById({
       id: dto.id,
       userId: dto.userId,

@@ -1,15 +1,15 @@
 export interface AnamnesisDTO {
-  patientId: string;
-  mainProblem?: string;
-  currentIllness?: string;
-  history?: string;
-  familiarHistory?: string;
-  activities?: string;
-  smoke?: 'yes' | 'no' | 'passive';
-  useMedicine?: boolean;
-  medicines?: string;
-  underwentSurgery?: boolean;
-  surgeries?: string;
+  patientId: string
+  mainProblem?: string
+  currentIllness?: string
+  history?: string
+  familiarHistory?: string
+  activities?: string
+  smoke?: 'yes' | 'no' | 'passive'
+  useMedicine?: boolean
+  medicines?: string
+  underwentSurgery?: boolean
+  surgeries?: string
 }
 
 export class Anamnesis {

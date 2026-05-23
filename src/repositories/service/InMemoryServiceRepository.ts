@@ -2,7 +2,7 @@ import { ServiceDTO } from '../../core/service/models/Service'
 import { IServiceRepository, listServiceProps } from './IServiceRepository'
 
 interface inMemoryInterface extends ServiceDTO {
-  clinicId: string;
+  clinicId: string
 }
 
 export class InMemoryServiceRepository implements IServiceRepository {
@@ -12,7 +12,13 @@ export class InMemoryServiceRepository implements IServiceRepository {
     throw new Error('Method not implemented.')
   }
 
-  async delete({ id, clinicId }: { id: string; clinicId: string }): Promise<void> {
+  async delete({
+    id,
+    clinicId,
+  }: {
+    id: string
+    clinicId: string
+  }): Promise<void> {
     this.dbServices = this.dbServices.filter(
       (service) => !(service.id === id && service.clinicId === clinicId),
     )
@@ -43,8 +49,8 @@ export class InMemoryServiceRepository implements IServiceRepository {
     id,
     clinicId,
   }: {
-    id: string;
-    clinicId: string;
+    id: string
+    clinicId: string
   }): Promise<ServiceDTO | null> {
     const service = this.dbServices.find(
       (s) => s.id === id && s.clinicId === clinicId,
@@ -56,8 +62,8 @@ export class InMemoryServiceRepository implements IServiceRepository {
     name,
     clinicId,
   }: {
-    name: string;
-    clinicId: string;
+    name: string
+    clinicId: string
   }): Promise<ServiceDTO[]> {
     const result = this.dbServices.filter(
       (service) => service.name === name && service.clinicId === clinicId,

@@ -4,7 +4,9 @@ import { DateTime } from '../../../shared/Date'
 
 export default class ClientStatusStrategy implements StatusStrategy {
   calculateStatus({ scheduling, status }: StatusStrategyData) {
-    if (!scheduling.date?.dateTime) { throw new ApiError('A data deve ser definida para calcular o status') }
+    if (!scheduling.date?.dateTime) {
+      throw new ApiError('A data deve ser definida para calcular o status')
+    }
 
     const now = DateTime.now()
     const difference = DateTime.difference(scheduling.date, now)

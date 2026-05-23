@@ -80,9 +80,7 @@ describe('BirthdayMessage', () => {
       },
     })
 
-    expect(rendered).toBe(
-      'Olá Maria (Maria Silva), tel 51999999999.',
-    )
+    expect(rendered).toBe('Olá Maria (Maria Silva), tel 51999999999.')
   })
 
   it('should render empty dia_aniversario when birthDate is missing or invalid', () => {

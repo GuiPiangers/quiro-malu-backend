@@ -42,7 +42,11 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         })
 
         const useCase = new GetProgressUseCase(new KnexProgressRepository(trx))
-        const dto = await useCase.execute({ id: progressId, patientId, clinicId: userId })
+        const dto = await useCase.execute({
+          id: progressId,
+          patientId,
+          clinicId: userId,
+        })
 
         expect(dto.id).toBe(progressId)
         expect(dto.service).toBe('Avaliação')

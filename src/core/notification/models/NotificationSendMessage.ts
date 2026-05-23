@@ -2,16 +2,16 @@ import { Phone } from '../../shared/Phone'
 import { ComplexNotification, ComplexNotificationDTO } from './Notification'
 
 export type NotificationSendMessageParams = {
-  patientId: string;
-  patientPhone: Phone;
-  templateMessage: string;
+  patientId: string
+  patientPhone: Phone
+  templateMessage: string
 }
 
 type ComplexNotificationParams = Omit<
   NotificationSendMessageParams,
   'patientPhone'
 > & {
-  patientPhone: string;
+  patientPhone: string
 }
 
 export class NotificationSendMessage extends ComplexNotification<ComplexNotificationParams> {

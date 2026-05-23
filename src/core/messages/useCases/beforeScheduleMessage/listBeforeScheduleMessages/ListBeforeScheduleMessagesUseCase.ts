@@ -4,16 +4,16 @@ import { BeforeScheduleMessage } from '../../../models/BeforeScheduleMessage'
 import { MessageTemplate } from '../../../models/MessageTemplate'
 
 export type ListBeforeScheduleMessagesDTO = {
-  userId: string;
-  page?: number;
-  limit?: number;
+  userId: string
+  page?: number
+  limit?: number
 }
 
 export type ListBeforeScheduleMessagesOutput = {
-  items: BeforeScheduleMessageDTO[];
-  total: number;
-  page: number;
-  limit: number;
+  items: BeforeScheduleMessageDTO[]
+  total: number
+  page: number
+  limit: number
 }
 
 export class ListBeforeScheduleMessagesUseCase {

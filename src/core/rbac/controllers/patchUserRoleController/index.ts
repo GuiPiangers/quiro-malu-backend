@@ -3,6 +3,8 @@ import { PatchUserRoleUseCase } from '../../useCases/patchUserRole/PatchUserRole
 import { knexRbacRepository } from '../../../../repositories/rbac/knexInstances'
 
 const patchUserRoleUseCase = new PatchUserRoleUseCase(knexRbacRepository)
-const patchUserRoleController = new PatchUserRoleController(patchUserRoleUseCase)
+const patchUserRoleController = new PatchUserRoleController(
+  patchUserRoleUseCase,
+)
 
 export { patchUserRoleController }

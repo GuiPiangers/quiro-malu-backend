@@ -8,20 +8,16 @@ export class ListServiceUseCase {
     page,
     search,
   }: {
-    clinicId: string;
-    page?: number;
-    search?: string;
+    clinicId: string
+    page?: number
+    search?: string
   }) {
     const limit = 20
-    const offSet = page
-      ? limit * (page - 1)
-      : 0
+    const offSet = page ? limit * (page - 1) : 0
 
     const serviceData = this.ServiceRepository.list({
       clinicId,
-      config: page === undefined
-        ? { search }
-        : { limit, offSet, search },
+      config: page === undefined ? { search } : { limit, offSet, search },
     })
     const totalService = this.ServiceRepository.count({ clinicId })
 

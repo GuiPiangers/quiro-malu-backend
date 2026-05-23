@@ -1,18 +1,18 @@
 export type EvolutionMessageStatusUpdate = {
-  providerMessageId: string;
-  evolutionStatus: string;
+  providerMessageId: string
+  evolutionStatus: string
   /** Texto de erro quando a Evolution envia detalhe além do status */
-  errorDetail?: string;
+  errorDetail?: string
 }
 
-export function extractMessagesUpdatesFromEvolutionWebhook(body: Record<string, unknown>): {
-  event: string | undefined;
-  instanceName: string | undefined;
-  updates: EvolutionMessageStatusUpdate[];
+export function extractMessagesUpdatesFromEvolutionWebhook(
+  body: Record<string, unknown>,
+): {
+  event: string | undefined
+  instanceName: string | undefined
+  updates: EvolutionMessageStatusUpdate[]
 } {
-  const event = typeof body.event === 'string'
-    ? body.event
-    : undefined
+  const event = typeof body.event === 'string' ? body.event : undefined
   const instanceRaw = body.instance
   const instanceName =
     typeof instanceRaw === 'string'
@@ -25,11 +25,7 @@ export function extractMessagesUpdatesFromEvolutionWebhook(body: Record<string, 
         : undefined
 
   const raw = body.data
-  const items = Array.isArray(raw)
-    ? raw
-    : raw != null
-      ? [raw]
-      : []
+  const items = Array.isArray(raw) ? raw : raw != null ? [raw] : []
 
   const updates: EvolutionMessageStatusUpdate[] = []
   for (const item of items) {
@@ -50,9 +46,7 @@ export function extractMessagesUpdatesFromEvolutionWebhook(body: Record<string, 
       updates.push({
         providerMessageId: nestedId,
         evolutionStatus: nestedStatus,
-        ...(errorDetail
-          ? { errorDetail }
-          : {}),
+        ...(errorDetail ? { errorDetail } : {}),
       })
       continue
     }
@@ -68,9 +62,7 @@ export function extractMessagesUpdatesFromEvolutionWebhook(body: Record<string, 
       updates.push({
         providerMessageId: keyId,
         evolutionStatus: flatStatus,
-        ...(errorDetail
-          ? { errorDetail }
-          : {}),
+        ...(errorDetail ? { errorDetail } : {}),
       })
     }
   }
@@ -78,7 +70,9 @@ export function extractMessagesUpdatesFromEvolutionWebhook(body: Record<string, 
   return { event, instanceName, updates }
 }
 
-export function isEvolutionMessagesUpdateEvent(event: string | undefined): boolean {
+export function isEvolutionMessagesUpdateEvent(
+  event: string | undefined,
+): boolean {
   if (!event) return false
   const n = event.toLowerCase().replace(/_/g, '')
   return n.includes('messages') && n.includes('update')

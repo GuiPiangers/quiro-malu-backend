@@ -1,23 +1,23 @@
 export type WorkSchedule = {
-  start: string;
-  end: string;
+  start: string
+  end: string
 }
 
 export type DayConfiguration = {
-  workSchedules: WorkSchedule[];
-  isActive?: boolean;
+  workSchedules: WorkSchedule[]
+  isActive?: boolean
 }
 
 export type CalendarConfigurationDTO = {
-  userId: string;
-  workTimeIncrementInMinutes?: number;
-  domingo?: DayConfiguration;
-  segunda?: DayConfiguration;
-  terca?: DayConfiguration;
-  quarta?: DayConfiguration;
-  quinta?: DayConfiguration;
-  sexta?: DayConfiguration;
-  sabado?: DayConfiguration;
+  userId: string
+  workTimeIncrementInMinutes?: number
+  domingo?: DayConfiguration
+  segunda?: DayConfiguration
+  terca?: DayConfiguration
+  quarta?: DayConfiguration
+  quinta?: DayConfiguration
+  sexta?: DayConfiguration
+  sabado?: DayConfiguration
 }
 
 export class CalendarConfiguration {

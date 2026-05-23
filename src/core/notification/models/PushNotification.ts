@@ -1,10 +1,10 @@
 import { Entity } from '../../shared/Entity'
 
 export type PushNotificationDTO = {
-  id?: string;
-  type: string;
-  title: string;
-  message: string;
+  id?: string
+  type: string
+  title: string
+  message: string
 }
 
 export class PushNotification extends Entity {

@@ -16,7 +16,9 @@ export class KnexDiagnosticRepository implements IDiagnosticRepository {
     })
   }
 
-  async saveMany(data: (DiagnosticDTO & { clinicId: string })[]): Promise<void> {
+  async saveMany(
+    data: (DiagnosticDTO & { clinicId: string })[],
+  ): Promise<void> {
     await this.knex(ETableNames.DIAGNOSTICS).insert(
       data.map(({ clinicId, ...diagnostic }) => ({
         ...diagnostic,

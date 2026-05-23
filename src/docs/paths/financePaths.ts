@@ -19,7 +19,8 @@ openApiRegistry.registerPath({
   method: 'post',
   path: '/finance',
   tags: ['Finance'],
-  summary: 'Cria ou atualiza movimentação financeira (upsert por id gerado no cliente)',
+  summary:
+    'Cria ou atualiza movimentação financeira (upsert por id gerado no cliente)',
   security: bearer,
   request: {
     body: {

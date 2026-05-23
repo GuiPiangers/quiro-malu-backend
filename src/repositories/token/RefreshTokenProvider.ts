@@ -13,9 +13,7 @@ function mapLastUsedAt(value: unknown): string | undefined {
     return value.toISOString().substring(0, 16)
   }
   const s = String(value)
-  return s.length >= 16
-    ? s.substring(0, 16)
-    : s
+  return s.length >= 16 ? s.substring(0, 16) : s
 }
 
 function rowToDTO(row: Record<string, unknown>): RefreshTokenDTO {

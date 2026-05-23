@@ -63,7 +63,8 @@ export class BirthdayMessageRepository implements IBirthdayMessageRepository {
       const updateData: Record<string, unknown> = {}
 
       if (data.name !== undefined) updateData.name = data.name
-      if (data.textTemplate !== undefined) updateData.textTemplate = data.textTemplate
+      if (data.textTemplate !== undefined)
+        updateData.textTemplate = data.textTemplate
       if (data.isActive !== undefined) updateData.isActive = data.isActive
       if (data.sendTime !== undefined) updateData.sendTime = data.sendTime
 
@@ -158,13 +159,11 @@ export class BirthdayMessageRepository implements IBirthdayMessageRepository {
       const base = () =>
         this.knex(ETableNames.BIRTHDAY_MESSAGES).where({ userId: data.userId })
 
-      const countRows = await base().clone().count<{ total: string | number }>(
-        '* as total',
-      )
+      const countRows = await base()
+        .clone()
+        .count<{ total: string | number }>('* as total')
       const total = Number(
-        (Array.isArray(countRows)
-          ? countRows[0]
-          : countRows)?.total ?? 0,
+        (Array.isArray(countRows) ? countRows[0] : countRows)?.total ?? 0,
       )
 
       const rows = await base()

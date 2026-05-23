@@ -1,6 +1,9 @@
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { ApiError } from '../../../../utils/ApiError'
 import { GetFinanceBySchedulingUseCase } from '../../useCases/getFinanceByScheduling/getFinanceByScheduling'
 import { FinanceSchedulingIdParamSchema } from '../financeSharedSchemas'
@@ -26,7 +29,9 @@ export class GetFinanceBySchedulingController {
         schedulingId,
       })
 
-      if (!res) { throw new ApiError('Movimentação financeira não encontrada', 404) }
+      if (!res) {
+        throw new ApiError('Movimentação financeira não encontrada', 404)
+      }
 
       response.status(200).json(res)
     } catch (err: any) {

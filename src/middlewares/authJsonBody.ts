@@ -12,9 +12,7 @@ export function normalizeAuthJsonPayload(raw: string): string {
 function requestPathname(req: IncomingMessage): string {
   const raw = req.url ?? '/'
   const q = raw.indexOf('?')
-  return (q === -1
-    ? raw
-    : raw.slice(0, q)) || '/'
+  return (q === -1 ? raw : raw.slice(0, q)) || '/'
 }
 
 function isAuthJsonPost(req: IncomingMessage): boolean {
@@ -81,9 +79,7 @@ export function parseAuthRoutesJsonBody(
   req.on('end', () => {
     try {
       const flattened = normalizeAuthJsonPayload(raw)
-      req.body = flattened
-        ? JSON.parse(flattened)
-        : {}
+      req.body = flattened ? JSON.parse(flattened) : {}
       next()
     } catch (err) {
       next(err)

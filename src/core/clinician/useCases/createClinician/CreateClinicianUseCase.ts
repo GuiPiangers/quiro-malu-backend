@@ -10,12 +10,12 @@ import type { IUserRepository } from '../../../../repositories/user/IUserReposit
 import { ApiError } from '../../../../utils/ApiError'
 
 export type CreateClinicianInputDTO = {
-  name: string;
-  email: string;
-  phone: string;
-  password: string;
-  roleId: string;
-  services?: { serviceId: string }[];
+  name: string
+  email: string
+  phone: string
+  password: string
+  roleId: string
+  services?: { serviceId: string }[]
 }
 
 export class CreateClinicianUseCase {

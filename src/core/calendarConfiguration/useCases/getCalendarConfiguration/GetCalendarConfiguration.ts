@@ -2,7 +2,7 @@ import { ICalendarConfigurationRepository } from '../../../../repositories/calen
 import { CalendarConfigurationDTO } from '../../models/CalendarConfiguration'
 
 export type GetCalendarConfigurationDTO = {
-  userId: string;
+  userId: string
 }
 
 export class GetCalendarConfigurationUseCase {

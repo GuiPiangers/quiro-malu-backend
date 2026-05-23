@@ -1,6 +1,9 @@
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { CreateBirthdayMessageUseCase } from '../../useCases/birthdayMessage/createBirthdayMessage/CreateBirthdayMessageUseCase'
 import { CreateBirthdayMessageBodySchema } from '../birthdayMessageSchemas'
 
@@ -10,7 +13,10 @@ export class CreateBirthdayMessageController {
   ) {}
 
   async handle(request: Request, response: Response) {
-    const parsed = parseWithSchema(CreateBirthdayMessageBodySchema, request.body)
+    const parsed = parseWithSchema(
+      CreateBirthdayMessageBodySchema,
+      request.body,
+    )
     if (!parsed.success) {
       return sendZodBadRequest(response, parsed.error)
     }

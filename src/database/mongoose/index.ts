@@ -16,15 +16,9 @@ const MONGO_URI =
 export const mongoConnect = async () => {
   try {
     await mongoose.connect(MONGO_URI, {
-      authSource: isProduction
-        ? undefined
-        : 'admin',
-      user: isProduction
-        ? undefined
-        : process.env.MONGO_INITDB_ROOT_USERNAME,
-      pass: isProduction
-        ? undefined
-        : process.env.MONGO_INITDB_ROOT_PASSWORD,
+      authSource: isProduction ? undefined : 'admin',
+      user: isProduction ? undefined : process.env.MONGO_INITDB_ROOT_USERNAME,
+      pass: isProduction ? undefined : process.env.MONGO_INITDB_ROOT_PASSWORD,
     })
 
     console.log('MongoDB conectado com sucesso!')

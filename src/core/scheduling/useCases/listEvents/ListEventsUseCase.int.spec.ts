@@ -13,8 +13,8 @@ type ListEventRow = SchedulingWithPatientDTO | BlockScheduleDto
 
 const integrationEnvReady = Boolean(
   process.env.DB_HOST &&
-    process.env.MYSQL_ROOT_USER &&
-    process.env.MYSQL_DATABASE,
+  process.env.MYSQL_ROOT_USER &&
+  process.env.MYSQL_DATABASE,
 )
 
 const runIntegrationTests = ['1', 'true', 'yes'].includes(
@@ -189,9 +189,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
             first.description === 'Manhã' &&
             !('patientId' in first),
         ).toBe(true)
-        expect('patientId' in second && second.service === 'Sessão').toBe(
-          true,
-        )
+        expect('patientId' in second && second.service === 'Sessão').toBe(true)
         if ('description' in first && !('patientId' in first)) {
           expect(first.id).toBe(blockId)
         }

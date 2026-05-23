@@ -1,8 +1,8 @@
 import { Entity } from '../../shared/Entity'
 
 export type MessageTemplateDTO = {
-  id?: string;
-  textTemplate: string;
+  id?: string
+  textTemplate: string
 }
 
 export class MessageTemplate extends Entity {

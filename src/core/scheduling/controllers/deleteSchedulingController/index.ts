@@ -8,6 +8,8 @@ const deleteSchedulingUseCase = new DeleteSchedulingUseCase(
   schedulingRepository,
   appEventListener,
 )
-const deleteSchedulingController = new DeleteSchedulingController(deleteSchedulingUseCase)
+const deleteSchedulingController = new DeleteSchedulingController(
+  deleteSchedulingUseCase,
+)
 
 export { deleteSchedulingController }

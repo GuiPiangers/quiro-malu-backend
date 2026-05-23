@@ -15,7 +15,9 @@ export class SubscribeNotificationController {
       const subscription = request.body as Subscription
 
       if (!userId) throw new ApiError('O id deve ser informado', 401)
-      if (!subscription) { throw new ApiError('A subscription ser informada', 401) }
+      if (!subscription) {
+        throw new ApiError('A subscription ser informada', 401)
+      }
 
       await this.subscribeNotificationUseCase.execute({ userId, subscription })
 

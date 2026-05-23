@@ -4,6 +4,8 @@ import { knexDiagnosticRepository } from '../../../../repositories/diagnostic/kn
 
 const DiagnosticRepository = knexDiagnosticRepository
 const getDiagnosticUseCase = new GetDiagnosticUseCase(DiagnosticRepository)
-const getDiagnosticController = new GetDiagnosticController(getDiagnosticUseCase)
+const getDiagnosticController = new GetDiagnosticController(
+  getDiagnosticUseCase,
+)
 
 export { getDiagnosticController }

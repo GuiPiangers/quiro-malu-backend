@@ -22,7 +22,9 @@ export class UpdateSchedulingUseCase {
     clinicId,
     ...data
   }: SchedulingDTO & { userId: string; clinicId: string }) {
-    if (!data.id) { throw new ApiError('O id deve ser informado', 400, 'Scheduling') }
+    if (!data.id) {
+      throw new ApiError('O id deve ser informado', 400, 'Scheduling')
+    }
 
     const dataBaseStatusStrategy = new DatabaseStatusStrategy()
     const rows = await this.SchedulingRepository.get({
@@ -65,16 +67,16 @@ export class UpdateSchedulingUseCase {
     scheduling,
     userId,
   }: {
-    scheduling: Scheduling;
-    userId: string;
+    scheduling: Scheduling
+    userId: string
   }) {
     const blockSchedules =
       scheduling.date && scheduling.endDate
         ? await this.BlockSchedulingRepository.listBetweenDates({
-          userId,
-          endDate: scheduling.date,
-          startDate: scheduling.endDate,
-        })
+            userId,
+            endDate: scheduling.date,
+            startDate: scheduling.endDate,
+          })
         : []
 
     blockSchedules?.forEach((blockSchedule) => {
@@ -95,9 +97,9 @@ export class UpdateSchedulingUseCase {
     clinicId,
     userId,
   }: {
-    scheduling: Scheduling;
-    clinicId: string;
-    userId: string;
+    scheduling: Scheduling
+    clinicId: string
+    userId: string
   }) {
     if (!scheduling.date?.dateTime) return
 
@@ -107,6 +109,8 @@ export class UpdateSchedulingUseCase {
       userId,
     })
 
-    if (scheduling.notAvailableDate(schedules)) { throw new ApiError('Horário indisponível', 400, 'date') }
+    if (scheduling.notAvailableDate(schedules)) {
+      throw new ApiError('Horário indisponível', 400, 'date')
+    }
   }
 }

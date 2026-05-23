@@ -5,9 +5,9 @@ export function calculateScheduleMessageDelay({
   minutesOffset,
   direction,
 }: {
-  scheduleDate: string | undefined;
-  minutesOffset: number;
-  direction: 'before' | 'after';
+  scheduleDate: string | undefined
+  minutesOffset: number
+  direction: 'before' | 'after'
 }): number {
   if (!scheduleDate) return 0
 
@@ -20,7 +20,5 @@ export function calculateScheduleMessageDelay({
   const now = DateTime.now().value
   const delay = targetDate.toMillis() - now.toMillis()
 
-  return delay > 0
-    ? delay
-    : 0
+  return delay > 0 ? delay : 0
 }

@@ -6,8 +6,8 @@ export class GetUserProfileUseCase {
   constructor(private userRepository: IUserRepository) {}
 
   async execute(params: {
-    userId: string;
-    clinicId: string;
+    userId: string
+    clinicId: string
   }): Promise<UserDTO> {
     const [user] = await this.userRepository.getById({
       userId: params.userId,

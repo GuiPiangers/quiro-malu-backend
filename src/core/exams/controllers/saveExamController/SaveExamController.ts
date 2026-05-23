@@ -10,7 +10,7 @@ export class SaveExamController {
     try {
       const { id: userId } = request.user
       const { patientId } = request.params as {
-        patientId: string;
+        patientId: string
       }
       const file = request.file
 

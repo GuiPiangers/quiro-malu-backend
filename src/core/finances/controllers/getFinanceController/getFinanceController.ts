@@ -1,6 +1,9 @@
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { GetFinanceUseCase } from '../../useCases/getFinance/getFinanceUseCase'
 import { FinanceIdParamSchema } from '../financeSharedSchemas'
 

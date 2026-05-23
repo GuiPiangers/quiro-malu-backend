@@ -7,19 +7,21 @@ import { IPatientRepository } from '../../patient/IPatientRepository'
 import { IQueueProvider } from '../IQueueProvider'
 
 export type PatientsBirthdayJobData = {
-  trigger: 'scheduled';
+  trigger: 'scheduled'
 }
 
 const PATIENT_BIRTHDAY_SCAN_CRON = '0 0 4 * * *'
 const PATIENT_BIRTHDAY_SCAN_TZ = 'America/Sao_Paulo'
 
 function parseCalendarDateToBirthMonthDay(calendarDate: string): {
-  birthMonth: number;
-  birthDay: number;
+  birthMonth: number
+  birthDay: number
 } {
   const m = `${calendarDate}`.match(/^(\d{4})-(\d{2})-(\d{2})/)
   if (!m) {
-    throw new Error(`Data de referência inválida para aniversário: ${calendarDate}`)
+    throw new Error(
+      `Data de referência inválida para aniversário: ${calendarDate}`,
+    )
   }
   return { birthMonth: Number(m[2]), birthDay: Number(m[3]) }
 }
@@ -35,8 +37,7 @@ export class PatientsBirthDayQueue {
   async registerPatientBirthdayScheduler(): Promise<void> {
     try {
       await this.queueProvider.deleteRepeat({ jobId: 'patientsBirthdayDaily' })
-    } catch {
-    }
+    } catch {}
     try {
       await this.queueProvider.removeAllRepeatableJobs()
     } catch (err) {
@@ -80,17 +81,21 @@ export class PatientsBirthDayQueue {
           const delayMs = computeDelayMsUntilSendTimeToday(campaign.sendTime)
           const jobId = `birthday-campaign-${patient.id}-${referenceDate}`
 
-          await this.birthdayMessageCampaignQueue.scheduleDelivery(jobId, {
-            userId: campaign.userId,
-            clinicId: patient.clinicId,
-            patientId: patient.id,
-            patientName: patient.name,
-            patientPhone: patient.phone ?? '',
-            patientDateOfBirth: patient.dateOfBirth ?? '',
-            campaignId: campaign.id,
-            campaignName: campaign.name,
-            textTemplate: campaign.textTemplate,
-          }, delayMs)
+          await this.birthdayMessageCampaignQueue.scheduleDelivery(
+            jobId,
+            {
+              userId: campaign.userId,
+              clinicId: patient.clinicId,
+              patientId: patient.id,
+              patientName: patient.name,
+              patientPhone: patient.phone ?? '',
+              patientDateOfBirth: patient.dateOfBirth ?? '',
+              campaignId: campaign.id,
+              campaignName: campaign.name,
+              textTemplate: campaign.textTemplate,
+            },
+            delayMs,
+          )
         } catch (err) {
           logger.error(
             { err, patientId: patient.id },

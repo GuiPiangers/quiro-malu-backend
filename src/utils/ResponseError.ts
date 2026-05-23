@@ -4,10 +4,10 @@ import { logger } from './logger'
 type LogEvent = Record<string, unknown>
 
 type ErrorPayload = {
-  type?: string;
-  message?: string;
-  statusCode?: number;
-  stack?: string;
+  type?: string
+  message?: string
+  statusCode?: number
+  stack?: string
 }
 
 export const responseError = (

@@ -37,7 +37,9 @@ export class KnexExamsRepository implements IExamsRepository {
     patientId,
     ...data
   }: updateExamRepositoryRepositoryProps) {
-    await this.knex(ETableNames.EXAMS).update(data).where({ id, userId, patientId })
+    await this.knex(ETableNames.EXAMS)
+      .update(data)
+      .where({ id, userId, patientId })
   }
 
   async get({

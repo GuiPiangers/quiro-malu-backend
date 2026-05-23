@@ -3,8 +3,8 @@ import { QueueProvider } from '../queueProvider'
 import { PushNotificationQueue } from './pushNotificationsQueue'
 
 const queueProvider = new QueueProvider<{
-  notification: PushNotificationDTO;
-  userId: string;
+  notification: PushNotificationDTO
+  userId: string
 }>('pushNotification')
 
 const pushNotificationQueue = new PushNotificationQueue(queueProvider)

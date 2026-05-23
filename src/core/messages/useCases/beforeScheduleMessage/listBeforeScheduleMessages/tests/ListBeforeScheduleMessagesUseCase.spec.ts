@@ -26,7 +26,9 @@ describe('ListBeforeScheduleMessagesUseCase', () => {
 
     const result = await useCase.execute({ userId: 'user-1' })
 
-    expect(beforeScheduleMessageRepository.listByUserIdPaged).toHaveBeenCalledWith({
+    expect(
+      beforeScheduleMessageRepository.listByUserIdPaged,
+    ).toHaveBeenCalledWith({
       userId: 'user-1',
       limit: 20,
       offset: 0,
@@ -68,7 +70,9 @@ describe('ListBeforeScheduleMessagesUseCase', () => {
       limit: 10,
     })
 
-    expect(beforeScheduleMessageRepository.listByUserIdPaged).toHaveBeenCalledWith({
+    expect(
+      beforeScheduleMessageRepository.listByUserIdPaged,
+    ).toHaveBeenCalledWith({
       userId: 'user-1',
       limit: 10,
       offset: 10,

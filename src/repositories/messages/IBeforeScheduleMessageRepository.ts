@@ -1,72 +1,72 @@
 export type SaveBeforeScheduleMessageProps = {
-  id?: string;
-  userId: string;
-  name: string;
-  minutesBeforeSchedule: number;
-  textTemplate: string;
-  isActive: boolean;
+  id?: string
+  userId: string
+  name: string
+  minutesBeforeSchedule: number
+  textTemplate: string
+  isActive: boolean
 }
 
 export type BeforeScheduleMessageConfigDTO = {
-  id: string;
-  userId: string;
-  name: string;
-  minutesBeforeSchedule: number;
-  textTemplate: string;
-  isActive: boolean;
+  id: string
+  userId: string
+  name: string
+  minutesBeforeSchedule: number
+  textTemplate: string
+  isActive: boolean
 }
 
 export type GetBeforeScheduleMessageByIdProps = {
-  id: string;
-  userId: string;
+  id: string
+  userId: string
 }
 
 export type UpdateBeforeScheduleMessageProps = {
-  id: string;
-  userId: string;
-  name?: string;
-  minutesBeforeSchedule?: number;
-  textTemplate?: string;
-  isActive?: boolean;
+  id: string
+  userId: string
+  name?: string
+  minutesBeforeSchedule?: number
+  textTemplate?: string
+  isActive?: boolean
 }
 
 export type ListBeforeScheduleMessagesByUserIdProps = {
-  userId: string;
+  userId: string
 }
 
 export type ListBeforeScheduleMessagesByUserIdPagedProps = {
-  userId: string;
-  limit: number;
-  offset: number;
+  userId: string
+  limit: number
+  offset: number
 }
 
 export type ListBeforeScheduleMessagesPagedResult = {
-  items: BeforeScheduleMessageConfigDTO[];
-  total: number;
+  items: BeforeScheduleMessageConfigDTO[]
+  total: number
 }
 
 export type DeleteBeforeScheduleMessageProps = {
-  id: string;
-  userId: string;
+  id: string
+  userId: string
 }
 
 export interface IBeforeScheduleMessageRepository {
-  save(data: SaveBeforeScheduleMessageProps): Promise<void>;
-  update(data: UpdateBeforeScheduleMessageProps): Promise<void>;
+  save(data: SaveBeforeScheduleMessageProps): Promise<void>
+  update(data: UpdateBeforeScheduleMessageProps): Promise<void>
 
-  delete(data: DeleteBeforeScheduleMessageProps): Promise<void>;
+  delete(data: DeleteBeforeScheduleMessageProps): Promise<void>
 
-  listAll(): Promise<BeforeScheduleMessageConfigDTO[]>;
+  listAll(): Promise<BeforeScheduleMessageConfigDTO[]>
 
   listByUserId(
     data: ListBeforeScheduleMessagesByUserIdProps,
-  ): Promise<BeforeScheduleMessageConfigDTO[]>;
+  ): Promise<BeforeScheduleMessageConfigDTO[]>
 
   listByUserIdPaged(
     data: ListBeforeScheduleMessagesByUserIdPagedProps,
-  ): Promise<ListBeforeScheduleMessagesPagedResult>;
+  ): Promise<ListBeforeScheduleMessagesPagedResult>
 
   getById(
     data: GetBeforeScheduleMessageByIdProps,
-  ): Promise<BeforeScheduleMessageConfigDTO | null>;
+  ): Promise<BeforeScheduleMessageConfigDTO | null>
 }

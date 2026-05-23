@@ -11,7 +11,10 @@ describe('ListWhatsAppMessageLogsByPatientUseCase', () => {
     const logRepo = createMockWhatsAppMessageLogRepository()
     const listLogs = new ListWhatsAppMessageLogsUseCase(logRepo)
 
-    const sut = new ListWhatsAppMessageLogsByPatientUseCase(patientRepo, listLogs)
+    const sut = new ListWhatsAppMessageLogsByPatientUseCase(
+      patientRepo,
+      listLogs,
+    )
 
     await expect(
       sut.execute({ userId: 'u1', patientId: 'p1' }),
@@ -26,7 +29,10 @@ describe('ListWhatsAppMessageLogsByPatientUseCase', () => {
     logRepo.listByUserId.mockResolvedValue({ items: [], total: 0 })
     const listLogs = new ListWhatsAppMessageLogsUseCase(logRepo)
 
-    const sut = new ListWhatsAppMessageLogsByPatientUseCase(patientRepo, listLogs)
+    const sut = new ListWhatsAppMessageLogsByPatientUseCase(
+      patientRepo,
+      listLogs,
+    )
 
     await sut.execute({ userId: 'u1', patientId: 'p1', page: 2, limit: 5 })
 

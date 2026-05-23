@@ -5,11 +5,11 @@ import { patientFirstNameFromFullName } from '../utils/patientFirstNameFromFullN
 import { MessageTemplate, MessageTemplateDTO } from './MessageTemplate'
 
 export type AfterScheduleMessageDTO = {
-  id?: string;
-  name: string;
-  minutesAfterSchedule: number;
-  isActive: boolean;
-  messageTemplate: MessageTemplateDTO;
+  id?: string
+  name: string
+  minutesAfterSchedule: number
+  isActive: boolean
+  messageTemplate: MessageTemplateDTO
 }
 
 export class AfterScheduleMessage extends Entity {
@@ -25,11 +25,11 @@ export class AfterScheduleMessage extends Entity {
     minutesAfterSchedule,
     isActive = true,
   }: {
-    id?: string;
-    name: string;
-    minutesAfterSchedule: number;
-    messageTemplate: MessageTemplate;
-    isActive?: boolean;
+    id?: string
+    name: string
+    minutesAfterSchedule: number
+    messageTemplate: MessageTemplate
+    isActive?: boolean
   }) {
     super(id)
 
@@ -59,8 +59,8 @@ export class AfterScheduleMessage extends Entity {
     patient,
     scheduling,
   }: {
-    patient: { name: string; phone: string; gender?: string };
-    scheduling?: { date?: string; service?: string; status?: string };
+    patient: { name: string; phone: string; gender?: string }
+    scheduling?: { date?: string; service?: string; status?: string }
   }): string {
     return this.messageTemplate.replaceVariables(
       this.buildTemplateVariables({ patient, scheduling }),
@@ -71,13 +71,11 @@ export class AfterScheduleMessage extends Entity {
     patient,
     scheduling,
   }: {
-    patient: { name: string; phone: string; gender?: string };
-    scheduling?: { date?: string; service?: string; status?: string };
+    patient: { name: string; phone: string; gender?: string }
+    scheduling?: { date?: string; service?: string; status?: string }
   }): Record<string, string> {
     const dateTime =
-      scheduling?.date != null
-        ? new DateTime(scheduling.date)
-        : null
+      scheduling?.date != null ? new DateTime(scheduling.date) : null
 
     const nomeCompleto = `${patient.name}`.trim()
 
@@ -86,12 +84,8 @@ export class AfterScheduleMessage extends Entity {
       nome_completo_paciente: nomeCompleto,
       telefone_paciente: patient.phone,
       genero_paciente: patient.gender ?? '',
-      data_consulta: dateTime
-        ? DateTime.toLocaleDate(dateTime.date)
-        : '',
-      horario_consulta: dateTime
-        ? dateTime.time
-        : '',
+      data_consulta: dateTime ? DateTime.toLocaleDate(dateTime.date) : '',
+      horario_consulta: dateTime ? dateTime.time : '',
       servico_consulta: scheduling?.service ?? '',
       status_consulta: scheduling?.status ?? '',
     }

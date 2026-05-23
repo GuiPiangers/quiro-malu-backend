@@ -20,15 +20,10 @@ export class RefreshTokenUseCase {
     if (!refreshToken) throw new ApiError('Refresh Token inválido', 401)
 
     if (refreshToken.fingerprint !== fingerprint) {
-      throw new ApiError(
-        'Refresh Token inválido para este dispositivo',
-        401,
-      )
+      throw new ApiError('Refresh Token inválido para este dispositivo', 401)
     }
 
-    const tokenExpired = dayjs().isAfter(
-      dayjs.unix(refreshToken.expiresIn),
-    )
+    const tokenExpired = dayjs().isAfter(dayjs.unix(refreshToken.expiresIn))
 
     if (tokenExpired) {
       await this.refreshTokenProvider.deleteByFingerprint(
@@ -50,10 +45,12 @@ export class RefreshTokenUseCase {
     })
     if (!user?.clinicId) throw new ApiError('Usuário não encontrado', 401)
 
-    const permissions = await this.rbacRepository.findResolvedPermissionsByUser({
-      userId: refreshToken.userId,
-      clinicId: user.clinicId,
-    })
+    const permissions = await this.rbacRepository.findResolvedPermissionsByUser(
+      {
+        userId: refreshToken.userId,
+        clinicId: user.clinicId,
+      },
+    )
 
     const token = await this.generateTokenProvider.execute({
       userId: refreshToken.userId,

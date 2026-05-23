@@ -3,7 +3,10 @@ import { DateTime } from '../../shared/Date'
 
 vi.mock('../../shared/Date', () => {
   return {
-    DateTime: vi.fn(function MockDateTime(this: { dateTime: string }, date: string) {
+    DateTime: vi.fn(function MockDateTime(
+      this: { dateTime: string },
+      date: string,
+    ) {
       this.dateTime = `formatted-${date}`
     }),
   }

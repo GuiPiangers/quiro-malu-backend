@@ -6,11 +6,11 @@ import { calculateScheduleMessageDelay } from '../../utils/calculateScheduleMess
 import { AppEventListener } from '../../../shared/observers/EventListener'
 
 export type AfterScheduleMessageListenerConfig = {
-  id: string;
-  userId: string;
-  name: string;
-  minutesAfterSchedule: number;
-  isActive: boolean;
+  id: string
+  userId: string
+  name: string
+  minutesAfterSchedule: number
+  isActive: boolean
 }
 
 export class AfterScheduleMessageEventHandlers {
@@ -86,13 +86,13 @@ export class AfterScheduleMessageEventHandlers {
     scheduleDate,
     status,
   }: {
-    type: 'create' | 'update';
-    userId: string;
-    clinicId: string;
-    scheduleId: string;
-    patientId: string;
-    scheduleDate: string | undefined;
-    status: string | undefined;
+    type: 'create' | 'update'
+    userId: string
+    clinicId: string
+    scheduleId: string
+    patientId: string
+    scheduleDate: string | undefined
+    status: string | undefined
   }) {
     const rows = await this.afterScheduleMessageRepository.listByUserId({
       userId,
@@ -144,9 +144,9 @@ export class AfterScheduleMessageEventHandlers {
     clinicId: _clinicId,
     scheduleId,
   }: {
-    userId: string;
-    clinicId: string;
-    scheduleId: string;
+    userId: string
+    clinicId: string
+    scheduleId: string
   }) {
     const configs = await this.afterScheduleMessageRepository.listByUserId({
       userId,

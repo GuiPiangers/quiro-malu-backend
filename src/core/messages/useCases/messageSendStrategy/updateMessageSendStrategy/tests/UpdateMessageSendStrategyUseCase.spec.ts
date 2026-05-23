@@ -9,7 +9,9 @@ import {
 } from '../../../../sendStrategy/sendStrategyKind'
 import { UpdateMessageSendStrategyUseCase } from '../UpdateMessageSendStrategyUseCase'
 
-function createSut(repo: ReturnType<typeof createMockMessageSendStrategyRepository>) {
+function createSut(
+  repo: ReturnType<typeof createMockMessageSendStrategyRepository>,
+) {
   const patientRepo = createMockPatientRepository()
   const sut = new UpdateMessageSendStrategyUseCase(repo, patientRepo)
   return { sut, patientRepo }

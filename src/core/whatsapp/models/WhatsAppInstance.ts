@@ -2,12 +2,12 @@ import { Entity } from '../../shared/Entity'
 import { ApiError } from '../../../utils/ApiError'
 
 export interface WhatsAppInstanceDTO {
-  id: string;
-  userId: string;
-  instanceName: string;
-  phoneNumber?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  id: string
+  userId: string
+  instanceName: string
+  phoneNumber?: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 export class WhatsAppInstance extends Entity {
@@ -19,7 +19,10 @@ export class WhatsAppInstance extends Entity {
     super(dto.id)
 
     if (!dto.userId) {
-      throw new ApiError('userId é obrigatório para uma instância WhatsApp', 400)
+      throw new ApiError(
+        'userId é obrigatório para uma instância WhatsApp',
+        400,
+      )
     }
     if (!dto.instanceName) {
       throw new ApiError(

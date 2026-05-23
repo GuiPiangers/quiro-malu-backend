@@ -23,7 +23,8 @@ openApiRegistry.registerPath({
   security: bearer,
   responses: {
     200: {
-      description: 'Lista de clínicos (sem senha). Corpo: `{ result: ClinicianItem[] }`.',
+      description:
+        'Lista de clínicos (sem senha). Corpo: `{ result: ClinicianItem[] }`.',
       content: {
         'application/json': { schema: ListClinicianUsersResponseSchema },
       },
@@ -37,7 +38,8 @@ openApiRegistry.registerPath({
   method: 'post',
   path: '/clinicians',
   tags: ['Users'],
-  summary: 'Cadastrar usuário clínico (user + perfil clinician + serviços vinculados)',
+  summary:
+    'Cadastrar usuário clínico (user + perfil clinician + serviços vinculados)',
   security: bearer,
   request: {
     body: {
@@ -85,9 +87,7 @@ openApiRegistry.registerPath({
         'application/json': {
           schema: SetClinicianServicesBodySchema,
           example: {
-            services: [
-              { serviceId: '00000000-0000-4000-8000-000000000002' },
-            ],
+            services: [{ serviceId: '00000000-0000-4000-8000-000000000002' }],
           },
         },
       },

@@ -8,9 +8,9 @@ export class GetExamUseCase {
     userId,
     id,
   }: {
-    userId: string;
-    patientId: string;
-    id: string;
+    userId: string
+    patientId: string
+    id: string
   }) {
     const exam = await this.examRepository.get({
       patientId,

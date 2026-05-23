@@ -14,7 +14,9 @@ export class Education {
 
   constructor(education?: string) {
     const convertEdeducation = this.convertEducation(education)
-    if (this.validateEducation(convertEdeducation)) { this.value = convertEdeducation }
+    if (this.validateEducation(convertEdeducation)) {
+      this.value = convertEdeducation
+    }
   }
 
   private validateEducation(education?: string): education is EducationType {
@@ -31,11 +33,7 @@ export class Education {
       education &&
       educationPossibility.every((possibility) => possibility !== education)
     ) {
-      throw new ApiError(
-        'A escolaridade definida é inválida',
-        400,
-        'education',
-      )
+      throw new ApiError('A escolaridade definida é inválida', 400, 'education')
     }
     return true
   }

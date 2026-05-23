@@ -10,18 +10,18 @@ import {
 } from '../../../sendStrategy/sendStrategyKind'
 
 export type ListMessageSendStrategyDTO = {
-  userId: string;
-  page?: number;
-  limit?: number;
+  userId: string
+  page?: number
+  limit?: number
 }
 
 export type ListedMessageSendStrategyDTO = MessageSendStrategyListItemDTO
 
 export type ListMessageSendStrategyOutput = {
-  items: ListedMessageSendStrategyDTO[];
-  total: number;
-  page: number;
-  limit: number;
+  items: ListedMessageSendStrategyDTO[]
+  total: number
+  page: number
+  limit: number
 }
 
 function dbWindowForListPage(

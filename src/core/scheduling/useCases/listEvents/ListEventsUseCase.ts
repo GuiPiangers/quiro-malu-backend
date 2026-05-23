@@ -6,13 +6,13 @@ import { DateTime } from '../../../shared/Date'
 import { BlockScheduleDto } from '../../models/dtos/BlockSchedule.dto'
 
 export interface IListEventsUseCaseRequest {
-  date: string;
-  clinicId: string;
-  userId: string;
+  date: string
+  clinicId: string
+  userId: string
 }
 
 export interface IListEventsUseCaseResponse {
-  data: (SchedulingDTO | BlockScheduleDto)[];
+  data: (SchedulingDTO | BlockScheduleDto)[]
 }
 
 export class ListEventsUseCase {
@@ -44,20 +44,14 @@ export class ListEventsUseCase {
     ])
 
     const combinedList = [...schedules, ...blockedSchedules].sort((a, b) => {
-      const dateA = this.isBlockSchedule(a)
-        ? a.date.dateTime
-        : a.date
-      const dateB = this.isBlockSchedule(b)
-        ? b.endDate.dateTime
-        : b.date
+      const dateA = this.isBlockSchedule(a) ? a.date.dateTime : a.date
+      const dateB = this.isBlockSchedule(b) ? b.endDate.dateTime : b.date
       return dateA?.localeCompare(dateB || '') ?? 0
     })
 
     return {
       data: combinedList.map((event) =>
-        this.isBlockSchedule(event)
-          ? event.getDTO()
-          : event,
+        this.isBlockSchedule(event) ? event.getDTO() : event,
       ),
     }
   }

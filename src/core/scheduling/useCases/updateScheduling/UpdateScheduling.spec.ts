@@ -8,9 +8,9 @@ import { IAppEventListener } from '../../../shared/observers/EventListener'
 import { UpdateSchedulingUseCase } from './UpdateSchedulingUseCase'
 
 type SchedulingUpdateTestInput = SchedulingDTO & {
-  userId: string;
-  clinicId: string;
-  date?: string;
+  userId: string
+  clinicId: string
+  date?: string
 }
 
 const eventsStub: IAppEventListener = { emit: vi.fn() }
@@ -33,9 +33,9 @@ describe('updateSchedulingUseCase', () => {
 
   describe('execute', () => {
     beforeAll(() => {
-      vi
-        .useFakeTimers()
-        .setSystemTime(new Date('2025-01-10T12:00:00Z').getTime())
+      vi.useFakeTimers().setSystemTime(
+        new Date('2025-01-10T12:00:00Z').getTime(),
+      )
     })
 
     beforeEach(() => {

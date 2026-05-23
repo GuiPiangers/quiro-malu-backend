@@ -1,7 +1,10 @@
 import { Request, Response } from 'express'
 import { ListEventSuggestionsUseCase } from '../../useCases/listEventSuggestions/ListEventSuggestionsUseCase'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { ListEventSuggestionsQuerySchema } from '../schedulingSharedSchemas'
 
 export class ListEventSuggestionsController {
@@ -10,7 +13,10 @@ export class ListEventSuggestionsController {
   ) {}
 
   async handle(request: Request, response: Response) {
-    const parsed = parseWithSchema(ListEventSuggestionsQuerySchema, request.query)
+    const parsed = parseWithSchema(
+      ListEventSuggestionsQuerySchema,
+      request.query,
+    )
     if (!parsed.success) {
       return sendZodBadRequest(response, parsed.error)
     }

@@ -8,14 +8,14 @@ import {
 import { MessageTemplate } from '../../../models/MessageTemplate'
 
 export type UpdateBeforeScheduleMessageDTO = {
-  id: string;
-  userId: string;
-  name?: string;
-  minutesBeforeSchedule?: number;
-  isActive?: boolean;
+  id: string
+  userId: string
+  name?: string
+  minutesBeforeSchedule?: number
+  isActive?: boolean
   messageTemplate?: {
-    textTemplate: string;
-  };
+    textTemplate: string
+  }
 }
 
 export class UpdateBeforeScheduleMessageUseCase {

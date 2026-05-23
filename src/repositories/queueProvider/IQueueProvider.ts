@@ -3,8 +3,8 @@ export abstract class IQueueProvider<T> {
   abstract add(
     jobTemplate: T,
     options?: {
-      jobId?: string;
-      delay?: number;
+      jobId?: string
+      delay?: number
     },
   ): Promise<void>
 
@@ -13,12 +13,12 @@ export abstract class IQueueProvider<T> {
   abstract addRepeatableCron(
     jobTemplate: T,
     options: {
-      pattern: string;
-      tz?: string;
-      immediately?: boolean;
-      startDate?: Date;
-      endDate?: Date;
-      limit?: number;
+      pattern: string
+      tz?: string
+      immediately?: boolean
+      startDate?: Date
+      endDate?: Date
+      limit?: number
     },
   ): Promise<void>
 

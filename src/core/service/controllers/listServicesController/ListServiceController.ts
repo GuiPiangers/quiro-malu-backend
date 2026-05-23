@@ -1,7 +1,10 @@
 import { ListServiceUseCase } from '../../useCases/listService/ListServiceUseCase'
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { ListServicesQuerySchema } from '../serviceSharedSchemas'
 
 export class ListServiceController {

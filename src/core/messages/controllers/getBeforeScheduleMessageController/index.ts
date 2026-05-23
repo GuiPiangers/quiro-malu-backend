@@ -6,8 +6,7 @@ const getBeforeScheduleMessageUseCase = new GetBeforeScheduleMessageUseCase(
   beforeScheduleMessageRepository,
 )
 
-const getBeforeScheduleMessageController = new GetBeforeScheduleMessageController(
-  getBeforeScheduleMessageUseCase,
-)
+const getBeforeScheduleMessageController =
+  new GetBeforeScheduleMessageController(getBeforeScheduleMessageUseCase)
 
 export { getBeforeScheduleMessageController }

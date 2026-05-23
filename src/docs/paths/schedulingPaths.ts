@@ -320,7 +320,10 @@ openApiRegistry.registerPath({
       content: {
         'application/json': {
           schema: ListEventsByUserBodySchema,
-          example: { userId: '00000000-0000-4000-8000-0000000000aa', date: '2026-05-14' },
+          example: {
+            userId: '00000000-0000-4000-8000-0000000000aa',
+            date: '2026-05-14',
+          },
         },
       },
     },

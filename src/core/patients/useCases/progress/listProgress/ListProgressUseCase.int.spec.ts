@@ -49,7 +49,11 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
         })
 
         const useCase = new ListProgressUseCase(new KnexProgressRepository(trx))
-        const result = await useCase.execute({ patientId, clinicId: userId, page: 1 })
+        const result = await useCase.execute({
+          patientId,
+          clinicId: userId,
+          page: 1,
+        })
 
         expect(result.total).toBeGreaterThanOrEqual(2)
         expect(result.progress.length).toBeGreaterThanOrEqual(2)

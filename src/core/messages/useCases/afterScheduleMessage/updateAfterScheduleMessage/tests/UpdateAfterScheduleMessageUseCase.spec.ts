@@ -2,7 +2,7 @@ import { createMockAfterScheduleMessageRepository } from '../../../../../../repo
 import { ApiError } from '../../../../../../utils/ApiError'
 import { UpdateAfterScheduleMessageUseCase } from '../UpdateAfterScheduleMessageUseCase'
 
-const makeAppEventListener = () => ({ emit: vi.fn(), on: vi.fn() } as any)
+const makeAppEventListener = () => ({ emit: vi.fn(), on: vi.fn() }) as any
 
 const existingConfig = {
   id: 'msg-1',
@@ -17,7 +17,10 @@ describe('UpdateAfterScheduleMessageUseCase', () => {
   const makeUseCase = () => {
     const repository = createMockAfterScheduleMessageRepository()
     const appEventListener = makeAppEventListener()
-    const sut = new UpdateAfterScheduleMessageUseCase(repository, appEventListener)
+    const sut = new UpdateAfterScheduleMessageUseCase(
+      repository,
+      appEventListener,
+    )
     return { sut, repository, appEventListener }
   }
 
@@ -66,7 +69,9 @@ describe('UpdateAfterScheduleMessageUseCase', () => {
       messageTemplate: { textTemplate: 'Nova mensagem {{nome_paciente}}' },
     })
 
-    expect(result.messageTemplate.textTemplate).toBe('Nova mensagem {{nome_paciente}}')
+    expect(result.messageTemplate.textTemplate).toBe(
+      'Nova mensagem {{nome_paciente}}',
+    )
     expect(result.minutesAfterSchedule).toBe(60)
     expect(result.isActive).toBe(true)
   })

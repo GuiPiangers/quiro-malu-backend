@@ -105,9 +105,9 @@ describe('CreateMessageSendStrategyUseCase', () => {
       }),
     )
     expect(result.kind).toBe(SEND_STRATEGY_KIND_SEND_SELECTED_LIST)
-    expect((result.params as { patientIdList: string[] }).patientIdList).toEqual(
-      patientIdList,
-    )
+    expect(
+      (result.params as { patientIdList: string[] }).patientIdList,
+    ).toEqual(patientIdList)
   })
 
   it('deve persistir exclude_patients_list com patientIdList vazio sem checar posse', async () => {
@@ -133,7 +133,9 @@ describe('CreateMessageSendStrategyUseCase', () => {
       }),
     )
     expect(result.kind).toBe(SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST)
-    expect((result.params as { patientIdList: string[] }).patientIdList).toEqual([])
+    expect(
+      (result.params as { patientIdList: string[] }).patientIdList,
+    ).toEqual([])
   })
 
   it('deve persistir exclude_patients_list quando todos os pacientes pertencem ao usuário', async () => {

@@ -6,8 +6,8 @@ export class ListRolePermissionsUseCase {
   constructor(private rbac: IRbacRepository) {}
 
   async execute(data: {
-    roleId: string;
-    clinicId: string;
+    roleId: string
+    clinicId: string
   }): Promise<RolePermissionItem[]> {
     const role = await this.rbac.findRoleByIdForClinic({
       id: data.roleId,

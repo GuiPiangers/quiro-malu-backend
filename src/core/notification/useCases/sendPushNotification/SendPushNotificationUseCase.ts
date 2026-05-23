@@ -11,8 +11,8 @@ export class SendPushNotificationUseCase {
     notificationData,
     userId,
   }: {
-    userId: string;
-    notificationData: PushNotificationDTO;
+    userId: string
+    notificationData: PushNotificationDTO
   }) {
     try {
       const notification = new PushNotification(notificationData)

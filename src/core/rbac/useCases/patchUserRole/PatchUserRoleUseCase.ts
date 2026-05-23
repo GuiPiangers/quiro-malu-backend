@@ -4,9 +4,9 @@ export class PatchUserRoleUseCase {
   constructor(private rbac: IRbacRepository) {}
 
   async execute(data: {
-    clinicId: string;
-    userId: string;
-    roleId: string;
+    clinicId: string
+    userId: string
+    roleId: string
   }): Promise<void> {
     await this.rbac.setUserRole({
       userId: data.userId,

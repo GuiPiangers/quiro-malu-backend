@@ -3,18 +3,18 @@ import { Entity } from '../../shared/Entity'
 import { notificationTypes } from './NotificationFactory'
 
 export type NotificationDTO<T = undefined> = {
-  id?: string;
-  title: string;
-  type: notificationTypes;
-  message: string;
-  createdAt?: DateTime;
-  read?: boolean;
-  actionNeeded?: boolean;
-  params?: T;
+  id?: string
+  title: string
+  type: notificationTypes
+  message: string
+  createdAt?: DateTime
+  read?: boolean
+  actionNeeded?: boolean
+  params?: T
 }
 
 export type ComplexNotificationDTO<T> = Omit<NotificationDTO<T>, 'type'> & {
-  params: T;
+  params: T
 }
 
 export class Notification extends Entity {
@@ -39,9 +39,7 @@ export class Notification extends Entity {
     this.createdAt = createdAt
     this.message = message
     this.type = type
-    this.read = read !== undefined
-      ? read
-      : false
+    this.read = read !== undefined ? read : false
     this.actionNeeded = actionNeeded
   }
 
@@ -67,9 +65,7 @@ export abstract class ComplexNotification<T> extends Notification {
   }: ComplexNotificationDTO<T> & Pick<NotificationDTO<T>, 'type'>) {
     super({
       ...data,
-      actionNeeded: data.actionNeeded === undefined
-        ? true
-        : data.actionNeeded,
+      actionNeeded: data.actionNeeded === undefined ? true : data.actionNeeded,
     })
     this.params = params
   }

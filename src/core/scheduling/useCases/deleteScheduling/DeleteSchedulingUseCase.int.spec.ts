@@ -9,8 +9,8 @@ import { DeleteSchedulingUseCase } from './DeleteSchedulingUseCase'
 
 const integrationEnvReady = Boolean(
   process.env.DB_HOST &&
-    process.env.MYSQL_ROOT_USER &&
-    process.env.MYSQL_DATABASE,
+  process.env.MYSQL_ROOT_USER &&
+  process.env.MYSQL_DATABASE,
 )
 
 const runIntegrationTests = ['1', 'true', 'yes'].includes(
@@ -45,13 +45,13 @@ async function insertUserAndPatient(trx: Knex.Transaction) {
 async function insertSchedule(
   trx: Knex.Transaction,
   row: {
-    id: string;
-    userId: string;
-    patientId: string;
-    date: string;
-    duration: number;
-    status: string;
-    service: string;
+    id: string
+    userId: string
+    patientId: string
+    date: string
+    duration: number
+    status: string
+    service: string
   },
 ) {
   await trx(ETableNames.SCHEDULES).insert({

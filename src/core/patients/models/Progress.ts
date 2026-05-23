@@ -46,17 +46,17 @@ export class PainScale extends Entity {
   }
 }
 export interface ProgressDTO {
-  id?: string;
-  userId: string;
-  schedulingId?: string;
-  patientId: string;
-  service?: string;
-  actualProblem?: string;
-  procedures?: string;
-  date?: string;
-  createAt?: string;
-  updateAt?: string;
-  painScales?: PainScaleDto[];
+  id?: string
+  userId: string
+  schedulingId?: string
+  patientId: string
+  service?: string
+  actualProblem?: string
+  procedures?: string
+  date?: string
+  createAt?: string
+  updateAt?: string
+  painScales?: PainScaleDto[]
 }
 
 export class Progress extends Entity {

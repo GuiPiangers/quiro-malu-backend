@@ -2,7 +2,10 @@ import { UpdateSchedulingUseCase } from '../../useCases/updateScheduling/UpdateS
 import { Request, Response } from 'express'
 import { SchedulingDTO } from '../../models/Scheduling'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { UpdateSchedulingBodySchema } from '../schedulingSharedSchemas'
 
 export class UpdateSchedulingController {

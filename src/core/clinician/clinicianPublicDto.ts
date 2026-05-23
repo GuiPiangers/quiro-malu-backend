@@ -2,13 +2,13 @@ import type { Clinician } from './models/Clinician'
 import type { ServiceDTO } from '../service/models/Service'
 
 export type ClinicianPublicDTO = {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  clinicId: string;
-  roleId?: string;
-  services: ServiceDTO[];
+  id: string
+  name: string
+  email: string
+  phone: string
+  clinicId: string
+  roleId?: string
+  services: ServiceDTO[]
 }
 
 export function toClinicianPublicDTO(clinician: Clinician): ClinicianPublicDTO {

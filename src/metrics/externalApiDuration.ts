@@ -15,8 +15,5 @@ export const observeExternalApiDuration = (
   endpoint: string,
   durationMs: number,
 ) => {
-  externalApiDuration.observe(
-    { service, endpoint },
-    durationMs / 1000,
-  )
+  externalApiDuration.observe({ service, endpoint }, durationMs / 1000)
 }

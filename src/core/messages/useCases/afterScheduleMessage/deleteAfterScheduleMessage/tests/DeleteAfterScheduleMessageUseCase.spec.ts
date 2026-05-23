@@ -5,7 +5,8 @@ import { DeleteAfterScheduleMessageUseCase } from '../DeleteAfterScheduleMessage
 
 describe('DeleteAfterScheduleMessageUseCase', () => {
   const makeSut = () => {
-    const afterScheduleMessageRepository = createMockAfterScheduleMessageRepository()
+    const afterScheduleMessageRepository =
+      createMockAfterScheduleMessageRepository()
     const schedulingRepository = createMockSchedulingRepository()
     const afterScheduleQueue = {
       remove: vi.fn().mockResolvedValue(undefined),
@@ -65,9 +66,12 @@ describe('DeleteAfterScheduleMessageUseCase', () => {
       id: 'msg-1',
       userId: 'user-1',
     })
-    expect(appEventListener.emit).toHaveBeenCalledWith('afterScheduleMessageDelete', {
-      id: 'msg-1',
-    })
+    expect(appEventListener.emit).toHaveBeenCalledWith(
+      'afterScheduleMessageDelete',
+      {
+        id: 'msg-1',
+      },
+    )
     expect(schedulingRepository.listIdsByClinicId).toHaveBeenCalledWith({
       clinicId: 'clinic-1',
     })

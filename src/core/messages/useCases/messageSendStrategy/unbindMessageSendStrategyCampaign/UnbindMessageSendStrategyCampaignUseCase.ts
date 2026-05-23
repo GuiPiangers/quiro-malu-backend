@@ -1,8 +1,8 @@
 import { IMessageSendStrategyRepository } from '../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository'
 
 export type UnbindMessageSendStrategyCampaignDTO = {
-  userId: string;
-  campaignId: string;
+  userId: string
+  campaignId: string
 }
 
 export class UnbindMessageSendStrategyCampaignUseCase {

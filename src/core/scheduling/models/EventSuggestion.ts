@@ -2,10 +2,10 @@ import { DateTime } from '../../shared/Date'
 import { Entity } from '../../shared/Entity'
 
 export type EventSuggestionDTO = {
-  id?: string;
-  description: string;
-  durationInMinutes: number;
-  frequency: number;
+  id?: string
+  description: string
+  durationInMinutes: number
+  frequency: number
 }
 
 export class EventSuggestion extends Entity {
@@ -44,9 +44,9 @@ export class EventSuggestion extends Entity {
 }
 
 export function factoryEventSuggestionWithStartEndDate(data: {
-  description: string;
-  startDate: string; // pattern YYYY-MM-DDTHH:mm:ss
-  endDate: string; // pattern YYYY-MM-DDTHH:mm:ss
+  description: string
+  startDate: string // pattern YYYY-MM-DDTHH:mm:ss
+  endDate: string // pattern YYYY-MM-DDTHH:mm:ss
 }) {
   const start = new DateTime(data.startDate)
   const end = new DateTime(data.endDate)

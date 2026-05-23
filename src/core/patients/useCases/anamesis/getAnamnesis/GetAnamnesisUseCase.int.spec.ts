@@ -31,7 +31,9 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
           phone: '(51) 98888 0001',
         })
 
-        const useCase = new GetAnamnesisUseCase(new KnexAnamnesisRepository(trx))
+        const useCase = new GetAnamnesisUseCase(
+          new KnexAnamnesisRepository(trx),
+        )
         const data = await useCase.execute(patientId, userId)
         expect(data).toEqual({})
       })
@@ -52,7 +54,9 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
           currentIllness: 'Há 2 meses',
         })
 
-        const useCase = new GetAnamnesisUseCase(new KnexAnamnesisRepository(trx))
+        const useCase = new GetAnamnesisUseCase(
+          new KnexAnamnesisRepository(trx),
+        )
         const data = await useCase.execute(patientId, userId)
 
         expect(data.mainProblem).toBe('Dor lombar')

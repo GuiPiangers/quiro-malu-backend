@@ -31,10 +31,7 @@ export class MessageSendStrategyFactory {
         SendMostRecentPatientsMessageSendStrategy.amountFromPersistedParams(
           row.params,
         )
-      return new SendMostRecentPatientsStrategy(
-        amount,
-        this.patientRepository,
-      )
+      return new SendMostRecentPatientsStrategy(amount, this.patientRepository)
     }
 
     if (row.kind === SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS) {

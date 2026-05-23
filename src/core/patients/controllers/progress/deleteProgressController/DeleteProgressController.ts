@@ -1,7 +1,10 @@
 import { Request, Response } from 'express'
 import { DeleteProgressUseCase } from '../../../useCases/progress/deleteProgress/DeleteProgressUseCase'
 import { responseError } from '../../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../../utils/zodValidation'
 import { DeleteProgressBodySchema } from '../progressBodySchemas'
 
 export class DeleteProgressController {

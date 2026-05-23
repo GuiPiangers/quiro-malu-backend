@@ -1,6 +1,4 @@
-import {
-  IBirthdayMessageRepository,
-} from '../../../../../repositories/messages/IBirthdayMessageRepository'
+import { IBirthdayMessageRepository } from '../../../../../repositories/messages/IBirthdayMessageRepository'
 import { ApiError } from '../../../../../utils/ApiError'
 import { AppEventListener } from '../../../../shared/observers/EventListener'
 import {
@@ -10,14 +8,14 @@ import {
 import { MessageTemplate } from '../../../models/MessageTemplate'
 
 export type UpdateBirthdayMessageDTO = {
-  id: string;
-  userId: string;
-  name?: string;
-  isActive?: boolean;
-  sendTime?: string;
+  id: string
+  userId: string
+  name?: string
+  isActive?: boolean
+  sendTime?: string
   messageTemplate?: {
-    textTemplate: string;
-  };
+    textTemplate: string
+  }
 }
 
 export class UpdateBirthdayMessageUseCase {
@@ -35,20 +33,15 @@ export class UpdateBirthdayMessageUseCase {
     if (!existing) {
       throw new ApiError('Campanha de aniversário não encontrada', 404)
     }
-    const name = dto.name !== undefined
-      ? dto.name.trim()
-      : existing.name
+    const name = dto.name !== undefined ? dto.name.trim() : existing.name
     const textTemplate =
       dto.messageTemplate !== undefined
         ? dto.messageTemplate.textTemplate.trim()
         : existing.textTemplate
-    const isActive = dto.isActive !== undefined
-      ? dto.isActive
-      : existing.isActive
+    const isActive =
+      dto.isActive !== undefined ? dto.isActive : existing.isActive
     const sendTimeForMerge =
-      dto.sendTime !== undefined
-        ? dto.sendTime
-        : existing.sendTime
+      dto.sendTime !== undefined ? dto.sendTime : existing.sendTime
 
     const messageTemplate = new MessageTemplate({ textTemplate })
     const birthdayMessage = new BirthdayMessage({
@@ -70,15 +63,11 @@ export class UpdateBirthdayMessageUseCase {
     await this.birthdayMessageRepository.update({
       id: dto.id,
       userId: dto.userId,
-      ...(dto.name !== undefined
-        ? { name: dto.name.trim() }
-        : {}),
+      ...(dto.name !== undefined ? { name: dto.name.trim() } : {}),
       ...(dto.messageTemplate !== undefined
         ? { textTemplate: dto.messageTemplate.textTemplate.trim() }
         : {}),
-      ...(dto.isActive !== undefined
-        ? { isActive: dto.isActive }
-        : {}),
+      ...(dto.isActive !== undefined ? { isActive: dto.isActive } : {}),
       ...(dto.sendTime !== undefined
         ? { sendTime: `${updatedDTO.sendTime}:00` }
         : {}),

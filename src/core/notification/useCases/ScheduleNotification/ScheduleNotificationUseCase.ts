@@ -27,7 +27,9 @@ export class ScheduleNotificationUseCase {
       })
 
       if (!data || !schedule.date) return
-      if (schedule.status === 'Cancelado' || schedule.status === 'Atendido') { return }
+      if (schedule.status === 'Cancelado' || schedule.status === 'Atendido') {
+        return
+      }
 
       const delay = this.calculateDelay(schedule.date, preTimer)
 

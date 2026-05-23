@@ -47,7 +47,9 @@ describe('RegisterWhatsAppUseCase', () => {
 
     const result = await sut.execute({ userId })
 
-    expect(whatsAppProvider.getConnectionState).toHaveBeenCalledWith(instanceName)
+    expect(whatsAppProvider.getConnectionState).toHaveBeenCalledWith(
+      instanceName,
+    )
     expect(result).toEqual({ instanceName, qrCode: 'base64-qr-code' })
   })
 

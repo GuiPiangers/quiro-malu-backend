@@ -16,7 +16,9 @@ export const PatientWriteBodySchema = z
   .object({
     id: z.string().optional(),
     name: z.string().min(3).max(120),
-    phone: z.string().regex(phoneBrPattern, 'Telefone no formato (DD) NNNNN NNNN'),
+    phone: z
+      .string()
+      .regex(phoneBrPattern, 'Telefone no formato (DD) NNNNN NNNN'),
     dateOfBirth: z.string().optional(),
     gender: z.enum(['masculino', 'feminino']).optional(),
     cpf: z.string().optional(),

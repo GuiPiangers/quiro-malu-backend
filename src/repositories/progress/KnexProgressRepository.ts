@@ -4,19 +4,19 @@ import { ETableNames } from '../../database/ETableNames'
 import type { Knex } from 'knex'
 
 interface ProgressWithPainScaleRow {
-  id: string;
-  userId: string;
-  patientId: string;
-  clinicId: string;
-  service: string;
-  actualProblem?: string;
-  procedures?: string;
-  schedulingId: string;
-  date: string;
+  id: string
+  userId: string
+  patientId: string
+  clinicId: string
+  service: string
+  actualProblem?: string
+  procedures?: string
+  schedulingId: string
+  date: string
 
-  painScaleId?: string;
-  painLevel: number;
-  description: string;
+  painScaleId?: string
+  painLevel: number
+  description: string
 }
 export class KnexProgressRepository implements IProgressRepository {
   constructor(private readonly knex: Knex) {}
@@ -26,9 +26,9 @@ export class KnexProgressRepository implements IProgressRepository {
     schedulingId,
     clinicId,
   }: {
-    schedulingId: string;
-    patientId: string;
-    clinicId: string;
+    schedulingId: string
+    patientId: string
+    clinicId: string
   }): Promise<ProgressDTO[]> {
     const rows: ProgressWithPainScaleRow[] = await this.knex(
       `${ETableNames.PROGRESS} as p`,
@@ -121,9 +121,9 @@ export class KnexProgressRepository implements IProgressRepository {
     patientId,
     clinicId,
   }: {
-    id: string;
-    patientId: string;
-    clinicId: string;
+    id: string
+    patientId: string
+    clinicId: string
   }): Promise<ProgressDTO[]> {
     const rows: ProgressWithPainScaleRow[] = await this.knex(
       `${ETableNames.PROGRESS} as p`,
@@ -160,9 +160,9 @@ export class KnexProgressRepository implements IProgressRepository {
     clinicId,
     config,
   }: {
-    patientId: string;
-    clinicId: string;
-    config?: { limit: number; offSet: number };
+    patientId: string
+    clinicId: string
+    config?: { limit: number; offSet: number }
   }): Promise<ProgressDTO[]> {
     const query = this.knex(`${ETableNames.PROGRESS} as p`)
       .leftJoin(`${ETableNames.PAIN_SCALES} as ps`, 'p.id', 'ps.progressId')
@@ -202,8 +202,8 @@ export class KnexProgressRepository implements IProgressRepository {
     patientId,
     clinicId,
   }: {
-    patientId: string;
-    clinicId: string;
+    patientId: string
+    clinicId: string
   }): Promise<[{ total: number }]> {
     const [result] = await this.knex(ETableNames.PROGRESS)
       .count('id as total')
@@ -217,9 +217,9 @@ export class KnexProgressRepository implements IProgressRepository {
     patientId,
     clinicId,
   }: {
-    id: string;
-    patientId: string;
-    clinicId: string;
+    id: string
+    patientId: string
+    clinicId: string
   }): Promise<void> {
     await this.knex(ETableNames.PROGRESS)
       .where({ id, patientId, clinicId })

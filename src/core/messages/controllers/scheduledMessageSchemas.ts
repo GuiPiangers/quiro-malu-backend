@@ -1,7 +1,5 @@
 import { z } from '../../../schemas/zodOpenApi'
-import {
-  MessageTemplateNestedSchema,
-} from './messagesCommonSchemas'
+import { MessageTemplateNestedSchema } from './messagesCommonSchemas'
 
 const MINUTES_BEFORE_DOC =
   'Minutos antes do horário da consulta para enviar a mensagem (inteiro > 0).'

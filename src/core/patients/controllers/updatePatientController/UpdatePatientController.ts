@@ -2,7 +2,10 @@ import { Request, Response } from 'express'
 import { UpdatePatientUseCase } from '../../useCases/updatePatient/UpdatePatientUseCase'
 import { Patient } from '../../models/Patient'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { PatientWriteBodySchema } from '../patientSharedSchemas'
 
 export class UpdatePatientController {

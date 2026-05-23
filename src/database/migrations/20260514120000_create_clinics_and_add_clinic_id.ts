@@ -125,10 +125,7 @@ async function dropClinicForeignKeys(
   }
 }
 
-async function dropClinicId(
-  knex: Knex,
-  tableName: ETableNames,
-): Promise<void> {
+async function dropClinicId(knex: Knex, tableName: ETableNames): Promise<void> {
   const hasClinicId = await knex.schema.hasColumn(tableName, 'clinicId')
   if (!hasClinicId) return
 

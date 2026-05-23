@@ -8,7 +8,9 @@ export class MaritalStatus {
 
   constructor(maritalStatus?: string) {
     const convertedMaritalStatus = this.convertMaritalStatus(maritalStatus)
-    if (this.validateMaritalStatus(convertedMaritalStatus)) { this.value = convertedMaritalStatus }
+    if (this.validateMaritalStatus(convertedMaritalStatus)) {
+      this.value = convertedMaritalStatus
+    }
   }
 
   private validateMaritalStatus(

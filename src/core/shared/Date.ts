@@ -3,8 +3,8 @@ import { ApiError } from '../../utils/ApiError'
 import { DateTime as Luxon } from 'luxon'
 
 type DateTimeConfig = {
-  onlyPassDate?: boolean;
-  onlyFutureDate?: boolean;
+  onlyPassDate?: boolean
+  onlyFutureDate?: boolean
 }
 
 export class DateTime {

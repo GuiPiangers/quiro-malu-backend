@@ -38,17 +38,18 @@ export class QueueProvider<T> implements IQueueProvider<T> {
   async addRepeatableCron(
     jobTemplate: T,
     options: {
-      pattern: string;
-      tz?: string;
-      immediately?: boolean;
-      startDate?: Date;
-      endDate?: Date;
-      limit?: number;
+      pattern: string
+      tz?: string
+      immediately?: boolean
+      startDate?: Date
+      endDate?: Date
+      limit?: number
     },
   ): Promise<void> {
     const repeat: RepeatOptions = { pattern: options.pattern }
     if (options.tz !== undefined) repeat.tz = options.tz
-    if (options.immediately !== undefined) repeat.immediately = options.immediately
+    if (options.immediately !== undefined)
+      repeat.immediately = options.immediately
     if (options.startDate !== undefined) repeat.startDate = options.startDate
     if (options.endDate !== undefined) repeat.endDate = options.endDate
     if (options.limit !== undefined) repeat.limit = options.limit
@@ -83,7 +84,10 @@ export class QueueProvider<T> implements IQueueProvider<T> {
     )
 
     worker.on('error', (error) => {
-      logger.error({ err: error, queue: this.queueName }, 'QueueProvider worker error')
+      logger.error(
+        { err: error, queue: this.queueName },
+        'QueueProvider worker error',
+      )
     })
     worker.on('failed', (job, error) => {
       logger.error(

@@ -6,11 +6,12 @@ import { beforeScheduleMessageRepository } from '../../../../../repositories/mes
 
 const schedulingRepository = knexSchedulingRepository
 
-const deleteBeforeScheduleMessageUseCase = new DeleteBeforeScheduleMessageUseCase(
-  beforeScheduleMessageRepository,
-  schedulingRepository,
-  beforeScheduleQueue,
-  appEventListener,
-)
+const deleteBeforeScheduleMessageUseCase =
+  new DeleteBeforeScheduleMessageUseCase(
+    beforeScheduleMessageRepository,
+    schedulingRepository,
+    beforeScheduleQueue,
+    appEventListener,
+  )
 
 export { deleteBeforeScheduleMessageUseCase }

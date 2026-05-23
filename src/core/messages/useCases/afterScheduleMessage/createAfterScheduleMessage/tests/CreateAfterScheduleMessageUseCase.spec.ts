@@ -5,7 +5,8 @@ import { CreateAfterScheduleMessageUseCase } from '../CreateAfterScheduleMessage
 
 describe('CreateAfterScheduleMessageUseCase', () => {
   it('deve criar entidade, persistir e emitir afterScheduleMessageCreate', async () => {
-    const afterScheduleMessageRepository = createMockAfterScheduleMessageRepository()
+    const afterScheduleMessageRepository =
+      createMockAfterScheduleMessageRepository()
     const appEventListener = new AppEventListener()
     const emitSpy = vi.spyOn(appEventListener, 'emit')
 
@@ -54,7 +55,8 @@ describe('CreateAfterScheduleMessageUseCase', () => {
   })
 
   it('deve persistir isActive false quando informado', async () => {
-    const afterScheduleMessageRepository = createMockAfterScheduleMessageRepository()
+    const afterScheduleMessageRepository =
+      createMockAfterScheduleMessageRepository()
     const appEventListener = new AppEventListener()
     const emitSpy = vi.spyOn(appEventListener, 'emit')
 

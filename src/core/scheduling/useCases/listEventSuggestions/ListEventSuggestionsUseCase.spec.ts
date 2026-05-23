@@ -20,10 +20,7 @@ describe('ListEventSuggestionsUseCase', () => {
       frequency: 2,
     })
 
-    eventSuggestionRepository.list.mockResolvedValue([
-      suggestion1,
-      suggestion2,
-    ])
+    eventSuggestionRepository.list.mockResolvedValue([suggestion1, suggestion2])
 
     const result = await listEventSuggestionsUseCase.execute({
       userId: 'user-id',

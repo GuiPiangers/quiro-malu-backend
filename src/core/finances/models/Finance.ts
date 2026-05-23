@@ -2,15 +2,15 @@ import { DateTime } from '../../shared/Date'
 import { Entity } from '../../shared/Entity'
 
 export interface FinanceDTO {
-  id?: string;
-  date: string;
-  description: string;
-  type: 'income' | 'expense';
-  paymentMethod: string;
-  value: number;
-  patientId?: string;
-  schedulingId?: string;
-  service?: string;
+  id?: string
+  date: string
+  description: string
+  type: 'income' | 'expense'
+  paymentMethod: string
+  value: number
+  patientId?: string
+  schedulingId?: string
+  service?: string
 }
 
 export class Finance extends Entity {

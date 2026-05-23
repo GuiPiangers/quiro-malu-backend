@@ -3,34 +3,34 @@ import { BlockScheduleDto } from '../../core/scheduling/models/dtos/BlockSchedul
 import { DateTime } from '../../core/shared/Date'
 
 export type BlockScheduleListBetweenDatesParams = {
-  userId: string;
-  startDate: DateTime;
-  endDate: DateTime;
+  userId: string
+  startDate: DateTime
+  endDate: DateTime
 }
 
 export type BlockScheduleDeleteParams = {
-  id: string;
-  userId: string;
+  id: string
+  userId: string
 }
 
 export interface IBlockScheduleRepository {
-  save(data: BlockSchedule, userId: string): Promise<void>;
+  save(data: BlockSchedule, userId: string): Promise<void>
 
-  edit(data: BlockSchedule, userId: string): Promise<void>;
+  edit(data: BlockSchedule, userId: string): Promise<void>
 
-  findById(id: string, userId: string): Promise<BlockSchedule | null>;
+  findById(id: string, userId: string): Promise<BlockSchedule | null>
 
   listBetweenDates(
     data: BlockScheduleListBetweenDatesParams,
-  ): Promise<BlockSchedule[]>;
+  ): Promise<BlockSchedule[]>
 
   list(data: {
-    userId: string;
-    date: string;
-    config?: { limit: number; offSet: number };
-  }): Promise<BlockScheduleDto[]>;
+    userId: string
+    date: string
+    config?: { limit: number; offSet: number }
+  }): Promise<BlockScheduleDto[]>
 
-  count(data: BlockScheduleListBetweenDatesParams): Promise<{ total: number }>;
+  count(data: BlockScheduleListBetweenDatesParams): Promise<{ total: number }>
 
-  delete(data: BlockScheduleDeleteParams): Promise<void>;
+  delete(data: BlockScheduleDeleteParams): Promise<void>
 }

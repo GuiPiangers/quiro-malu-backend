@@ -14,9 +14,7 @@ describe('ListBlockScheduleUseCase', () => {
   const mockBlockSchedulingRepository = createMockBlockScheduleRepository()
 
   beforeAll(() => {
-    vi
-      .useFakeTimers()
-      .setSystemTime(new Date('2025-01-10T12:00:00Z').getTime())
+    vi.useFakeTimers().setSystemTime(new Date('2025-01-10T12:00:00Z').getTime())
   })
 
   beforeEach(() => {

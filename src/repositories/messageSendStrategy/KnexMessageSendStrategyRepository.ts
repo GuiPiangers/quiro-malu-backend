@@ -31,18 +31,17 @@ function parseParams(raw: unknown): Record<string, unknown> {
 
 function parseCampaignBindingsCount(value: unknown): number {
   const n = Number(value)
-  return Number.isFinite(n)
-    ? Math.max(0, Math.trunc(n))
-    : 0
+  return Number.isFinite(n) ? Math.max(0, Math.trunc(n)) : 0
 }
 
 function rowBindingsCount(row: Record<string, unknown>): number {
-  const raw =
-    row.campaignBindingsCount ?? row.campaignbindingscount
+  const raw = row.campaignBindingsCount ?? row.campaignbindingscount
   return parseCampaignBindingsCount(raw)
 }
 
-function buildVirtualUniqueUserStrategyRow(userId: string): MessageSendStrategyRow {
+function buildVirtualUniqueUserStrategyRow(
+  userId: string,
+): MessageSendStrategyRow {
   return {
     id: UNIQUE_USER_STRATEGY_ID,
     userId,
@@ -68,13 +67,10 @@ async function countUniqueSendCampaignBindings(
     .select(knex.raw('COUNT(DISTINCT campaignId) AS c'))
   const raw = (rows[0] as { c: string | number } | undefined)?.c
   const n = Number(raw)
-  return Number.isFinite(n)
-    ? n
-    : 0
+  return Number.isFinite(n) ? n : 0
 }
 
-export class KnexMessageSendStrategyRepository
-implements IMessageSendStrategyRepository {
+export class KnexMessageSendStrategyRepository implements IMessageSendStrategyRepository {
   constructor(private readonly knex: Knex) {}
 
   async listByUserIdPaged(
@@ -82,15 +78,15 @@ implements IMessageSendStrategyRepository {
   ): Promise<ListMessageSendStrategiesByUserIdResult> {
     try {
       const base = () =>
-        this.knex(ETableNames.MESSAGE_SEND_STRATEGIES).where({ userId: data.userId })
+        this.knex(ETableNames.MESSAGE_SEND_STRATEGIES).where({
+          userId: data.userId,
+        })
 
-      const countRows = await base().clone().count<{ total: string | number }>(
-        '* as total',
-      )
+      const countRows = await base()
+        .clone()
+        .count<{ total: string | number }>('* as total')
       const total = Number(
-        (Array.isArray(countRows)
-          ? countRows[0]
-          : countRows)?.total ?? 0,
+        (Array.isArray(countRows) ? countRows[0] : countRows)?.total ?? 0,
       )
 
       const strategyTable = `\`${ETableNames.MESSAGE_SEND_STRATEGIES}\`.id`
@@ -253,7 +249,9 @@ implements IMessageSendStrategyRepository {
           name: row.name ?? '',
           kind: row.kind,
           params: parseParams(row.params),
-          campaignBindingsCount: rowBindingsCount(row as Record<string, unknown>),
+          campaignBindingsCount: rowBindingsCount(
+            row as Record<string, unknown>,
+          ),
         })
       }
 
@@ -277,7 +275,9 @@ implements IMessageSendStrategyRepository {
           .where({ userId, campaignId })
           .del()
 
-        const realIds = strategyIds.filter((id) => id !== UNIQUE_USER_STRATEGY_ID)
+        const realIds = strategyIds.filter(
+          (id) => id !== UNIQUE_USER_STRATEGY_ID,
+        )
         const includeUnique = strategyIds.includes(UNIQUE_USER_STRATEGY_ID)
 
         if (realIds.length > 0) {

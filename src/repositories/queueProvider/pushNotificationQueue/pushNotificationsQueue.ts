@@ -3,20 +3,20 @@ import { sendPushNotificationUseCase } from '../../../core/notification/useCases
 import { IQueueProvider } from '../IQueueProvider'
 
 export type PushNotificationQueuePrams = {
-  notification: PushNotificationDTO;
-  userId: string;
-  delay: number;
+  notification: PushNotificationDTO
+  userId: string
+  delay: number
 }
 
 export type deleteNotificationQueueParams = {
-  id: string;
+  id: string
 }
 
 export class PushNotificationQueue {
   constructor(
     private queueProvider: IQueueProvider<{
-      notification: PushNotificationDTO;
-      userId: string;
+      notification: PushNotificationDTO
+      userId: string
     }>,
   ) {}
 

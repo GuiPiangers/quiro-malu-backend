@@ -9,9 +9,9 @@ export class RestoreExamUseCase {
     patientId,
     userId,
   }: {
-    id: string;
-    userId: string;
-    patientId: string;
+    id: string
+    userId: string
+    patientId: string
   }) {
     await this.examRepository.update({
       id,

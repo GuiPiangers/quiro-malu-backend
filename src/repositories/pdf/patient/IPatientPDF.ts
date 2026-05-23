@@ -6,16 +6,16 @@ import { LocationDTO } from '../../../core/shared/Location'
 export interface IPdfGenerator {
   generate(
     data: {
-      name: string;
-      phone?: string;
-      dateOfBirth?: string;
-      gender?: GenderType;
-      cpf?: string;
-      location?: LocationDTO;
-      education?: string;
-      maritalStatus?: string;
-      profession?: string;
-      anamnesis?: Partial<AnamnesisDTO>;
+      name: string
+      phone?: string
+      dateOfBirth?: string
+      gender?: GenderType
+      cpf?: string
+      location?: LocationDTO
+      education?: string
+      maritalStatus?: string
+      profession?: string
+      anamnesis?: Partial<AnamnesisDTO>
     } & Partial<DiagnosticDTO>,
-  ): Promise<Buffer>;
+  ): Promise<Buffer>
 }

@@ -7,9 +7,7 @@ export async function resolveClinicianServices(
   serviceRefs: { serviceId: string }[],
   clinicId: string,
 ): Promise<ServiceDTO[]> {
-  const uniqueServiceIds = [
-    ...new Set(serviceRefs.map((ref) => ref.serviceId)),
-  ]
+  const uniqueServiceIds = [...new Set(serviceRefs.map((ref) => ref.serviceId))]
 
   const lookups = await Promise.all(
     uniqueServiceIds.map(async (serviceId) => ({

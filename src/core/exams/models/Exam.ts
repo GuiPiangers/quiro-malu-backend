@@ -1,10 +1,10 @@
 import { Entity } from '../../shared/Entity'
 
 export type ExamDTO = {
-  id?: string;
-  patientId: string;
-  fileName: string;
-  fileSize?: number;
+  id?: string
+  patientId: string
+  fileName: string
+  fileSize?: number
 }
 
 export class Exam extends Entity {

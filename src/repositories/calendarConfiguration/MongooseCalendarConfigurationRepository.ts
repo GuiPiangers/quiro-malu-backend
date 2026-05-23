@@ -7,8 +7,7 @@ import {
   UpdateCalendarConfiguration,
 } from './ICalendarConfigurationRepository'
 
-export class MongooseCalendarConfigurationRepository
-implements ICalendarConfigurationRepository {
+export class MongooseCalendarConfigurationRepository implements ICalendarConfigurationRepository {
   async get({
     userId,
   }: GetCalendarConfiguration): Promise<CalendarConfiguration | null> {

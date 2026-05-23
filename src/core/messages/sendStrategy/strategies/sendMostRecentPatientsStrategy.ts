@@ -1,5 +1,8 @@
 import { IPatientRepository } from '../../../../repositories/patient/IPatientRepository'
-import { IMessageSendStrategy, SendStrategyContext } from '../IMessageSendStrategy'
+import {
+  IMessageSendStrategy,
+  SendStrategyContext,
+} from '../IMessageSendStrategy'
 import { SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS } from '../sendStrategyKind'
 
 export class SendMostRecentPatientsStrategy implements IMessageSendStrategy {

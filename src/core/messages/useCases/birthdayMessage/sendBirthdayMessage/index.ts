@@ -7,7 +7,10 @@ import { SendBirthdayMessageUseCase } from './sendBirthdayMessageUseCase'
 import { knexMessageSendStrategyRepository } from '../../../../../repositories/messageSendStrategy/knexInstances'
 import { knexPatientRepository } from '../../../../../repositories/patient/knexInstances'
 import { knexSchedulingRepository } from '../../../../../repositories/scheduling/knexInstances'
-import { knexWhatsAppInstanceRepository, knexWhatsAppMessageLogRepository } from '../../../../../repositories/whatsapp/knexInstances'
+import {
+  knexWhatsAppInstanceRepository,
+  knexWhatsAppMessageLogRepository,
+} from '../../../../../repositories/whatsapp/knexInstances'
 
 const patientRepository = knexPatientRepository
 const schedulingRepository = knexSchedulingRepository

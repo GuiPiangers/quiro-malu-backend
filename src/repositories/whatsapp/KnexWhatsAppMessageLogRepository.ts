@@ -15,38 +15,34 @@ import {
 } from './IWhatsAppMessageLogRepository'
 
 type MessageLogRow = {
-  id: string;
-  userId: string;
-  patientId: string;
-  schedulingId: string;
-  scheduleMessageType: ScheduleMessageType;
-  scheduleMessageConfigId: string;
-  message: string;
-  toPhone: string;
-  instanceName: string;
-  status: WhatsAppMessageLogStatus;
-  providerMessageId: string | null;
-  errorMessage: string | null;
-  sentAt: Date | string | null;
-  deliveredAt: Date | string | null;
-  readAt: Date | string | null;
-  created_at: Date | string;
-  updated_at: Date | string;
+  id: string
+  userId: string
+  patientId: string
+  schedulingId: string
+  scheduleMessageType: ScheduleMessageType
+  scheduleMessageConfigId: string
+  message: string
+  toPhone: string
+  instanceName: string
+  status: WhatsAppMessageLogStatus
+  providerMessageId: string | null
+  errorMessage: string | null
+  sentAt: Date | string | null
+  deliveredAt: Date | string | null
+  readAt: Date | string | null
+  created_at: Date | string
+  updated_at: Date | string
 }
 
 function toIso(d: Date | string | null | undefined): string | null {
   if (d == null) return null
-  const t = d instanceof Date
-    ? d
-    : new Date(d)
+  const t = d instanceof Date ? d : new Date(d)
   if (Number.isNaN(t.getTime())) return null
   return t.toISOString()
 }
 
 function countTotal(result: unknown): number {
-  const rows = Array.isArray(result)
-    ? result
-    : [result]
+  const rows = Array.isArray(result) ? result : [result]
   const r = rows[0] as { total?: string | number } | undefined
   return Number(r?.total ?? 0)
 }
@@ -73,8 +69,7 @@ function rowToDto(row: MessageLogRow): WhatsAppMessageLogDTO {
   }
 }
 
-export class KnexWhatsAppMessageLogRepository
-implements IWhatsAppMessageLogRepository {
+export class KnexWhatsAppMessageLogRepository implements IWhatsAppMessageLogRepository {
   constructor(private readonly knex: Knex) {}
 
   async findById(id: string): Promise<WhatsAppMessageLogDTO | null> {
@@ -82,15 +77,15 @@ implements IWhatsAppMessageLogRepository {
       const row = await this.knex(ETableNames.WHATSAPP_MESSAGE_LOGS)
         .where({ id })
         .first()
-      return row
-        ? rowToDto(row as MessageLogRow)
-        : null
+      return row ? rowToDto(row as MessageLogRow) : null
     } catch (error: any) {
       throw new ApiError(error.message, 500)
     }
   }
 
-  async getBySchedulingAndCampaignId(props: GetBySchedulingAndCampaignIdProps): Promise<WhatsAppMessageLogDTO | null> {
+  async getBySchedulingAndCampaignId(
+    props: GetBySchedulingAndCampaignIdProps,
+  ): Promise<WhatsAppMessageLogDTO | null> {
     try {
       const row = await this.knex(ETableNames.WHATSAPP_MESSAGE_LOGS)
         .where({
@@ -98,9 +93,7 @@ implements IWhatsAppMessageLogRepository {
           scheduleMessageConfigId: props.campaignId,
         })
         .first()
-      return row
-        ? rowToDto(row)
-        : null
+      return row ? rowToDto(row) : null
     } catch (error: any) {
       throw new ApiError(error.message, 500)
     }
@@ -202,9 +195,9 @@ implements IWhatsAppMessageLogRepository {
   async summaryByUserId(
     userId: string,
     filter?: {
-      patientId?: string;
-      scheduleMessageType?: ScheduleMessageType;
-      scheduleMessageConfigId?: string;
+      patientId?: string
+      scheduleMessageType?: ScheduleMessageType
+      scheduleMessageConfigId?: string
     },
   ): Promise<WhatsAppMessageLogsSummaryDTO> {
     try {
@@ -214,7 +207,9 @@ implements IWhatsAppMessageLogRepository {
         base = base.andWhere({ patientId: filter.patientId })
       }
       if (filter?.scheduleMessageType) {
-        base = base.andWhere({ scheduleMessageType: filter.scheduleMessageType })
+        base = base.andWhere({
+          scheduleMessageType: filter.scheduleMessageType,
+        })
       }
       if (filter?.scheduleMessageConfigId) {
         base = base.andWhere({
@@ -242,8 +237,8 @@ implements IWhatsAppMessageLogRepository {
 
       let total = 0
       for (const row of rows as {
-        status: WhatsAppMessageLogStatus;
-        total: string | number;
+        status: WhatsAppMessageLogStatus
+        total: string | number
       }[]) {
         const c = Number(row.total)
         const st = row.status
@@ -257,14 +252,10 @@ implements IWhatsAppMessageLogRepository {
       const denomDelivery =
         byStatus.SENT + byStatus.DELIVERED + byStatus.READ + byStatus.FAILED
       const deliveryRate =
-        denomDelivery > 0
-          ? deliveredOrRead / denomDelivery
-          : null
+        denomDelivery > 0 ? deliveredOrRead / denomDelivery : null
 
       const denomRead = byStatus.DELIVERED + byStatus.READ
-      const readRate = denomRead > 0
-        ? byStatus.READ / denomRead
-        : null
+      const readRate = denomRead > 0 ? byStatus.READ / denomRead : null
 
       return { total, byStatus, deliveryRate, readRate }
     } catch (error: any) {

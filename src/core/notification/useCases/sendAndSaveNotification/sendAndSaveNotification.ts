@@ -9,8 +9,8 @@ export default class SaveSendNotificationUseCase {
     userId,
     notification,
   }: {
-    userId: string;
-    notification: Notification;
+    userId: string
+    notification: Notification
   }) {
     const notificationDTO = notification.getDTO()
 

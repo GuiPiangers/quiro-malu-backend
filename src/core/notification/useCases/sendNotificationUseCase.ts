@@ -9,8 +9,8 @@ export class SendNotificationUseCase {
     userId,
     notification,
   }: {
-    notification?: Notification;
-    userId: string;
+    notification?: Notification
+    userId: string
   }) {
     const totalNotRead =
       await this.notificationRepository.countNotReadOrNeedAct({

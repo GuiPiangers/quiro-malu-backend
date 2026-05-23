@@ -16,9 +16,7 @@ describe('BindMessageSendStrategyCampaignsUseCase', () => {
   it('deve validar cada estratégia e persistir todos os vínculos da campanha em uma única operação', async () => {
     const repo = createMockMessageSendStrategyRepository()
     repo.findByIdAndUserId.mockImplementation(async (id: string) =>
-      ['s-1', 's-2', 's-3'].includes(id)
-        ? strategyRow(id)
-        : null,
+      ['s-1', 's-2', 's-3'].includes(id) ? strategyRow(id) : null,
     )
 
     const sut = new BindMessageSendStrategyCampaignsUseCase(repo)
@@ -43,9 +41,7 @@ describe('BindMessageSendStrategyCampaignsUseCase', () => {
   it('deve deduplicar strategyIds antes de persistir', async () => {
     const repo = createMockMessageSendStrategyRepository()
     repo.findByIdAndUserId.mockImplementation(async (id: string) =>
-      id === 's-1' || id === 's-2'
-        ? strategyRow(id)
-        : null,
+      id === 's-1' || id === 's-2' ? strategyRow(id) : null,
     )
 
     const sut = new BindMessageSendStrategyCampaignsUseCase(repo)
@@ -85,9 +81,7 @@ describe('BindMessageSendStrategyCampaignsUseCase', () => {
   it('deve lançar 404 quando alguma estratégia não pertence ao usuário', async () => {
     const repo = createMockMessageSendStrategyRepository()
     repo.findByIdAndUserId.mockImplementation(async (id: string) =>
-      id === 's-1'
-        ? strategyRow('s-1')
-        : null,
+      id === 's-1' ? strategyRow('s-1') : null,
     )
 
     const sut = new BindMessageSendStrategyCampaignsUseCase(repo)
@@ -106,9 +100,7 @@ describe('BindMessageSendStrategyCampaignsUseCase', () => {
   it('não deve validar findByIdAndUserId para a estratégia virtual unique-user-strategy', async () => {
     const repo = createMockMessageSendStrategyRepository()
     repo.findByIdAndUserId.mockImplementation(async (id: string) =>
-      id === 's-1'
-        ? strategyRow('s-1')
-        : null,
+      id === 's-1' ? strategyRow('s-1') : null,
     )
 
     const sut = new BindMessageSendStrategyCampaignsUseCase(repo)

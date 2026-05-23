@@ -9,21 +9,18 @@ export class InMemoryUserRepository implements IUserRepository {
   }
 
   async getByEmail(email: string): Promise<UserDTO[]> {
-    const selectedUser = await this.dbUsers.find(
-      (user) => user.email === email,
-    )
+    const selectedUser = await this.dbUsers.find((user) => user.email === email)
 
     if (selectedUser) return [selectedUser]
     return []
   }
 
   async getById(params: {
-    userId: string;
-    clinicId: string;
+    userId: string
+    clinicId: string
   }): Promise<UserDTO[]> {
     const selectedUser = await this.dbUsers.find(
-      (user) =>
-        user.id === params.userId && user.clinicId === params.clinicId,
+      (user) => user.id === params.userId && user.clinicId === params.clinicId,
     )
 
     if (selectedUser) return [selectedUser]
@@ -31,7 +28,7 @@ export class InMemoryUserRepository implements IUserRepository {
   }
 
   async listByClinicId(params: {
-    clinicId: string;
+    clinicId: string
   }): Promise<ClinicUserListItem[]> {
     return this.dbUsers
       .filter((u) => u.clinicId === params.clinicId)
@@ -47,8 +44,8 @@ export class InMemoryUserRepository implements IUserRepository {
   }
 
   async deleteByIdForClinic(params: {
-    id: string;
-    clinicId: string;
+    id: string
+    clinicId: string
   }): Promise<number> {
     const idx = this.dbUsers.findIndex(
       (u) => u.id === params.id && u.clinicId === params.clinicId,

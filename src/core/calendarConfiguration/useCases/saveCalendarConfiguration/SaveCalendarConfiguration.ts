@@ -5,15 +5,15 @@ import {
 } from '../../models/CalendarConfiguration'
 
 export type SaveCalendarConfigurationDTO = {
-  userId: string;
-  workTimeIncrementInMinutes?: number;
-  domingo?: DayConfiguration;
-  segunda?: DayConfiguration;
-  terca?: DayConfiguration;
-  quarta?: DayConfiguration;
-  quinta?: DayConfiguration;
-  sexta?: DayConfiguration;
-  sabado?: DayConfiguration;
+  userId: string
+  workTimeIncrementInMinutes?: number
+  domingo?: DayConfiguration
+  segunda?: DayConfiguration
+  terca?: DayConfiguration
+  quarta?: DayConfiguration
+  quinta?: DayConfiguration
+  sexta?: DayConfiguration
+  sabado?: DayConfiguration
 }
 
 export class SaveCalendarConfigurationUseCase {

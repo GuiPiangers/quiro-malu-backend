@@ -15,10 +15,11 @@ export const SchedulingPersistedSchema = z
   .openapi('SchedulingPersisted')
 
 /** Retorno de `SchedulingWithPatient.getDTO()` (GET lista / GET por id). */
-export const SchedulingWithPatientResponseSchema = SchedulingPersistedSchema.extend({
-  patient: z.string(),
-  phone: z.string(),
-}).openapi('SchedulingWithPatientResponse')
+export const SchedulingWithPatientResponseSchema =
+  SchedulingPersistedSchema.extend({
+    patient: z.string(),
+    phone: z.string(),
+  }).openapi('SchedulingWithPatientResponse')
 
 export const ListSchedulesResponseSchema = z
   .object({

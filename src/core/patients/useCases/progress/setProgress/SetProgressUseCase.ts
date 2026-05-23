@@ -10,9 +10,7 @@ export class SetProgressUseCase {
       clinicId,
     })
 
-    const payload: ProgressDTO = existing
-      ? { ...existing, ...data }
-      : data
+    const payload: ProgressDTO = existing ? { ...existing, ...data } : data
 
     const progress = new Progress(payload)
     const progressDTO = progress.getDTO()

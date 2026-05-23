@@ -14,8 +14,8 @@ export class GetUserUseCase {
   ) {}
 
   async execute(params: {
-    id: string;
-    clinicId: string;
+    id: string
+    clinicId: string
   }): Promise<UserDetailDTO> {
     const [user] = await this.userRepository.getById({
       userId: params.id,

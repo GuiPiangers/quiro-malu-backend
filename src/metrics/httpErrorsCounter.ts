@@ -19,9 +19,7 @@ export const httpErrorsCounterMiddleware = (
   res.on('finish', () => {
     if (res.statusCode >= 400) {
       const route = normalizeRoute(req)
-      const errorType = res.statusCode >= 500
-        ? 'server_error'
-        : 'client_error'
+      const errorType = res.statusCode >= 500 ? 'server_error' : 'client_error'
 
       httpErrorsCounter.inc({
         method: req.method,

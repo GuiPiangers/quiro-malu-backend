@@ -1,11 +1,16 @@
 import { Request, Response } from 'express'
 import { CreateClinicianBodySchema } from './createClinicianSchemas'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { CreateClinicianUseCase } from '../../useCases/createClinician/CreateClinicianUseCase'
 
 export class CreateClinicianController {
-  constructor(private readonly createClinicianUseCase: CreateClinicianUseCase) {}
+  constructor(
+    private readonly createClinicianUseCase: CreateClinicianUseCase,
+  ) {}
 
   async handle(request: Request, response: Response) {
     const parsed = parseWithSchema(CreateClinicianBodySchema, request.body)

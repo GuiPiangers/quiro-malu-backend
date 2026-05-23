@@ -8,8 +8,7 @@ const updateAfterScheduleMessageUseCase = new UpdateAfterScheduleMessageUseCase(
   appEventListener,
 )
 
-const updateAfterScheduleMessageController = new UpdateAfterScheduleMessageController(
-  updateAfterScheduleMessageUseCase,
-)
+const updateAfterScheduleMessageController =
+  new UpdateAfterScheduleMessageController(updateAfterScheduleMessageUseCase)
 
 export { updateAfterScheduleMessageController }

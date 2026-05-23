@@ -20,13 +20,7 @@ async function loadServicesForClinicians(
     .innerJoin(`${ETableNames.SERVICES} as s`, 's.id', 'cs.serviceId')
     .whereIn('cs.clinicianId', clinicianIds)
     .where('s.clinicId', clinicId)
-    .select(
-      'cs.clinicianId',
-      's.id',
-      's.name',
-      's.value',
-      's.duration',
-    )
+    .select('cs.clinicianId', 's.id', 's.name', 's.value', 's.duration')
 
   for (const row of rows) {
     const list = byClinician.get(row.clinicianId) ?? []
@@ -150,9 +144,9 @@ export class KnexClinicianRepository implements IClinicianRepository {
   }
 
   async setServices(params: {
-    id: string;
-    clinicId: string;
-    services: ServiceDTO[];
+    id: string
+    clinicId: string
+    services: ServiceDTO[]
   }): Promise<void> {
     await this.knex.transaction(async (trx) => {
       await trx(ETableNames.CLINICIAN_SERVICES)

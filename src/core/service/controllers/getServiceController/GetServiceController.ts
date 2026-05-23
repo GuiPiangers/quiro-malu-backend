@@ -1,7 +1,10 @@
 import { GetServiceUseCase } from '../../useCases/getService/GetServiceUseCase'
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { ServiceIdParamSchema } from '../serviceSharedSchemas'
 
 export class GetServiceController {

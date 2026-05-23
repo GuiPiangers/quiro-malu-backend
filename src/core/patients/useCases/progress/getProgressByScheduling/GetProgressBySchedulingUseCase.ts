@@ -10,9 +10,9 @@ export class GetProgressBySchedulingUseCase {
     patientId,
     clinicId,
   }: {
-    schedulingId: string;
-    patientId: string;
-    clinicId: string;
+    schedulingId: string
+    patientId: string
+    clinicId: string
   }) {
     const [progressData] = await this.ProgressRepository.getByScheduling({
       schedulingId,

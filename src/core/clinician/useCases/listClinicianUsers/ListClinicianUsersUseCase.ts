@@ -1,8 +1,11 @@
-import { toClinicianPublicDTO, type ClinicianPublicDTO } from '../../clinicianPublicDto'
+import {
+  toClinicianPublicDTO,
+  type ClinicianPublicDTO,
+} from '../../clinicianPublicDto'
 import type { IClinicianRepository } from '../../../../repositories/clinician/IClinicianRepository'
 
 export type ListClinicianUsersResult = {
-  result: ClinicianPublicDTO[];
+  result: ClinicianPublicDTO[]
 }
 
 export class ListClinicianUsersUseCase {

@@ -6,9 +6,9 @@ import { MESSAGE_SEND_STRATEGY_SELECTED_LIST_MAX_IDS } from './SendSelectedListM
 import { MessageSendStrategyDisplayName } from './MessageSendStrategyDisplayName'
 
 export type ExcludePatientsListMessageSendStrategyDTO = {
-  id?: string;
-  displayName: MessageSendStrategyDisplayName;
-  patientIdList: readonly string[];
+  id?: string
+  displayName: MessageSendStrategyDisplayName
+  patientIdList: readonly string[]
 }
 
 export class ExcludePatientsListMessageSendStrategy extends Entity {
@@ -38,6 +38,11 @@ export class ExcludePatientsListMessageSendStrategy extends Entity {
   }
 
   getDTO() {
-    return { id: this.id, name: this.displayName.value, kind: this.kind, params: { patientIdList: [...this.patientIdList] } }
+    return {
+      id: this.id,
+      name: this.displayName.value,
+      kind: this.kind,
+      params: { patientIdList: [...this.patientIdList] },
+    }
   }
 }

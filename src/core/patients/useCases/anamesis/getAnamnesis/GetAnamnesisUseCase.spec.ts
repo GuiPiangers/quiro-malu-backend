@@ -34,7 +34,10 @@ describe('Get anamnesis use case', () => {
     const result = await getAnamnesisUseCase.execute(patientId, clinicId)
     expect(result).toEqual(anamnesisData)
     expect(mockAnamnesisRepository.get).toHaveBeenCalledTimes(1)
-    expect(mockAnamnesisRepository.get).toHaveBeenCalledWith(patientId, clinicId)
+    expect(mockAnamnesisRepository.get).toHaveBeenCalledWith(
+      patientId,
+      clinicId,
+    )
   })
 
   test('should return undefined when no anamnesis data is found', async () => {
@@ -47,6 +50,9 @@ describe('Get anamnesis use case', () => {
 
     expect(result).toEqual({})
     expect(mockAnamnesisRepository.get).toHaveBeenCalledTimes(1)
-    expect(mockAnamnesisRepository.get).toHaveBeenCalledWith(patientId, clinicId)
+    expect(mockAnamnesisRepository.get).toHaveBeenCalledWith(
+      patientId,
+      clinicId,
+    )
   })
 })

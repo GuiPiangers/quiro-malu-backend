@@ -36,11 +36,13 @@ describe('LogoutUseCase', () => {
       fingerprint: 'a',
       expiresIn: 9999999999,
     })
-    mockRefreshTokenProvider.delete.mockRejectedValueOnce(new Error(errorMessage))
+    mockRefreshTokenProvider.delete.mockRejectedValueOnce(
+      new Error(errorMessage),
+    )
 
-    await expect(
-      logoutUseCase.execute(refreshTokenId, 'a'),
-    ).rejects.toThrow(errorMessage)
+    await expect(logoutUseCase.execute(refreshTokenId, 'a')).rejects.toThrow(
+      errorMessage,
+    )
   })
 })
 

@@ -7,8 +7,8 @@ export default class DeleteManyNotificationsUseCase {
     userId,
     notificationsId,
   }: {
-    userId: string;
-    notificationsId: string[];
+    userId: string
+    notificationsId: string[]
   }) {
     await this.notificationRepository.deleteMany({
       userId,

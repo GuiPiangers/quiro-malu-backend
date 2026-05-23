@@ -11,10 +11,10 @@ export class DeleteExamUseCase {
     userId,
     clinicId,
   }: {
-    id: string;
-    userId: string;
-    clinicId: string;
-    patientId: string;
+    id: string
+    userId: string
+    clinicId: string
+    patientId: string
   }) {
     await this.examRepository.update({
       id,

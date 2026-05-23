@@ -39,7 +39,9 @@ describe('GetWhatsAppQrCodeUseCase', () => {
 
     const result = await sut.execute({ userId })
 
-    expect(whatsAppProvider.getConnectionState).toHaveBeenCalledWith(instanceName)
+    expect(whatsAppProvider.getConnectionState).toHaveBeenCalledWith(
+      instanceName,
+    )
     expect(whatsAppProvider.getQrCode).not.toHaveBeenCalled()
     expect(result).toEqual({ status: 'CONNECTED', qrCode: null })
   })

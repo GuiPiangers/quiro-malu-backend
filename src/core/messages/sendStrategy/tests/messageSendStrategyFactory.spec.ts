@@ -17,7 +17,9 @@ import {
   SEND_STRATEGY_KIND_UNIQUE_SEND_BY_PATIENT,
 } from '../sendStrategyKind'
 
-function baseRow(overrides: Partial<MessageSendStrategyRow>): MessageSendStrategyRow {
+function baseRow(
+  overrides: Partial<MessageSendStrategyRow>,
+): MessageSendStrategyRow {
   return {
     id: 'str-1',
     userId: 'user-1',

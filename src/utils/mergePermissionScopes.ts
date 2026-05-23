@@ -15,7 +15,9 @@ export function parsePermissionScope(raw: unknown): PermissionScope | null {
   return null
 }
 
-export function mergeScopesForSamePermission(scopes: unknown[]): PermissionScope | null {
+export function mergeScopesForSamePermission(
+  scopes: unknown[],
+): PermissionScope | null {
   const normalized = scopes.map((s) => {
     const parsed = parsePermissionScope(s)
     return parsed ?? ({ type: 'all' } as const)

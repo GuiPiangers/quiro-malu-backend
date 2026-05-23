@@ -41,7 +41,10 @@ export class KnexLocationRepository implements ILocationRepository {
     })
   }
 
-  async getLocation(patientId: string, clinicId: string): Promise<LocationDTO[]> {
+  async getLocation(
+    patientId: string,
+    clinicId: string,
+  ): Promise<LocationDTO[]> {
     const result = await this.knex(ETableNames.LOCATIONS).select('*').where({
       clinicId,
       patientId,

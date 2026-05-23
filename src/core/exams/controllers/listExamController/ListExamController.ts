@@ -10,8 +10,8 @@ export class ListExamController {
     try {
       const { id: userId } = request.user
       const { patientId } = request.params as {
-        patientId: string;
-        id: string;
+        patientId: string
+        id: string
       }
       const { page } = request.query
 
@@ -21,9 +21,7 @@ export class ListExamController {
       const exams = await this.listExamUseCase.execute({
         patientId,
         userId,
-        page: page
-          ? +page
-          : undefined,
+        page: page ? +page : undefined,
       })
 
       response.status(200).json(exams)

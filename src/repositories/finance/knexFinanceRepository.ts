@@ -1,5 +1,5 @@
 import type { Knex } from 'knex'
-import { Finance, FinanceDTO } from '../../core/finances/models/Finance'
+import { FinanceDTO } from '../../core/finances/models/Finance'
 import { ETableNames } from '../../database/ETableNames'
 import {
   setFinanceProps,
@@ -22,15 +22,11 @@ export class KnexFinanceRepository implements IFinanceRepository {
   }
 
   async update({ clinicId, id, ...data }: updateFinanceProps): Promise<void> {
-    await this.knex(ETableNames.FINANCES)
-      .update(data)
-      .where({ id, clinicId })
+    await this.knex(ETableNames.FINANCES).update(data).where({ id, clinicId })
   }
 
   async delete({ clinicId, id }: deleteFinanceProps): Promise<void> {
-    await this.knex(ETableNames.FINANCES)
-      .where({ clinicId, id })
-      .del()
+    await this.knex(ETableNames.FINANCES).where({ clinicId, id }).del()
   }
 
   async get({ id, clinicId }: getFinanceProps): Promise<FinanceDTO> {

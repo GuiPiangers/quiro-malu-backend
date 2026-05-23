@@ -2,10 +2,10 @@ import { IMessageSendStrategyRepository } from '../../../repositories/messageSen
 import { MessageSendStrategyFactory } from './messageSendStrategyFactory'
 
 export type IsSendAllowedParams = {
-  userId: string;
-  clinicId: string;
-  campaignId: string;
-  patientId: string;
+  userId: string
+  clinicId: string
+  campaignId: string
+  patientId: string
 }
 
 export class MessageSendStrategyEnforcer {

@@ -13,9 +13,9 @@ export class RealizeSchedulingUseCase {
     patientId,
     schedulingId,
   }: {
-    clinicId: string;
-    patientId: string;
-    schedulingId: string;
+    clinicId: string
+    patientId: string
+    schedulingId: string
   }) {
     const [[progress]] = await Promise.all([
       this.progressRepository.getByScheduling({

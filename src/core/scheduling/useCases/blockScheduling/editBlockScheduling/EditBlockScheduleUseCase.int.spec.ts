@@ -10,8 +10,8 @@ import { EditBlockScheduleUseCase } from './editBlockScheduleUseCase'
 
 const integrationEnvReady = Boolean(
   process.env.DB_HOST &&
-    process.env.MYSQL_ROOT_USER &&
-    process.env.MYSQL_DATABASE,
+  process.env.MYSQL_ROOT_USER &&
+  process.env.MYSQL_DATABASE,
 )
 
 const runIntegrationTests = ['1', 'true', 'yes'].includes(
@@ -101,11 +101,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         )
 
         await expect(
-          useCase.execute(
-            { id: uuidv4(), description: 'X' },
-            userId,
-            userId,
-          ),
+          useCase.execute({ id: uuidv4(), description: 'X' }, userId, userId),
         ).rejects.toMatchObject({ message: 'Agendamento não encontrado' })
       })
     })

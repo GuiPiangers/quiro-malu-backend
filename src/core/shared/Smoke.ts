@@ -5,12 +5,8 @@ export abstract class Smoke {
     const validNo = ['não', 'n', 'no']
     const validPassive = ['passive', 'passivo']
 
-    const yes = validYes.includes(smoke.toLowerCase())
-      ? 'yes'
-      : undefined
-    const no = validNo.includes(smoke.toLowerCase())
-      ? 'no'
-      : undefined
+    const yes = validYes.includes(smoke.toLowerCase()) ? 'yes' : undefined
+    const no = validNo.includes(smoke.toLowerCase()) ? 'no' : undefined
     const passive = validPassive.includes(smoke.toLowerCase())
       ? 'passive'
       : undefined

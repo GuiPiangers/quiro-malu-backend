@@ -4,12 +4,12 @@ import { ApiError } from '../../../../utils/ApiError'
 import { WhatsAppInstance } from '../../models/WhatsAppInstance'
 
 export type GetWhatsAppQrCodeDTO = {
-  userId: string;
+  userId: string
 }
 
 export type GetWhatsAppQrCodeResult = {
-  status: 'CONNECTED' | 'PENDING';
-  qrCode: string | null;
+  status: 'CONNECTED' | 'PENDING'
+  qrCode: string | null
 }
 
 export class GetWhatsAppQrCodeUseCase {
@@ -18,8 +18,11 @@ export class GetWhatsAppQrCodeUseCase {
     private whatsAppProvider: IWhatsAppProvider,
   ) {}
 
-  async execute({ userId }: GetWhatsAppQrCodeDTO): Promise<GetWhatsAppQrCodeResult> {
-    const instanceDTO = await this.whatsAppInstanceRepository.getByUserId(userId)
+  async execute({
+    userId,
+  }: GetWhatsAppQrCodeDTO): Promise<GetWhatsAppQrCodeResult> {
+    const instanceDTO =
+      await this.whatsAppInstanceRepository.getByUserId(userId)
 
     if (!instanceDTO) {
       throw new ApiError('Nenhuma instância de WhatsApp registrada', 404)

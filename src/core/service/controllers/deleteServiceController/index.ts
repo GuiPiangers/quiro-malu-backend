@@ -4,6 +4,8 @@ import { knexServiceRepository } from '../../../../repositories/service/knexInst
 
 const serviceRepository = knexServiceRepository
 const deleteServiceUseCase = new DeleteServiceUseCase(serviceRepository)
-const deleteServiceController = new DeleteServiceController(deleteServiceUseCase)
+const deleteServiceController = new DeleteServiceController(
+  deleteServiceUseCase,
+)
 
 export { deleteServiceController }

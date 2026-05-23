@@ -8,14 +8,12 @@ export class ListProgressUseCase {
     clinicId,
     page,
   }: {
-    patientId: string;
-    clinicId: string;
-    page?: number;
+    patientId: string
+    clinicId: string
+    page?: number
   }) {
     const limit = 10
-    const offSet = page
-      ? limit * (page - 1)
-      : 0
+    const offSet = page ? limit * (page - 1) : 0
 
     const progressData = this.ProgressRepository.list({
       patientId,

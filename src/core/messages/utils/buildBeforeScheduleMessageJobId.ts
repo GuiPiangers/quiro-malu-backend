@@ -5,9 +5,9 @@ export function buildBeforeScheduleMessageJobId({
   scheduleId,
   beforeScheduleMessageId,
 }: {
-  userId: string;
-  scheduleId: string;
-  beforeScheduleMessageId: string;
+  userId: string
+  scheduleId: string
+  beforeScheduleMessageId: string
 }): string {
   return buildScheduleMessageJobId({
     prefix: 'before-schedule',

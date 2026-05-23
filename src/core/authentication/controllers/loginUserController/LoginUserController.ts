@@ -1,7 +1,10 @@
 import { Request, Response } from 'express'
 import { LoginBodySchema } from './loginSchemas'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { generateRequestFingerprint } from '../../utils/generateRequestFingerprint'
 import { LoginUserUseCase } from '../../useCases/loginUser/LoginUserUseCase'
 

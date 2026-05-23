@@ -1,14 +1,20 @@
 import { ListProgressUseCase } from '../../../useCases/progress/listProgress/ListProgressUseCase'
 import { Request, Response } from 'express'
 import { responseError } from '../../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../../utils/zodValidation'
 import { PatientIdPathParamSchema } from '../../patientSharedSchemas'
 import { ListProgressQuerySchema } from '../listProgressSchemas'
 
 export class ListProgressController {
   constructor(private listProgressUseCase: ListProgressUseCase) {}
   async handle(request: Request, response: Response) {
-    const parsedParams = parseWithSchema(PatientIdPathParamSchema, request.params)
+    const parsedParams = parseWithSchema(
+      PatientIdPathParamSchema,
+      request.params,
+    )
     if (!parsedParams.success) {
       return sendZodBadRequest(response, parsedParams.error)
     }

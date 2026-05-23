@@ -6,9 +6,7 @@ export class MessageSendStrategyDisplayName {
   readonly value: string
 
   constructor(raw: string) {
-    const trimmed = typeof raw === 'string'
-      ? raw.trim()
-      : ''
+    const trimmed = typeof raw === 'string' ? raw.trim() : ''
     if (!trimmed) {
       throw new ApiError('name é obrigatório', 400, 'name')
     }

@@ -4,9 +4,9 @@ export class Name {
   constructor(
     readonly value: string,
     private config: {
-      min?: number;
-      max?: number;
-      compoundName?: boolean;
+      min?: number
+      max?: number
+      compoundName?: boolean
     } = {},
   ) {
     const { min = 3, max = 120, compoundName = false } = config
@@ -38,7 +38,9 @@ export class Name {
     }
 
     const secondName = value.split(' ')[1]
-    if (compoundName && !secondName) { throw new ApiError('O valor deve ser um nome composto', 400, 'name') }
+    if (compoundName && !secondName) {
+      throw new ApiError('O valor deve ser um nome composto', 400, 'name')
+    }
 
     this.value = this.capitaliseName(value)
   }

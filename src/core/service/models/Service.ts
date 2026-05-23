@@ -1,11 +1,11 @@
 import { Entity } from '../../shared/Entity'
 
 export interface ServiceDTO {
-  id?: string;
-  name: string;
-  value: number;
+  id?: string
+  name: string
+  value: number
   /** Duração do serviço em segundos (ex.: duração de atendimento ou slot). */
-  duration: number;
+  duration: number
 }
 
 export class Service extends Entity {

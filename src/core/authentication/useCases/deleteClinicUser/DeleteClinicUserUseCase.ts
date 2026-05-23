@@ -6,9 +6,9 @@ export class DeleteClinicUserUseCase {
   constructor(private readonly userRepository: IUserRepository) {}
 
   async execute(data: {
-    actingUserId: string;
-    clinicId: string;
-    targetUserId: string;
+    actingUserId: string
+    clinicId: string
+    targetUserId: string
   }): Promise<void> {
     if (data.targetUserId === data.actingUserId) {
       throw new ApiError(

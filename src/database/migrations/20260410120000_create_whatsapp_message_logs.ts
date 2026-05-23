@@ -11,10 +11,7 @@ export async function up(knex: Knex): Promise<void> {
     table.text('message').notNullable()
     table.string('toPhone', 32).notNullable()
     table.string('instanceName', 255).notNullable()
-    table
-      .string('status', 32)
-      .notNullable()
-      .index()
+    table.string('status', 32).notNullable().index()
     table.string('providerMessageId', 255).nullable().unique().index()
     table.text('errorMessage').nullable()
     table.timestamps(true, true)

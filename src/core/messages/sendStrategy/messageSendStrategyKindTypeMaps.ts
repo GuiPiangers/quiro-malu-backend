@@ -21,48 +21,49 @@ export type MessageSendStrategyParamsByKind = {
     ? { amount: number }
     : K extends MessageSendStrategyPatientListParamKinds
       ? { patientIdList: string[] }
-      : Record<string, unknown>;
+      : Record<string, unknown>
 }
 
-export type MessageSendStrategyCreateParamsByKind = MessageSendStrategyParamsByKind
+export type MessageSendStrategyCreateParamsByKind =
+  MessageSendStrategyParamsByKind
 
 export type CreateMessageSendStrategyDTO = {
   [K in SendStrategyKind]: {
-    userId: string;
-    clinicId: string;
-    kind: K;
-    name: string;
-    params: MessageSendStrategyCreateParamsByKind[K];
-  };
+    userId: string
+    clinicId: string
+    kind: K
+    name: string
+    params: MessageSendStrategyCreateParamsByKind[K]
+  }
 }[SendStrategyKind]
 
 export type CreateMessageSendStrategyHttpBody = {
-  kind?: SendStrategyKind;
-  name?: string;
-  params?: MessageSendStrategyCreateParamsByKind[SendStrategyKind];
+  kind?: SendStrategyKind
+  name?: string
+  params?: MessageSendStrategyCreateParamsByKind[SendStrategyKind]
 }
 
 export type MessageSendStrategyDTOForKind<K extends SendStrategyKind> = {
-  id: string;
-  userId: string;
-  name: string;
-  kind: K;
-  params: MessageSendStrategyParamsByKind[K];
-  campaignBindingsCount: number;
+  id: string
+  userId: string
+  name: string
+  kind: K
+  params: MessageSendStrategyParamsByKind[K]
+  campaignBindingsCount: number
 }
 
 export type MessageSendStrategyDTO = {
-  [K in SendStrategyKind]: MessageSendStrategyDTOForKind<K>;
+  [K in SendStrategyKind]: MessageSendStrategyDTOForKind<K>
 }[SendStrategyKind]
 
 /** Item extra da listagem: estratégia global por usuário (sem CRUD). */
 export type MessageSendStrategyListUniqueItemDTO = {
-  id: typeof UNIQUE_USER_STRATEGY_ID;
-  userId: string;
-  name: string;
-  kind: typeof SEND_STRATEGY_KIND_UNIQUE_SEND_BY_PATIENT;
-  params: Record<string, unknown>;
-  campaignBindingsCount: number;
+  id: typeof UNIQUE_USER_STRATEGY_ID
+  userId: string
+  name: string
+  kind: typeof SEND_STRATEGY_KIND_UNIQUE_SEND_BY_PATIENT
+  params: Record<string, unknown>
+  campaignBindingsCount: number
 }
 
 export type MessageSendStrategyListItemDTO =
@@ -70,12 +71,12 @@ export type MessageSendStrategyListItemDTO =
   | MessageSendStrategyListUniqueItemDTO
 
 export type MessageSendStrategyPersistenceRow = {
-  id: string;
-  userId: string;
-  name: string;
-  kind: string;
-  params: Record<string, unknown>;
-  campaignBindingsCount: number;
+  id: string
+  userId: string
+  name: string
+  kind: string
+  params: Record<string, unknown>
+  campaignBindingsCount: number
 }
 
 export function toMessageSendStrategyDTO(

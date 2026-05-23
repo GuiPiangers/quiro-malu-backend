@@ -1,6 +1,9 @@
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { buildValidatedUpdateMessageSendStrategyBody } from '../../http/validateMessageSendStrategyUpdateHttpInput'
 import {
   type UpdateMessageSendStrategyDTO,
@@ -15,11 +18,17 @@ export class UpdateMessageSendStrategyController {
   ) {}
 
   async handle(request: Request, response: Response) {
-    const parsedParams = parseWithSchema(MessageEntityIdParamSchema, request.params)
+    const parsedParams = parseWithSchema(
+      MessageEntityIdParamSchema,
+      request.params,
+    )
     if (!parsedParams.success) {
       return sendZodBadRequest(response, parsedParams.error)
     }
-    const parsedBody = parseWithSchema(UpdateMessageSendStrategyBodySchema, request.body)
+    const parsedBody = parseWithSchema(
+      UpdateMessageSendStrategyBodySchema,
+      request.body,
+    )
     if (!parsedBody.success) {
       return sendZodBadRequest(response, parsedBody.error)
     }
@@ -31,7 +40,10 @@ export class UpdateMessageSendStrategyController {
       const clinicId = request.user.clinicId!
 
       const body = buildValidatedUpdateMessageSendStrategyBody(
-        rawBody as Pick<UpdateMessageSendStrategyDTO, 'name' | 'kind' | 'params'>,
+        rawBody as Pick<
+          UpdateMessageSendStrategyDTO,
+          'name' | 'kind' | 'params'
+        >,
       )
 
       const res = await this.updateMessageSendStrategyUseCase.execute({

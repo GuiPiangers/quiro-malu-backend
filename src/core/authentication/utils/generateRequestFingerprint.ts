@@ -5,9 +5,7 @@ function headerToString(value: string | string[] | undefined): string {
   if (value === undefined) {
     return ''
   }
-  return Array.isArray(value)
-    ? value.join(',')
-    : value
+  return Array.isArray(value) ? value.join(',') : value
 }
 
 function extractSafeIp(req: Request): string {
@@ -22,9 +20,7 @@ function extractSafeIp(req: Request): string {
 }
 
 export function generateRequestFingerprint(request: Request): string {
-  const components = [
-    headerToString(request.headers['x-device-id']),
-  ].join('|')
+  const components = [headerToString(request.headers['x-device-id'])].join('|')
 
   return headerToString(components)
 }

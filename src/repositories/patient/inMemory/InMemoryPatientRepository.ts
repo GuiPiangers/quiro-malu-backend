@@ -2,30 +2,30 @@ import { PatientDTO } from '../../../core/patients/models/Patient'
 import { IPatientRepository } from '../IPatientRepository'
 
 type InMemoryPatient = PatientDTO & {
-  clinicId: string;
-  createdAt: number;
+  clinicId: string
+  createdAt: number
 }
 
 export class InMemoryPatientRepository implements IPatientRepository {
   private dbPatients: InMemoryPatient[] = []
 
   async getByBirthMonthAndDay(data: {
-    birthMonth: number;
-    birthDay: number;
-    clinicId?: string;
+    birthMonth: number
+    birthDay: number
+    clinicId?: string
   }): Promise<(PatientDTO & { clinicId: string })[]> {
     return this.dbPatients.filter((patient) => {
       if (data.clinicId && patient.clinicId !== data.clinicId) return false
       if (!patient.dateOfBirth) return false
       const m = `${patient.dateOfBirth}`.match(/^(\d{4})-(\d{2})-(\d{2})/)
       if (!m) return false
-      return (
-        Number(m[2]) === data.birthMonth && Number(m[3]) === data.birthDay
-      )
+      return Number(m[2]) === data.birthMonth && Number(m[3]) === data.birthDay
     })
   }
 
-  async saveMany(patient: (PatientDTO & { clinicId: string })[]): Promise<void> {
+  async saveMany(
+    patient: (PatientDTO & { clinicId: string })[],
+  ): Promise<void> {
     patient.forEach((p) => {
       this.dbPatients.push({ ...p, createdAt: Date.now() })
     })
@@ -33,7 +33,8 @@ export class InMemoryPatientRepository implements IPatientRepository {
 
   async getByHash(hashData: string, clinicId: string): Promise<PatientDTO> {
     return this.dbPatients.find(
-      (patient) => patient.clinicId === clinicId && patient.hashData === hashData,
+      (patient) =>
+        patient.clinicId === clinicId && patient.hashData === hashData,
     ) as PatientDTO
   }
 
@@ -56,7 +57,11 @@ export class InMemoryPatientRepository implements IPatientRepository {
     )
   }
 
-  async update(data: PatientDTO, patientId: string, clinicId: string): Promise<void> {
+  async update(
+    data: PatientDTO,
+    patientId: string,
+    clinicId: string,
+  ): Promise<void> {
     const index = this.dbPatients.findIndex((patient) => {
       return patient.clinicId === clinicId && patient.id === patientId
     })
@@ -82,10 +87,10 @@ export class InMemoryPatientRepository implements IPatientRepository {
   async getAll(
     clinicId: string,
     config: {
-      limit: number;
-      offSet: number;
-      search?: { name?: string };
-      orderBy?: { field: string; orientation: 'ASC' | 'DESC' }[];
+      limit: number
+      offSet: number
+      search?: { name?: string }
+      orderBy?: { field: string; orientation: 'ASC' | 'DESC' }[]
     },
   ): Promise<PatientDTO[]> {
     const list = this.dbPatients.filter((patient) => {
@@ -113,8 +118,8 @@ export class InMemoryPatientRepository implements IPatientRepository {
   }
 
   async listPatientsById(data: {
-    clinicId: string;
-    patientIds: string[];
+    clinicId: string
+    patientIds: string[]
   }): Promise<PatientDTO[]> {
     if (data.patientIds.length === 0) {
       return []
@@ -137,8 +142,8 @@ export class InMemoryPatientRepository implements IPatientRepository {
   }
 
   async countPatientsOwnedByUser(data: {
-    clinicId: string;
-    patientIds: string[];
+    clinicId: string
+    patientIds: string[]
   }): Promise<number> {
     if (data.patientIds.length === 0) {
       return 0

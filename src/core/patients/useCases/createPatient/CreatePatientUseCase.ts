@@ -30,8 +30,8 @@ export class CreatePatientUseCase {
     cpf,
     clinicId,
   }: {
-    cpf?: string;
-    clinicId: string;
+    cpf?: string
+    clinicId: string
   }) {
     if (cpf) {
       const [verifyCpf] = await this.patientRepository.getByCpf(cpf, clinicId)

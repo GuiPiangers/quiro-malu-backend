@@ -1,4 +1,7 @@
-import { IMessageSendStrategy, SendStrategyContext } from '../IMessageSendStrategy'
+import {
+  IMessageSendStrategy,
+  SendStrategyContext,
+} from '../IMessageSendStrategy'
 import { SEND_STRATEGY_KIND_SEND_SELECTED_LIST } from '../sendStrategyKind'
 
 export class SendSelectedListStrategy implements IMessageSendStrategy {

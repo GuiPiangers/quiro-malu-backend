@@ -4,9 +4,9 @@ import type { MessageSendStrategyDTOForKind } from '../sendStrategy/messageSendS
 import { MessageSendStrategyDisplayName } from './MessageSendStrategyDisplayName'
 
 export type SendMostFrequencyPatientsMessageSendStrategyDTO = {
-  id?: string;
-  displayName: MessageSendStrategyDisplayName;
-  amount: number;
+  id?: string
+  displayName: MessageSendStrategyDisplayName
+  amount: number
 }
 
 export class SendMostFrequencyPatientsMessageSendStrategy extends Entity {
@@ -24,6 +24,11 @@ export class SendMostFrequencyPatientsMessageSendStrategy extends Entity {
   }
 
   getDTO() {
-    return { id: this.id, name: this.displayName.value, kind: this.kind, params: { amount: this.amount } }
+    return {
+      id: this.id,
+      name: this.displayName.value,
+      kind: this.kind,
+      params: { amount: this.amount },
+    }
   }
 }

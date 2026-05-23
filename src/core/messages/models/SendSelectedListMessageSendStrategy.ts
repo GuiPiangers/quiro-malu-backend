@@ -7,9 +7,9 @@ import { MessageSendStrategyDisplayName } from './MessageSendStrategyDisplayName
 export const MESSAGE_SEND_STRATEGY_SELECTED_LIST_MAX_IDS = 50
 
 export type SendSelectedListMessageSendStrategyDTO = {
-  id?: string;
-  displayName: MessageSendStrategyDisplayName;
-  patientIdList: readonly string[];
+  id?: string
+  displayName: MessageSendStrategyDisplayName
+  patientIdList: readonly string[]
 }
 
 export class SendSelectedListMessageSendStrategy extends Entity {
@@ -46,6 +46,11 @@ export class SendSelectedListMessageSendStrategy extends Entity {
   }
 
   getDTO() {
-    return { id: this.id, name: this.displayName.value, kind: this.kind, params: { patientIdList: [...this.patientIdList] } }
+    return {
+      id: this.id,
+      name: this.displayName.value,
+      kind: this.kind,
+      params: { patientIdList: [...this.patientIdList] },
+    }
   }
 }

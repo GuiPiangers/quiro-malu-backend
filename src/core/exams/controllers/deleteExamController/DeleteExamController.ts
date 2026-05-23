@@ -10,8 +10,8 @@ export class DeleteExamController {
     try {
       const { id: userId, clinicId } = request.user
       const { patientId, id } = request.params as {
-        patientId: string;
-        id: string;
+        patientId: string
+        id: string
       }
 
       if (!userId) throw new ApiError('Acesso não autorizado', 401)

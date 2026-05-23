@@ -15,9 +15,9 @@ export class ListSchedulingUseCase {
     clinicId,
     date: schedulingDate,
   }: {
-    clinicId: string;
-    date: string;
-    page?: number;
+    clinicId: string
+    date: string
+    page?: number
   }) {
     const limit = 20
     const clientStatusStrategy = new ClientStatusStrategy()

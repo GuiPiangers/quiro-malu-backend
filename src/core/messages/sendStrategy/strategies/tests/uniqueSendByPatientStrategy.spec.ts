@@ -11,7 +11,8 @@ describe('UniqueSendByPatientStrategy', () => {
   }
 
   it('deve permitir envio quando não existir log para userId, patientId e campanha', async () => {
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const whatsAppMessageLogRepository =
+      createMockWhatsAppMessageLogRepository()
     whatsAppMessageLogRepository.listByUserId.mockResolvedValue({
       items: [],
       total: 0,
@@ -32,7 +33,8 @@ describe('UniqueSendByPatientStrategy', () => {
   })
 
   it('deve negar envio quando já existir ao menos um log para userId, patientId e campanha', async () => {
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const whatsAppMessageLogRepository =
+      createMockWhatsAppMessageLogRepository()
     whatsAppMessageLogRepository.listByUserId.mockResolvedValue({
       items: [
         {
@@ -73,7 +75,8 @@ describe('UniqueSendByPatientStrategy', () => {
   })
 
   it('deve negar envio quando campaignId não estiver no contexto', async () => {
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const whatsAppMessageLogRepository =
+      createMockWhatsAppMessageLogRepository()
 
     const sut = new UniqueSendByPatientStrategy(whatsAppMessageLogRepository)
 

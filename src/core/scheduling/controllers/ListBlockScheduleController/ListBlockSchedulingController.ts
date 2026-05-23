@@ -1,6 +1,9 @@
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { ListBlockSchedulingUseCase } from '../../useCases/blockScheduling/listBlockSchedules/ListBlockSchedulingUseCase'
 import { ListBlockSchedulesQuerySchema } from '../blockScheduleSchemas'
 

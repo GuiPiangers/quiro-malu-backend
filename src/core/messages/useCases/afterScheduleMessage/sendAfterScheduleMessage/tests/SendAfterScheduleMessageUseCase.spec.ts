@@ -25,12 +25,14 @@ function createMessageSendStrategyEnforcerMock() {
 
 describe('SendAfterScheduleMessageUseCase', () => {
   it('deve enviar mensagem quando status é Atendido', async () => {
-    const afterScheduleMessageRepository = createMockAfterScheduleMessageRepository()
+    const afterScheduleMessageRepository =
+      createMockAfterScheduleMessageRepository()
     const patientRepository = createMockPatientRepository()
     const schedulingRepository = createMockSchedulingRepository()
     const whatsAppProvider = createMockWhatsAppProvider()
     const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const whatsAppMessageLogRepository =
+      createMockWhatsAppMessageLogRepository()
     const appEventListener = createAppEventListenerMock()
 
     whatsAppMessageLogRepository.getBySchedulingAndCampaignId.mockResolvedValue(
@@ -42,7 +44,8 @@ describe('SendAfterScheduleMessageUseCase', () => {
       userId: 'user-1',
       name: 'Envio',
       minutesAfterSchedule: 60,
-      textTemplate: 'Obrigado {{nome_paciente}} pela consulta em {{data_consulta}} às {{horario_consulta}}.',
+      textTemplate:
+        'Obrigado {{nome_paciente}} pela consulta em {{data_consulta}} às {{horario_consulta}}.',
       isActive: true,
     })
 
@@ -118,19 +121,23 @@ describe('SendAfterScheduleMessageUseCase', () => {
   })
 
   it('não deve reenviar quando já existe log para o mesmo agendamento e campanha', async () => {
-    const afterScheduleMessageRepository = createMockAfterScheduleMessageRepository()
+    const afterScheduleMessageRepository =
+      createMockAfterScheduleMessageRepository()
     const patientRepository = createMockPatientRepository()
     const schedulingRepository = createMockSchedulingRepository()
     const whatsAppProvider = createMockWhatsAppProvider()
     const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const whatsAppMessageLogRepository =
+      createMockWhatsAppMessageLogRepository()
     const appEventListener = createAppEventListenerMock()
 
-    whatsAppMessageLogRepository.getBySchedulingAndCampaignId.mockResolvedValue({
-      id: 'log-existente',
-      schedulingId: 'schedule-1',
-      scheduleMessageConfigId: 'cfg-1',
-    } as any)
+    whatsAppMessageLogRepository.getBySchedulingAndCampaignId.mockResolvedValue(
+      {
+        id: 'log-existente',
+        schedulingId: 'schedule-1',
+        scheduleMessageConfigId: 'cfg-1',
+      } as any,
+    )
 
     const useCase = new SendAfterScheduleMessageUseCase(
       afterScheduleMessageRepository,
@@ -165,12 +172,14 @@ describe('SendAfterScheduleMessageUseCase', () => {
   })
 
   it('não deve enviar quando status não é Atendido', async () => {
-    const afterScheduleMessageRepository = createMockAfterScheduleMessageRepository()
+    const afterScheduleMessageRepository =
+      createMockAfterScheduleMessageRepository()
     const patientRepository = createMockPatientRepository()
     const schedulingRepository = createMockSchedulingRepository()
     const whatsAppProvider = createMockWhatsAppProvider()
     const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const whatsAppMessageLogRepository =
+      createMockWhatsAppMessageLogRepository()
     const appEventListener = createAppEventListenerMock()
 
     whatsAppMessageLogRepository.getBySchedulingAndCampaignId.mockResolvedValue(
@@ -228,12 +237,14 @@ describe('SendAfterScheduleMessageUseCase', () => {
   })
 
   it('não deve enviar quando a estratégia (isSendAllowed) retorna false', async () => {
-    const afterScheduleMessageRepository = createMockAfterScheduleMessageRepository()
+    const afterScheduleMessageRepository =
+      createMockAfterScheduleMessageRepository()
     const patientRepository = createMockPatientRepository()
     const schedulingRepository = createMockSchedulingRepository()
     const whatsAppProvider = createMockWhatsAppProvider()
     const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const whatsAppMessageLogRepository =
+      createMockWhatsAppMessageLogRepository()
     const appEventListener = createAppEventListenerMock()
     const messageSendStrategyEnforcer = {
       isSendAllowed: vi.fn().mockResolvedValue(false),

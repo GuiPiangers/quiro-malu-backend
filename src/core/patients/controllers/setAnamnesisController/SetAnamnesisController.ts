@@ -1,7 +1,10 @@
 import { SetAnamnesisUseCase } from '../../useCases/anamesis/setAnamnesis/SetAnamnesisUseCase'
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { SetAnamnesisBodySchema } from './anamnesisBodySchemas'
 
 export class SetAnamnesisController {

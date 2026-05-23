@@ -11,12 +11,12 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 }
 
 type DefaultEvents = {
-  onError?: (err: any) => void;
-  onData?: (chunk: any) => void;
-  onEnd?: () => void;
-  onPause?: () => void;
-  onReadable?: () => void;
-  onClose?: () => void;
+  onError?: (err: any) => void
+  onData?: (chunk: any) => void
+  onEnd?: () => void
+  onPause?: () => void
+  onReadable?: () => void
+  onClose?: () => void
 }
 
 abstract class IStream<chunk> {

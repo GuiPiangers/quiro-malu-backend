@@ -7,7 +7,7 @@ export class KnexUserRepository implements IUserRepository {
   constructor(private readonly knex: Knex) {}
 
   async listByClinicId(params: {
-    clinicId: string;
+    clinicId: string
   }): Promise<ClinicUserListItem[]> {
     const rows = await this.knex(ETableNames.USERS)
       .select('id', 'name', 'email', 'phone', 'clinicId', 'roleId')
@@ -21,8 +21,8 @@ export class KnexUserRepository implements IUserRepository {
   }
 
   async getById(params: {
-    userId: string;
-    clinicId: string;
+    userId: string
+    clinicId: string
   }): Promise<UserDTO[]> {
     return await this.knex(ETableNames.USERS)
       .select('*')
@@ -38,8 +38,8 @@ export class KnexUserRepository implements IUserRepository {
   }
 
   async deleteByIdForClinic(params: {
-    id: string;
-    clinicId: string;
+    id: string
+    clinicId: string
   }): Promise<number> {
     return await this.knex(ETableNames.USERS)
       .where({ id: params.id, clinicId: params.clinicId })

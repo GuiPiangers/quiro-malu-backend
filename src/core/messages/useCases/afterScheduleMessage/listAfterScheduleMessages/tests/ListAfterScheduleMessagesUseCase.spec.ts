@@ -3,7 +3,8 @@ import { ListAfterScheduleMessagesUseCase } from '../ListAfterScheduleMessagesUs
 
 describe('ListAfterScheduleMessagesUseCase', () => {
   it('deve listar configs de mensagem pós-consulta com paginação padrão', async () => {
-    const afterScheduleMessageRepository = createMockAfterScheduleMessageRepository()
+    const afterScheduleMessageRepository =
+      createMockAfterScheduleMessageRepository()
 
     afterScheduleMessageRepository.listByUserIdPaged.mockResolvedValue({
       items: [
@@ -19,11 +20,15 @@ describe('ListAfterScheduleMessagesUseCase', () => {
       total: 1,
     })
 
-    const useCase = new ListAfterScheduleMessagesUseCase(afterScheduleMessageRepository)
+    const useCase = new ListAfterScheduleMessagesUseCase(
+      afterScheduleMessageRepository,
+    )
 
     const result = await useCase.execute({ userId: 'user-1' })
 
-    expect(afterScheduleMessageRepository.listByUserIdPaged).toHaveBeenCalledWith({
+    expect(
+      afterScheduleMessageRepository.listByUserIdPaged,
+    ).toHaveBeenCalledWith({
       userId: 'user-1',
       limit: 20,
       offset: 0,
@@ -47,14 +52,17 @@ describe('ListAfterScheduleMessagesUseCase', () => {
   })
 
   it('deve calcular offset a partir de page e limit', async () => {
-    const afterScheduleMessageRepository = createMockAfterScheduleMessageRepository()
+    const afterScheduleMessageRepository =
+      createMockAfterScheduleMessageRepository()
 
     afterScheduleMessageRepository.listByUserIdPaged.mockResolvedValue({
       items: [],
       total: 40,
     })
 
-    const useCase = new ListAfterScheduleMessagesUseCase(afterScheduleMessageRepository)
+    const useCase = new ListAfterScheduleMessagesUseCase(
+      afterScheduleMessageRepository,
+    )
 
     const result = await useCase.execute({
       userId: 'user-1',
@@ -62,7 +70,9 @@ describe('ListAfterScheduleMessagesUseCase', () => {
       limit: 15,
     })
 
-    expect(afterScheduleMessageRepository.listByUserIdPaged).toHaveBeenCalledWith({
+    expect(
+      afterScheduleMessageRepository.listByUserIdPaged,
+    ).toHaveBeenCalledWith({
       userId: 'user-1',
       limit: 15,
       offset: 15,

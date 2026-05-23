@@ -1,11 +1,14 @@
 import { IBirthdayMessageRepository } from '../../../../../repositories/messages/IBirthdayMessageRepository'
 import { ApiError } from '../../../../../utils/ApiError'
-import { BirthdayMessage, BirthdayMessageDTO } from '../../../models/BirthdayMessage'
+import {
+  BirthdayMessage,
+  BirthdayMessageDTO,
+} from '../../../models/BirthdayMessage'
 import { MessageTemplate } from '../../../models/MessageTemplate'
 
 export type GetBirthdayMessageDTO = {
-  id: string;
-  userId: string;
+  id: string
+  userId: string
 }
 
 export class GetBirthdayMessageUseCase {

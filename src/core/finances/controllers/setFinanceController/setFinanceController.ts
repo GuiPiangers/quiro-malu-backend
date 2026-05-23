@@ -1,7 +1,10 @@
 import { Request, Response } from 'express'
 import { SetFinanceUseCase } from '../../useCases/setFinance/setFinanceUseCase'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { SetFinanceBodySchema } from '../financeSharedSchemas'
 
 export class SetFinanceController {

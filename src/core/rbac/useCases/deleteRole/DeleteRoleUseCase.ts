@@ -13,7 +13,11 @@ export class DeleteRoleUseCase {
       throw new ApiError('Papel não encontrado', 404, 'role')
     }
     if (role.isSystem) {
-      throw new ApiError('Não é permitido excluir um papel de sistema', 400, 'role')
+      throw new ApiError(
+        'Não é permitido excluir um papel de sistema',
+        400,
+        'role',
+      )
     }
     await this.rbac.deleteRole(data)
   }

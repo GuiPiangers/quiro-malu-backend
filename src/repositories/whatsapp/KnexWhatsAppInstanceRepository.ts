@@ -4,8 +4,7 @@ import { WhatsAppInstanceDTO } from '../../core/whatsapp/models/WhatsAppInstance
 import { IWhatsAppInstanceRepository } from './IWhatsAppInstanceRepository'
 import type { Knex } from 'knex'
 
-export class KnexWhatsAppInstanceRepository
-implements IWhatsAppInstanceRepository {
+export class KnexWhatsAppInstanceRepository implements IWhatsAppInstanceRepository {
   constructor(private readonly knex: Knex) {}
 
   async save(instance: WhatsAppInstanceDTO): Promise<void> {

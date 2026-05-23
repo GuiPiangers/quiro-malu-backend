@@ -1,12 +1,12 @@
 import { Entity } from '../../shared/Entity'
 
 export type RefreshTokenDTO = {
-  id?: string;
-  userId: string;
-  clinicId: string;
-  fingerprint: string;
-  expiresIn: number;
-  lastUsedAt?: string;
+  id?: string
+  userId: string
+  clinicId: string
+  fingerprint: string
+  expiresIn: number
+  lastUsedAt?: string
 }
 
 export class RefreshToken extends Entity {

@@ -1,5 +1,8 @@
 import { Request, Response } from 'express'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { responseError } from '../../../../utils/ResponseError'
 import { RoleIdParamsSchema } from '../../schemas/rbacSchemas'
 import { DeleteRoleUseCase } from '../../useCases/deleteRole/DeleteRoleUseCase'

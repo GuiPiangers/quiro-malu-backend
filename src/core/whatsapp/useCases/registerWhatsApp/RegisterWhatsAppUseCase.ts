@@ -5,12 +5,12 @@ import { ApiError } from '../../../../utils/ApiError'
 import { WhatsAppInstance } from '../../models/WhatsAppInstance'
 
 export type RegisterWhatsAppDTO = {
-  userId: string;
+  userId: string
 }
 
 export type RegisterWhatsAppResult = {
-  instanceName: string;
-  qrCode: string | null;
+  instanceName: string
+  qrCode: string | null
 }
 
 export class RegisterWhatsAppUseCase {
@@ -19,8 +19,11 @@ export class RegisterWhatsAppUseCase {
     private whatsAppProvider: IWhatsAppProvider,
   ) {}
 
-  async execute({ userId }: RegisterWhatsAppDTO): Promise<RegisterWhatsAppResult> {
-    const existingDTO = await this.whatsAppInstanceRepository.getByUserId(userId)
+  async execute({
+    userId,
+  }: RegisterWhatsAppDTO): Promise<RegisterWhatsAppResult> {
+    const existingDTO =
+      await this.whatsAppInstanceRepository.getByUserId(userId)
     const instanceName = `clinic-${userId}`
 
     if (existingDTO) {
@@ -35,7 +38,9 @@ export class RegisterWhatsAppUseCase {
       }
       await this.whatsAppProvider.createInstance(existing.instanceName)
 
-      const qrCode = await this.whatsAppProvider.getQrCode(existing.instanceName)
+      const qrCode = await this.whatsAppProvider.getQrCode(
+        existing.instanceName,
+      )
       return { instanceName: existing.instanceName, qrCode }
     }
 
@@ -49,7 +54,9 @@ export class RegisterWhatsAppUseCase {
 
     await this.whatsAppInstanceRepository.save(newInstance.getDTO())
 
-    const qrCode = await this.whatsAppProvider.getQrCode(newInstance.instanceName)
+    const qrCode = await this.whatsAppProvider.getQrCode(
+      newInstance.instanceName,
+    )
     return { instanceName: newInstance.instanceName, qrCode }
   }
 }

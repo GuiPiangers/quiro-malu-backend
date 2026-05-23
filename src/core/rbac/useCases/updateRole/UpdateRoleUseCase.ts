@@ -5,10 +5,10 @@ export class UpdateRoleUseCase {
   constructor(private rbac: IRbacRepository) {}
 
   async execute(data: {
-    id: string;
-    clinicId: string;
-    name?: string;
-    description?: string;
+    id: string
+    clinicId: string
+    name?: string
+    description?: string
   }): Promise<void> {
     const role = await this.rbac.findRoleByIdForClinic({
       id: data.id,
@@ -20,7 +20,11 @@ export class UpdateRoleUseCase {
     }
 
     if (role.isSystem) {
-      throw new ApiError('Não é permitido alterar um papel de sistema', 400, 'role')
+      throw new ApiError(
+        'Não é permitido alterar um papel de sistema',
+        400,
+        'role',
+      )
     }
 
     await this.rbac.updateRole(data)

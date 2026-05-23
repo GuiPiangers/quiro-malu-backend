@@ -2,8 +2,8 @@ import { Scheduling, SchedulingDTO, SchedulingStatus } from './Scheduling'
 import { StatusStrategy } from './status/StatusStrategy'
 
 export type SchedulingWithPatientDTO = SchedulingDTO & {
-  patient: string;
-  phone: string;
+  patient: string
+  phone: string
 }
 
 export class SchedulingWithPatient extends Scheduling {

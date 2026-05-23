@@ -7,9 +7,7 @@ describe('DeleteExamUseCase', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    vi
-      .useFakeTimers()
-      .setSystemTime(new Date('2025-01-10T12:00:00Z').getTime())
+    vi.useFakeTimers().setSystemTime(new Date('2025-01-10T12:00:00Z').getTime())
     deleteExamUseCase = new DeleteExamUseCase(mockExamRepository)
   })
   describe('execute', () => {

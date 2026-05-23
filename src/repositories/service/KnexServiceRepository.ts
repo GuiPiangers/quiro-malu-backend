@@ -21,18 +21,12 @@ export class KnexServiceRepository implements IServiceRepository {
     clinicId,
     ...data
   }: ServiceDTO & { id: string; clinicId: string }): Promise<void> {
-    await this.knex(ETableNames.SERVICES)
-      .update(data)
-      .where({ id, clinicId })
+    await this.knex(ETableNames.SERVICES).update(data).where({ id, clinicId })
   }
 
   async list({ clinicId, config }: listServiceProps): Promise<ServiceDTO[]> {
-    const order = config?.search
-      ? 'name'
-      : 'created_at'
-    const orderDirection = config?.search
-      ? 'asc'
-      : 'desc'
+    const order = config?.search ? 'name' : 'created_at'
+    const orderDirection = config?.search ? 'asc' : 'desc'
 
     const result = this.knex(ETableNames.SERVICES)
       .select('*')
@@ -50,8 +44,8 @@ export class KnexServiceRepository implements IServiceRepository {
     clinicId,
     search,
   }: {
-    clinicId: string;
-    search?: string;
+    clinicId: string
+    search?: string
   }): Promise<[{ total: number }]> {
     const [result] = await this.knex(ETableNames.SERVICES)
       .count('id as total')
@@ -64,8 +58,8 @@ export class KnexServiceRepository implements IServiceRepository {
     id,
     clinicId,
   }: {
-    id: string;
-    clinicId: string;
+    id: string
+    clinicId: string
   }): Promise<ServiceDTO | null> {
     const row = await this.knex(ETableNames.SERVICES)
       .select('*')
@@ -79,17 +73,21 @@ export class KnexServiceRepository implements IServiceRepository {
     name,
     clinicId,
   }: {
-    name: string;
-    clinicId: string;
+    name: string
+    clinicId: string
   }): Promise<ServiceDTO[]> {
     return await this.knex(ETableNames.SERVICES)
       .select('*')
       .where({ clinicId, name })
   }
 
-  async delete({ id, clinicId }: { id: string; clinicId: string }): Promise<void> {
-    await this.knex(ETableNames.SERVICES)
-      .where({ id, clinicId })
-      .del()
+  async delete({
+    id,
+    clinicId,
+  }: {
+    id: string
+    clinicId: string
+  }): Promise<void> {
+    await this.knex(ETableNames.SERVICES).where({ id, clinicId }).del()
   }
 }

@@ -4,9 +4,9 @@ import { DateTime } from '../../../../shared/Date'
 import { BlockScheduleDto } from '../../../models/dtos/BlockSchedule.dto'
 
 export interface ListBlockSchedulingDTO {
-  startDate: string;
-  endDate: string;
-  userId: string;
+  startDate: string
+  endDate: string
+  userId: string
 }
 
 export class ListBlockSchedulingUseCase {

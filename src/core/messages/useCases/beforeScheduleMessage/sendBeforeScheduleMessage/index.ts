@@ -6,7 +6,10 @@ import { SendBeforeScheduleMessageUseCase } from './sendBeforeScheduleMessageUse
 import { knexMessageSendStrategyRepository } from '../../../../../repositories/messageSendStrategy/knexInstances'
 import { knexPatientRepository } from '../../../../../repositories/patient/knexInstances'
 import { knexSchedulingRepository } from '../../../../../repositories/scheduling/knexInstances'
-import { knexWhatsAppInstanceRepository, knexWhatsAppMessageLogRepository } from '../../../../../repositories/whatsapp/knexInstances'
+import {
+  knexWhatsAppInstanceRepository,
+  knexWhatsAppMessageLogRepository,
+} from '../../../../../repositories/whatsapp/knexInstances'
 import { beforeScheduleMessageRepository } from '../../../../../repositories/messages/knexInstances'
 
 const patientRepository = knexPatientRepository

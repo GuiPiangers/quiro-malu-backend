@@ -8,9 +8,9 @@ export class DeleteProgressUseCase {
     patientId,
     clinicId,
   }: {
-    id: string;
-    patientId: string;
-    clinicId: string;
+    id: string
+    patientId: string
+    clinicId: string
   }) {
     await this.ProgressRepository.delete({ id, patientId, clinicId })
   }

@@ -1,7 +1,10 @@
 import { UpdateServiceUseCase } from '../../useCases/updateService/UpdateServiceUseCase'
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { UpdateServiceBodySchema } from '../serviceSharedSchemas'
 
 export class UpdateServiceController {

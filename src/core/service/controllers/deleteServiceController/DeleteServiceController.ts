@@ -1,7 +1,10 @@
 import { Request, Response } from 'express'
 import { DeleteServiceUseCase } from '../../useCases/deleteService/DeleteServiceUseCase'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { DeleteServiceBodySchema } from '../serviceSharedSchemas'
 
 export class DeleteServiceController {

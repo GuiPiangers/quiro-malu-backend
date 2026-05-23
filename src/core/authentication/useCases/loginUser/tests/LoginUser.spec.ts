@@ -11,7 +11,9 @@ import type { Mock } from 'vitest'
 
 const stubFingerprint = 'stub-fingerprint-hash'
 const clinicId = '00000000-0000-4000-8000-000000000001'
-const mockPermissions = [{ key: 'patients:read', scope: { type: 'all' as const } }]
+const mockPermissions = [
+  { key: 'patients:read', scope: { type: 'all' as const } },
+]
 
 describe('Login user', () => {
   let userRepository: IUserRepository

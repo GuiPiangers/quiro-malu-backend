@@ -21,18 +21,18 @@ const SCHEDULE_MESSAGE_TYPES: ScheduleMessageType[] = [
 ]
 
 export type ListWhatsAppMessageLogsInput = {
-  userId: string;
-  page?: number;
-  limit?: number;
-  patientId?: string;
-  scheduleMessageType?: string;
-  scheduleMessageConfigId?: string;
-  status?: string;
+  userId: string
+  page?: number
+  limit?: number
+  patientId?: string
+  scheduleMessageType?: string
+  scheduleMessageConfigId?: string
+  status?: string
 }
 
 export type ListWhatsAppMessageLogsOutput = ListWhatsAppMessageLogsResult & {
-  page: number;
-  limit: number;
+  page: number
+  limit: number
 }
 
 export class ListWhatsAppMessageLogsUseCase {
@@ -58,7 +58,10 @@ export class ListWhatsAppMessageLogsUseCase {
     }
 
     let scheduleMessageType: ScheduleMessageType | undefined
-    if (input.scheduleMessageType != null && `${input.scheduleMessageType}`.trim() !== '') {
+    if (
+      input.scheduleMessageType != null &&
+      `${input.scheduleMessageType}`.trim() !== ''
+    ) {
       const raw = `${input.scheduleMessageType}`.trim() as ScheduleMessageType
       if (!SCHEDULE_MESSAGE_TYPES.includes(raw)) {
         throw new ApiError('Tipo de mensagem inválido', 400)

@@ -61,9 +61,9 @@ export class UpdatePatientUseCase {
     patientId,
     clinicId,
   }: {
-    cpf?: string;
-    patientId: string;
-    clinicId: string;
+    cpf?: string
+    patientId: string
+    clinicId: string
   }) {
     if (cpf) {
       const [verifyPatient] = await this.patientRepository.getByCpf(

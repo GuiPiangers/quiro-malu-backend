@@ -3,7 +3,10 @@ import { ETableNames } from '../ETableNames'
 
 const TABLE = ETableNames.USER_MESSAGE_SEND_STRATEGY
 
-async function mysqlDropAllForeignKeys(knex: Knex, tableName: string): Promise<void> {
+async function mysqlDropAllForeignKeys(
+  knex: Knex,
+  tableName: string,
+): Promise<void> {
   const result = await knex.raw(
     `SELECT CONSTRAINT_NAME FROM information_schema.TABLE_CONSTRAINTS
      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND CONSTRAINT_TYPE = 'FOREIGN KEY'`,
@@ -12,7 +15,9 @@ async function mysqlDropAllForeignKeys(knex: Knex, tableName: string): Promise<v
   const rows = result[0] as { CONSTRAINT_NAME: string }[]
 
   for (const row of rows) {
-    await knex.raw(`ALTER TABLE \`${tableName}\` DROP FOREIGN KEY \`${row.CONSTRAINT_NAME}\``)
+    await knex.raw(
+      `ALTER TABLE \`${tableName}\` DROP FOREIGN KEY \`${row.CONSTRAINT_NAME}\``,
+    )
   }
 }
 

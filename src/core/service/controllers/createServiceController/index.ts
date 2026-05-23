@@ -4,6 +4,8 @@ import { knexServiceRepository } from '../../../../repositories/service/knexInst
 
 const serviceRepository = knexServiceRepository
 const createServiceUseCase = new CreateServiceUseCase(serviceRepository)
-const createServiceController = new CreateServiceController(createServiceUseCase)
+const createServiceController = new CreateServiceController(
+  createServiceUseCase,
+)
 
 export { createServiceController }

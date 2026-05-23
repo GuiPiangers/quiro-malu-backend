@@ -13,8 +13,7 @@ import {
   UpdateAfterScheduleMessageProps,
 } from './IAfterScheduleMessageRepository'
 
-export class AfterScheduleMessageRepository
-implements IAfterScheduleMessageRepository {
+export class AfterScheduleMessageRepository implements IAfterScheduleMessageRepository {
   constructor(private readonly knex: Knex) {}
 
   async save(data: SaveAfterScheduleMessageProps): Promise<void> {
@@ -40,9 +39,15 @@ implements IAfterScheduleMessageRepository {
       const updateData: Record<string, unknown> = {}
 
       if (data.name !== undefined) updateData.name = data.name
-      if (data.minutesAfterSchedule !== undefined) { updateData.minutesAfterSchedule = data.minutesAfterSchedule }
-      if (data.textTemplate !== undefined) { updateData.textTemplate = data.textTemplate }
-      if (data.isActive !== undefined) { updateData.isActive = data.isActive }
+      if (data.minutesAfterSchedule !== undefined) {
+        updateData.minutesAfterSchedule = data.minutesAfterSchedule
+      }
+      if (data.textTemplate !== undefined) {
+        updateData.textTemplate = data.textTemplate
+      }
+      if (data.isActive !== undefined) {
+        updateData.isActive = data.isActive
+      }
 
       await this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES)
         .where({ id: data.id, userId: data.userId })
@@ -101,13 +106,13 @@ implements IAfterScheduleMessageRepository {
   ): Promise<ListAfterScheduleMessagesPagedResult> {
     try {
       const base = () =>
-        this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES).where({ userId: data.userId })
+        this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES).where({
+          userId: data.userId,
+        })
 
       const countRows = await base().clone().count('* as total')
       const total = Number(
-        (Array.isArray(countRows)
-          ? countRows[0]
-          : countRows)?.total ?? 0,
+        (Array.isArray(countRows) ? countRows[0] : countRows)?.total ?? 0,
       )
 
       const rows = await base()

@@ -24,12 +24,12 @@ import {
 import type { ListedMessageSendStrategyDTO } from '../listMessageSendStrategy/ListMessageSendStrategyUseCase'
 
 export type UpdateMessageSendStrategyDTO = {
-  userId: string;
-  clinicId: string;
-  strategyId: string;
-  name?: string;
-  kind?: SendStrategyKind;
-  params?: MessageSendStrategyCreateParamsByKind[SendStrategyKind];
+  userId: string
+  clinicId: string
+  strategyId: string
+  name?: string
+  kind?: SendStrategyKind
+  params?: MessageSendStrategyCreateParamsByKind[SendStrategyKind]
 }
 
 export class UpdateMessageSendStrategyUseCase {
@@ -108,7 +108,10 @@ export class UpdateMessageSendStrategyUseCase {
       displayName,
       patientIdList: params.patientIdList,
     })
-    await this.assertAllPatientsOwnedByClinic(dto.clinicId, entity.patientIdList)
+    await this.assertAllPatientsOwnedByClinic(
+      dto.clinicId,
+      entity.patientIdList,
+    )
     return {
       kind: entity.kind,
       name: entity.displayName.value,
@@ -128,7 +131,10 @@ export class UpdateMessageSendStrategyUseCase {
       displayName,
       patientIdList: params.patientIdList,
     })
-    await this.assertAllPatientsOwnedByClinic(dto.clinicId, entity.patientIdList)
+    await this.assertAllPatientsOwnedByClinic(
+      dto.clinicId,
+      entity.patientIdList,
+    )
     return {
       kind: entity.kind,
       name: entity.displayName.value,
@@ -149,9 +155,16 @@ export class UpdateMessageSendStrategyUseCase {
       case SEND_STRATEGY_KIND_SEND_SELECTED_LIST:
         return await this.buildSelectedListFullReplacePatch(dto, existing.id)
       case SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST:
-        return await this.buildExcludePatientsListFullReplacePatch(dto, existing.id)
+        return await this.buildExcludePatientsListFullReplacePatch(
+          dto,
+          existing.id,
+        )
       default:
-        throw new ApiError('Tipo de estratégia ainda não suportado', 501, 'kind')
+        throw new ApiError(
+          'Tipo de estratégia ainda não suportado',
+          501,
+          'kind',
+        )
     }
   }
 

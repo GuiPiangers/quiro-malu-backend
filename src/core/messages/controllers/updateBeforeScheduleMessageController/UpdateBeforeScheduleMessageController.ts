@@ -1,9 +1,10 @@
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
 import {
-  UpdateBeforeScheduleMessageUseCase,
-} from '../../useCases/beforeScheduleMessage/updateBeforeScheduleMessage/UpdateBeforeScheduleMessageUseCase'
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
+import { UpdateBeforeScheduleMessageUseCase } from '../../useCases/beforeScheduleMessage/updateBeforeScheduleMessage/UpdateBeforeScheduleMessageUseCase'
 import { MessageEntityIdParamSchema } from '../messagesCommonSchemas'
 import { UpdateBeforeScheduleMessageBodySchema } from '../scheduledMessageSchemas'
 
@@ -13,11 +14,17 @@ export class UpdateBeforeScheduleMessageController {
   ) {}
 
   async handle(request: Request, response: Response) {
-    const parsedParams = parseWithSchema(MessageEntityIdParamSchema, request.params)
+    const parsedParams = parseWithSchema(
+      MessageEntityIdParamSchema,
+      request.params,
+    )
     if (!parsedParams.success) {
       return sendZodBadRequest(response, parsedParams.error)
     }
-    const parsedBody = parseWithSchema(UpdateBeforeScheduleMessageBodySchema, request.body)
+    const parsedBody = parseWithSchema(
+      UpdateBeforeScheduleMessageBodySchema,
+      request.body,
+    )
     if (!parsedBody.success) {
       return sendZodBadRequest(response, parsedBody.error)
     }

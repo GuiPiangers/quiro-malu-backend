@@ -5,13 +5,13 @@ import { Password } from '../../shared/Password'
 import { Phone } from '../../shared/Phone'
 
 export interface UserDTO {
-  id?: string;
-  name: string;
-  email: string;
-  phone: string;
-  password: string;
-  clinicId: string;
-  roleId?: string;
+  id?: string
+  name: string
+  email: string
+  phone: string
+  password: string
+  clinicId: string
+  roleId?: string
 }
 
 export class User extends Entity {

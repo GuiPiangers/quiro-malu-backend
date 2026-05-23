@@ -19,9 +19,9 @@ describe('DeleteBirthdayMessageUseCase', () => {
     const { sut, birthdayMessageRepository } = makeSut()
     birthdayMessageRepository.getById.mockResolvedValue(null)
 
-    await expect(sut.execute({ id: 'camp-1', userId: 'user-1' })).rejects.toThrow(
-      ApiError,
-    )
+    await expect(
+      sut.execute({ id: 'camp-1', userId: 'user-1' }),
+    ).rejects.toThrow(ApiError)
 
     expect(birthdayMessageRepository.delete).not.toHaveBeenCalled()
   })
@@ -45,8 +45,11 @@ describe('DeleteBirthdayMessageUseCase', () => {
       id: 'camp-1',
       userId: 'user-1',
     })
-    expect(appEventListener.emit).toHaveBeenCalledWith('birthdayMessageDelete', {
-      id: 'camp-1',
-    })
+    expect(appEventListener.emit).toHaveBeenCalledWith(
+      'birthdayMessageDelete',
+      {
+        id: 'camp-1',
+      },
+    )
   })
 })

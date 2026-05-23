@@ -3,10 +3,11 @@ import { beforeScheduleMessageRepository } from '../../../../repositories/messag
 import { appEventListener } from '../../../shared/observers/EventListener'
 import { BeforeScheduleMessageEventHandlers } from './beforeScheduleMessageEventHandlers'
 
-const beforeScheduleMessageEventHandlers = new BeforeScheduleMessageEventHandlers(
-  beforeScheduleQueue,
-  appEventListener,
-  beforeScheduleMessageRepository,
-)
+const beforeScheduleMessageEventHandlers =
+  new BeforeScheduleMessageEventHandlers(
+    beforeScheduleQueue,
+    appEventListener,
+    beforeScheduleMessageRepository,
+  )
 
 export { beforeScheduleMessageEventHandlers }

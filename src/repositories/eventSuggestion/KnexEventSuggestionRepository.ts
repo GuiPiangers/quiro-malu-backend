@@ -6,13 +6,12 @@ import { ETableNames } from '../../database/ETableNames'
 import { IEventSuggestionRepository } from './IEventSuggestionRepository'
 import type { Knex } from 'knex'
 
-export class KnexEventSuggestionRepository
-implements IEventSuggestionRepository {
+export class KnexEventSuggestionRepository implements IEventSuggestionRepository {
   constructor(private readonly knex: Knex) {}
 
   async getByDescription(params: {
-    description: string;
-    userId: string;
+    description: string
+    userId: string
   }): Promise<EventSuggestion | null> {
     const { description, userId } = params
     const result = await this.knex(ETableNames.EVENT_SUGGESTIONS)
@@ -42,8 +41,8 @@ implements IEventSuggestionRepository {
   }
 
   async list(params: {
-    userId: string;
-    config?: { filter?: string };
+    userId: string
+    config?: { filter?: string }
   }): Promise<EventSuggestion[]> {
     const { userId, config } = params
 

@@ -1,5 +1,8 @@
 import { ISchedulingRepository } from '../../../../repositories/scheduling/ISchedulingRepository'
-import { IMessageSendStrategy, SendStrategyContext } from '../IMessageSendStrategy'
+import {
+  IMessageSendStrategy,
+  SendStrategyContext,
+} from '../IMessageSendStrategy'
 import { SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS } from '../sendStrategyKind'
 
 export class SendMostFrequencyPatientsStrategy implements IMessageSendStrategy {

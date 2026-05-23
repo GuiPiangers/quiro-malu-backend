@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { mergeScopesForSamePermission, parsePermissionScope } from '../mergePermissionScopes'
+import {
+  mergeScopesForSamePermission,
+  parsePermissionScope,
+} from '../mergePermissionScopes'
 
 describe('mergePermissionScopes', () => {
   it('treats null as unrestricted and merges to all when combined with all', () => {

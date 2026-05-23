@@ -4,6 +4,8 @@ import { knexSchedulingRepository } from '../../../../repositories/scheduling/kn
 
 const schedulingRepository = knexSchedulingRepository
 const qtdSchedulesUseCase = new GetQtdSchedulesByDay(schedulingRepository)
-const qtdSchedulesController = new GetQtdSchedulesByDayController(qtdSchedulesUseCase)
+const qtdSchedulesController = new GetQtdSchedulesByDayController(
+  qtdSchedulesUseCase,
+)
 
 export { qtdSchedulesController }

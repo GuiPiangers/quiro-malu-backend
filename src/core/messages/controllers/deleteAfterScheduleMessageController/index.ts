@@ -14,8 +14,7 @@ const deleteAfterScheduleMessageUseCase = new DeleteAfterScheduleMessageUseCase(
   appEventListener,
 )
 
-const deleteAfterScheduleMessageController = new DeleteAfterScheduleMessageController(
-  deleteAfterScheduleMessageUseCase,
-)
+const deleteAfterScheduleMessageController =
+  new DeleteAfterScheduleMessageController(deleteAfterScheduleMessageUseCase)
 
 export { deleteAfterScheduleMessageController }

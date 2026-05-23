@@ -24,7 +24,10 @@ describe('getServiceUseCase', () => {
 
       mockServiceRepository.get.mockResolvedValue(serviceData)
 
-      const result = await getServiceUseCase.execute({ id: serviceId, clinicId })
+      const result = await getServiceUseCase.execute({
+        id: serviceId,
+        clinicId,
+      })
 
       expect(result).toEqual(serviceData)
     })

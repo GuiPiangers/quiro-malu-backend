@@ -6,8 +6,7 @@ const listBeforeScheduleMessagesUseCase = new ListBeforeScheduleMessagesUseCase(
   beforeScheduleMessageRepository,
 )
 
-const listBeforeScheduleMessagesController = new ListBeforeScheduleMessagesController(
-  listBeforeScheduleMessagesUseCase,
-)
+const listBeforeScheduleMessagesController =
+  new ListBeforeScheduleMessagesController(listBeforeScheduleMessagesUseCase)
 
 export { listBeforeScheduleMessagesController }

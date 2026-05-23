@@ -7,7 +7,7 @@ type LogEvent = Record<string, unknown>
 
 const isObservedRoute = (path: string) => {
   const ignoredRoutes = ['/health', '/metrics']
-  return !ignoredRoutes.some(route => path.includes(route))
+  return !ignoredRoutes.some((route) => path.includes(route))
 }
 
 export const requestLoggerMiddleware = (
@@ -24,25 +24,21 @@ export const requestLoggerMiddleware = (
     path: req.originalUrl,
     ip: req.ip,
     userAgent: req.get('user-agent'),
-  };
+  }
 
-  (req as any).logEvent = event
+  ;(req as any).logEvent = event
   res.locals.logEvent = event
   res.setHeader('X-Request-Id', requestId)
 
   res.on('finish', () => {
-    const userId = (req)?.user?.id
+    const userId = req?.user?.id
     if (userId) event.userId = userId
 
     event.statusCode = res.statusCode
     event.durationMs = Date.now() - startTime
 
     const level =
-      res.statusCode >= 500
-        ? 'error'
-        : res.statusCode >= 400
-          ? 'warn'
-          : 'info'
+      res.statusCode >= 500 ? 'error' : res.statusCode >= 400 ? 'warn' : 'info'
 
     if (!isObservedRoute(event.path as string)) {
       return

@@ -1,3 +1,1 @@
-export type {
-  SendBirthdayMessageJob as BirthdayMessageCampaignJobData,
-} from '../../core/messages/useCases/birthdayMessage/sendBirthdayMessage/sendBirthdayMessageUseCase'
+export type { SendBirthdayMessageJob as BirthdayMessageCampaignJobData } from '../../core/messages/useCases/birthdayMessage/sendBirthdayMessage/sendBirthdayMessageUseCase'

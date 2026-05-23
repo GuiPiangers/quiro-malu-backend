@@ -44,7 +44,9 @@ export class KnexUserFingerprintRepository implements IUserFingerprintRepository
     }
   }
 
-  async registerNewFingerprint(props: UserFingerprintUpsertProps): Promise<void> {
+  async registerNewFingerprint(
+    props: UserFingerprintUpsertProps,
+  ): Promise<void> {
     await this.upsertTouchLastUsed(props)
     await this.enforceLimit(props.userId)
   }

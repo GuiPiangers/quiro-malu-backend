@@ -1,7 +1,7 @@
 import { ApiError } from '../../../utils/ApiError'
 
 export type ParseHttpPatientIdListOptions = {
-  allowEmpty?: boolean;
+  allowEmpty?: boolean
 }
 
 export function parseHttpPatientIdList(
@@ -9,7 +9,11 @@ export function parseHttpPatientIdList(
   options?: ParseHttpPatientIdListOptions,
 ): string[] {
   if (!Array.isArray(raw)) {
-    throw new ApiError('patientIdList deve ser um array', 400, 'params.patientIdList')
+    throw new ApiError(
+      'patientIdList deve ser um array',
+      400,
+      'params.patientIdList',
+    )
   }
 
   const seen = new Set<string>()

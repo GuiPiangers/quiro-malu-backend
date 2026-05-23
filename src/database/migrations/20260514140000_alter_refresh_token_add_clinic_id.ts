@@ -14,12 +14,13 @@ export async function up(knex: Knex): Promise<void> {
     })
   }
 
-  await knex.raw(`
+  await knex.raw(
+    `
     UPDATE ?? AS rt
     INNER JOIN ?? AS u ON u.id = rt.userId
     SET rt.clinicId = u.clinicId
     WHERE rt.clinicId IS NULL`,
-  [ETableNames.REFRESH_TOKEN, ETableNames.USERS],
+    [ETableNames.REFRESH_TOKEN, ETableNames.USERS],
   )
 
   await knex.schema.alterTable(ETableNames.REFRESH_TOKEN, (table) => {

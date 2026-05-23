@@ -38,8 +38,8 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
         'id',
         'userId',
         'description',
-        this.knex.raw('DATE_FORMAT(startDate, \'%Y-%m-%dT%H:%i\') as date'),
-        this.knex.raw('DATE_FORMAT(endDate, \'%Y-%m-%dT%H:%i\') as endDate'),
+        this.knex.raw("DATE_FORMAT(startDate, '%Y-%m-%dT%H:%i') as date"),
+        this.knex.raw("DATE_FORMAT(endDate, '%Y-%m-%dT%H:%i') as endDate"),
       )
       .first()
       .where({
@@ -84,8 +84,8 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
         'id',
         'userId',
         'description',
-        this.knex.raw('DATE_FORMAT(startDate, \'%Y-%m-%dT%H:%i\') as date'),
-        this.knex.raw('DATE_FORMAT(endDate, \'%Y-%m-%dT%H:%i\') as endDate'),
+        this.knex.raw("DATE_FORMAT(startDate, '%Y-%m-%dT%H:%i') as date"),
+        this.knex.raw("DATE_FORMAT(endDate, '%Y-%m-%dT%H:%i') as endDate"),
       )
       .where('userId', userId)
       .andWhere((qb) => {
@@ -109,9 +109,9 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
   }
 
   async list(data: {
-    userId: string;
-    date: string;
-    config?: { limit: number; offSet: number };
+    userId: string
+    date: string
+    config?: { limit: number; offSet: number }
   }): Promise<BlockScheduleDto[]> {
     const { userId, date, config } = data
 
@@ -120,17 +120,15 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
         'id',
         'userId',
         'description',
-        this.knex.raw('DATE_FORMAT(startDate, \'%Y-%m-%dT%H:%i\') as startDate'),
-        this.knex.raw('DATE_FORMAT(endDate, \'%Y-%m-%dT%H:%i\') as endDate'),
+        this.knex.raw("DATE_FORMAT(startDate, '%Y-%m-%dT%H:%i') as startDate"),
+        this.knex.raw("DATE_FORMAT(endDate, '%Y-%m-%dT%H:%i') as endDate"),
       )
       .where('userId', userId)
       .andWhere((qb) => {
         qb.where('startDate', '>=', date)
           .orWhere('endDate', '<=', date)
           .orWhere((subQb) => {
-            subQb
-              .where('startDate', '<=', date)
-              .andWhere('endDate', '>=', date)
+            subQb.where('startDate', '<=', date).andWhere('endDate', '>=', date)
           })
       })
 

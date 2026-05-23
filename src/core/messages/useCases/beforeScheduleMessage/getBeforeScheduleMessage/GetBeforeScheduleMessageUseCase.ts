@@ -5,8 +5,8 @@ import { BeforeScheduleMessage } from '../../../models/BeforeScheduleMessage'
 import { MessageTemplate } from '../../../models/MessageTemplate'
 
 export type GetBeforeScheduleMessageDTO = {
-  id: string;
-  userId: string;
+  id: string
+  userId: string
 }
 
 export class GetBeforeScheduleMessageUseCase {
@@ -14,7 +14,9 @@ export class GetBeforeScheduleMessageUseCase {
     private beforeScheduleMessageRepository: IBeforeScheduleMessageRepository,
   ) {}
 
-  async execute(dto: GetBeforeScheduleMessageDTO): Promise<BeforeScheduleMessageDTO> {
+  async execute(
+    dto: GetBeforeScheduleMessageDTO,
+  ): Promise<BeforeScheduleMessageDTO> {
     const config = await this.beforeScheduleMessageRepository.getById({
       id: dto.id,
       userId: dto.userId,

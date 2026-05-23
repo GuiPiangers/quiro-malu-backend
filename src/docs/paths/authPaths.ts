@@ -1,6 +1,15 @@
-import { CreateUserBodySchema, CreateUserResponseSchema } from '../../core/authentication/controllers/createUserController/createUserSchemas'
-import { LoginBodySchema, LoginResponseSchema } from '../../core/authentication/controllers/loginUserController/loginSchemas'
-import { LogoutBodySchema, LogoutResponseSchema } from '../../core/authentication/controllers/logout/logoutSchemas'
+import {
+  CreateUserBodySchema,
+  CreateUserResponseSchema,
+} from '../../core/authentication/controllers/createUserController/createUserSchemas'
+import {
+  LoginBodySchema,
+  LoginResponseSchema,
+} from '../../core/authentication/controllers/loginUserController/loginSchemas'
+import {
+  LogoutBodySchema,
+  LogoutResponseSchema,
+} from '../../core/authentication/controllers/logout/logoutSchemas'
 import {
   RefreshTokenBodySchema,
   RefreshTokenResponseSchema,
@@ -40,7 +49,10 @@ openApiRegistry.registerPath({
         'application/json': { schema: CreateUserResponseSchema },
       },
     },
-    400: { description: 'Corpo inválido ou regra de negócio (ex.: email já cadastrado)' },
+    400: {
+      description:
+        'Corpo inválido ou regra de negócio (ex.: email já cadastrado)',
+    },
   },
 })
 
@@ -129,7 +141,9 @@ openApiRegistry.registerPath({
       },
     },
     400: { description: 'Corpo inválido' },
-    401: { description: 'Refresh token inválido, expirado ou dispositivo incorreto' },
+    401: {
+      description: 'Refresh token inválido, expirado ou dispositivo incorreto',
+    },
   },
 })
 
@@ -146,7 +160,9 @@ openApiRegistry.registerPath({
         'application/json': { schema: GetUserProfileResponseSchema },
       },
     },
-    401: { description: 'Não autenticado ou token sem identificação de usuário' },
+    401: {
+      description: 'Não autenticado ou token sem identificação de usuário',
+    },
     404: { description: 'Usuário não encontrado' },
   },
 })

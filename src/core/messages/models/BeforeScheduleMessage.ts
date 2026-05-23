@@ -5,11 +5,11 @@ import { patientFirstNameFromFullName } from '../utils/patientFirstNameFromFullN
 import { MessageTemplate, MessageTemplateDTO } from './MessageTemplate'
 
 export type BeforeScheduleMessageDTO = {
-  id?: string;
-  name: string;
-  minutesBeforeSchedule: number;
-  isActive: boolean;
-  messageTemplate: MessageTemplateDTO;
+  id?: string
+  name: string
+  minutesBeforeSchedule: number
+  isActive: boolean
+  messageTemplate: MessageTemplateDTO
 }
 
 export class BeforeScheduleMessage extends Entity {
@@ -25,11 +25,11 @@ export class BeforeScheduleMessage extends Entity {
     minutesBeforeSchedule,
     isActive = true,
   }: {
-    id?: string;
-    name: string;
-    minutesBeforeSchedule: number;
-    messageTemplate: MessageTemplate;
-    isActive?: boolean;
+    id?: string
+    name: string
+    minutesBeforeSchedule: number
+    messageTemplate: MessageTemplate
+    isActive?: boolean
   }) {
     super(id)
 
@@ -37,7 +37,10 @@ export class BeforeScheduleMessage extends Entity {
       throw new ApiError('name deve ser uma string', 400, 'name')
     }
 
-    if (!Number.isInteger(minutesBeforeSchedule) || minutesBeforeSchedule <= 0) {
+    if (
+      !Number.isInteger(minutesBeforeSchedule) ||
+      minutesBeforeSchedule <= 0
+    ) {
       throw new ApiError(
         'minutesBeforeSchedule deve ser um inteiro maior que zero',
         400,
@@ -59,8 +62,8 @@ export class BeforeScheduleMessage extends Entity {
     patient,
     scheduling,
   }: {
-    patient: { name: string; phone: string; gender?: string };
-    scheduling?: { date?: string; service?: string; status?: string };
+    patient: { name: string; phone: string; gender?: string }
+    scheduling?: { date?: string; service?: string; status?: string }
   }): string {
     return this.messageTemplate.replaceVariables(
       this.buildTemplateVariables({ patient, scheduling }),
@@ -71,13 +74,11 @@ export class BeforeScheduleMessage extends Entity {
     patient,
     scheduling,
   }: {
-    patient: { name: string; phone: string; gender?: string };
-    scheduling?: { date?: string; service?: string; status?: string };
+    patient: { name: string; phone: string; gender?: string }
+    scheduling?: { date?: string; service?: string; status?: string }
   }): Record<string, string> {
     const dateTime =
-      scheduling?.date != null
-        ? new DateTime(scheduling.date)
-        : null
+      scheduling?.date != null ? new DateTime(scheduling.date) : null
 
     const nomeCompleto = `${patient.name}`.trim()
 
@@ -86,12 +87,8 @@ export class BeforeScheduleMessage extends Entity {
       nome_completo_paciente: nomeCompleto,
       telefone_paciente: patient.phone,
       genero_paciente: patient.gender ?? '',
-      data_consulta: dateTime
-        ? DateTime.toLocaleDate(dateTime.date)
-        : '',
-      horario_consulta: dateTime
-        ? dateTime.time
-        : '',
+      data_consulta: dateTime ? DateTime.toLocaleDate(dateTime.date) : '',
+      horario_consulta: dateTime ? dateTime.time : '',
       servico_consulta: scheduling?.service ?? '',
       status_consulta: scheduling?.status ?? '',
     }

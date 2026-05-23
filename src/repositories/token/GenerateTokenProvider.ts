@@ -7,7 +7,9 @@ dotenv.config()
 
 class GenerateTokenProvider implements IGenerateTokenProvider {
   async execute({ userId, clinicId, permissions }: GenerateTokenInput) {
-    if (!process.env.JWT_SECRET) { throw new ApiError('Erro de configuração do servidor', 500) }
+    if (!process.env.JWT_SECRET) {
+      throw new ApiError('Erro de configuração do servidor', 500)
+    }
     const token = await jwt.sign(
       { id: userId, clinicId, permissions },
       process.env.JWT_SECRET,

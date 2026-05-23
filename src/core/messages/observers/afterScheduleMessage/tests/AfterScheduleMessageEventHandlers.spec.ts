@@ -38,7 +38,9 @@ describe('AfterScheduleMessageEventHandlers', () => {
 
   it('não deve agendar job no createSchedule quando status não é Atendido', async () => {
     vi.setSystemTime(
-      Luxon.fromISO('2025-01-01T12:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+      Luxon.fromISO('2025-01-01T12:00', {
+        zone: 'America/Sao_Paulo',
+      }).toMillis(),
     )
 
     const afterScheduleQueue = {
@@ -84,7 +86,9 @@ describe('AfterScheduleMessageEventHandlers', () => {
 
   it('deve agendar job no updateSchedule quando status é Atendido', async () => {
     vi.setSystemTime(
-      Luxon.fromISO('2025-01-01T12:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+      Luxon.fromISO('2025-01-01T12:00', {
+        zone: 'America/Sao_Paulo',
+      }).toMillis(),
     )
 
     const afterScheduleQueue = {
@@ -140,7 +144,9 @@ describe('AfterScheduleMessageEventHandlers', () => {
 
   it('deve remover o job no updateSchedule quando status não é Atendido', async () => {
     vi.setSystemTime(
-      Luxon.fromISO('2025-01-01T12:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+      Luxon.fromISO('2025-01-01T12:00', {
+        zone: 'America/Sao_Paulo',
+      }).toMillis(),
     )
 
     const afterScheduleQueue = {
@@ -188,7 +194,9 @@ describe('AfterScheduleMessageEventHandlers', () => {
 
   it('não deve agendar job quando config está inativa', async () => {
     vi.setSystemTime(
-      Luxon.fromISO('2025-01-01T12:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+      Luxon.fromISO('2025-01-01T12:00', {
+        zone: 'America/Sao_Paulo',
+      }).toMillis(),
     )
 
     const afterScheduleQueue = {

@@ -1,60 +1,60 @@
 export type MessageSendStrategyRow = {
-  id: string;
-  userId: string;
-  name: string;
-  kind: string;
-  params: Record<string, unknown>;
-  campaignBindingsCount: number;
+  id: string
+  userId: string
+  name: string
+  kind: string
+  params: Record<string, unknown>
+  campaignBindingsCount: number
 }
 
 export type SaveMessageSendStrategyProps = {
-  id: string;
-  userId: string;
-  name: string;
-  kind: string;
-  params: Record<string, unknown>;
+  id: string
+  userId: string
+  name: string
+  kind: string
+  params: Record<string, unknown>
 }
 
 export type ListMessageSendStrategiesByUserIdProps = {
-  userId: string;
-  limit: number;
-  offset: number;
+  userId: string
+  limit: number
+  offset: number
 }
 
 export type ListMessageSendStrategiesByUserIdResult = {
-  items: MessageSendStrategyRow[];
-  total: number;
+  items: MessageSendStrategyRow[]
+  total: number
 }
 
 export type UpdateMessageSendStrategyPatch = {
-  name?: string;
-  kind?: string;
-  params?: Record<string, unknown>;
+  name?: string
+  kind?: string
+  params?: Record<string, unknown>
 }
 
 export interface IMessageSendStrategyRepository {
-  save(data: SaveMessageSendStrategyProps): Promise<void>;
+  save(data: SaveMessageSendStrategyProps): Promise<void>
   listByUserIdPaged(
     data: ListMessageSendStrategiesByUserIdProps,
-  ): Promise<ListMessageSendStrategiesByUserIdResult>;
+  ): Promise<ListMessageSendStrategiesByUserIdResult>
   findByIdAndUserId(
     id: string,
     userId: string,
-  ): Promise<MessageSendStrategyRow | null>;
+  ): Promise<MessageSendStrategyRow | null>
   findActiveStrategiesByUserAndCampaign(
     userId: string,
     campaignId: string,
-  ): Promise<MessageSendStrategyRow[]>;
+  ): Promise<MessageSendStrategyRow[]>
   setCampaignStrategyBindings(
     userId: string,
     campaignId: string,
     strategyIds: string[],
-  ): Promise<void>;
-  deleteCampaignBinding(userId: string, campaignId: string): Promise<void>;
+  ): Promise<void>
+  deleteCampaignBinding(userId: string, campaignId: string): Promise<void>
   updateByIdAndUserId(
     id: string,
     userId: string,
     patch: UpdateMessageSendStrategyPatch,
-  ): Promise<void>;
-  deleteByIdAndUserId(id: string, userId: string): Promise<void>;
+  ): Promise<void>
+  deleteByIdAndUserId(id: string, userId: string): Promise<void>
 }

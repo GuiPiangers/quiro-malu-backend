@@ -1,5 +1,8 @@
 import { Request, Response } from 'express'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { responseError } from '../../../../utils/ResponseError'
 import { CreateRoleBodySchema } from '../../schemas/rbacSchemas'
 import { CreateRoleUseCase } from '../../useCases/createRole/CreateRoleUseCase'

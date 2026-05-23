@@ -48,7 +48,8 @@ describe('SendBirthdayMessageUseCase', () => {
     const patientRepository = createMockPatientRepository()
     const whatsAppProvider = createMockWhatsAppProvider()
     const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const whatsAppMessageLogRepository =
+      createMockWhatsAppMessageLogRepository()
     const appEventListener = createAppEventListenerMock()
 
     birthdayMessageRepository.findActiveByUserId.mockResolvedValue({
@@ -125,7 +126,8 @@ describe('SendBirthdayMessageUseCase', () => {
     const patientRepository = createMockPatientRepository()
     const whatsAppProvider = createMockWhatsAppProvider()
     const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const whatsAppMessageLogRepository =
+      createMockWhatsAppMessageLogRepository()
     const appEventListener = createAppEventListenerMock()
 
     const logId = expectedBirthdayLogId()
@@ -181,7 +183,8 @@ describe('SendBirthdayMessageUseCase', () => {
     const patientRepository = createMockPatientRepository()
     const whatsAppProvider = createMockWhatsAppProvider()
     const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const whatsAppMessageLogRepository =
+      createMockWhatsAppMessageLogRepository()
     const appEventListener = createAppEventListenerMock()
 
     birthdayMessageRepository.findActiveByUserId.mockResolvedValue({
@@ -214,7 +217,8 @@ describe('SendBirthdayMessageUseCase', () => {
     const patientRepository = createMockPatientRepository()
     const whatsAppProvider = createMockWhatsAppProvider()
     const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const whatsAppMessageLogRepository =
+      createMockWhatsAppMessageLogRepository()
     const appEventListener = createAppEventListenerMock()
 
     birthdayMessageRepository.findActiveByUserId.mockResolvedValue({
@@ -230,7 +234,12 @@ describe('SendBirthdayMessageUseCase', () => {
     whatsAppProvider.getConnectionState.mockResolvedValue('open')
 
     patientRepository.getById.mockResolvedValue([
-      { id: 'patient-1', name: 'Maria', phone: '(51) 99999 9999', dateOfBirth: '1990-03-05' } as any,
+      {
+        id: 'patient-1',
+        name: 'Maria',
+        phone: '(51) 99999 9999',
+        dateOfBirth: '1990-03-05',
+      } as any,
     ])
 
     whatsAppProvider.sendMessage.mockResolvedValue({
@@ -269,7 +278,8 @@ describe('SendBirthdayMessageUseCase', () => {
     const patientRepository = createMockPatientRepository()
     const whatsAppProvider = createMockWhatsAppProvider()
     const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const whatsAppMessageLogRepository =
+      createMockWhatsAppMessageLogRepository()
     const appEventListener = createAppEventListenerMock()
     const messageSendStrategyEnforcer = createMessageSendStrategyEnforcerMock()
     messageSendStrategyEnforcer.isSendAllowed.mockResolvedValue(false)

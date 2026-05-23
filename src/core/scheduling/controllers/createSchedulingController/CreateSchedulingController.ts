@@ -1,7 +1,10 @@
 import { CreateSchedulingUseCase } from '../../useCases/createScheduling/CreateSchedulingUseCase'
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { CreateSchedulingBodySchema } from '../schedulingSharedSchemas'
 
 export class CreateSchedulingController {

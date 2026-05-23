@@ -6,8 +6,10 @@ export class InMemoryAnamnesis implements IAnamnesisRepository {
     throw new Error('Method not implemented.')
   }
 
-  private dbLocation: (AnamnesisDTO & { patientId: string; clinicId: string })[] =
-    []
+  private dbLocation: (AnamnesisDTO & {
+    patientId: string
+    clinicId: string
+  })[] = []
 
   async save(
     { patientId, ...data }: AnamnesisDTO,

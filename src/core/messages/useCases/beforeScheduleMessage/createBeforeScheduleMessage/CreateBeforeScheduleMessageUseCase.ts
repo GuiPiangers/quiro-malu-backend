@@ -11,13 +11,13 @@ import {
 import { MessageTemplate } from '../../../models/MessageTemplate'
 
 export type CreateBeforeScheduleMessageDTO = {
-  userId: string;
-  name: string;
-  minutesBeforeSchedule: number;
-  isActive?: boolean;
+  userId: string
+  name: string
+  minutesBeforeSchedule: number
+  isActive?: boolean
   messageTemplate: {
-    textTemplate: string;
-  };
+    textTemplate: string
+  }
 }
 
 export class CreateBeforeScheduleMessageUseCase {
@@ -29,9 +29,7 @@ export class CreateBeforeScheduleMessageUseCase {
   async execute(
     dto: CreateBeforeScheduleMessageDTO,
   ): Promise<BeforeScheduleMessageDTO> {
-    const name = typeof dto.name === 'string'
-      ? dto.name.trim()
-      : ''
+    const name = typeof dto.name === 'string' ? dto.name.trim() : ''
 
     const messageTemplate = new MessageTemplate({
       textTemplate: dto.messageTemplate.textTemplate,

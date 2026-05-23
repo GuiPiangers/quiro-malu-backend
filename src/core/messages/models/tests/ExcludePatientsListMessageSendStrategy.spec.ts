@@ -23,7 +23,9 @@ describe('ExcludePatientsListMessageSendStrategy', () => {
       displayName,
       patientIdList,
     })
-    expect(entity.patientIdList.length).toBe(MESSAGE_SEND_STRATEGY_SELECTED_LIST_MAX_IDS)
+    expect(entity.patientIdList.length).toBe(
+      MESSAGE_SEND_STRATEGY_SELECTED_LIST_MAX_IDS,
+    )
   })
 
   it('rejeita lista acima do máximo permitido', () => {

@@ -26,9 +26,7 @@ function assertAmountInRange(n: number): number {
 }
 
 function parseHttpAmount(raw: unknown): number {
-  const n = typeof raw === 'number'
-    ? raw
-    : Number(raw)
+  const n = typeof raw === 'number' ? raw : Number(raw)
   return assertAmountInRange(n)
 }
 
@@ -73,9 +71,7 @@ export function buildValidatedUpdateMessageSendStrategyBody(
     const kind = assertSendStrategyKind(body.kind)
     if (isPatientListStrategyKind(kind)) {
       const paramsBody = body.params as { patientIdList?: unknown } | undefined
-      const nameRaw = typeof body.name === 'string'
-        ? body.name
-        : ''
+      const nameRaw = typeof body.name === 'string' ? body.name : ''
       const displayName = new MessageSendStrategyDisplayName(nameRaw)
       if (kind === SEND_STRATEGY_KIND_SEND_SELECTED_LIST) {
         const patientIdList = parseHttpPatientIdList(paramsBody?.patientIdList)
@@ -99,9 +95,7 @@ export function buildValidatedUpdateMessageSendStrategyBody(
     }
     const amountParams = body.params as { amount?: unknown } | undefined
     const amount = parseHttpAmount(amountParams?.amount)
-    const nameRaw = typeof body.name === 'string'
-      ? body.name
-      : ''
+    const nameRaw = typeof body.name === 'string' ? body.name : ''
     const displayName = new MessageSendStrategyDisplayName(nameRaw)
     return {
       kind,
@@ -112,9 +106,7 @@ export function buildValidatedUpdateMessageSendStrategyBody(
 
   if (body.name !== undefined) {
     const displayName = new MessageSendStrategyDisplayName(
-      typeof body.name === 'string'
-        ? body.name
-        : '',
+      typeof body.name === 'string' ? body.name : '',
     )
     return { name: displayName.value }
   }

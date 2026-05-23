@@ -1,7 +1,10 @@
 import { Request, Response } from 'express'
 import { RefreshTokenUseCase } from '../../useCases/refreshToken/RefreshTokenUseCase'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { generateRequestFingerprint } from '../../utils/generateRequestFingerprint'
 import { RefreshTokenBodySchema } from './refreshTokenSchemas'
 

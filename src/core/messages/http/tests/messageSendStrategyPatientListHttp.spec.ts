@@ -17,7 +17,10 @@ describe('parseHttpPatientIdList', () => {
   })
 
   it('permite lista bruta maior que o máximo se após deduplicação couber na entidade', () => {
-    const list = Array.from({ length: MESSAGE_SEND_STRATEGY_SELECTED_LIST_MAX_IDS + 5 }, () => 'same-id')
+    const list = Array.from(
+      { length: MESSAGE_SEND_STRATEGY_SELECTED_LIST_MAX_IDS + 5 },
+      () => 'same-id',
+    )
     const ids = parseHttpPatientIdList(list)
     expect(ids).toEqual(['same-id'])
   })

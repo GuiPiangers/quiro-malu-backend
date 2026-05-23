@@ -1,8 +1,8 @@
 import { Entity } from '../../shared/Entity'
 
 export interface ClinicDTO {
-  id?: string;
-  name: string;
+  id?: string
+  name: string
 }
 
 export class Clinic extends Entity {

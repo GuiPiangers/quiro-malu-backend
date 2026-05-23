@@ -1,8 +1,8 @@
 import { IMessageSendStrategyRepository } from '../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository'
 
 export type DeleteMessageSendStrategyDTO = {
-  userId: string;
-  strategyId: string;
+  userId: string
+  strategyId: string
 }
 
 export class DeleteMessageSendStrategyUseCase {

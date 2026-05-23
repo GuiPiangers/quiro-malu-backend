@@ -34,10 +34,10 @@ export class UploadPatientsUseCase {
   private updateBatch = 10
   private errorList: { error: string; patient: PatientDTO }[] = []
   private patientsBatch: {
-    patientData: PatientDTO & { id: string; clinicId: string };
-    locationData?: LocationDTO;
-    anamnesisData?: Partial<AnamnesisDTO>;
-    diagnosticData?: Partial<DiagnosticDTO>;
+    patientData: PatientDTO & { id: string; clinicId: string }
+    locationData?: LocationDTO
+    anamnesisData?: Partial<AnamnesisDTO>
+    diagnosticData?: Partial<DiagnosticDTO>
   }[] = []
 
   async execute({ buffer, clinicId }: { buffer: Buffer; clinicId: string }) {
@@ -77,11 +77,11 @@ export class UploadPatientsUseCase {
     )
 
     return await new Promise<{
-      fatalError?: string;
-      errors: { error: string; patient: PatientDTO }[];
-      erroCounter: number;
-      successCounter: number;
-      duplicateCounter: number;
+      fatalError?: string
+      errors: { error: string; patient: PatientDTO }[]
+      erroCounter: number
+      successCounter: number
+      duplicateCounter: number
     }>((resolve, reject) => {
       try {
         const csvStream = new CsvStream<CsvPatientObject>(buffer, {
@@ -128,17 +128,17 @@ export class UploadPatientsUseCase {
 
               const { patientId = undefined, ...anamnesisDTO } = anamnesisData
                 ? new Anamnesis({
-                  ...anamnesisData,
-                  patientId: patient.id,
-                })
+                    ...anamnesisData,
+                    patientId: patient.id,
+                  })
                 : {}
 
               const { patientId: _ = undefined, ...diagnosticDTO } =
                 diagnosticData
                   ? new Diagnostic({
-                    ...diagnosticData,
-                    patientId: patient.id,
-                  })
+                      ...diagnosticData,
+                      patientId: patient.id,
+                    })
                   : {}
 
               if (await this.validatePatientExist(patient, clinicId)) return
@@ -219,9 +219,7 @@ export class UploadPatientsUseCase {
         name,
         phone: Phone.convertPhone(phone),
         gender,
-        dateOfBirth: dateOfBirth
-          ? DateTime.toIsoDate(dateOfBirth)
-          : undefined,
+        dateOfBirth: dateOfBirth ? DateTime.toIsoDate(dateOfBirth) : undefined,
         cpf,
       }),
       locationData: getValidObjectValues({
@@ -265,10 +263,10 @@ export class UploadPatientsUseCase {
     anamnesisDTO,
     diagnosticDTO,
   }: {
-    patientDTO: PatientDTO & { clinicId: string; id: string };
-    locationDTO?: LocationDTO;
-    anamnesisDTO?: Partial<AnamnesisDTO>;
-    diagnosticDTO?: Partial<DiagnosticDTO>;
+    patientDTO: PatientDTO & { clinicId: string; id: string }
+    locationDTO?: LocationDTO
+    anamnesisDTO?: Partial<AnamnesisDTO>
+    diagnosticDTO?: Partial<DiagnosticDTO>
   }) {
     if (
       this.patientsBatch.some((patient) => {
@@ -365,12 +363,14 @@ export class UploadPatientsUseCase {
     cpf,
     clinicId,
   }: {
-    cpf?: string;
-    clinicId: string;
+    cpf?: string
+    clinicId: string
   }) {
     if (cpf) {
       const [verifyCpf] = await this.patientRepository.getByCpf(cpf, clinicId)
-      if (verifyCpf?.cpf === cpf) { throw new Error('Já existe um usuário cadastrado com esse CPF') }
+      if (verifyCpf?.cpf === cpf) {
+        throw new Error('Já existe um usuário cadastrado com esse CPF')
+      }
     }
   }
 

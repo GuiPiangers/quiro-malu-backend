@@ -24,12 +24,8 @@ export class InMemoryRefreshToken implements IRefreshTokenProvider {
       (t) => t.userId === refreshToken.userId,
     )
     userSessions.sort((a, b) => {
-      const ta = a.lastUsedAt
-        ? dayjs(a.lastUsedAt).valueOf()
-        : 0
-      const tb = b.lastUsedAt
-        ? dayjs(b.lastUsedAt).valueOf()
-        : 0
+      const ta = a.lastUsedAt ? dayjs(a.lastUsedAt).valueOf() : 0
+      const tb = b.lastUsedAt ? dayjs(b.lastUsedAt).valueOf() : 0
       return ta - tb
     })
 
@@ -43,9 +39,7 @@ export class InMemoryRefreshToken implements IRefreshTokenProvider {
 
   async getRefreshToken(id: string): Promise<RefreshTokenDTO | null> {
     const refToken = this.refreshTokens.find((t) => t.id === id)
-    return refToken
-      ? { ...refToken }
-      : null
+    return refToken ? { ...refToken } : null
   }
 
   async markAsUsed(id: string): Promise<void> {

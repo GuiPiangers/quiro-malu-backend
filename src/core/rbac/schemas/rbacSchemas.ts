@@ -6,7 +6,9 @@ const permissionKeyEnumValues = SYSTEM_PERMISSIONS.map((p) => p.key) as [
   ...string[],
 ]
 
-export const PermissionKeySchema = z.enum(permissionKeyEnumValues).openapi('RbacPermissionKey')
+export const PermissionKeySchema = z
+  .enum(permissionKeyEnumValues)
+  .openapi('RbacPermissionKey')
 
 export const ReplaceRolePermissionsBodySchema = z
   .array(
@@ -63,7 +65,9 @@ export const RoleRowResponseSchema = z
   })
   .openapi('RbacRoleRow')
 
-export const ListRolesResponseSchema = z.array(RoleRowResponseSchema).openapi('RbacListRolesResponse')
+export const ListRolesResponseSchema = z
+  .array(RoleRowResponseSchema)
+  .openapi('RbacListRolesResponse')
 
 export const PermissionCatalogRowSchema = z
   .object({

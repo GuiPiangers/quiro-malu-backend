@@ -5,21 +5,21 @@ import { toUserPublicDTO } from './userPublicDto'
 import type { UserDTO } from './models/User'
 
 export type UserDetailBase = {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  clinicId: string;
-  roleId: string | null;
+  id: string
+  name: string
+  email: string
+  phone: string
+  clinicId: string
+  roleId: string | null
 }
 
 export type StandardUserDetailDTO = UserDetailBase & {
-  kind: 'user';
+  kind: 'user'
 }
 
 export type ClinicianUserDetailDTO = UserDetailBase & {
-  kind: 'clinician';
-  services: ServiceDTO[];
+  kind: 'clinician'
+  services: ServiceDTO[]
 }
 
 export type UserDetailDTO = StandardUserDetailDTO | ClinicianUserDetailDTO
@@ -31,7 +31,9 @@ export function toStandardUserDetail(user: UserDTO): StandardUserDetailDTO {
   }
 }
 
-export function toClinicianUserDetail(clinician: Clinician): ClinicianUserDetailDTO {
+export function toClinicianUserDetail(
+  clinician: Clinician,
+): ClinicianUserDetailDTO {
   const publicDto = toClinicianPublicDTO(clinician)
   return {
     kind: 'clinician',

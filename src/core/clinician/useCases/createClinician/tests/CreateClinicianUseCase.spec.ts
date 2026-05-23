@@ -75,19 +75,17 @@ describe('CreateClinicianUseCase', () => {
   })
 
   it('rejects duplicate email', async () => {
-    userRepository.getByEmail
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([
-        {
-          id: 'existing-id',
-          email: 'dup@teste.com',
-          password: '$2b$10$abcdefghijklmnopqrstuv',
-          name: 'Existing',
-          phone: '(51) 99999 9999',
-          clinicId,
-          roleId,
-        },
-      ])
+    userRepository.getByEmail.mockResolvedValueOnce([]).mockResolvedValueOnce([
+      {
+        id: 'existing-id',
+        email: 'dup@teste.com',
+        password: '$2b$10$abcdefghijklmnopqrstuv',
+        name: 'Existing',
+        phone: '(51) 99999 9999',
+        clinicId,
+        roleId,
+      },
+    ])
 
     await useCase.execute(
       {

@@ -23,8 +23,8 @@ export function shouldRunPatientIntegrationSuite(): boolean {
   return (
     Boolean(
       process.env.DB_HOST &&
-        process.env.MYSQL_ROOT_USER &&
-        process.env.MYSQL_DATABASE,
+      process.env.MYSQL_ROOT_USER &&
+      process.env.MYSQL_DATABASE,
     ) &&
     ['1', 'true', 'yes'].includes(
       String(process.env.RUN_INTEGRATION_TESTS ?? '').toLowerCase(),
@@ -56,11 +56,11 @@ export async function insertPatientForIntegration(
   trx: Knex.Transaction,
   userId: string,
   input: {
-    id?: string;
-    name: string;
-    phone: string;
-    dateOfBirth?: string;
-    cpf?: string;
+    id?: string
+    name: string
+    phone: string
+    dateOfBirth?: string
+    cpf?: string
   },
 ): Promise<{ patientId: string; hashData: string }> {
   const entity = new Patient({

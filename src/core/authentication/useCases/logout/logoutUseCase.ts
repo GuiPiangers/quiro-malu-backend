@@ -5,7 +5,8 @@ export class LogoutUseCase {
   constructor(private refreshTokenProvider: IRefreshTokenProvider) {}
 
   async execute(refreshTokenId: string, fingerprint: string): Promise<void> {
-    const token = await this.refreshTokenProvider.getRefreshToken(refreshTokenId)
+    const token =
+      await this.refreshTokenProvider.getRefreshToken(refreshTokenId)
 
     if (!token) throw new ApiError('Sessão não encontrada', 404)
 

@@ -1,7 +1,10 @@
 import { Request, Response } from 'express'
 import { GetPatientUseCase } from '../../useCases/getPatient/GetPatientUseCase'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { PatientIdParamSchema } from '../patientSharedSchemas'
 
 export class GetPatientController {

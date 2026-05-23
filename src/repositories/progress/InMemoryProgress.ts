@@ -3,9 +3,9 @@ import { IProgressRepository } from './IProgressRepository'
 
 export class InMemoryProgress implements IProgressRepository {
   getByScheduling(data: {
-    schedulingId: string;
-    patientId: string;
-    clinicId: string;
+    schedulingId: string
+    patientId: string
+    clinicId: string
   }): Promise<ProgressDTO[]> {
     const rows = this.dbProgress.filter(
       (progress) =>
@@ -16,12 +16,14 @@ export class InMemoryProgress implements IProgressRepository {
     return Promise.resolve(rows)
   }
 
-  private dbProgress: (ProgressDTO & { patientId: string; clinicId: string })[] =
-    []
+  private dbProgress: (ProgressDTO & {
+    patientId: string
+    clinicId: string
+  })[] = []
 
   async count(data: {
-    patientId: string;
-    clinicId: string;
+    patientId: string
+    clinicId: string
   }): Promise<[{ total: number }]> {
     const total = this.dbProgress.filter(
       (progress) =>
@@ -65,9 +67,9 @@ export class InMemoryProgress implements IProgressRepository {
     patientId,
     clinicId,
   }: {
-    id: string;
-    patientId: string;
-    clinicId: string;
+    id: string
+    patientId: string
+    clinicId: string
   }): Promise<ProgressDTO[]> {
     const selectedUser = await this.dbProgress.find(
       (progress) =>
@@ -85,9 +87,9 @@ export class InMemoryProgress implements IProgressRepository {
     clinicId,
     config,
   }: {
-    patientId: string;
-    clinicId: string;
-    config?: { limit: number; offSet: number };
+    patientId: string
+    clinicId: string
+    config?: { limit: number; offSet: number }
   }): Promise<ProgressDTO[]> {
     const selectedUser = this.dbProgress.filter(
       (progress) =>
@@ -106,9 +108,9 @@ export class InMemoryProgress implements IProgressRepository {
     patientId,
     clinicId,
   }: {
-    id: string;
-    patientId: string;
-    clinicId: string;
+    id: string
+    patientId: string
+    clinicId: string
   }): Promise<void> {
     this.dbProgress = this.dbProgress.filter(
       (progress) =>

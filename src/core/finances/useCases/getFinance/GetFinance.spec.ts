@@ -25,7 +25,10 @@ describe('getFinanceUseCase', () => {
 
       mockFinanceRepository.get.mockResolvedValue(FinanceData)
 
-      const result = await getFinanceUseCase.execute({ id: FinanceId, clinicId })
+      const result = await getFinanceUseCase.execute({
+        id: FinanceId,
+        clinicId,
+      })
 
       expect(result).toEqual(FinanceData)
     })

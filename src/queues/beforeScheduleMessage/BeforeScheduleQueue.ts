@@ -10,7 +10,11 @@ export class BeforeScheduleQueue {
     private sendBeforeScheduleMessageUseCase: SendBeforeScheduleMessageUseCase,
   ) {}
 
-  async upsert(jobId: string, data: SendBeforeScheduleMessageJob, delay: number) {
+  async upsert(
+    jobId: string,
+    data: SendBeforeScheduleMessageJob,
+    delay: number,
+  ) {
     await this.remove(jobId)
 
     await this.queueProvider.add(data, {

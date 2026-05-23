@@ -1,5 +1,8 @@
 import { IWhatsAppMessageLogRepository } from '../../../../repositories/whatsapp/IWhatsAppMessageLogRepository'
-import { IMessageSendStrategy, SendStrategyContext } from '../IMessageSendStrategy'
+import {
+  IMessageSendStrategy,
+  SendStrategyContext,
+} from '../IMessageSendStrategy'
 import { SEND_STRATEGY_KIND_UNIQUE_SEND_BY_PATIENT } from '../sendStrategyKind'
 
 export class UniqueSendByPatientStrategy implements IMessageSendStrategy {

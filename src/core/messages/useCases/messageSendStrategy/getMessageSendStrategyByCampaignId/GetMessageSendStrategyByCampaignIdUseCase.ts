@@ -4,8 +4,8 @@ import { toMessageSendStrategyDTO } from '../../../sendStrategy/messageSendStrat
 import type { ListedMessageSendStrategyDTO } from '../listMessageSendStrategy/ListMessageSendStrategyUseCase'
 
 export type GetMessageSendStrategyByCampaignIdDTO = {
-  userId: string;
-  campaignId: string;
+  userId: string
+  campaignId: string
 }
 
 export class GetMessageSendStrategyByCampaignIdUseCase {

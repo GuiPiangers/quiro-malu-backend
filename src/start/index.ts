@@ -25,7 +25,10 @@ export async function start() {
   try {
     await patientsBirthDayQueue.registerPatientBirthdayScheduler()
   } catch (err) {
-    logger.error({ err }, 'patientsBirthDayQueue.registerPatientBirthdayScheduler failed')
+    logger.error(
+      { err },
+      'patientsBirthDayQueue.registerPatientBirthdayScheduler failed',
+    )
   }
 
   await beforeScheduleQueue.process()
@@ -34,40 +37,55 @@ export async function start() {
   appEventListener.on('createSchedule', async (data) => {
     try {
       scheduleNotificationUseCase.schedule({ ...data, id: data.scheduleId })
-    } catch (error) {}
+    } catch (error) {
+      logger.error(error)
+    }
   })
   appEventListener.on('deleteSchedule', async ({ scheduleId }) => {
     if (!scheduleId) return
     try {
       scheduleNotificationUseCase.deleteSchedule({ scheduleId })
-    } catch (error) {}
+    } catch (error) {
+      logger.error(error)
+    }
   })
 
   appEventListener.on('updateSchedule', async (data) => {
     try {
       scheduleNotificationUseCase.update({ ...data, id: data.scheduleId })
-    } catch (error) {}
+    } catch (error) {
+      logger.error(error)
+    }
   })
 
-  appEventListener.on('deleteExam', async ({ patientId, userId, clinicId, examId }) => {
-    try {
-      if (!examId) return
+  appEventListener.on(
+    'deleteExam',
+    async ({ patientId, userId, clinicId, examId }) => {
+      try {
+        if (!examId) return
 
-      const getPatient = getPatientUseCase.execute(patientId, clinicId)
-      const getExam = getExamUseCase.execute({ id: examId, patientId, userId })
+        const getPatient = getPatientUseCase.execute(patientId, clinicId)
+        const getExam = getExamUseCase.execute({
+          id: examId,
+          patientId,
+          userId,
+        })
 
-      const [patient, exam] = await Promise.all([getPatient, getExam])
+        const [patient, exam] = await Promise.all([getPatient, getExam])
 
-      const notification = new NotificationUndoExam({
-        title: 'Exame deletado',
-        message: `O exame "${exam.fileName}" do paciente "${patient.name}" foi deletado. Deseja restaura-lo?`,
-        params: { id: examId, patientId, userId },
-        actionNeeded: false,
-      })
+        const notification = new NotificationUndoExam({
+          title: 'Exame deletado',
+          message: `O exame "${exam.fileName}" do paciente "${patient.name}" foi deletado. Deseja restaura-lo?`,
+          params: { id: examId, patientId, userId },
+          actionNeeded: false,
+        })
 
-      sendAndSaveNotificationUseCase.execute({ userId, notification })
-    } catch (error) {}
-  })
+        sendAndSaveNotificationUseCase.execute({ userId, notification })
+      } catch (error) {
+        logger.error(error)
+      }
+    },
+  )
 
   appEventListener.on('createBlockSchedule', async (data) => {
     try {

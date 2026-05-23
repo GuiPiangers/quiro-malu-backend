@@ -1,9 +1,9 @@
 import { ComplexNotification, ComplexNotificationDTO } from './Notification'
 
 export type NotificationUndoExamParams = {
-  id: string;
-  userId: string;
-  patientId: string;
+  id: string
+  userId: string
+  patientId: string
 }
 
 export class NotificationUndoExam extends ComplexNotification<NotificationUndoExamParams> {

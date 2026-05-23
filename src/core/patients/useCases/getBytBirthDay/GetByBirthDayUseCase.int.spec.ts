@@ -53,7 +53,9 @@ describe.skipIf(!shouldRunPatientIntegrationSuite())(
           rows.some((r) => r.name === expectedPatientDisplayName('Ana Silva')),
         ).toBe(true)
         expect(
-          rows.some((r) => r.name === expectedPatientDisplayName('Bruno Costa')),
+          rows.some(
+            (r) => r.name === expectedPatientDisplayName('Bruno Costa'),
+          ),
         ).toBe(false)
       })
     })

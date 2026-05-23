@@ -11,17 +11,17 @@ import { Education, EducationType } from '../../shared/Education'
 import { MaritalStatus, MaritalStatusType } from '../../shared/MaritalStatus'
 
 export interface PatientDTO {
-  id?: string;
-  name: string;
-  phone: string;
-  dateOfBirth?: string;
-  gender?: GenderType;
-  cpf?: string;
-  location?: LocationDTO;
-  hashData?: string;
-  education?: string;
-  profession?: string;
-  maritalStatus?: string;
+  id?: string
+  name: string
+  phone: string
+  dateOfBirth?: string
+  gender?: GenderType
+  cpf?: string
+  location?: LocationDTO
+  hashData?: string
+  education?: string
+  profession?: string
+  maritalStatus?: string
 }
 
 export class Patient extends Entity {
@@ -56,12 +56,8 @@ export class Patient extends Entity {
     this.maritalStatus = new MaritalStatus(maritalStatus).value
     this.profession = profession
     this._phone = new Phone(phone)
-    this._location = location
-      ? new Location(location)
-      : undefined
-    this._cpf = cpf
-      ? new Cpf(cpf)
-      : undefined
+    this._location = location ? new Location(location) : undefined
+    this._cpf = cpf ? new Cpf(cpf) : undefined
     this.dateOfBirth = dateOfBirth
       ? new DateTime(dateOfBirth, { onlyPassDate: true })
       : undefined

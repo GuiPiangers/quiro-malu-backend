@@ -17,7 +17,10 @@ export function generateOpenApiDocument() {
     tags: [
       { name: 'Clinics', description: 'Cadastro de clínica (onboarding)' },
       { name: 'Auth', description: 'Sessão, tokens e perfil' },
-      { name: 'Users', description: 'Usuários da clínica (lista, papel, exclusão)' },
+      {
+        name: 'Users',
+        description: 'Usuários da clínica (lista, papel, exclusão)',
+      },
       { name: 'RBAC', description: 'Catálogo de permissões e papéis' },
     ],
   })

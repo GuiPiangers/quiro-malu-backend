@@ -53,9 +53,9 @@ describe('ListWhatsAppMessageLogsUseCase', () => {
     const repo = createMockWhatsAppMessageLogRepository()
     const sut = new ListWhatsAppMessageLogsUseCase(repo)
 
-    await expect(sut.execute({ userId: 'u1', status: 'XYZ' })).rejects.toMatchObject(
-      { statusCode: 400 },
-    )
+    await expect(
+      sut.execute({ userId: 'u1', status: 'XYZ' }),
+    ).rejects.toMatchObject({ statusCode: 400 })
   })
 
   it('deve rejeitar tipo inválido', async () => {

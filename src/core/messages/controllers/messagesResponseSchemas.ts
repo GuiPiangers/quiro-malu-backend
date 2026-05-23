@@ -102,7 +102,11 @@ export const WhatsAppMessageLogDtoSchema = z
     userId: z.string(),
     patientId: z.string(),
     schedulingId: z.string(),
-    scheduleMessageType: z.enum(['beforeSchedule', 'afterSchedule', 'birthday']),
+    scheduleMessageType: z.enum([
+      'beforeSchedule',
+      'afterSchedule',
+      'birthday',
+    ]),
     scheduleMessageConfigId: z.string(),
     message: z.string(),
     toPhone: z.string(),

@@ -6,11 +6,11 @@ import { calculateScheduleMessageDelay } from '../../utils/calculateScheduleMess
 import { AppEventListener } from '../../../shared/observers/EventListener'
 
 export type BeforeScheduleMessageListenerConfig = {
-  id: string;
-  userId: string;
-  name: string;
-  minutesBeforeSchedule: number;
-  isActive: boolean;
+  id: string
+  userId: string
+  name: string
+  minutesBeforeSchedule: number
+  isActive: boolean
 }
 
 export class BeforeScheduleMessageEventHandlers {
@@ -83,12 +83,12 @@ export class BeforeScheduleMessageEventHandlers {
     patientId,
     scheduleDate,
   }: {
-    type: 'create' | 'update';
-    userId: string;
-    clinicId: string;
-    scheduleId: string;
-    patientId: string;
-    scheduleDate: string | undefined;
+    type: 'create' | 'update'
+    userId: string
+    clinicId: string
+    scheduleId: string
+    patientId: string
+    scheduleDate: string | undefined
   }) {
     const rows = await this.beforeScheduleMessageRepository.listByUserId({
       userId,
@@ -133,9 +133,9 @@ export class BeforeScheduleMessageEventHandlers {
     clinicId: _clinicId,
     scheduleId,
   }: {
-    userId: string;
-    clinicId: string;
-    scheduleId: string;
+    userId: string
+    clinicId: string
+    scheduleId: string
   }) {
     const configs = await this.beforeScheduleMessageRepository.listByUserId({
       userId,

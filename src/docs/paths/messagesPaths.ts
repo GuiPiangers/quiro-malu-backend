@@ -54,13 +54,17 @@ openApiRegistry.registerPath({
   security: bearer,
   request: {
     body: {
-      content: { 'application/json': { schema: CreateBeforeScheduleMessageBodySchema } },
+      content: {
+        'application/json': { schema: CreateBeforeScheduleMessageBodySchema },
+      },
     },
   },
   responses: {
     201: {
       description: 'Criada',
-      content: { 'application/json': { schema: BeforeScheduleMessageDtoSchema } },
+      content: {
+        'application/json': { schema: BeforeScheduleMessageDtoSchema },
+      },
     },
     400: { description: 'Corpo inválido (Zod) ou regra de negócio' },
     401: { description: 'Não autenticado' },
@@ -78,7 +82,9 @@ openApiRegistry.registerPath({
     200: {
       description: 'Lista',
       content: {
-        'application/json': { schema: BeforeScheduleMessagesListResponseSchema },
+        'application/json': {
+          schema: BeforeScheduleMessagesListResponseSchema,
+        },
       },
     },
     400: { description: 'Query inválida (Zod)' },
@@ -96,7 +102,9 @@ openApiRegistry.registerPath({
   responses: {
     200: {
       description: 'Configuração',
-      content: { 'application/json': { schema: BeforeScheduleMessageDtoSchema } },
+      content: {
+        'application/json': { schema: BeforeScheduleMessageDtoSchema },
+      },
     },
     400: { description: 'Parâmetros inválidos (Zod)' },
     401: { description: 'Não autenticado' },
@@ -113,15 +121,21 @@ openApiRegistry.registerPath({
   request: {
     params: MessageEntityIdParamSchema,
     body: {
-      content: { 'application/json': { schema: UpdateBeforeScheduleMessageBodySchema } },
+      content: {
+        'application/json': { schema: UpdateBeforeScheduleMessageBodySchema },
+      },
     },
   },
   responses: {
     200: {
       description: 'Atualizada',
-      content: { 'application/json': { schema: BeforeScheduleMessageDtoSchema } },
+      content: {
+        'application/json': { schema: BeforeScheduleMessageDtoSchema },
+      },
     },
-    400: { description: 'Parâmetros/corpo inválidos (Zod) ou regra de negócio' },
+    400: {
+      description: 'Parâmetros/corpo inválidos (Zod) ou regra de negócio',
+    },
     401: { description: 'Não autenticado' },
     404: { description: 'Não encontrada' },
   },
@@ -153,13 +167,17 @@ openApiRegistry.registerPath({
   security: bearer,
   request: {
     body: {
-      content: { 'application/json': { schema: CreateAfterScheduleMessageBodySchema } },
+      content: {
+        'application/json': { schema: CreateAfterScheduleMessageBodySchema },
+      },
     },
   },
   responses: {
     201: {
       description: 'Criada',
-      content: { 'application/json': { schema: AfterScheduleMessageDtoSchema } },
+      content: {
+        'application/json': { schema: AfterScheduleMessageDtoSchema },
+      },
     },
     400: { description: 'Corpo inválido (Zod) ou regra de negócio' },
     401: { description: 'Não autenticado' },
@@ -177,7 +195,9 @@ openApiRegistry.registerPath({
     200: {
       description: 'Lista',
       content: {
-        'application/json': { schema: AfterScheduledMessagesListResponseSchema },
+        'application/json': {
+          schema: AfterScheduledMessagesListResponseSchema,
+        },
       },
     },
     400: { description: 'Query inválida (Zod)' },
@@ -195,7 +215,9 @@ openApiRegistry.registerPath({
   responses: {
     200: {
       description: 'Configuração',
-      content: { 'application/json': { schema: AfterScheduleMessageDtoSchema } },
+      content: {
+        'application/json': { schema: AfterScheduleMessageDtoSchema },
+      },
     },
     400: { description: 'Parâmetros inválidos (Zod)' },
     401: { description: 'Não autenticado' },
@@ -212,15 +234,21 @@ openApiRegistry.registerPath({
   request: {
     params: MessageEntityIdParamSchema,
     body: {
-      content: { 'application/json': { schema: UpdateAfterScheduleMessageBodySchema } },
+      content: {
+        'application/json': { schema: UpdateAfterScheduleMessageBodySchema },
+      },
     },
   },
   responses: {
     200: {
       description: 'Atualizada',
-      content: { 'application/json': { schema: AfterScheduleMessageDtoSchema } },
+      content: {
+        'application/json': { schema: AfterScheduleMessageDtoSchema },
+      },
     },
-    400: { description: 'Parâmetros/corpo inválidos (Zod) ou regra de negócio' },
+    400: {
+      description: 'Parâmetros/corpo inválidos (Zod) ou regra de negócio',
+    },
     401: { description: 'Não autenticado' },
     404: { description: 'Não encontrada' },
   },
@@ -252,7 +280,9 @@ openApiRegistry.registerPath({
   security: bearer,
   request: {
     body: {
-      content: { 'application/json': { schema: CreateBirthdayMessageBodySchema } },
+      content: {
+        'application/json': { schema: CreateBirthdayMessageBodySchema },
+      },
     },
   },
   responses: {
@@ -311,7 +341,9 @@ openApiRegistry.registerPath({
   request: {
     params: MessageEntityIdParamSchema,
     body: {
-      content: { 'application/json': { schema: UpdateBirthdayMessageBodySchema } },
+      content: {
+        'application/json': { schema: UpdateBirthdayMessageBodySchema },
+      },
     },
   },
   responses: {
@@ -319,7 +351,9 @@ openApiRegistry.registerPath({
       description: 'Atualizada',
       content: { 'application/json': { schema: BirthdayMessageDtoSchema } },
     },
-    400: { description: 'Parâmetros/corpo inválidos (Zod) ou regra de negócio' },
+    400: {
+      description: 'Parâmetros/corpo inválidos (Zod) ou regra de negócio',
+    },
     401: { description: 'Não autenticado' },
     404: { description: 'Não encontrada' },
   },
@@ -347,7 +381,8 @@ openApiRegistry.registerPath({
   method: 'get',
   path: '/messageSendStrategies',
   tags: ['Messages'],
-  summary: 'Lista estratégias de envio (paginação; inclui estratégia virtual “Único por paciente”)',
+  summary:
+    'Lista estratégias de envio (paginação; inclui estratégia virtual “Único por paciente”)',
   security: bearer,
   request: { query: ListPageLimitQuerySchema },
   responses: {
@@ -386,7 +421,8 @@ openApiRegistry.registerPath({
   method: 'get',
   path: '/messageSendStrategies/{id}',
   tags: ['Messages'],
-  summary: 'Obtém estratégia de envio por id (inclui pacientes-alvo quando aplicável)',
+  summary:
+    'Obtém estratégia de envio por id (inclui pacientes-alvo quando aplicável)',
   security: bearer,
   request: { params: MessageEntityIdParamSchema },
   responses: {
@@ -406,11 +442,14 @@ openApiRegistry.registerPath({
   method: 'post',
   path: '/messageSendStrategies',
   tags: ['Messages'],
-  summary: 'Cria estratégia de envio (validação fina de params por kind no servidor)',
+  summary:
+    'Cria estratégia de envio (validação fina de params por kind no servidor)',
   security: bearer,
   request: {
     body: {
-      content: { 'application/json': { schema: CreateMessageSendStrategyBodySchema } },
+      content: {
+        'application/json': { schema: CreateMessageSendStrategyBodySchema },
+      },
     },
   },
   responses: {
@@ -434,7 +473,9 @@ openApiRegistry.registerPath({
   request: {
     params: MessageEntityIdParamSchema,
     body: {
-      content: { 'application/json': { schema: UpdateMessageSendStrategyBodySchema } },
+      content: {
+        'application/json': { schema: UpdateMessageSendStrategyBodySchema },
+      },
     },
   },
   responses: {
@@ -444,7 +485,9 @@ openApiRegistry.registerPath({
         'application/json': { schema: MessageSendStrategyItemResponseSchema },
       },
     },
-    400: { description: 'Parâmetros/corpo inválidos (Zod ou regras de params/kind)' },
+    400: {
+      description: 'Parâmetros/corpo inválidos (Zod ou regras de params/kind)',
+    },
     401: { description: 'Não autenticado' },
     404: { description: 'Não encontrada' },
   },
@@ -459,12 +502,16 @@ openApiRegistry.registerPath({
   request: {
     params: CampaignIdParamSchema,
     body: {
-      content: { 'application/json': { schema: BindCampaignStrategiesBodySchema } },
+      content: {
+        'application/json': { schema: BindCampaignStrategiesBodySchema },
+      },
     },
   },
   responses: {
     204: { description: 'Vínculos atualizados' },
-    400: { description: 'Parâmetros/corpo inválidos (Zod) ou regra de negócio' },
+    400: {
+      description: 'Parâmetros/corpo inválidos (Zod) ou regra de negócio',
+    },
     401: { description: 'Não autenticado' },
   },
 })
@@ -550,7 +597,9 @@ openApiRegistry.registerPath({
     200: {
       description: 'Totais e taxas',
       content: {
-        'application/json': { schema: WhatsAppMessageLogsSummaryResponseSchema },
+        'application/json': {
+          schema: WhatsAppMessageLogsSummaryResponseSchema,
+        },
       },
     },
     400: { description: 'Query inválida (Zod)' },

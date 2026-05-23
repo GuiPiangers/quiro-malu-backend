@@ -1,8 +1,8 @@
 import { Notification } from '../../../notification/models/Notification'
 
 export type NotificationObserverEvent = (data: {
-  notification?: Notification;
-  totalNotRead: number;
+  notification?: Notification
+  totalNotRead: number
 }) => Promise<void>
 
 class NotificationObserver {

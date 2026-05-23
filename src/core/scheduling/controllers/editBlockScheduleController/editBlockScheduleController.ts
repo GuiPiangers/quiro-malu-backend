@@ -1,9 +1,10 @@
 import { Request, Response } from 'express'
-import {
-  EditBlockScheduleUseCase,
-} from '../../useCases/blockScheduling/editBlockScheduling/editBlockScheduleUseCase'
+import { EditBlockScheduleUseCase } from '../../useCases/blockScheduling/editBlockScheduling/editBlockScheduleUseCase'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import {
   BlockScheduleIdParamSchema,
   EditBlockScheduleBodySchema,
@@ -13,11 +14,17 @@ export class EditBlockScheduleController {
   constructor(private editBlockScheduleUseCase: EditBlockScheduleUseCase) {}
 
   async handle(request: Request, response: Response) {
-    const parsedParams = parseWithSchema(BlockScheduleIdParamSchema, request.params)
+    const parsedParams = parseWithSchema(
+      BlockScheduleIdParamSchema,
+      request.params,
+    )
     if (!parsedParams.success) {
       return sendZodBadRequest(response, parsedParams.error)
     }
-    const parsedBody = parseWithSchema(EditBlockScheduleBodySchema, request.body)
+    const parsedBody = parseWithSchema(
+      EditBlockScheduleBodySchema,
+      request.body,
+    )
     if (!parsedBody.success) {
       return sendZodBadRequest(response, parsedBody.error)
     }
@@ -28,7 +35,11 @@ export class EditBlockScheduleController {
       const clinicId = request.user.clinicId as string
       const data = parsedBody.data
 
-      await this.editBlockScheduleUseCase.execute({ ...data, id }, userId!, clinicId)
+      await this.editBlockScheduleUseCase.execute(
+        { ...data, id },
+        userId!,
+        clinicId,
+      )
 
       return response.status(200).json({ message: 'Atualizado com sucesso!' })
     } catch (err: any) {

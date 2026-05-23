@@ -5,12 +5,12 @@ import { patientFirstNameFromFullName } from '../utils/patientFirstNameFromFullN
 import { MessageTemplate, MessageTemplateDTO } from './MessageTemplate'
 
 export type BirthdayMessageDTO = {
-  id?: string;
-  name: string;
-  isActive: boolean;
+  id?: string
+  name: string
+  isActive: boolean
   /** Horário de envio no dia do aniversário (HH:mm, fuso America/Sao_Paulo na fila). */
-  sendTime: string;
-  messageTemplate: MessageTemplateDTO;
+  sendTime: string
+  messageTemplate: MessageTemplateDTO
 }
 
 export class BirthdayMessage extends Entity {
@@ -26,11 +26,11 @@ export class BirthdayMessage extends Entity {
     sendTime,
     isActive = true,
   }: {
-    id?: string;
-    name: string;
-    messageTemplate: MessageTemplate;
-    sendTime: string;
-    isActive?: boolean;
+    id?: string
+    name: string
+    messageTemplate: MessageTemplate
+    sendTime: string
+    isActive?: boolean
   }) {
     super(id)
 
@@ -42,9 +42,7 @@ export class BirthdayMessage extends Entity {
       throw new ApiError('isActive deve ser um booleano', 400, 'isActive')
     }
 
-    const st = typeof sendTime === 'string'
-      ? sendTime.trim()
-      : ''
+    const st = typeof sendTime === 'string' ? sendTime.trim() : ''
     const normalized = BirthdayMessage.normalizeSendTime(st)
     if (!normalized) {
       throw new ApiError(
@@ -64,10 +62,10 @@ export class BirthdayMessage extends Entity {
     patient,
   }: {
     patient: {
-      name: string;
-      phone: string;
-      birthDate: string | Date | null | undefined;
-    };
+      name: string
+      phone: string
+      birthDate: string | Date | null | undefined
+    }
   }): string {
     return this.messageTemplate.replaceVariables(
       this.buildTemplateVariables(patient),
@@ -75,9 +73,9 @@ export class BirthdayMessage extends Entity {
   }
 
   private buildTemplateVariables(patient: {
-    name: string;
-    phone: string;
-    birthDate: string | Date | null | undefined;
+    name: string
+    phone: string
+    birthDate: string | Date | null | undefined
   }): Record<string, string> {
     const dia = BirthdayMessage.formatBirthDateAsDayMonthPt(patient.birthDate)
     const nomeCompleto = `${patient.name}`.trim()
@@ -115,9 +113,7 @@ export class BirthdayMessage extends Entity {
     const trimmed = String(birthDate).trim()
     if (!trimmed) return ''
 
-    const iso = trimmed.includes('T')
-      ? trimmed
-      : `${trimmed}T12:00:00`
+    const iso = trimmed.includes('T') ? trimmed : `${trimmed}T12:00:00`
     const dt = Luxon.fromISO(iso, {
       zone: 'America/Sao_Paulo',
     }).setLocale('pt-BR')

@@ -6,9 +6,9 @@ export class ReplaceRolePermissionsUseCase {
   constructor(private rbac: IRbacRepository) {}
 
   async execute(data: {
-    roleId: string;
-    clinicId: string;
-    items: RolePermissionItem[];
+    roleId: string
+    clinicId: string
+    items: RolePermissionItem[]
   }): Promise<void> {
     const role = await this.rbac.findRoleByIdForClinic({
       id: data.roleId,

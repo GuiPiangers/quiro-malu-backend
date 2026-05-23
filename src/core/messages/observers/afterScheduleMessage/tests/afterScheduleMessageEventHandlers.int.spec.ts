@@ -21,9 +21,9 @@ import type { AfterScheduleMessageListenerConfig } from '../afterScheduleMessage
 import { AfterScheduleMessageEventHandlers } from '../afterScheduleMessageEventHandlers'
 
 type CreateScheduleEmitPayload = Omit<SchedulingDTO, 'id'> & {
-  userId: string;
-  clinicId: string;
-  scheduleId: string;
+  userId: string
+  clinicId: string
+  scheduleId: string
 }
 
 // ---------------------------------------------------------------------------
@@ -61,9 +61,9 @@ const SCHEDULE_DELAY_ASSERT_TOLERANCE_MS =
   Number(process.env.SCHEDULE_DELAY_TOLERANCE_MS) || 1500
 
 function expectJobDelayMatchesSchedule(params: {
-  actualDelay: number | undefined;
-  scheduleDate: string;
-  minutesOffset: number;
+  actualDelay: number | undefined
+  scheduleDate: string
+  minutesOffset: number
 }) {
   const expected = calculateScheduleMessageDelay({
     scheduleDate: params.scheduleDate,
@@ -71,9 +71,9 @@ function expectJobDelayMatchesSchedule(params: {
     direction: 'after',
   })
   expect(params.actualDelay).toBeDefined()
-  expect(
-    Math.abs((params.actualDelay ?? 0) - expected),
-  ).toBeLessThanOrEqual(SCHEDULE_DELAY_ASSERT_TOLERANCE_MS)
+  expect(Math.abs((params.actualDelay ?? 0) - expected)).toBeLessThanOrEqual(
+    SCHEDULE_DELAY_ASSERT_TOLERANCE_MS,
+  )
 }
 
 async function waitForBullJob(
@@ -213,20 +213,29 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
 
     it('createSchedule cria job na fila com delay alinhado ao agendamento + minutos da config', async () => {
       vi.setSystemTime(
-        Luxon.fromISO('2025-01-01T12:00:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+        Luxon.fromISO('2025-01-01T12:00:00', {
+          zone: 'America/Sao_Paulo',
+        }).toMillis(),
       )
 
-      const cfg = makeConfig({ id: 'cfg-job', userId: 'user-job', minutesAfterSchedule: 60 })
+      const cfg = makeConfig({
+        id: 'cfg-job',
+        userId: 'user-job',
+        minutesAfterSchedule: 60,
+      })
       const repo = createRepoReturningConfigs([cfg])
       const { appEventListener } = makeHandlers(repo)
 
       const scheduleDate = '2025-01-01T14:00'
-      appEventListener.emit('createSchedule', makeSchedulePayload({
-        userId: 'user-job',
-        scheduleId: 'sched-1',
-        patientId: 'pat-1',
-        date: scheduleDate,
-      }))
+      appEventListener.emit(
+        'createSchedule',
+        makeSchedulePayload({
+          userId: 'user-job',
+          scheduleId: 'sched-1',
+          patientId: 'pat-1',
+          date: scheduleDate,
+        }),
+      )
       await flushAsyncListeners()
 
       const jobId = buildAfterScheduleMessageJobId({
@@ -252,7 +261,9 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
 
     it('createSchedule não cria job para config inativa', async () => {
       vi.setSystemTime(
-        Luxon.fromISO('2025-01-01T12:00:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+        Luxon.fromISO('2025-01-01T12:00:00', {
+          zone: 'America/Sao_Paulo',
+        }).toMillis(),
       )
 
       const cfg = makeConfig({
@@ -263,11 +274,14 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
       const repo = createRepoReturningConfigs([cfg])
       const { appEventListener } = makeHandlers(repo)
 
-      appEventListener.emit('createSchedule', makeSchedulePayload({
-        userId: 'user-inactive',
-        scheduleId: 'sched-inactive',
-        patientId: 'pat-inactive',
-      }))
+      appEventListener.emit(
+        'createSchedule',
+        makeSchedulePayload({
+          userId: 'user-inactive',
+          scheduleId: 'sched-inactive',
+          patientId: 'pat-inactive',
+        }),
+      )
       await flushAsyncListeners()
 
       const jobs = await bullInspector.getDelayed()
@@ -276,18 +290,23 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
 
     it('createSchedule não cria job quando status não é Atendido', async () => {
       vi.setSystemTime(
-        Luxon.fromISO('2025-01-01T12:00:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+        Luxon.fromISO('2025-01-01T12:00:00', {
+          zone: 'America/Sao_Paulo',
+        }).toMillis(),
       )
 
       const cfg = makeConfig({ id: 'cfg-status', userId: 'user-status' })
       const repo = createRepoReturningConfigs([cfg])
       const { appEventListener } = makeHandlers(repo)
 
-      appEventListener.emit('createSchedule', makeSchedulePayload({
-        userId: 'user-status',
-        scheduleId: 'sched-status',
-        status: 'Agendado', // não é Atendido
-      }))
+      appEventListener.emit(
+        'createSchedule',
+        makeSchedulePayload({
+          userId: 'user-status',
+          scheduleId: 'sched-status',
+          status: 'Agendado', // não é Atendido
+        }),
+      )
       await flushAsyncListeners()
 
       const jobs = await bullInspector.getDelayed()
@@ -296,19 +315,27 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
 
     it('updateSchedule remove job existente quando status muda para não-Atendido', async () => {
       vi.setSystemTime(
-        Luxon.fromISO('2025-01-01T12:00:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+        Luxon.fromISO('2025-01-01T12:00:00', {
+          zone: 'America/Sao_Paulo',
+        }).toMillis(),
       )
 
-      const cfg = makeConfig({ id: 'cfg-status-upd', userId: 'user-status-upd' })
+      const cfg = makeConfig({
+        id: 'cfg-status-upd',
+        userId: 'user-status-upd',
+      })
       const repo = createRepoReturningConfigs([cfg])
       const { appEventListener } = makeHandlers(repo)
 
       // Cria o job com status Atendido
-      appEventListener.emit('createSchedule', makeSchedulePayload({
-        userId: 'user-status-upd',
-        scheduleId: 'sched-status-upd',
-        status: 'Atendido',
-      }))
+      appEventListener.emit(
+        'createSchedule',
+        makeSchedulePayload({
+          userId: 'user-status-upd',
+          scheduleId: 'sched-status-upd',
+          status: 'Atendido',
+        }),
+      )
       await flushAsyncListeners()
 
       const jobId = buildAfterScheduleMessageJobId({
@@ -319,11 +346,14 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
       await waitForBullJob(bullInspector, jobId)
 
       // Atualiza para status não-Atendido — job deve ser removido
-      appEventListener.emit('updateSchedule', makeSchedulePayload({
-        userId: 'user-status-upd',
-        scheduleId: 'sched-status-upd',
-        status: 'Cancelado',
-      }))
+      appEventListener.emit(
+        'updateSchedule',
+        makeSchedulePayload({
+          userId: 'user-status-upd',
+          scheduleId: 'sched-status-upd',
+          status: 'Cancelado',
+        }),
+      )
       await flushAsyncListeners()
 
       await waitForBullJobRemoved(bullInspector, jobId)
@@ -331,19 +361,28 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
 
     it('updateSchedule com novo horário re-upserta o mesmo jobId com novo delay', async () => {
       vi.setSystemTime(
-        Luxon.fromISO('2025-01-01T12:00:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+        Luxon.fromISO('2025-01-01T12:00:00', {
+          zone: 'America/Sao_Paulo',
+        }).toMillis(),
       )
 
-      const cfg = makeConfig({ id: 'cfg-upd-job', userId: 'user-upd', minutesAfterSchedule: 60 })
+      const cfg = makeConfig({
+        id: 'cfg-upd-job',
+        userId: 'user-upd',
+        minutesAfterSchedule: 60,
+      })
       const repo = createRepoReturningConfigs([cfg])
       const { appEventListener } = makeHandlers(repo)
 
-      appEventListener.emit('createSchedule', makeSchedulePayload({
-        userId: 'user-upd',
-        scheduleId: 'sched-upd',
-        patientId: 'pat-upd',
-        date: '2025-01-01T14:00',
-      }))
+      appEventListener.emit(
+        'createSchedule',
+        makeSchedulePayload({
+          userId: 'user-upd',
+          scheduleId: 'sched-upd',
+          patientId: 'pat-upd',
+          date: '2025-01-01T14:00',
+        }),
+      )
       await flushAsyncListeners()
 
       const jobId = buildAfterScheduleMessageJobId({
@@ -355,12 +394,15 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
       const delayBefore = jobBefore.delay ?? 0
 
       const newDate = '2025-01-01T16:00'
-      appEventListener.emit('updateSchedule', makeSchedulePayload({
-        userId: 'user-upd',
-        scheduleId: 'sched-upd',
-        patientId: 'pat-upd',
-        date: newDate,
-      }))
+      appEventListener.emit(
+        'updateSchedule',
+        makeSchedulePayload({
+          userId: 'user-upd',
+          scheduleId: 'sched-upd',
+          patientId: 'pat-upd',
+          date: newDate,
+        }),
+      )
       await flushAsyncListeners()
 
       const jobAfter = await waitForBullJob(bullInspector, jobId)
@@ -375,7 +417,9 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
 
     it('updateSchedule não altera jobs de outro userId', async () => {
       vi.setSystemTime(
-        Luxon.fromISO('2025-01-01T12:00:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+        Luxon.fromISO('2025-01-01T12:00:00', {
+          zone: 'America/Sao_Paulo',
+        }).toMillis(),
       )
 
       const cfgA = makeConfig({
@@ -447,18 +491,27 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
 
     it('deleteSchedule remove o job da fila', async () => {
       vi.setSystemTime(
-        Luxon.fromISO('2025-01-01T12:00:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+        Luxon.fromISO('2025-01-01T12:00:00', {
+          zone: 'America/Sao_Paulo',
+        }).toMillis(),
       )
 
-      const cfg = makeConfig({ id: 'cfg-del', userId: 'user-del', minutesAfterSchedule: 30 })
+      const cfg = makeConfig({
+        id: 'cfg-del',
+        userId: 'user-del',
+        minutesAfterSchedule: 30,
+      })
       const repo = createRepoReturningConfigs([cfg])
       const { appEventListener } = makeHandlers(repo)
 
-      appEventListener.emit('createSchedule', makeSchedulePayload({
-        userId: 'user-del',
-        scheduleId: 'sched-del',
-        patientId: 'pat-del',
-      }))
+      appEventListener.emit(
+        'createSchedule',
+        makeSchedulePayload({
+          userId: 'user-del',
+          scheduleId: 'sched-del',
+          patientId: 'pat-del',
+        }),
+      )
       await flushAsyncListeners()
 
       const jobId = buildAfterScheduleMessageJobId({
@@ -481,7 +534,9 @@ describe.skipIf(!shouldRunAfterScheduleQueueIntegration)(
 
     it('deleteSchedule não remove jobs de outro userId', async () => {
       vi.setSystemTime(
-        Luxon.fromISO('2025-01-01T12:00:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+        Luxon.fromISO('2025-01-01T12:00:00', {
+          zone: 'America/Sao_Paulo',
+        }).toMillis(),
       )
 
       const cfgA = makeConfig({

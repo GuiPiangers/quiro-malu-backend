@@ -16,9 +16,7 @@ export class KnexClinicRepository implements IClinicRepository {
       .first('*')
       .where({ id })
 
-    return clinic
-      ? new Clinic(clinic)
-      : null
+    return clinic ? new Clinic(clinic) : null
   }
 
   async findByName(name: string): Promise<Clinic | null> {
@@ -26,8 +24,6 @@ export class KnexClinicRepository implements IClinicRepository {
       .first('*')
       .where({ name })
 
-    return clinic
-      ? new Clinic(clinic)
-      : null
+    return clinic ? new Clinic(clinic) : null
   }
 }

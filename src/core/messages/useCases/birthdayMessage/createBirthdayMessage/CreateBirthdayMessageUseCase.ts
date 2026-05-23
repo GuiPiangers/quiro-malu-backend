@@ -11,14 +11,14 @@ import {
 import { MessageTemplate } from '../../../models/MessageTemplate'
 
 export type CreateBirthdayMessageDTO = {
-  userId: string;
-  name: string;
-  isActive?: boolean;
+  userId: string
+  name: string
+  isActive?: boolean
   /** Horário de envio no dia do aniversário (HH:mm). Padrão: 09:00. */
-  sendTime?: string;
+  sendTime?: string
   messageTemplate: {
-    textTemplate: string;
-  };
+    textTemplate: string
+  }
 }
 
 export class CreateBirthdayMessageUseCase {
@@ -28,9 +28,7 @@ export class CreateBirthdayMessageUseCase {
   ) {}
 
   async execute(dto: CreateBirthdayMessageDTO): Promise<BirthdayMessageDTO> {
-    const name = typeof dto.name === 'string'
-      ? dto.name.trim()
-      : ''
+    const name = typeof dto.name === 'string' ? dto.name.trim() : ''
 
     const messageTemplate = new MessageTemplate({
       textTemplate: dto.messageTemplate.textTemplate,

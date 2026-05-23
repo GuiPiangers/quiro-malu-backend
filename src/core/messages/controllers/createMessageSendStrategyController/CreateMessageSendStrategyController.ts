@@ -1,6 +1,9 @@
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { buildValidatedCreateMessageSendStrategyDTO } from '../../http/validateMessageSendStrategyHttpInput'
 import type { CreateMessageSendStrategyHttpBody } from '../../sendStrategy/messageSendStrategyKindTypeMaps'
 import { CreateMessageSendStrategyUseCase } from '../../useCases/messageSendStrategy/createMessageSendStrategy/CreateMessageSendStrategyUseCase'
@@ -12,7 +15,10 @@ export class CreateMessageSendStrategyController {
   ) {}
 
   async handle(request: Request, response: Response) {
-    const parsed = parseWithSchema(CreateMessageSendStrategyBodySchema, request.body)
+    const parsed = parseWithSchema(
+      CreateMessageSendStrategyBodySchema,
+      request.body,
+    )
     if (!parsed.success) {
       return sendZodBadRequest(response, parsed.error)
     }

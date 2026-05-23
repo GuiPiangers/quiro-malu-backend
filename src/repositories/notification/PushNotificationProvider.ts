@@ -61,8 +61,8 @@ export class PushNotificationProvider implements IPushNotificationProvider {
   }
 
   async getAllowedSubscriptions({ userId }: GetSubscriptionsParams): Promise<{
-    userId: string;
-    subscriptions: Subscription[];
+    userId: string
+    subscriptions: Subscription[]
   } | null> {
     return await SubscriptionModel.findOne({
       userId,

@@ -1,6 +1,9 @@
 import { Request, Response } from 'express'
 import { responseError } from '../../../../utils/ResponseError'
-import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import {
+  parseWithSchema,
+  sendZodBadRequest,
+} from '../../../../utils/zodValidation'
 import { GetMessageSendStrategyByCampaignIdUseCase } from '../../useCases/messageSendStrategy/getMessageSendStrategyByCampaignId/GetMessageSendStrategyByCampaignIdUseCase'
 import { CampaignIdParamSchema } from '../messagesCommonSchemas'
 

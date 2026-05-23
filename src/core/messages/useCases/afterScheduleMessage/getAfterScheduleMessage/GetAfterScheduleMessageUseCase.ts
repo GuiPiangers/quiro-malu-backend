@@ -1,11 +1,14 @@
 import { IAfterScheduleMessageRepository } from '../../../../../repositories/messages/IAfterScheduleMessageRepository'
 import { ApiError } from '../../../../../utils/ApiError'
-import { AfterScheduleMessageDTO, AfterScheduleMessage } from '../../../models/AfterScheduleMessage'
+import {
+  AfterScheduleMessageDTO,
+  AfterScheduleMessage,
+} from '../../../models/AfterScheduleMessage'
 import { MessageTemplate } from '../../../models/MessageTemplate'
 
 export type GetAfterScheduleMessageDTO = {
-  id: string;
-  userId: string;
+  id: string
+  userId: string
 }
 
 export class GetAfterScheduleMessageUseCase {
@@ -13,7 +16,9 @@ export class GetAfterScheduleMessageUseCase {
     private afterScheduleMessageRepository: IAfterScheduleMessageRepository,
   ) {}
 
-  async execute(dto: GetAfterScheduleMessageDTO): Promise<AfterScheduleMessageDTO> {
+  async execute(
+    dto: GetAfterScheduleMessageDTO,
+  ): Promise<AfterScheduleMessageDTO> {
     const config = await this.afterScheduleMessageRepository.getById({
       id: dto.id,
       userId: dto.userId,
