@@ -414,7 +414,7 @@ router.get(
   },
 )
 router.get(
-  '/schedules/qtd',
+  '/schedules/qtd/:userId',
   authMiddleware,
   authorize('schedules:read'),
   (request, response) => {

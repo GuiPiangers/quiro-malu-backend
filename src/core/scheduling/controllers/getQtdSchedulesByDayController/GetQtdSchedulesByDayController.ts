@@ -5,25 +5,41 @@ import {
   parseWithSchema,
   sendZodBadRequest,
 } from '../../../../utils/zodValidation'
-import { QtdSchedulesQuerySchema } from '../schedulingSharedSchemas'
+import {
+  QtdSchedulesMonthYearQuerySchema,
+  QtdSchedulesParamsSchema,
+} from '../schedulingSharedSchemas'
 
 export class GetQtdSchedulesByDayController {
   constructor(private getQtdSchedulesUseCase: GetQtdSchedulesByDay) {}
 
   async handle(request: Request, response: Response) {
-    const parsed = parseWithSchema(QtdSchedulesQuerySchema, request.query)
-    if (!parsed.success) {
-      return sendZodBadRequest(response, parsed.error)
+    const paramsParsed = parseWithSchema(
+      QtdSchedulesParamsSchema,
+      request.params,
+    )
+    if (!paramsParsed.success) {
+      return sendZodBadRequest(response, paramsParsed.error)
+    }
+
+    const queryParsed = parseWithSchema(
+      QtdSchedulesMonthYearQuerySchema,
+      request.query,
+    )
+    if (!queryParsed.success) {
+      return sendZodBadRequest(response, queryParsed.error)
     }
 
     try {
-      const { month, year } = parsed.data
+      const { userId } = paramsParsed.data
+      const { month, year } = queryParsed.data
       const clinicId = request.user.clinicId as string
 
       const qtdSchedules = await this.getQtdSchedulesUseCase.execute({
         month,
         year,
         clinicId,
+        userId,
       })
       response.status(200).json(qtdSchedules)
     } catch (err: any) {

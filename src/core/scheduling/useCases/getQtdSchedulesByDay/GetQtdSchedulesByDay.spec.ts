@@ -28,10 +28,12 @@ describe('getQtdSchedulesByDayUseCase', () => {
         qtdSchedulesByDayData,
       )
 
+      const userId = 'test-user-id'
       const result = await getQtdSchedulesByDayUseCase.execute({
         month,
         year,
         clinicId,
+        userId,
       })
 
       expect(result).toEqual([
@@ -43,12 +45,13 @@ describe('getQtdSchedulesByDayUseCase', () => {
 
     it('should call the repository qdtSchedulesByDay method with the correct params', async () => {
       const clinicId = 'test-clinic-id'
+      const userId = 'test-user-id'
       const month = 1
       const year = 2025
 
       mockSchedulingRepository.qdtSchedulesByDay.mockResolvedValue([])
 
-      await getQtdSchedulesByDayUseCase.execute({ month, year, clinicId })
+      await getQtdSchedulesByDayUseCase.execute({ month, year, clinicId, userId })
 
       expect(mockSchedulingRepository.qdtSchedulesByDay).toHaveBeenCalledTimes(
         1,
@@ -57,11 +60,13 @@ describe('getQtdSchedulesByDayUseCase', () => {
         month,
         year,
         clinicId,
+        userId,
       })
     })
 
     it('should propagate an error if the repository method qdtSchedulesByDay throws', async () => {
       const clinicId = 'test-clinic-id'
+      const userId = 'test-user-id'
       const errorMessage = 'Failed to getQtdSchedulesByDay'
       const month = 1
       const year = 2025
@@ -71,7 +76,7 @@ describe('getQtdSchedulesByDayUseCase', () => {
       )
 
       await expect(
-        getQtdSchedulesByDayUseCase.execute({ month, year, clinicId }),
+        getQtdSchedulesByDayUseCase.execute({ month, year, clinicId, userId }),
       ).rejects.toThrow(errorMessage)
     })
   })

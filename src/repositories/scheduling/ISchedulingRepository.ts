@@ -39,6 +39,7 @@ export interface ISchedulingRepository {
     month: number
     year: number
     clinicId: string
+    userId: string
   }): Promise<{ formattedDate: string; qtd: number }[]>
 
   get(data: {

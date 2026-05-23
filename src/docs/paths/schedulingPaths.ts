@@ -21,7 +21,8 @@ import {
   ListEventsByUserBodySchema,
   ListSchedulesQuerySchema,
   MessageResponseSchema,
-  QtdSchedulesQuerySchema,
+  QtdSchedulesMonthYearQuerySchema,
+  QtdSchedulesParamsSchema,
   RealizeSchedulingBodySchema,
   SchedulingIdParamSchema,
   UpdateSchedulingBodySchema,
@@ -51,11 +52,16 @@ openApiRegistry.registerPath({
 
 openApiRegistry.registerPath({
   method: 'get',
-  path: '/schedules/qtd',
+  path: '/schedules/qtd/{userId}',
   tags: ['Scheduling'],
-  summary: 'Quantidade de agendamentos por dia (mês/ano)',
+  summary: 'Quantidade de agendamentos por dia (mês/ano) de um profissional',
+  description:
+    'Path: `userId`. Query: `month`, `year`. O `clinicId` vem do token. Contagens consideram apenas agendamentos desse usuário na clínica.',
   security: bearer,
-  request: { query: QtdSchedulesQuerySchema },
+  request: {
+    params: QtdSchedulesParamsSchema,
+    query: QtdSchedulesMonthYearQuerySchema,
+  },
   responses: {
     200: {
       description: 'Totais por dia',

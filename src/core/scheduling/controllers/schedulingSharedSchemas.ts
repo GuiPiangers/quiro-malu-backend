@@ -73,12 +73,26 @@ export const ListSchedulesQuerySchema = z
   })
   .openapi('ListSchedulesQuery')
 
-export const QtdSchedulesQuerySchema = z
+export const QtdSchedulesParamsSchema = z
+  .object({
+    userId: z
+      .string()
+      .min(1)
+      .describe('Profissional (clínico) dono dos agendamentos contabilizados'),
+  })
+  .openapi('QtdSchedulesParams')
+
+export const QtdSchedulesMonthYearQuerySchema = z
   .object({
     month: z.coerce.number().int().min(1).max(12),
     year: z.coerce.number().int().min(2000).max(2100),
   })
-  .openapi('QtdSchedulesQuery')
+  .openapi('QtdSchedulesMonthYearQuery')
+
+/** @deprecated Preferir params + QtdSchedulesMonthYearQuerySchema */
+export const QtdSchedulesQuerySchema = QtdSchedulesParamsSchema.merge(
+  QtdSchedulesMonthYearQuerySchema,
+).openapi('QtdSchedulesQuery')
 
 export const ListEventsQuerySchema = z
   .object({

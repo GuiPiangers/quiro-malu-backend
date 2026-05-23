@@ -28,8 +28,31 @@ export class InMemorySchedulingRepository implements ISchedulingRepository {
     month: number
     year: number
     clinicId: string
+    userId: string
   }): Promise<{ formattedDate: string; qtd: number }[]> {
-    return []
+    const counts = new Map<string, number>()
+
+    for (const schedule of this.dbSchedules) {
+      if (schedule.clinicId !== data.clinicId) continue
+      if (schedule.userId !== data.userId) continue
+      if (!schedule.date) continue
+
+      const date = new Date(String(schedule.date))
+      if (
+        date.getMonth() + 1 !== data.month ||
+        date.getFullYear() !== data.year
+      ) {
+        continue
+      }
+
+      const formattedDate = String(schedule.date).substring(0, 10)
+      counts.set(formattedDate, (counts.get(formattedDate) ?? 0) + 1)
+    }
+
+    return [...counts.entries()].map(([formattedDate, qtd]) => ({
+      formattedDate,
+      qtd,
+    }))
   }
 
   async count(data: {

@@ -137,10 +137,12 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     month,
     year,
     clinicId,
+    userId,
   }: {
     month: number
     year: number
     clinicId: string
+    userId: string
   }): Promise<{ formattedDate: string; qtd: number }[]> {
     try {
       const result = await this.knex(ETableNames.SCHEDULES)
@@ -148,7 +150,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
           this.knex.raw("date_format(date, '%Y-%m-%d') as formattedDate"),
           this.knex.raw('count(id) as qtd'),
         )
-        .where({ clinicId })
+        .where({ clinicId, userId })
         .andWhereRaw('month(date) = ? AND year(date) = ?', [month, year])
         .groupByRaw("date_format(date, '%Y-%m-%d')")
 
