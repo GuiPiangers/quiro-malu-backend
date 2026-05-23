@@ -22,7 +22,7 @@ Operational assets live in `deploy/`, `nginx/`, `prometheus/`, `grafana/`, `loki
 
 ## Coding Style & Naming Conventions
 Use TypeScript with strict mode enabled (`tsconfig.json`).  
-Linting uses ESLint with `@rocketseat/eslint-config/node` (`.eslintrc.json`); fix lint issues before opening a PR.
+Linting uses ESLint 9 flat config (`eslint.config.mjs`) with `@rocketseat/eslint-config/node` plus Object Calisthenics–style rules (native ESLint equivalents). Run `npm run lint` / `npm run lint:fix`.
 - Prefer `camelCase` for files/folders in feature code.
 - Keep controllers thin and delegate behavior to use cases.
 - Throw domain/API errors using `src/utils/ApiError.ts` and return controller errors via `responseError`.
