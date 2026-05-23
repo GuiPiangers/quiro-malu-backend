@@ -1,8 +1,8 @@
-import type { Knex } from "knex";
-import { ETableNames } from "../ETableNames";
+import type { Knex } from 'knex'
+import { ETableNames } from '../ETableNames'
 
 /** Nome explícito: o default do Knex excede o limite de 64 caracteres do MySQL. */
-const SCHEDULE_COMPOSITE_INDEX = "idx_wm_logs_sch_type_cfg";
+const SCHEDULE_COMPOSITE_INDEX = 'idx_wm_logs_sch_type_cfg'
 
 async function hasScheduleColumnsCompositeIndex(
   knex: Knex,
@@ -20,9 +20,9 @@ async function hasScheduleColumnsCompositeIndex(
     LIMIT 1
     `,
     [tableName],
-  );
-  const rows = result[0] as unknown;
-  return Array.isArray(rows) && rows.length > 0;
+  )
+  const rows = result[0] as unknown
+  return Array.isArray(rows) && rows.length > 0
 }
 
 /**
@@ -30,40 +30,40 @@ async function hasScheduleColumnsCompositeIndex(
  * colunas `scheduleMessageType` / `scheduleMessageConfigId` podem já existir sem registro em `knex_migrations`.
  */
 export async function up(knex: Knex): Promise<void> {
-  const t = ETableNames.WHATSAPP_MESSAGE_LOGS;
+  const t = ETableNames.WHATSAPP_MESSAGE_LOGS
   const hasScheduleMessageType = await knex.schema.hasColumn(
     t,
-    "scheduleMessageType",
-  );
+    'scheduleMessageType',
+  )
   const hasScheduleMessageConfigId = await knex.schema.hasColumn(
     t,
-    "scheduleMessageConfigId",
-  );
+    'scheduleMessageConfigId',
+  )
 
   if (!hasScheduleMessageType || !hasScheduleMessageConfigId) {
     await knex.schema.alterTable(t, (table) => {
       if (!hasScheduleMessageType) {
         table
-          .string("scheduleMessageType", 32)
+          .string('scheduleMessageType', 32)
           .notNullable()
-          .defaultTo("beforeSchedule")
-          .index();
+          .defaultTo('beforeSchedule')
+          .index()
       }
       if (!hasScheduleMessageConfigId) {
         table
-          .string("scheduleMessageConfigId", 100)
+          .string('scheduleMessageConfigId', 100)
           .notNullable()
-          .defaultTo("")
-          .index();
+          .defaultTo('')
+          .index()
       }
-    });
+    })
 
     await knex.schema.alterTable(t, (table) => {
       table.index(
-        ["scheduleMessageType", "scheduleMessageConfigId"],
+        ['scheduleMessageType', 'scheduleMessageConfigId'],
         SCHEDULE_COMPOSITE_INDEX,
-      );
-    });
+      )
+    })
   } else if (
     hasScheduleMessageType &&
     hasScheduleMessageConfigId &&
@@ -71,55 +71,55 @@ export async function up(knex: Knex): Promise<void> {
   ) {
     await knex.schema.alterTable(t, (table) => {
       table.index(
-        ["scheduleMessageType", "scheduleMessageConfigId"],
+        ['scheduleMessageType', 'scheduleMessageConfigId'],
         SCHEDULE_COMPOSITE_INDEX,
-      );
-    });
+      )
+    })
   }
 
-  if (await knex.schema.hasColumn(t, "beforeScheduleMessageId")) {
+  if (await knex.schema.hasColumn(t, 'beforeScheduleMessageId')) {
     await knex(t).update({
-      scheduleMessageType: "beforeSchedule",
-      scheduleMessageConfigId: knex.ref("beforeScheduleMessageId"),
-    });
+      scheduleMessageType: 'beforeSchedule',
+      scheduleMessageConfigId: knex.ref('beforeScheduleMessageId'),
+    })
 
     await knex.schema.alterTable(t, (table) => {
-      table.string("beforeScheduleMessageId", 100).nullable().alter();
-    });
+      table.string('beforeScheduleMessageId', 100).nullable().alter()
+    })
   }
 }
 
 export async function down(knex: Knex): Promise<void> {
-  const t = ETableNames.WHATSAPP_MESSAGE_LOGS;
+  const t = ETableNames.WHATSAPP_MESSAGE_LOGS
 
   if (
-    (await knex.schema.hasColumn(t, "scheduleMessageType")) &&
-    (await knex.schema.hasColumn(t, "scheduleMessageConfigId")) &&
+    (await knex.schema.hasColumn(t, 'scheduleMessageType')) &&
+    (await knex.schema.hasColumn(t, 'scheduleMessageConfigId')) &&
     (await hasScheduleColumnsCompositeIndex(knex, t))
   ) {
     await knex.schema.alterTable(t, (table) => {
       table.dropIndex(
-        ["scheduleMessageType", "scheduleMessageConfigId"],
+        ['scheduleMessageType', 'scheduleMessageConfigId'],
         SCHEDULE_COMPOSITE_INDEX,
-      );
-    });
+      )
+    })
   }
 
-  if (await knex.schema.hasColumn(t, "scheduleMessageType")) {
+  if (await knex.schema.hasColumn(t, 'scheduleMessageType')) {
     await knex.schema.alterTable(t, (table) => {
-      table.dropColumn("scheduleMessageType");
-    });
+      table.dropColumn('scheduleMessageType')
+    })
   }
 
-  if (await knex.schema.hasColumn(t, "scheduleMessageConfigId")) {
+  if (await knex.schema.hasColumn(t, 'scheduleMessageConfigId')) {
     await knex.schema.alterTable(t, (table) => {
-      table.dropColumn("scheduleMessageConfigId");
-    });
+      table.dropColumn('scheduleMessageConfigId')
+    })
   }
 
-  if (await knex.schema.hasColumn(t, "beforeScheduleMessageId")) {
+  if (await knex.schema.hasColumn(t, 'beforeScheduleMessageId')) {
     await knex.schema.alterTable(t, (table) => {
-      table.string("beforeScheduleMessageId", 100).notNullable().alter();
-    });
+      table.string('beforeScheduleMessageId', 100).notNullable().alter()
+    })
   }
 }

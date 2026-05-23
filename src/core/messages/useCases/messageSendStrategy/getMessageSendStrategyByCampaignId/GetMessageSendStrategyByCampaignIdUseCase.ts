@@ -1,12 +1,12 @@
-import { IMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
-import { ApiError } from "../../../../../utils/ApiError";
-import { toMessageSendStrategyDTO } from "../../../sendStrategy/messageSendStrategyKindTypeMaps";
-import type { ListedMessageSendStrategyDTO } from "../listMessageSendStrategy/ListMessageSendStrategyUseCase";
+import { IMessageSendStrategyRepository } from '../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository'
+import { ApiError } from '../../../../../utils/ApiError'
+import { toMessageSendStrategyDTO } from '../../../sendStrategy/messageSendStrategyKindTypeMaps'
+import type { ListedMessageSendStrategyDTO } from '../listMessageSendStrategy/ListMessageSendStrategyUseCase'
 
 export type GetMessageSendStrategyByCampaignIdDTO = {
   userId: string;
   campaignId: string;
-};
+}
 
 export class GetMessageSendStrategyByCampaignIdUseCase {
   constructor(
@@ -20,15 +20,15 @@ export class GetMessageSendStrategyByCampaignIdUseCase {
       await this.messageSendStrategyRepository.findActiveStrategiesByUserAndCampaign(
         dto.userId,
         dto.campaignId,
-      );
+      )
 
     if (rows.length === 0) {
       throw new ApiError(
-        "Nenhuma estratégia de envio vinculada a esta campanha",
+        'Nenhuma estratégia de envio vinculada a esta campanha',
         404,
-      );
+      )
     }
 
-    return rows.map((row) => toMessageSendStrategyDTO(row));
+    return rows.map((row) => toMessageSendStrategyDTO(row))
   }
 }

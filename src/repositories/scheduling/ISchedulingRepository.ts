@@ -1,20 +1,20 @@
 import {
   Scheduling,
   SchedulingDTO,
-} from "../../core/scheduling/models/Scheduling";
-import { SchedulingWithPatientDTO } from "../../core/scheduling/models/SchedulingWithPatient";
-import { DateTime } from "../../core/shared/Date";
+} from '../../core/scheduling/models/Scheduling'
+import { SchedulingWithPatientDTO } from '../../core/scheduling/models/SchedulingWithPatient'
+import { DateTime } from '../../core/shared/Date'
 
 export type UpdateSchedulingParams = Partial<SchedulingDTO> & {
   clinicId: string;
   id: string;
-};
+}
 
 export type ListBetweenDatesParams = {
   clinicId: string;
   startDate: DateTime;
   endDate: DateTime;
-};
+}
 
 export interface ISchedulingRepository {
   save(

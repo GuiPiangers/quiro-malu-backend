@@ -1,5 +1,5 @@
-import { IWhatsAppProvider } from "../IWhatsAppProvider";
-import type { Mocked } from "vitest";
+import { IWhatsAppProvider } from '../IWhatsAppProvider'
+import type { Mocked } from 'vitest'
 
 export const createMockWhatsAppProvider = (): Mocked<IWhatsAppProvider> => ({
   sendMessage: vi.fn(),
@@ -7,4 +7,4 @@ export const createMockWhatsAppProvider = (): Mocked<IWhatsAppProvider> => ({
   getQrCode: vi.fn(),
   getConnectionState: vi.fn(),
   deleteInstance: vi.fn(),
-});
+})

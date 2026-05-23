@@ -1,4 +1,4 @@
-import { db } from "../../database/knex";
-import { BlockScheduleRepository } from "./BlockScheduleRepository";
+import { db } from '../../database/knex'
+import { BlockScheduleRepository } from './BlockScheduleRepository'
 
-export const blockScheduleRepository = new BlockScheduleRepository(db);
+export const blockScheduleRepository = new BlockScheduleRepository(db)

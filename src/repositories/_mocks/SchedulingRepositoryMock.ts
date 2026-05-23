@@ -1,5 +1,5 @@
-import { ISchedulingRepository } from "../scheduling/ISchedulingRepository";
-import type { Mocked } from "vitest";
+import { ISchedulingRepository } from '../scheduling/ISchedulingRepository'
+import type { Mocked } from 'vitest'
 
 export const createMockSchedulingRepository =
   (): Mocked<ISchedulingRepository> => ({
@@ -13,4 +13,4 @@ export const createMockSchedulingRepository =
     save: vi.fn(),
     update: vi.fn(),
     listBetweenDates: vi.fn(),
-  });
+  })

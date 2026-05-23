@@ -1,4 +1,4 @@
-import { AnamnesisDTO } from "../../core/patients/models/Anamnesis";
+import { AnamnesisDTO } from '../../core/patients/models/Anamnesis'
 
 export interface IAnamnesisRepository {
   save(data: AnamnesisDTO, clinicId: string): Promise<void>;

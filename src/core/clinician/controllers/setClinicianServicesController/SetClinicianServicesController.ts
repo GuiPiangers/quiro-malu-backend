@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
-import { UserIdParamsSchema } from "../../../rbac/schemas/rbacSchemas";
-import { responseError } from "../../../../utils/ResponseError";
-import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
-import { SetClinicianServicesUseCase } from "../../useCases/setClinicianServices/SetClinicianServicesUseCase";
-import { SetClinicianServicesBodySchema } from "./setClinicianServicesSchemas";
+import { Request, Response } from 'express'
+import { UserIdParamsSchema } from '../../../rbac/schemas/rbacSchemas'
+import { responseError } from '../../../../utils/ResponseError'
+import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import { SetClinicianServicesUseCase } from '../../useCases/setClinicianServices/SetClinicianServicesUseCase'
+import { SetClinicianServicesBodySchema } from './setClinicianServicesSchemas'
 
 export class SetClinicianServicesController {
   constructor(
@@ -11,20 +11,20 @@ export class SetClinicianServicesController {
   ) {}
 
   async handle(request: Request, response: Response) {
-    const parsedParams = parseWithSchema(UserIdParamsSchema, request.params);
+    const parsedParams = parseWithSchema(UserIdParamsSchema, request.params)
     if (!parsedParams.success) {
-      return sendZodBadRequest(response, parsedParams.error);
+      return sendZodBadRequest(response, parsedParams.error)
     }
 
     const parsedBody = parseWithSchema(
       SetClinicianServicesBodySchema,
       request.body,
-    );
+    )
 
-    console.log("parsedBody", parsedBody);
+    console.log('parsedBody', parsedBody)
 
     if (!parsedBody.success) {
-      return sendZodBadRequest(response, parsedBody.error);
+      return sendZodBadRequest(response, parsedBody.error)
     }
 
     try {
@@ -34,10 +34,10 @@ export class SetClinicianServicesController {
           services: parsedBody.data.services,
         },
         request.user.clinicId!,
-      );
-      return response.status(200).json(updated);
+      )
+      return response.status(200).json(updated)
     } catch (err: unknown) {
-      return responseError(response, err);
+      return responseError(response, err)
     }
   }
 }

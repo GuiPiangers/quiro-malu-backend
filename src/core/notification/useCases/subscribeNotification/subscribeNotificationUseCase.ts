@@ -1,7 +1,7 @@
 import {
   IPushNotificationProvider,
   Subscription,
-} from "../../../../repositories/notification/IPushNotificationProvider";
+} from '../../../../repositories/notification/IPushNotificationProvider'
 
 export class SubscribeNotificationUseCase {
   constructor(private pushNotificationProvider: IPushNotificationProvider) {}
@@ -16,13 +16,14 @@ export class SubscribeNotificationUseCase {
     const { subscriptions } =
       (await this.pushNotificationProvider.getAllowedSubscriptions({
         userId,
-      })) || { subscriptions: [] };
+      })) || { subscriptions: [] }
 
-    if (subscriptions.every((sub) => sub.endpoint !== subscription.endpoint))
+    if (subscriptions.every((sub) => sub.endpoint !== subscription.endpoint)) {
       await this.pushNotificationProvider.subscribe({
         subscription,
         userId,
         allowPushNotifications: true,
-      });
+      })
+    }
   }
 }

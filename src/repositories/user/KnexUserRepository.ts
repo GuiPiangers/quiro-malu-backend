@@ -1,7 +1,7 @@
-import { UserDTO } from "../../core/authentication/models/User";
-import type { ClinicUserListItem, IUserRepository } from "./IUserRepository";
-import { ETableNames } from "../../database/ETableNames";
-import type { Knex } from "knex";
+import { UserDTO } from '../../core/authentication/models/User'
+import type { ClinicUserListItem, IUserRepository } from './IUserRepository'
+import { ETableNames } from '../../database/ETableNames'
+import type { Knex } from 'knex'
 
 export class KnexUserRepository implements IUserRepository {
   constructor(private readonly knex: Knex) {}
@@ -10,14 +10,14 @@ export class KnexUserRepository implements IUserRepository {
     clinicId: string;
   }): Promise<ClinicUserListItem[]> {
     const rows = await this.knex(ETableNames.USERS)
-      .select("id", "name", "email", "phone", "clinicId", "roleId")
+      .select('id', 'name', 'email', 'phone', 'clinicId', 'roleId')
       .where({ clinicId: params.clinicId })
-      .orderBy("name", "asc");
+      .orderBy('name', 'asc')
 
     return rows.map((row) => ({
       ...row,
       roleId: row.roleId ?? null,
-    }));
+    }))
   }
 
   async getById(params: {
@@ -25,16 +25,16 @@ export class KnexUserRepository implements IUserRepository {
     clinicId: string;
   }): Promise<UserDTO[]> {
     return await this.knex(ETableNames.USERS)
-      .select("*")
-      .where({ id: params.userId, clinicId: params.clinicId });
+      .select('*')
+      .where({ id: params.userId, clinicId: params.clinicId })
   }
 
   async getByEmail(email: string): Promise<UserDTO[]> {
-    return await this.knex(ETableNames.USERS).select("*").where({ email });
+    return await this.knex(ETableNames.USERS).select('*').where({ email })
   }
 
   async save(data: UserDTO): Promise<void> {
-    return await this.knex(ETableNames.USERS).insert(data);
+    return await this.knex(ETableNames.USERS).insert(data)
   }
 
   async deleteByIdForClinic(params: {
@@ -43,6 +43,6 @@ export class KnexUserRepository implements IUserRepository {
   }): Promise<number> {
     return await this.knex(ETableNames.USERS)
       .where({ id: params.id, clinicId: params.clinicId })
-      .del();
+      .del()
   }
 }

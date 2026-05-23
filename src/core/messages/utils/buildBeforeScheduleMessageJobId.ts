@@ -1,4 +1,4 @@
-import { buildScheduleMessageJobId } from "./buildScheduleMessageJobId";
+import { buildScheduleMessageJobId } from './buildScheduleMessageJobId'
 
 export function buildBeforeScheduleMessageJobId({
   userId,
@@ -10,9 +10,9 @@ export function buildBeforeScheduleMessageJobId({
   beforeScheduleMessageId: string;
 }): string {
   return buildScheduleMessageJobId({
-    prefix: "before-schedule",
+    prefix: 'before-schedule',
     userId,
     scheduleId,
     configId: beforeScheduleMessageId,
-  });
+  })
 }

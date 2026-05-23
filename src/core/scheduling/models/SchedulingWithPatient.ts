@@ -1,14 +1,14 @@
-import { Scheduling, SchedulingDTO, SchedulingStatus } from "./Scheduling";
-import { StatusStrategy } from "./status/StatusStrategy";
+import { Scheduling, SchedulingDTO, SchedulingStatus } from './Scheduling'
+import { StatusStrategy } from './status/StatusStrategy'
 
 export type SchedulingWithPatientDTO = SchedulingDTO & {
   patient: string;
   phone: string;
-};
+}
 
 export class SchedulingWithPatient extends Scheduling {
-  readonly patient: string;
-  readonly phone: string;
+  readonly patient: string
+  readonly phone: string
 
   constructor(
     {
@@ -39,10 +39,10 @@ export class SchedulingWithPatient extends Scheduling {
         reminderSentAt,
       },
       statusStrategy,
-    );
+    )
 
-    this.patient = patient;
-    this.phone = phone;
+    this.patient = patient
+    this.phone = phone
   }
 
   getDTO() {
@@ -50,6 +50,6 @@ export class SchedulingWithPatient extends Scheduling {
       ...super.getDTO(),
       patient: this.patient,
       phone: this.phone,
-    };
+    }
   }
 }

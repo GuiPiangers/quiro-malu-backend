@@ -1,8 +1,8 @@
-import { disconnectWhatsAppUseCase } from "../../useCases/disconnectWhatsApp";
-import { DisconnectWhatsAppController } from "./DisconnectWhatsAppController";
+import { disconnectWhatsAppUseCase } from '../../useCases/disconnectWhatsApp'
+import { DisconnectWhatsAppController } from './DisconnectWhatsAppController'
 
 const disconnectWhatsAppController = new DisconnectWhatsAppController(
   disconnectWhatsAppUseCase,
-);
+)
 
-export { disconnectWhatsAppController };
+export { disconnectWhatsAppController }

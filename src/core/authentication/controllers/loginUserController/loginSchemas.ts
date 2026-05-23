@@ -1,11 +1,11 @@
-import { z } from "../../../../schemas/zodOpenApi";
+import { z } from '../../../../schemas/zodOpenApi'
 
 export const LoginBodySchema = z
   .object({
     email: z.string().email(),
     password: z.string().min(1),
   })
-  .openapi("LoginBody");
+  .openapi('LoginBody')
 
 export const LoginUserSummarySchema = z
   .object({
@@ -13,7 +13,7 @@ export const LoginUserSummarySchema = z
     name: z.string(),
     clinicId: z.string(),
   })
-  .openapi("LoginUserSummary");
+  .openapi('LoginUserSummary')
 
 export const LoginResponseSchema = z
   .object({
@@ -21,6 +21,6 @@ export const LoginResponseSchema = z
     refreshToken: z.string(),
     user: LoginUserSummarySchema,
   })
-  .openapi("LoginResponse");
+  .openapi('LoginResponse')
 
-export type LoginBody = z.infer<typeof LoginBodySchema>;
+export type LoginBody = z.infer<typeof LoginBodySchema>

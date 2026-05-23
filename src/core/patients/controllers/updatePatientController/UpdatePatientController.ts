@@ -1,29 +1,29 @@
-import { Request, Response } from "express";
-import { UpdatePatientUseCase } from "../../useCases/updatePatient/UpdatePatientUseCase";
-import { Patient } from "../../models/Patient";
-import { responseError } from "../../../../utils/ResponseError";
-import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
-import { PatientWriteBodySchema } from "../patientSharedSchemas";
+import { Request, Response } from 'express'
+import { UpdatePatientUseCase } from '../../useCases/updatePatient/UpdatePatientUseCase'
+import { Patient } from '../../models/Patient'
+import { responseError } from '../../../../utils/ResponseError'
+import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import { PatientWriteBodySchema } from '../patientSharedSchemas'
 
 export class UpdatePatientController {
   constructor(private updatePatientUseCase: UpdatePatientUseCase) {}
 
   async handle(request: Request, response: Response) {
-    const parsed = parseWithSchema(PatientWriteBodySchema, request.body);
+    const parsed = parseWithSchema(PatientWriteBodySchema, request.body)
     if (!parsed.success) {
-      return sendZodBadRequest(response, parsed.error);
+      return sendZodBadRequest(response, parsed.error)
     }
 
     try {
-      const clinicId = request.user.clinicId;
-      const patientData = parsed.data;
-      const patient = new Patient(patientData);
-      const patientDTO = patient.getPatientDTO();
+      const clinicId = request.user.clinicId
+      const patientData = parsed.data
+      const patient = new Patient(patientData)
+      const patientDTO = patient.getPatientDTO()
 
-      await this.updatePatientUseCase.execute(patientDTO, clinicId!);
-      response.status(201).json({ message: "Atualizado com sucesso!" });
+      await this.updatePatientUseCase.execute(patientDTO, clinicId!)
+      response.status(201).json({ message: 'Atualizado com sucesso!' })
     } catch (err: any) {
-      responseError(response, err);
+      responseError(response, err)
     }
   }
 }

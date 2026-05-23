@@ -1,22 +1,22 @@
 import {
   CreateClinicBodySchema,
   CreateClinicResponseSchema,
-} from "../../core/clinics/controllers/createClinicController/createClinicSchemas";
-import { openApiRegistry } from "../registry";
+} from '../../core/clinics/controllers/createClinicController/createClinicSchemas'
+import { openApiRegistry } from '../registry'
 
 /** Onboarding: criar clínica antes do cadastro de usuário (ver `Auth` / `register`). */
 openApiRegistry.registerPath({
-  method: "post",
-  path: "/clinics",
-  tags: ["Clinics"],
-  summary: "Cria clínica",
+  method: 'post',
+  path: '/clinics',
+  tags: ['Clinics'],
+  summary: 'Cria clínica',
   request: {
     body: {
       content: {
-        "application/json": {
+        'application/json': {
           schema: CreateClinicBodySchema,
           example: {
-            name: "Clínica Quiro Malu",
+            name: 'Clínica Quiro Malu',
           },
         },
       },
@@ -24,11 +24,11 @@ openApiRegistry.registerPath({
   },
   responses: {
     201: {
-      description: "Clínica criada",
+      description: 'Clínica criada',
       content: {
-        "application/json": { schema: CreateClinicResponseSchema },
+        'application/json': { schema: CreateClinicResponseSchema },
       },
     },
-    400: { description: "Corpo inválido ou clínica já cadastrada" },
+    400: { description: 'Corpo inválido ou clínica já cadastrada' },
   },
-});
+})

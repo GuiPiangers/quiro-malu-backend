@@ -1,6 +1,6 @@
-import { UserDTO } from "../../core/authentication/models/User";
+import { UserDTO } from '../../core/authentication/models/User'
 
-export type UserGetByIdParams = { userId: string; clinicId: string };
+export type UserGetByIdParams = { userId: string; clinicId: string }
 
 export type ClinicUserListItem = {
   id: string;
@@ -9,7 +9,7 @@ export type ClinicUserListItem = {
   phone: string;
   clinicId: string;
   roleId: string | null;
-};
+}
 
 export interface IUserRepository {
   save(user: UserDTO): Promise<void>;

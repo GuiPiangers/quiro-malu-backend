@@ -1,8 +1,8 @@
-import { Email } from "../../shared/Email";
-import { Entity } from "../../shared/Entity";
-import { Name } from "../../shared/Name";
-import { Password } from "../../shared/Password";
-import { Phone } from "../../shared/Phone";
+import { Email } from '../../shared/Email'
+import { Entity } from '../../shared/Entity'
+import { Name } from '../../shared/Name'
+import { Password } from '../../shared/Password'
+import { Phone } from '../../shared/Phone'
 
 export interface UserDTO {
   id?: string;
@@ -15,29 +15,29 @@ export interface UserDTO {
 }
 
 export class User extends Entity {
-  readonly name: Name;
-  readonly password: Password;
-  readonly clinicId: string;
-  readonly roleId?: string;
-  private _email: Email;
-  private _phone: Phone;
+  readonly name: Name
+  readonly password: Password
+  readonly clinicId: string
+  readonly roleId?: string
+  private _email: Email
+  private _phone: Phone
 
   constructor(props: UserDTO) {
-    super(props.id);
-    this.name = new Name(props.name, { compoundName: true });
-    this._email = new Email(props.email);
-    this._phone = new Phone(props.phone);
-    this.password = new Password(props.password);
-    this.clinicId = props.clinicId;
-    this.roleId = props.roleId;
+    super(props.id)
+    this.name = new Name(props.name, { compoundName: true })
+    this._email = new Email(props.email)
+    this._phone = new Phone(props.phone)
+    this.password = new Password(props.password)
+    this.clinicId = props.clinicId
+    this.roleId = props.roleId
   }
 
   get email() {
-    return this._email.value;
+    return this._email.value
   }
 
   get phone() {
-    return this._phone.value;
+    return this._phone.value
   }
 
   async getUserDTO(): Promise<UserDTO> {
@@ -49,6 +49,6 @@ export class User extends Entity {
       phone: this.phone,
       clinicId: this.clinicId,
       roleId: this.roleId,
-    };
+    }
   }
 }

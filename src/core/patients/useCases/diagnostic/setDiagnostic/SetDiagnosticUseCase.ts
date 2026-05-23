@@ -1,15 +1,15 @@
-import { Diagnostic, DiagnosticDTO } from "../../../models/Diagnostic";
-import { IDiagnosticRepository } from "../../../../../repositories/diagnostic/IDiagnosticRepository";
+import { Diagnostic, DiagnosticDTO } from '../../../models/Diagnostic'
+import { IDiagnosticRepository } from '../../../../../repositories/diagnostic/IDiagnosticRepository'
 
 export class SetDiagnosticUseCase {
   constructor(private DiagnosticRepository: IDiagnosticRepository) {}
   async execute(data: DiagnosticDTO, clinicId: string) {
-    const { patientId, diagnostic, treatmentPlan } = new Diagnostic(data);
+    const { patientId, diagnostic, treatmentPlan } = new Diagnostic(data)
 
     const diagnosticAlreadyExist = await this.DiagnosticRepository.get(
       data.patientId,
       clinicId,
-    );
+    )
 
     if (diagnosticAlreadyExist) {
       await this.DiagnosticRepository.update(
@@ -19,7 +19,7 @@ export class SetDiagnosticUseCase {
           treatmentPlan,
         },
         clinicId,
-      );
+      )
     } else {
       await this.DiagnosticRepository.save(
         {
@@ -28,8 +28,8 @@ export class SetDiagnosticUseCase {
           treatmentPlan,
         },
         clinicId,
-      );
+      )
     }
-    return Diagnostic;
+    return Diagnostic
   }
 }

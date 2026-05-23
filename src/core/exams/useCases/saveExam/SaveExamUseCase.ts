@@ -1,6 +1,6 @@
-import { IExamsFileStorageRepository } from "../../../../repositories/examsFileStorage/IExamsFileStorageRepository";
-import { IExamsRepository } from "../../../../repositories/examsRepository/IExamsRepository";
-import { Exam, ExamDTO } from "../../models/Exam";
+import { IExamsFileStorageRepository } from '../../../../repositories/examsFileStorage/IExamsFileStorageRepository'
+import { IExamsRepository } from '../../../../repositories/examsRepository/IExamsRepository'
+import { Exam, ExamDTO } from '../../models/Exam'
 
 export class SaveExamUseCase {
   constructor(
@@ -17,18 +17,18 @@ export class SaveExamUseCase {
     patientId: string;
     userId: string;
   }) {
-    const fileName = file.originalname;
-    const fileSize = file.size;
+    const fileName = file.originalname
+    const fileSize = file.size
 
-    const exam = new Exam({ fileName, fileSize, patientId });
-    const id = exam.id;
+    const exam = new Exam({ fileName, fileSize, patientId })
+    const id = exam.id
 
     await this.examFileStorage.save({
       file,
       id,
       userId,
       patientId,
-    });
+    })
 
     await this.examRepository.save({
       fileName,
@@ -36,6 +36,6 @@ export class SaveExamUseCase {
       patientId,
       userId,
       id,
-    });
+    })
   }
 }

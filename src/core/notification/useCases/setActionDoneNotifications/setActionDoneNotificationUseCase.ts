@@ -1,5 +1,5 @@
-import { INotificationRepository } from "../../../../repositories/notification/INotificationRepository";
-import { notificationObserver } from "../../../shared/observers/NotificationObserver/NotificationObserver";
+import { INotificationRepository } from '../../../../repositories/notification/INotificationRepository'
+import { notificationObserver } from '../../../shared/observers/NotificationObserver/NotificationObserver'
 
 export class SetActionDoneNotificationUseCase {
   constructor(private notificationRepository: INotificationRepository) {}
@@ -9,11 +9,11 @@ export class SetActionDoneNotificationUseCase {
       id,
       userId,
       actionNeeded: false,
-    });
+    })
 
     const totalNotRead =
-      await this.notificationRepository.countNotReadOrNeedAct({ userId });
+      await this.notificationRepository.countNotReadOrNeedAct({ userId })
 
-    notificationObserver.notify(userId, { totalNotRead });
+    notificationObserver.notify(userId, { totalNotRead })
   }
 }

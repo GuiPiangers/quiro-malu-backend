@@ -1,5 +1,5 @@
-import { ProgressDTO } from "../../core/patients/models/Progress";
-import { IProgressRepository } from "./IProgressRepository";
+import { ProgressDTO } from '../../core/patients/models/Progress'
+import { IProgressRepository } from './IProgressRepository'
 
 export class InMemoryProgress implements IProgressRepository {
   getByScheduling(data: {
@@ -12,12 +12,12 @@ export class InMemoryProgress implements IProgressRepository {
         progress.schedulingId === data.schedulingId &&
         progress.patientId === data.patientId &&
         progress.clinicId === data.clinicId,
-    );
-    return Promise.resolve(rows);
+    )
+    return Promise.resolve(rows)
   }
 
   private dbProgress: (ProgressDTO & { patientId: string; clinicId: string })[] =
-    [];
+    []
 
   async count(data: {
     patientId: string;
@@ -27,9 +27,9 @@ export class InMemoryProgress implements IProgressRepository {
       (progress) =>
         progress.patientId === data.patientId &&
         progress.clinicId === data.clinicId,
-    ).length;
+    ).length
 
-    return [{ total }];
+    return [{ total }]
   }
 
   async save({
@@ -37,7 +37,7 @@ export class InMemoryProgress implements IProgressRepository {
     clinicId,
     ...data
   }: ProgressDTO & { clinicId: string }): Promise<void> {
-    this.dbProgress.push({ ...data, patientId, clinicId });
+    this.dbProgress.push({ ...data, patientId, clinicId })
   }
 
   async update({
@@ -51,13 +51,13 @@ export class InMemoryProgress implements IProgressRepository {
         progress.patientId === patientId &&
         progress.clinicId === clinicId &&
         progress.id === id
-      );
-    });
+      )
+    })
     this.dbProgress[index] = {
       ...data,
       patientId,
       clinicId: this.dbProgress[index].clinicId,
-    };
+    }
   }
 
   async get({
@@ -74,10 +74,10 @@ export class InMemoryProgress implements IProgressRepository {
         progress.id === id &&
         progress.patientId === patientId &&
         progress.clinicId === clinicId,
-    );
+    )
 
-    if (selectedUser) return [selectedUser];
-    else return [];
+    if (selectedUser) return [selectedUser]
+    return []
   }
 
   async list({
@@ -92,13 +92,13 @@ export class InMemoryProgress implements IProgressRepository {
     const selectedUser = this.dbProgress.filter(
       (progress) =>
         progress.patientId === patientId && progress.clinicId === clinicId,
-    );
+    )
 
     if (config) {
-      return selectedUser.slice(config.offSet, config.offSet + config.limit);
+      return selectedUser.slice(config.offSet, config.offSet + config.limit)
     }
 
-    return selectedUser;
+    return selectedUser
   }
 
   async delete({
@@ -117,6 +117,6 @@ export class InMemoryProgress implements IProgressRepository {
           progress.patientId === patientId &&
           progress.clinicId === clinicId
         ),
-    );
+    )
   }
 }

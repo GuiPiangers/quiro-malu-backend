@@ -1,5 +1,5 @@
-import { IServiceRepository } from "../service/IServiceRepository";
-import type { Mocked } from "vitest";
+import { IServiceRepository } from '../service/IServiceRepository'
+import type { Mocked } from 'vitest'
 
 export const createMockServiceRepository =
   (): Mocked<IServiceRepository> => ({
@@ -10,4 +10,4 @@ export const createMockServiceRepository =
     get: vi.fn(),
     getByName: vi.fn(),
     delete: vi.fn(),
-  });
+  })

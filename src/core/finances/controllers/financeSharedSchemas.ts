@@ -1,12 +1,12 @@
-import { z } from "../../../schemas/zodOpenApi";
+import { z } from '../../../schemas/zodOpenApi'
 
 export const FINANCE_DATE_WRITE_DOC =
-  "Data/hora da movimentação no formato `yyyy-mm-ddThh:mm` (ex.: `2026-05-06T14:30`). Validação fina em `DateTime`.";
+  'Data/hora da movimentação no formato `yyyy-mm-ddThh:mm` (ex.: `2026-05-06T14:30`). Validação fina em `DateTime`.'
 
 export const FINANCE_YEAR_MONTH_QUERY_DOC =
-  "Mês de referência no formato `yyyy-mm` (ex.: `2026-05`), alinhado ao filtro do repositório.";
+  'Mês de referência no formato `yyyy-mm` (ex.: `2026-05`), alinhado ao filtro do repositório.'
 
-export const FinanceTypeSchema = z.enum(["income", "expense"]);
+export const FinanceTypeSchema = z.enum(['income', 'expense'])
 
 export const SetFinanceBodySchema = z
   .object({
@@ -20,39 +20,39 @@ export const SetFinanceBodySchema = z
     schedulingId: z.string().optional(),
     service: z.string().optional(),
   })
-  .openapi("SetFinanceBody");
+  .openapi('SetFinanceBody')
 
 export const UpdateFinanceBodySchema = SetFinanceBodySchema.extend({
   id: z.string().min(1),
-}).openapi("UpdateFinanceBody");
+}).openapi('UpdateFinanceBody')
 
 export const DeleteFinanceBodySchema = z
   .object({
     id: z.string().min(1),
   })
-  .openapi("DeleteFinanceBody");
+  .openapi('DeleteFinanceBody')
 
 export const FinanceIdParamSchema = z
   .object({
     id: z.string().min(1),
   })
-  .openapi("FinanceIdParam");
+  .openapi('FinanceIdParam')
 
 export const FinanceSchedulingIdParamSchema = z
   .object({
     schedulingId: z.string().min(1),
   })
-  .openapi("FinanceSchedulingIdParam");
+  .openapi('FinanceSchedulingIdParam')
 
 export const ListFinancesQuerySchema = z
   .object({
     yearAndMonth: z
       .string()
-      .regex(/^\d{4}-\d{2}$/, "Use o formato yyyy-mm (ex.: 2026-05)")
+      .regex(/^\d{4}-\d{2}$/, 'Use o formato yyyy-mm (ex.: 2026-05)')
       .describe(FINANCE_YEAR_MONTH_QUERY_DOC),
   })
-  .openapi("ListFinancesQuery");
+  .openapi('ListFinancesQuery')
 
 export const MessageResponseSchema = z
   .object({ message: z.string() })
-  .openapi("FinanceMessageResponse");
+  .openapi('FinanceMessageResponse')

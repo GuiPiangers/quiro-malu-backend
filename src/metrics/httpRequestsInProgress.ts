@@ -1,31 +1,31 @@
-import { NextFunction, Request, Response } from "express";
-import { register } from "./index";
-import client from "prom-client";
-import { normalizeRoute } from "./utils/normalizeRoute";
+import { NextFunction, Request, Response } from 'express'
+import { register } from './index'
+import client from 'prom-client'
+import { normalizeRoute } from './utils/normalizeRoute'
 
 const httpRequestsInProgress = new client.Gauge({
-  name: "http_requests_in_progress",
-  help: "Número de requisições HTTP em andamento",
-  labelNames: ["method", "route"],
-});
+  name: 'http_requests_in_progress',
+  help: 'Número de requisições HTTP em andamento',
+  labelNames: ['method', 'route'],
+})
 
-register.registerMetric(httpRequestsInProgress);
+register.registerMetric(httpRequestsInProgress)
 
 const httpRequestsInProgressMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
-  const route = normalizeRoute(req);
-  const labels = { method: req.method, route };
+  const route = normalizeRoute(req)
+  const labels = { method: req.method, route }
 
-  httpRequestsInProgress.inc(labels);
+  httpRequestsInProgress.inc(labels)
 
-  res.on("finish", () => {
-    httpRequestsInProgress.dec(labels);
-  });
+  res.on('finish', () => {
+    httpRequestsInProgress.dec(labels)
+  })
 
-  next();
-};
+  next()
+}
 
-export { httpRequestsInProgressMiddleware };
+export { httpRequestsInProgressMiddleware }

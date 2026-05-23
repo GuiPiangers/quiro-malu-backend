@@ -1,5 +1,5 @@
-import { IAnamnesisRepository } from "../anamnesis/IAnamnesisRepository";
-import type { Mocked } from "vitest";
+import { IAnamnesisRepository } from '../anamnesis/IAnamnesisRepository'
+import type { Mocked } from 'vitest'
 
 export const createMockAnamnesisRepository =
   (): Mocked<IAnamnesisRepository> => ({
@@ -7,4 +7,4 @@ export const createMockAnamnesisRepository =
     update: vi.fn(),
     save: vi.fn(),
     saveMany: vi.fn(),
-  });
+  })

@@ -1,7 +1,7 @@
 import type {
   IUserFingerprintRepository,
   UserFingerprintUpsertProps,
-} from "../../../../repositories/userFingerprint/IUserFingerprintRepository";
+} from '../../../../repositories/userFingerprint/IUserFingerprintRepository'
 
 export class ValidateUserFingerprintUseCase {
   constructor(
@@ -9,11 +9,11 @@ export class ValidateUserFingerprintUseCase {
   ) {}
 
   async execute(dto: UserFingerprintUpsertProps): Promise<boolean> {
-    const known = await this.userFingerprintRepository.isKnown(dto);
+    const known = await this.userFingerprintRepository.isKnown(dto)
     if (known) {
-      await this.userFingerprintRepository.upsertTouchLastUsed(dto);
-      return true;
+      await this.userFingerprintRepository.upsertTouchLastUsed(dto)
+      return true
     }
-    return false;
+    return false
   }
 }

@@ -1,9 +1,9 @@
-import { IMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
+import { IMessageSendStrategyRepository } from '../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository'
 
 export type UnbindMessageSendStrategyCampaignDTO = {
   userId: string;
   campaignId: string;
-};
+}
 
 export class UnbindMessageSendStrategyCampaignUseCase {
   constructor(
@@ -16,6 +16,6 @@ export class UnbindMessageSendStrategyCampaignUseCase {
     await this.messageSendStrategyRepository.deleteCampaignBinding(
       dto.userId,
       campaignId,
-    );
+    )
   }
 }

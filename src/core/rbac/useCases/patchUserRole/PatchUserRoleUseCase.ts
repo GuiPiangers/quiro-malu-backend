@@ -1,4 +1,4 @@
-import type { IRbacRepository } from "../../../../repositories/rbac/IRbacRepository";
+import type { IRbacRepository } from '../../../../repositories/rbac/IRbacRepository'
 
 export class PatchUserRoleUseCase {
   constructor(private rbac: IRbacRepository) {}
@@ -12,6 +12,6 @@ export class PatchUserRoleUseCase {
       userId: data.userId,
       clinicId: data.clinicId,
       roleId: data.roleId,
-    });
+    })
   }
 }

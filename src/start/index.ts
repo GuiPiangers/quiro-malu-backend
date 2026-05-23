@@ -1,87 +1,87 @@
-import { getExamUseCase } from "../core/exams/useCases/getExam";
-import { beforeScheduleMessageEventHandlers } from "../core/messages/observers/beforeScheduleMessage";
-import { afterScheduleMessageEventHandlers } from "../core/messages/observers/afterScheduleMessage";
-import { NotificationUndoExam } from "../core/notification/models/NotificationUndoExam";
-import { scheduleNotificationUseCase } from "../core/notification/useCases/ScheduleNotification";
-import { sendAndSaveNotificationUseCase } from "../core/notification/useCases/sendAndSaveNotification";
-import { getPatientUseCase } from "../core/patients/controllers/getPatientController";
-import { factoryEventSuggestionWithStartEndDate } from "../core/scheduling/models/EventSuggestion";
-import { saveEventSuggestionUseCase } from "../core/scheduling/useCases/saveEventSuggestion";
-import { appEventListener } from "../core/shared/observers/EventListener";
-import { beforeScheduleQueue } from "../queues/beforeScheduleMessage";
-import { afterScheduleQueue } from "../queues/afterScheduleMessage";
+import { getExamUseCase } from '../core/exams/useCases/getExam'
+import { beforeScheduleMessageEventHandlers } from '../core/messages/observers/beforeScheduleMessage'
+import { afterScheduleMessageEventHandlers } from '../core/messages/observers/afterScheduleMessage'
+import { NotificationUndoExam } from '../core/notification/models/NotificationUndoExam'
+import { scheduleNotificationUseCase } from '../core/notification/useCases/ScheduleNotification'
+import { sendAndSaveNotificationUseCase } from '../core/notification/useCases/sendAndSaveNotification'
+import { getPatientUseCase } from '../core/patients/controllers/getPatientController'
+import { factoryEventSuggestionWithStartEndDate } from '../core/scheduling/models/EventSuggestion'
+import { saveEventSuggestionUseCase } from '../core/scheduling/useCases/saveEventSuggestion'
+import { appEventListener } from '../core/shared/observers/EventListener'
+import { beforeScheduleQueue } from '../queues/beforeScheduleMessage'
+import { afterScheduleQueue } from '../queues/afterScheduleMessage'
 import {
   birthdayMessageCampaignQueue,
   patientsBirthDayQueue,
-} from "../repositories/queueProvider/patientBirthDay";
-import { logger } from "../utils/logger";
+} from '../repositories/queueProvider/patientBirthDay'
+import { logger } from '../utils/logger'
 
 export async function start() {
-  beforeScheduleMessageEventHandlers.register();
-  afterScheduleMessageEventHandlers.register();
+  beforeScheduleMessageEventHandlers.register()
+  afterScheduleMessageEventHandlers.register()
 
-  await birthdayMessageCampaignQueue.process();
-  await patientsBirthDayQueue.process();
+  await birthdayMessageCampaignQueue.process()
+  await patientsBirthDayQueue.process()
   try {
-    await patientsBirthDayQueue.registerPatientBirthdayScheduler();
+    await patientsBirthDayQueue.registerPatientBirthdayScheduler()
   } catch (err) {
-    logger.error({ err }, "patientsBirthDayQueue.registerPatientBirthdayScheduler failed");
+    logger.error({ err }, 'patientsBirthDayQueue.registerPatientBirthdayScheduler failed')
   }
 
-  await beforeScheduleQueue.process();
-  await afterScheduleQueue.process();
+  await beforeScheduleQueue.process()
+  await afterScheduleQueue.process()
 
-  appEventListener.on("createSchedule", async (data) => {
+  appEventListener.on('createSchedule', async (data) => {
     try {
-      scheduleNotificationUseCase.schedule({ ...data, id: data.scheduleId });
+      scheduleNotificationUseCase.schedule({ ...data, id: data.scheduleId })
     } catch (error) {}
-  });
-  appEventListener.on("deleteSchedule", async ({ scheduleId }) => {
-    if (!scheduleId) return;
+  })
+  appEventListener.on('deleteSchedule', async ({ scheduleId }) => {
+    if (!scheduleId) return
     try {
-      scheduleNotificationUseCase.deleteSchedule({ scheduleId });
+      scheduleNotificationUseCase.deleteSchedule({ scheduleId })
     } catch (error) {}
-  });
+  })
 
-  appEventListener.on("updateSchedule", async (data) => {
+  appEventListener.on('updateSchedule', async (data) => {
     try {
-      scheduleNotificationUseCase.update({ ...data, id: data.scheduleId });
+      scheduleNotificationUseCase.update({ ...data, id: data.scheduleId })
     } catch (error) {}
-  });
+  })
 
-  appEventListener.on("deleteExam", async ({ patientId, userId, clinicId, examId }) => {
+  appEventListener.on('deleteExam', async ({ patientId, userId, clinicId, examId }) => {
     try {
-      if (!examId) return;
+      if (!examId) return
 
-      const getPatient = getPatientUseCase.execute(patientId, clinicId);
-      const getExam = getExamUseCase.execute({ id: examId, patientId, userId });
+      const getPatient = getPatientUseCase.execute(patientId, clinicId)
+      const getExam = getExamUseCase.execute({ id: examId, patientId, userId })
 
-      const [patient, exam] = await Promise.all([getPatient, getExam]);
+      const [patient, exam] = await Promise.all([getPatient, getExam])
 
       const notification = new NotificationUndoExam({
-        title: `Exame deletado`,
+        title: 'Exame deletado',
         message: `O exame "${exam.fileName}" do paciente "${patient.name}" foi deletado. Deseja restaura-lo?`,
         params: { id: examId, patientId, userId },
         actionNeeded: false,
-      });
+      })
 
-      sendAndSaveNotificationUseCase.execute({ userId, notification });
+      sendAndSaveNotificationUseCase.execute({ userId, notification })
     } catch (error) {}
-  });
+  })
 
-  appEventListener.on("createBlockSchedule", async (data) => {
+  appEventListener.on('createBlockSchedule', async (data) => {
     try {
       const eventSuggestion = factoryEventSuggestionWithStartEndDate({
-        description: data.description ?? "",
+        description: data.description ?? '',
         startDate: data.date,
         endDate: data.endDate,
-      });
+      })
       await saveEventSuggestionUseCase.execute(
         eventSuggestion.getDTO(),
         data.userId,
-      );
+      )
     } catch (error) {
-      logger.error({ err: error, event: data }, "error creating block schedule");
+      logger.error({ err: error, event: data }, 'error creating block schedule')
     }
-  });
+  })
 }

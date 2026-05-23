@@ -1,22 +1,22 @@
-import { PushSubscription } from "web-push";
-import { NotificationDTO } from "../../core/notification/models/Notification";
-import { PushNotificationDTO } from "../../core/notification/models/PushNotification";
+import { PushSubscription } from 'web-push'
+import { NotificationDTO } from '../../core/notification/models/Notification'
+import { PushNotificationDTO } from '../../core/notification/models/PushNotification'
 
-export type Subscription = PushSubscription;
+export type Subscription = PushSubscription
 
 export type SubscribeParams = {
   userId: string;
   allowPushNotifications: boolean;
   subscription: Subscription;
-};
+}
 
 export type UnsubscribeParams = {
   userId: string;
-};
+}
 
 export type GetSubscriptionsParams = {
   userId: string;
-};
+}
 
 export interface IPushNotificationProvider {
   send(subscription: Subscription, payload: PushNotificationDTO): Promise<void>;

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 const subscriptionSchema = new mongoose.Schema({
   userId: { type: String, required: true, index: true },
@@ -12,9 +12,9 @@ const subscriptionSchema = new mongoose.Schema({
       expirationTime: Number,
     },
   ],
-});
+})
 
 export const SubscriptionModel = mongoose.model(
-  "Subscription",
+  'Subscription',
   subscriptionSchema,
-);
+)

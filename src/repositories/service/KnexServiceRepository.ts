@@ -1,7 +1,7 @@
-import { ServiceDTO } from "../../core/service/models/Service";
-import { ETableNames } from "../../database/ETableNames";
-import { IServiceRepository, listServiceProps } from "./IServiceRepository";
-import type { Knex } from "knex";
+import { ServiceDTO } from '../../core/service/models/Service'
+import { ETableNames } from '../../database/ETableNames'
+import { IServiceRepository, listServiceProps } from './IServiceRepository'
+import type { Knex } from 'knex'
 
 export class KnexServiceRepository implements IServiceRepository {
   constructor(private readonly knex: Knex) {}
@@ -13,7 +13,7 @@ export class KnexServiceRepository implements IServiceRepository {
     return await this.knex(ETableNames.SERVICES).insert({
       ...data,
       clinicId,
-    });
+    })
   }
 
   async update({
@@ -23,23 +23,27 @@ export class KnexServiceRepository implements IServiceRepository {
   }: ServiceDTO & { id: string; clinicId: string }): Promise<void> {
     await this.knex(ETableNames.SERVICES)
       .update(data)
-      .where({ id, clinicId });
+      .where({ id, clinicId })
   }
 
   async list({ clinicId, config }: listServiceProps): Promise<ServiceDTO[]> {
-    const order = config?.search ? "name" : "created_at";
-    const orderDirection = config?.search ? "asc" : "desc";
+    const order = config?.search
+      ? 'name'
+      : 'created_at'
+    const orderDirection = config?.search
+      ? 'asc'
+      : 'desc'
 
     const result = this.knex(ETableNames.SERVICES)
-      .select("*")
+      .select('*')
       .where({ clinicId })
-      .andWhere("name", "like", `%${config?.search ?? ""}%`)
-      .orderBy(order, orderDirection);
+      .andWhere('name', 'like', `%${config?.search ?? ''}%`)
+      .orderBy(order, orderDirection)
 
     if (config?.limit && config?.offSet) {
-      return await result.limit(config.limit).offset(config.offSet);
+      return await result.limit(config.limit).offset(config.offSet)
     }
-    return await result;
+    return await result
   }
 
   async count({
@@ -50,10 +54,10 @@ export class KnexServiceRepository implements IServiceRepository {
     search?: string;
   }): Promise<[{ total: number }]> {
     const [result] = await this.knex(ETableNames.SERVICES)
-      .count("id as total")
+      .count('id as total')
       .where({ clinicId })
-      .andWhere("name", "like", `%${search ?? ""}%`);
-    return [result] as [{ total: number }];
+      .andWhere('name', 'like', `%${search ?? ''}%`)
+    return [result] as [{ total: number }]
   }
 
   async get({
@@ -64,11 +68,11 @@ export class KnexServiceRepository implements IServiceRepository {
     clinicId: string;
   }): Promise<ServiceDTO | null> {
     const row = await this.knex(ETableNames.SERVICES)
-      .select("*")
+      .select('*')
       .where({ clinicId, id })
-      .first();
+      .first()
 
-    return row ?? null;
+    return row ?? null
   }
 
   async getByName({
@@ -79,13 +83,13 @@ export class KnexServiceRepository implements IServiceRepository {
     clinicId: string;
   }): Promise<ServiceDTO[]> {
     return await this.knex(ETableNames.SERVICES)
-      .select("*")
-      .where({ clinicId, name });
+      .select('*')
+      .where({ clinicId, name })
   }
 
   async delete({ id, clinicId }: { id: string; clinicId: string }): Promise<void> {
     await this.knex(ETableNames.SERVICES)
       .where({ id, clinicId })
-      .del();
+      .del()
   }
 }

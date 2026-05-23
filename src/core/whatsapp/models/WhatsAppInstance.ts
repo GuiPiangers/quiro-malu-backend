@@ -1,5 +1,5 @@
-import { Entity } from "../../shared/Entity";
-import { ApiError } from "../../../utils/ApiError";
+import { Entity } from '../../shared/Entity'
+import { ApiError } from '../../../utils/ApiError'
 
 export interface WhatsAppInstanceDTO {
   id: string;
@@ -11,34 +11,34 @@ export interface WhatsAppInstanceDTO {
 }
 
 export class WhatsAppInstance extends Entity {
-  private _userId: string;
-  private _instanceName: string;
-  private _phoneNumber?: string;
+  private _userId: string
+  private _instanceName: string
+  private _phoneNumber?: string
 
   constructor(dto: WhatsAppInstanceDTO) {
-    super(dto.id);
+    super(dto.id)
 
     if (!dto.userId) {
-      throw new ApiError("userId é obrigatório para uma instância WhatsApp", 400);
+      throw new ApiError('userId é obrigatório para uma instância WhatsApp', 400)
     }
     if (!dto.instanceName) {
       throw new ApiError(
-        "instanceName é obrigatório para uma instância WhatsApp",
+        'instanceName é obrigatório para uma instância WhatsApp',
         400,
-      );
+      )
     }
 
-    this._userId = dto.userId;
-    this._instanceName = dto.instanceName;
-    this._phoneNumber = dto.phoneNumber;
+    this._userId = dto.userId
+    this._instanceName = dto.instanceName
+    this._phoneNumber = dto.phoneNumber
   }
 
   get userId() {
-    return this._userId;
+    return this._userId
   }
 
   get instanceName() {
-    return this._instanceName;
+    return this._instanceName
   }
 
   getDTO(): WhatsAppInstanceDTO {
@@ -47,6 +47,6 @@ export class WhatsAppInstance extends Entity {
       userId: this._userId,
       instanceName: this._instanceName,
       phoneNumber: this._phoneNumber,
-    };
+    }
   }
 }

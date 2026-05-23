@@ -1,4 +1,4 @@
-import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
+import { ISchedulingRepository } from '../../../../repositories/scheduling/ISchedulingRepository'
 
 export class GetQtdSchedulesByDay {
   constructor(private SchedulingRepository: ISchedulingRepository) {}
@@ -16,10 +16,10 @@ export class GetQtdSchedulesByDay {
       month,
       year,
       clinicId,
-    });
+    })
     return qtdByDates.map((data) => ({
       date: data.formattedDate,
       qtd: data.qtd,
-    }));
+    }))
   }
 }

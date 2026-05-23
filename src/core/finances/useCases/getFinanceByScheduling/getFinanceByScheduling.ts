@@ -1,7 +1,7 @@
 import {
   getBySchedulingFinanceProps,
   IFinanceRepository,
-} from "../../../../repositories/finance/IFinanceRepository";
+} from '../../../../repositories/finance/IFinanceRepository'
 
 export class GetFinanceBySchedulingUseCase {
   constructor(private financeRepository: IFinanceRepository) {}
@@ -10,8 +10,8 @@ export class GetFinanceBySchedulingUseCase {
     const finance = await this.financeRepository.getByScheduling({
       schedulingId,
       clinicId,
-    });
+    })
 
-    return finance;
+    return finance
   }
 }

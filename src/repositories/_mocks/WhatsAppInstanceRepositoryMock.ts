@@ -1,5 +1,5 @@
-import { IWhatsAppInstanceRepository } from "../whatsapp/IWhatsAppInstanceRepository";
-import type { Mocked } from "vitest";
+import { IWhatsAppInstanceRepository } from '../whatsapp/IWhatsAppInstanceRepository'
+import type { Mocked } from 'vitest'
 
 export const createMockWhatsAppInstanceRepository =
   (): Mocked<IWhatsAppInstanceRepository> => ({
@@ -7,4 +7,4 @@ export const createMockWhatsAppInstanceRepository =
     delete: vi.fn(),
     getByUserId: vi.fn(),
     getByInstanceName: vi.fn(),
-  });
+  })

@@ -1,8 +1,8 @@
-import { ICalendarConfigurationRepository } from "../../../../repositories/calendarConfiguration/ICalendarConfigurationRepository";
+import { ICalendarConfigurationRepository } from '../../../../repositories/calendarConfiguration/ICalendarConfigurationRepository'
 import {
   CalendarConfiguration,
   DayConfiguration,
-} from "../../models/CalendarConfiguration";
+} from '../../models/CalendarConfiguration'
 
 export type SaveCalendarConfigurationDTO = {
   userId: string;
@@ -14,7 +14,7 @@ export type SaveCalendarConfigurationDTO = {
   quinta?: DayConfiguration;
   sexta?: DayConfiguration;
   sabado?: DayConfiguration;
-};
+}
 
 export class SaveCalendarConfigurationUseCase {
   constructor(
@@ -24,20 +24,20 @@ export class SaveCalendarConfigurationUseCase {
   async execute(dto: SaveCalendarConfigurationDTO) {
     const existingConfig = await this.calendarConfigurationRepository.get({
       userId: dto.userId,
-    });
+    })
 
     const calendarConfiguration = new CalendarConfiguration({
       ...dto,
-    });
+    })
 
     if (existingConfig) {
       await this.calendarConfigurationRepository.update({
         calendarConfiguration,
-      });
+      })
     } else {
       await this.calendarConfigurationRepository.save({
         calendarConfiguration,
-      });
+      })
     }
   }
 }

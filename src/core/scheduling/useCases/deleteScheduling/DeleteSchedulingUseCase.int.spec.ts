@@ -1,45 +1,45 @@
-import { v4 as uuidv4 } from "uuid";
-import type { Knex } from "knex";
-import { ETableNames } from "../../../../database/ETableNames";
-import { KnexSchedulingRepository } from "../../../../repositories/scheduling/KnexSchedulingRepository";
-import { createKnexForIntegrationTests } from "../../../../test/integration/knexTestConnection";
-import { withRollbackTransaction } from "../../../../test/integration/transactionRollback";
-import { AppEventListener } from "../../../shared/observers/EventListener";
-import { DeleteSchedulingUseCase } from "./DeleteSchedulingUseCase";
+import { v4 as uuidv4 } from 'uuid'
+import type { Knex } from 'knex'
+import { ETableNames } from '../../../../database/ETableNames'
+import { KnexSchedulingRepository } from '../../../../repositories/scheduling/KnexSchedulingRepository'
+import { createKnexForIntegrationTests } from '../../../../test/integration/knexTestConnection'
+import { withRollbackTransaction } from '../../../../test/integration/transactionRollback'
+import { AppEventListener } from '../../../shared/observers/EventListener'
+import { DeleteSchedulingUseCase } from './DeleteSchedulingUseCase'
 
 const integrationEnvReady = Boolean(
   process.env.DB_HOST &&
     process.env.MYSQL_ROOT_USER &&
     process.env.MYSQL_DATABASE,
-);
+)
 
-const runIntegrationTests = ["1", "true", "yes"].includes(
-  String(process.env.RUN_INTEGRATION_TESTS ?? "").toLowerCase(),
-);
+const runIntegrationTests = ['1', 'true', 'yes'].includes(
+  String(process.env.RUN_INTEGRATION_TESTS ?? '').toLowerCase(),
+)
 
-const shouldRunIntegrationSuite = integrationEnvReady && runIntegrationTests;
+const shouldRunIntegrationSuite = integrationEnvReady && runIntegrationTests
 
 async function insertUserAndPatient(trx: Knex.Transaction) {
-  const userId = uuidv4();
-  const patientId = uuidv4();
+  const userId = uuidv4()
+  const patientId = uuidv4()
   await trx(ETableNames.CLINICS).insert({
     id: userId,
     name: `Clinic ${userId}`,
-  });
+  })
   await trx(ETableNames.USERS).insert({
     id: userId,
     clinicId: userId,
-    name: "Integration user",
+    name: 'Integration user',
     email: `${userId}@integration.test`,
-    password: "not-used",
-  });
+    password: 'not-used',
+  })
   await trx(ETableNames.PATIENTS).insert({
     id: patientId,
-    name: "Integration patient",
+    name: 'Integration patient',
     userId,
     clinicId: userId,
-  });
-  return { userId, patientId };
+  })
+  return { userId, patientId }
 }
 
 async function insertSchedule(
@@ -63,131 +63,131 @@ async function insertSchedule(
     duration: row.duration,
     status: row.status,
     service: row.service,
-  });
+  })
 }
 
 describe.skipIf(!shouldRunIntegrationSuite)(
-  "DeleteSchedulingUseCase (integration)",
+  'DeleteSchedulingUseCase (integration)',
   () => {
-    let knex: Knex;
+    let knex: Knex
 
     beforeAll(() => {
-      knex = createKnexForIntegrationTests();
-    });
+      knex = createKnexForIntegrationTests()
+    })
 
     afterAll(async () => {
-      await knex.destroy();
-    });
+      await knex.destroy()
+    })
 
     afterEach(() => {
-      vi.restoreAllMocks();
-    });
+      vi.restoreAllMocks()
+    })
 
-    it("remove o agendamento do banco quando id e userId conferem", async () => {
+    it('remove o agendamento do banco quando id e userId conferem', async () => {
       await withRollbackTransaction(knex, async (trx) => {
-        const { userId, patientId } = await insertUserAndPatient(trx);
-        const scheduleId = uuidv4();
+        const { userId, patientId } = await insertUserAndPatient(trx)
+        const scheduleId = uuidv4()
 
         await insertSchedule(trx, {
           id: scheduleId,
           userId,
           patientId,
-          date: "2030-04-01T10:00:00",
+          date: '2030-04-01T10:00:00',
           duration: 3600,
-          status: "Agendado",
-          service: "Consulta",
-        });
+          status: 'Agendado',
+          service: 'Consulta',
+        })
 
         const useCase = new DeleteSchedulingUseCase(
           new KnexSchedulingRepository(trx),
           new AppEventListener(),
-        );
+        )
 
-        await useCase.execute({ id: scheduleId, userId, clinicId: userId });
+        await useCase.execute({ id: scheduleId, userId, clinicId: userId })
 
         const row = await trx(ETableNames.SCHEDULES)
           .where({ id: scheduleId, userId })
-          .first();
+          .first()
 
-        expect(row).toBeUndefined();
-      });
-    });
+        expect(row).toBeUndefined()
+      })
+    })
 
-    it("não remove agendamento de outro usuário", async () => {
+    it('não remove agendamento de outro usuário', async () => {
       await withRollbackTransaction(knex, async (trx) => {
-        const owner = await insertUserAndPatient(trx);
-        const other = await insertUserAndPatient(trx);
-        const scheduleId = uuidv4();
+        const owner = await insertUserAndPatient(trx)
+        const other = await insertUserAndPatient(trx)
+        const scheduleId = uuidv4()
 
         await insertSchedule(trx, {
           id: scheduleId,
           userId: owner.userId,
           patientId: owner.patientId,
-          date: "2030-04-02T11:00:00",
+          date: '2030-04-02T11:00:00',
           duration: 3600,
-          status: "Agendado",
-          service: "A",
-        });
+          status: 'Agendado',
+          service: 'A',
+        })
 
         const useCase = new DeleteSchedulingUseCase(
           new KnexSchedulingRepository(trx),
           new AppEventListener(),
-        );
+        )
 
         await useCase.execute({
           id: scheduleId,
           userId: other.userId,
           clinicId: other.userId,
-        });
+        })
 
         const row = await trx(ETableNames.SCHEDULES)
           .where({ id: scheduleId, userId: owner.userId })
-          .first();
+          .first()
 
-        expect(row).toBeDefined();
-        expect(row?.service).toBe("A");
-      });
-    });
+        expect(row).toBeDefined()
+        expect(row?.service).toBe('A')
+      })
+    })
 
-    it("emite deleteSchedule no appEventListener e executa listeners", async () => {
+    it('emite deleteSchedule no appEventListener e executa listeners', async () => {
       await withRollbackTransaction(knex, async (trx) => {
-        const { userId, patientId } = await insertUserAndPatient(trx);
-        const scheduleId = uuidv4();
+        const { userId, patientId } = await insertUserAndPatient(trx)
+        const scheduleId = uuidv4()
 
         await insertSchedule(trx, {
           id: scheduleId,
           userId,
           patientId,
-          date: "2030-04-03T12:00:00",
+          date: '2030-04-03T12:00:00',
           duration: 1800,
-          status: "Agendado",
-          service: "Sessão",
-        });
+          status: 'Agendado',
+          service: 'Sessão',
+        })
 
-        const events = new AppEventListener();
-        const listener = vi.fn().mockResolvedValue(undefined);
-        events.on("deleteSchedule", listener);
-        const emitSpy = vi.spyOn(events, "emit");
+        const events = new AppEventListener()
+        const listener = vi.fn().mockResolvedValue(undefined)
+        events.on('deleteSchedule', listener)
+        const emitSpy = vi.spyOn(events, 'emit')
 
         const useCase = new DeleteSchedulingUseCase(
           new KnexSchedulingRepository(trx),
           events,
-        );
+        )
 
-        await useCase.execute({ id: scheduleId, userId, clinicId: userId });
+        await useCase.execute({ id: scheduleId, userId, clinicId: userId })
 
-        expect(emitSpy).toHaveBeenCalledWith("deleteSchedule", {
+        expect(emitSpy).toHaveBeenCalledWith('deleteSchedule', {
           scheduleId,
           userId,
           clinicId: userId,
-        });
-        expect(listener).toHaveBeenCalledTimes(1);
+        })
+        expect(listener).toHaveBeenCalledTimes(1)
         expect(listener).toHaveBeenCalledWith({
           scheduleId,
           userId,
           clinicId: userId,
-        });
-      });
-    });
+        })
+      })
+    })
   },
-);
+)

@@ -1,6 +1,6 @@
-import { IProgressRepository } from "../../../../../repositories/progress/IProgressRepository";
-import { ApiError } from "../../../../../utils/ApiError";
-import { Progress } from "../../../models/Progress";
+import { IProgressRepository } from '../../../../../repositories/progress/IProgressRepository'
+import { ApiError } from '../../../../../utils/ApiError'
+import { Progress } from '../../../models/Progress'
 
 export class GetProgressUseCase {
   constructor(private ProgressRepository: IProgressRepository) {}
@@ -18,13 +18,13 @@ export class GetProgressUseCase {
       id,
       patientId,
       clinicId,
-    });
+    })
 
     if (!progressData) {
-      throw new ApiError("Evolução não encontrada", 404);
+      throw new ApiError('Evolução não encontrada', 404)
     }
 
-    const progress = new Progress(progressData);
-    return progress.getDTO();
+    const progress = new Progress(progressData)
+    return progress.getDTO()
   }
 }

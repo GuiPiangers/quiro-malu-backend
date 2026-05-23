@@ -1,9 +1,9 @@
-import type { PermissionKey } from "../database/seeds/permissions.seed";
+import type { PermissionKey } from '../database/seeds/permissions.seed'
 
 export type PermissionScope =
-  | { type: "all" }
-  | { type: "own" }
-  | { type: "list"; userIds: string[] };
+  | { type: 'all' }
+  | { type: 'own' }
+  | { type: 'list'; userIds: string[] }
 
 export interface ResolvedPermission {
   key: PermissionKey;

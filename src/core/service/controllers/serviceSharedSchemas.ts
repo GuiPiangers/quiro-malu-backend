@@ -1,8 +1,8 @@
-import { z } from "../../../schemas/zodOpenApi";
+import { z } from '../../../schemas/zodOpenApi'
 
 /** Duração do serviço na API e no domínio: sempre em segundos (ex.: 3600 = 1 hora). */
 export const SERVICE_DURATION_SECONDS_DOC =
-  "Duração do serviço em segundos (inteiro positivo; ex.: 3600 para 1 hora).";
+  'Duração do serviço em segundos (inteiro positivo; ex.: 3600 para 1 hora).'
 
 export const CreateServiceBodySchema = z
   .object({
@@ -14,7 +14,7 @@ export const CreateServiceBodySchema = z
       .positive()
       .describe(SERVICE_DURATION_SECONDS_DOC),
   })
-  .openapi("CreateServiceBody");
+  .openapi('CreateServiceBody')
 
 export const UpdateServiceBodySchema = z
   .object({
@@ -27,27 +27,27 @@ export const UpdateServiceBodySchema = z
       .positive()
       .describe(SERVICE_DURATION_SECONDS_DOC),
   })
-  .openapi("UpdateServiceBody");
+  .openapi('UpdateServiceBody')
 
 export const DeleteServiceBodySchema = z
   .object({
     id: z.string().min(1),
   })
-  .openapi("DeleteServiceBody");
+  .openapi('DeleteServiceBody')
 
 export const ListServicesQuerySchema = z
   .object({
     page: z.coerce.number().int().min(1).default(1),
     search: z.string().optional(),
   })
-  .openapi("ListServicesQuery");
+  .openapi('ListServicesQuery')
 
 export const ServiceIdParamSchema = z
   .object({
     id: z.string().min(1),
   })
-  .openapi("ServiceIdParam");
+  .openapi('ServiceIdParam')
 
 export const MessageResponseSchema = z
   .object({ message: z.string() })
-  .openapi("ServiceMessageResponse");
+  .openapi('ServiceMessageResponse')

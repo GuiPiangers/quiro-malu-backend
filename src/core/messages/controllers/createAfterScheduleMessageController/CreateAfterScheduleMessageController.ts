@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
-import { responseError } from "../../../../utils/ResponseError";
-import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
+import { Request, Response } from 'express'
+import { responseError } from '../../../../utils/ResponseError'
+import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
 import {
   CreateAfterScheduleMessageUseCase,
-} from "../../useCases/afterScheduleMessage/createAfterScheduleMessage/CreateAfterScheduleMessageUseCase";
-import { CreateAfterScheduleMessageBodySchema } from "../scheduledMessageSchemas";
+} from '../../useCases/afterScheduleMessage/createAfterScheduleMessage/CreateAfterScheduleMessageUseCase'
+import { CreateAfterScheduleMessageBodySchema } from '../scheduledMessageSchemas'
 
 export class CreateAfterScheduleMessageController {
   constructor(
@@ -12,23 +12,23 @@ export class CreateAfterScheduleMessageController {
   ) {}
 
   async handle(request: Request, response: Response) {
-    const parsed = parseWithSchema(CreateAfterScheduleMessageBodySchema, request.body);
+    const parsed = parseWithSchema(CreateAfterScheduleMessageBodySchema, request.body)
     if (!parsed.success) {
-      return sendZodBadRequest(response, parsed.error);
+      return sendZodBadRequest(response, parsed.error)
     }
 
     try {
-      const body = parsed.data;
-      const userId = request.user.id;
+      const body = parsed.data
+      const userId = request.user.id
 
       const res = await this.createAfterScheduleMessageUseCase.execute({
         ...body,
         userId: userId!,
-      });
+      })
 
-      return response.status(201).json(res);
+      return response.status(201).json(res)
     } catch (err: any) {
-      return responseError(response, err);
+      return responseError(response, err)
     }
   }
 }

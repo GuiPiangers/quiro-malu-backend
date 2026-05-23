@@ -1,14 +1,14 @@
 export type WhatsAppMessageLogStatus =
-  | "PENDING"
-  | "SENT"
-  | "DELIVERED"
-  | "READ"
-  | "FAILED";
+  | 'PENDING'
+  | 'SENT'
+  | 'DELIVERED'
+  | 'READ'
+  | 'FAILED'
 
 export type ScheduleMessageType =
-  | "beforeSchedule"
-  | "afterSchedule"
-  | "birthday";
+  | 'beforeSchedule'
+  | 'afterSchedule'
+  | 'birthday'
 
 export type SaveWhatsAppMessageLogProps = {
   id: string;
@@ -23,7 +23,7 @@ export type SaveWhatsAppMessageLogProps = {
   status: WhatsAppMessageLogStatus;
   providerMessageId: string | null;
   errorMessage?: string | null;
-};
+}
 
 export type UpdateWhatsAppMessageLogByProviderIdProps = {
   providerMessageId: string;
@@ -31,7 +31,7 @@ export type UpdateWhatsAppMessageLogByProviderIdProps = {
   errorMessage?: string | null;
   deliveredAt?: string | null;
   readAt?: string | null;
-};
+}
 
 export type WhatsAppMessageLogDTO = {
   id: string;
@@ -51,7 +51,7 @@ export type WhatsAppMessageLogDTO = {
   readAt: string | null;
   createdAt: string;
   updatedAt: string;
-};
+}
 
 export type ListWhatsAppMessageLogsFilter = {
   userId: string;
@@ -62,24 +62,24 @@ export type ListWhatsAppMessageLogsFilter = {
   status?: WhatsAppMessageLogStatus;
   limit: number;
   offset: number;
-};
+}
 
 export type ListWhatsAppMessageLogsResult = {
   items: WhatsAppMessageLogDTO[];
   total: number;
-};
+}
 
 export type GetBySchedulingAndCampaignIdProps = {
   schedulingId: string;
   campaignId: string;
-};
+}
 
 export type WhatsAppMessageLogsSummaryDTO = {
   total: number;
   byStatus: Record<WhatsAppMessageLogStatus, number>;
   deliveryRate: number | null;
   readRate: number | null;
-};
+}
 
 export interface IWhatsAppMessageLogRepository {
   save(data: SaveWhatsAppMessageLogProps): Promise<void>;

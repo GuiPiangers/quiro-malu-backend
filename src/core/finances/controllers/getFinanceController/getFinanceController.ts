@@ -1,30 +1,30 @@
-import { Request, Response } from "express";
-import { responseError } from "../../../../utils/ResponseError";
-import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
-import { GetFinanceUseCase } from "../../useCases/getFinance/getFinanceUseCase";
-import { FinanceIdParamSchema } from "../financeSharedSchemas";
+import { Request, Response } from 'express'
+import { responseError } from '../../../../utils/ResponseError'
+import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import { GetFinanceUseCase } from '../../useCases/getFinance/getFinanceUseCase'
+import { FinanceIdParamSchema } from '../financeSharedSchemas'
 
 export class GetFinanceController {
   constructor(private getFinanceUseCase: GetFinanceUseCase) {}
 
   async handle(request: Request, response: Response) {
-    const parsedParams = parseWithSchema(FinanceIdParamSchema, request.params);
+    const parsedParams = parseWithSchema(FinanceIdParamSchema, request.params)
     if (!parsedParams.success) {
-      return sendZodBadRequest(response, parsedParams.error);
+      return sendZodBadRequest(response, parsedParams.error)
     }
 
     try {
-      const { id } = parsedParams.data;
-      const clinicId = request.user.clinicId;
+      const { id } = parsedParams.data
+      const clinicId = request.user.clinicId
 
       const res = await this.getFinanceUseCase.execute({
         clinicId: clinicId!,
         id,
-      });
+      })
 
-      response.status(200).json(res);
+      response.status(200).json(res)
     } catch (err: any) {
-      return responseError(response, err);
+      return responseError(response, err)
     }
   }
 }

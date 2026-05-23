@@ -1,7 +1,7 @@
-import { Clinic, ClinicDTO } from "../../models/Clinic";
-import { IClinicRepository } from "../../../../repositories/clinic/IClinicRepository";
-import type { IRbacRepository } from "../../../../repositories/rbac/IRbacRepository";
-import { ApiError } from "../../../../utils/ApiError";
+import { Clinic, ClinicDTO } from '../../models/Clinic'
+import { IClinicRepository } from '../../../../repositories/clinic/IClinicRepository'
+import type { IRbacRepository } from '../../../../repositories/rbac/IRbacRepository'
+import { ApiError } from '../../../../utils/ApiError'
 
 export class CreateClinicUseCase {
   constructor(
@@ -12,15 +12,15 @@ export class CreateClinicUseCase {
   async execute(data: ClinicDTO): Promise<ClinicDTO> {
     const clinicAlreadyExists = await this.clinicRepository.findByName(
       data.name,
-    );
+    )
     if (clinicAlreadyExists) {
-      throw new ApiError("Clínica já cadastrada", 400, "clinic");
+      throw new ApiError('Clínica já cadastrada', 400, 'clinic')
     }
 
-    const clinic = new Clinic(data);
-    await this.clinicRepository.save(clinic);
-    await this.rbacRepository.createClinicAdminRole(clinic.id);
+    const clinic = new Clinic(data)
+    await this.clinicRepository.save(clinic)
+    await this.rbacRepository.createClinicAdminRole(clinic.id)
 
-    return clinic.getDTO();
+    return clinic.getDTO()
   }
 }

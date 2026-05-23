@@ -1,8 +1,8 @@
-import { IQueueProvider } from "../../repositories/queueProvider/IQueueProvider";
+import { IQueueProvider } from '../../repositories/queueProvider/IQueueProvider'
 import {
   SendBeforeScheduleMessageJob,
   SendBeforeScheduleMessageUseCase,
-} from "../../core/messages/useCases/beforeScheduleMessage/sendBeforeScheduleMessage/sendBeforeScheduleMessageUseCase";
+} from '../../core/messages/useCases/beforeScheduleMessage/sendBeforeScheduleMessage/sendBeforeScheduleMessageUseCase'
 
 export class BeforeScheduleQueue {
   constructor(
@@ -11,17 +11,17 @@ export class BeforeScheduleQueue {
   ) {}
 
   async upsert(jobId: string, data: SendBeforeScheduleMessageJob, delay: number) {
-    await this.remove(jobId);
+    await this.remove(jobId)
 
     await this.queueProvider.add(data, {
       delay,
       jobId,
-    });
+    })
   }
 
   async remove(jobId: string) {
     try {
-      await this.queueProvider.delete({ jobId });
+      await this.queueProvider.delete({ jobId })
     } catch {
       // ignore when job does not exist
     }
@@ -29,7 +29,7 @@ export class BeforeScheduleQueue {
 
   async process() {
     await this.queueProvider.process(async (job) => {
-      await this.sendBeforeScheduleMessageUseCase.execute(job);
-    });
+      await this.sendBeforeScheduleMessageUseCase.execute(job)
+    })
   }
 }

@@ -1,8 +1,8 @@
-import { ILocationRepository } from "./ILocationRepository";
-import { LocationDTO } from "../../core/shared/Location";
-import { getValidObjectValues } from "../../utils/getValidObjectValues";
-import { ETableNames } from "../../database/ETableNames";
-import type { Knex } from "knex";
+import { ILocationRepository } from './ILocationRepository'
+import { LocationDTO } from '../../core/shared/Location'
+import { getValidObjectValues } from '../../utils/getValidObjectValues'
+import { ETableNames } from '../../database/ETableNames'
+import type { Knex } from 'knex'
 
 export class KnexLocationRepository implements ILocationRepository {
   constructor(private readonly knex: Knex) {}
@@ -14,9 +14,9 @@ export class KnexLocationRepository implements ILocationRepository {
   ): Promise<void> {
     return await this.knex(ETableNames.LOCATIONS).insert({
       ...data,
-      clinicId: clinicId,
+      clinicId,
       patientId,
-    });
+    })
   }
 
   async saveMany(
@@ -25,9 +25,9 @@ export class KnexLocationRepository implements ILocationRepository {
     await this.knex(ETableNames.LOCATIONS).insert(
       data.map(({ clinicId, ...location }) => ({
         ...location,
-        clinicId: clinicId,
+        clinicId,
       })),
-    );
+    )
   }
 
   async update(
@@ -37,16 +37,16 @@ export class KnexLocationRepository implements ILocationRepository {
   ): Promise<void> {
     await this.knex(ETableNames.LOCATIONS).update(data).where({
       patientId,
-      clinicId: clinicId,
-    });
+      clinicId,
+    })
   }
 
   async getLocation(patientId: string, clinicId: string): Promise<LocationDTO[]> {
-    const result = await this.knex(ETableNames.LOCATIONS).select("*").where({
-      clinicId: clinicId,
+    const result = await this.knex(ETableNames.LOCATIONS).select('*').where({
+      clinicId,
       patientId,
-    });
+    })
 
-    return result.map((res) => getValidObjectValues(res));
+    return result.map((res) => getValidObjectValues(res))
   }
 }

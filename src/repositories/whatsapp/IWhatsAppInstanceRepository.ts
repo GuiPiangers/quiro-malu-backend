@@ -1,4 +1,4 @@
-import { WhatsAppInstanceDTO } from "../../core/whatsapp/models/WhatsAppInstance";
+import { WhatsAppInstanceDTO } from '../../core/whatsapp/models/WhatsAppInstance'
 
 export interface IWhatsAppInstanceRepository {
   save(instance: WhatsAppInstanceDTO): Promise<void>;

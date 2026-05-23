@@ -1,4 +1,4 @@
-import { INotificationRepository } from "../../../../repositories/notification/INotificationRepository";
+import { INotificationRepository } from '../../../../repositories/notification/INotificationRepository'
 
 export default class DeleteManyNotificationsUseCase {
   constructor(private notificationRepository: INotificationRepository) {}
@@ -13,6 +13,6 @@ export default class DeleteManyNotificationsUseCase {
     await this.notificationRepository.deleteMany({
       userId,
       notificationsId,
-    });
+    })
   }
 }

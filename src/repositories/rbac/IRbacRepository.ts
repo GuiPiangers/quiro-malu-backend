@@ -1,5 +1,5 @@
-import type { PermissionKey } from "../../database/seeds/permissions.seed";
-import type { ResolvedPermission } from "../../types/permissions";
+import type { PermissionKey } from '../../database/seeds/permissions.seed'
+import type { ResolvedPermission } from '../../types/permissions'
 
 export type PermissionCatalogRow = {
   id: string;
@@ -7,7 +7,7 @@ export type PermissionCatalogRow = {
   module: string;
   action: string;
   description: string;
-};
+}
 
 export type RoleRow = {
   id: string;
@@ -15,12 +15,12 @@ export type RoleRow = {
   name: string;
   description: string;
   isSystem: boolean;
-};
+}
 
 export type RolePermissionItem = {
   permissionKey: PermissionKey;
   scope: unknown | null;
-};
+}
 
 export interface IRbacRepository {
   findResolvedPermissionsByUser(data: {

@@ -1,4 +1,4 @@
-import type { SendStrategyKind } from "./sendStrategyKind";
+import type { SendStrategyKind } from './sendStrategyKind'
 import {
   SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
@@ -6,15 +6,15 @@ import {
   SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
   SEND_STRATEGY_KIND_UNIQUE_SEND_BY_PATIENT,
   UNIQUE_USER_STRATEGY_ID,
-} from "./sendStrategyKind";
+} from './sendStrategyKind'
 
 type MessageSendStrategyAmountParamKinds =
   | typeof SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS
-  | typeof SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS;
+  | typeof SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS
 
 type MessageSendStrategyPatientListParamKinds =
   | typeof SEND_STRATEGY_KIND_SEND_SELECTED_LIST
-  | typeof SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST;
+  | typeof SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST
 
 export type MessageSendStrategyParamsByKind = {
   [K in SendStrategyKind]: K extends MessageSendStrategyAmountParamKinds
@@ -22,7 +22,7 @@ export type MessageSendStrategyParamsByKind = {
     : K extends MessageSendStrategyPatientListParamKinds
       ? { patientIdList: string[] }
       : Record<string, unknown>;
-};
+}
 
 export type MessageSendStrategyCreateParamsByKind = MessageSendStrategyParamsByKind
 
@@ -34,13 +34,13 @@ export type CreateMessageSendStrategyDTO = {
     name: string;
     params: MessageSendStrategyCreateParamsByKind[K];
   };
-}[SendStrategyKind];
+}[SendStrategyKind]
 
 export type CreateMessageSendStrategyHttpBody = {
   kind?: SendStrategyKind;
   name?: string;
   params?: MessageSendStrategyCreateParamsByKind[SendStrategyKind];
-};
+}
 
 export type MessageSendStrategyDTOForKind<K extends SendStrategyKind> = {
   id: string;
@@ -49,11 +49,11 @@ export type MessageSendStrategyDTOForKind<K extends SendStrategyKind> = {
   kind: K;
   params: MessageSendStrategyParamsByKind[K];
   campaignBindingsCount: number;
-};
+}
 
 export type MessageSendStrategyDTO = {
   [K in SendStrategyKind]: MessageSendStrategyDTOForKind<K>;
-}[SendStrategyKind];
+}[SendStrategyKind]
 
 /** Item extra da listagem: estratégia global por usuário (sem CRUD). */
 export type MessageSendStrategyListUniqueItemDTO = {
@@ -63,11 +63,11 @@ export type MessageSendStrategyListUniqueItemDTO = {
   kind: typeof SEND_STRATEGY_KIND_UNIQUE_SEND_BY_PATIENT;
   params: Record<string, unknown>;
   campaignBindingsCount: number;
-};
+}
 
 export type MessageSendStrategyListItemDTO =
   | MessageSendStrategyDTO
-  | MessageSendStrategyListUniqueItemDTO;
+  | MessageSendStrategyListUniqueItemDTO
 
 export type MessageSendStrategyPersistenceRow = {
   id: string;
@@ -76,7 +76,7 @@ export type MessageSendStrategyPersistenceRow = {
   kind: string;
   params: Record<string, unknown>;
   campaignBindingsCount: number;
-};
+}
 
 export function toMessageSendStrategyDTO(
   row: MessageSendStrategyPersistenceRow,
@@ -88,5 +88,5 @@ export function toMessageSendStrategyDTO(
     kind: row.kind as SendStrategyKind,
     params: row.params,
     campaignBindingsCount: row.campaignBindingsCount,
-  } as MessageSendStrategyDTO;
+  } as MessageSendStrategyDTO
 }

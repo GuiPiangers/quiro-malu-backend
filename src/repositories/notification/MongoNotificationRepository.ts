@@ -1,5 +1,5 @@
-import { NotificationDTO } from "../../core/notification/models/Notification";
-import { NotificationModel } from "../../database/mongoose/schemas/Notification";
+import { NotificationDTO } from '../../core/notification/models/Notification'
+import { NotificationModel } from '../../database/mongoose/schemas/Notification'
 import {
   CountNotReadNotificationParams,
   DeleteManyNotificationParams,
@@ -9,7 +9,7 @@ import {
   ListNotificationParams,
   SaveNotificationParams,
   UpdateNotificationParams,
-} from "./INotificationRepository";
+} from './INotificationRepository'
 
 export class MongoNotificationRepository implements INotificationRepository {
   async deleteMany({
@@ -21,15 +21,15 @@ export class MongoNotificationRepository implements INotificationRepository {
       id: {
         $in: notificationsId,
       },
-    });
+    })
   }
 
   async save(data: SaveNotificationParams): Promise<void> {
-    await NotificationModel.create(data);
+    await NotificationModel.create(data)
   }
 
   async delete({ id, userId }: DeleteNotificationParams): Promise<void> {
-    NotificationModel.deleteOne({ id, userId });
+    NotificationModel.deleteOne({ id, userId })
   }
 
   async update({
@@ -37,14 +37,14 @@ export class MongoNotificationRepository implements INotificationRepository {
     userId,
     ...data
   }: UpdateNotificationParams): Promise<void> {
-    await NotificationModel.updateOne({ id, userId }, data);
+    await NotificationModel.updateOne({ id, userId }, data)
   }
 
   async get<T>({
     id,
     userId,
   }: GetNotificationParams): Promise<NotificationDTO<T> | null> {
-    return await NotificationModel.findOne({ userId, id });
+    return await NotificationModel.findOne({ userId, id })
   }
 
   async list({
@@ -53,7 +53,7 @@ export class MongoNotificationRepository implements INotificationRepository {
   }: ListNotificationParams): Promise<NotificationDTO[]> {
     return await NotificationModel.find<NotificationDTO>({ userId }).sort({
       createdAt: -1,
-    });
+    })
   }
 
   async countNotReadOrNeedAct({
@@ -62,6 +62,6 @@ export class MongoNotificationRepository implements INotificationRepository {
     return await NotificationModel.countDocuments({
       userId,
       $or: [{ read: false }, { actionNeeded: true }],
-    });
+    })
   }
 }

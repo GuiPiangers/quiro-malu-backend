@@ -1,12 +1,12 @@
-import { SYSTEM_PERMISSIONS } from "../../../database/seeds/permissions.seed";
-import { z } from "../../../schemas/zodOpenApi";
+import { SYSTEM_PERMISSIONS } from '../../../database/seeds/permissions.seed'
+import { z } from '../../../schemas/zodOpenApi'
 
 const permissionKeyEnumValues = SYSTEM_PERMISSIONS.map((p) => p.key) as [
   string,
   ...string[],
-];
+]
 
-export const PermissionKeySchema = z.enum(permissionKeyEnumValues).openapi("RbacPermissionKey");
+export const PermissionKeySchema = z.enum(permissionKeyEnumValues).openapi('RbacPermissionKey')
 
 export const ReplaceRolePermissionsBodySchema = z
   .array(
@@ -15,43 +15,43 @@ export const ReplaceRolePermissionsBodySchema = z
         permissionKey: PermissionKeySchema,
         scope: z.unknown().optional().nullable(),
       })
-      .openapi("RbacReplaceRolePermissionItem"),
+      .openapi('RbacReplaceRolePermissionItem'),
   )
-  .openapi("RbacReplaceRolePermissionsBody");
+  .openapi('RbacReplaceRolePermissionsBody')
 
 export const PatchUserRoleBodySchema = z
   .object({
     roleId: z.string().min(1),
   })
-  .openapi("RbacPatchUserRoleBody");
+  .openapi('RbacPatchUserRoleBody')
 
 export const CreateRoleBodySchema = z
   .object({
     name: z.string().min(1).max(80),
     description: z.string().max(200).optional(),
   })
-  .openapi("RbacCreateRoleBody");
+  .openapi('RbacCreateRoleBody')
 
 export const UpdateRoleBodySchema = z
   .object({
     name: z.string().min(1).max(80).optional(),
     description: z.string().max(200).optional(),
   })
-  .openapi("RbacUpdateRoleBody");
+  .openapi('RbacUpdateRoleBody')
 
 export const RoleIdParamsSchema = z
   .object({
     id: z.string().min(1),
   })
-  .openapi("RbacRoleIdParams");
+  .openapi('RbacRoleIdParams')
 
 export const UserIdParamsSchema = z
   .object({
     id: z.string().min(1),
   })
-  .openapi("RbacUserIdParams");
+  .openapi('RbacUserIdParams')
 
-const permissionActionSchema = z.enum(["read", "write"]);
+const permissionActionSchema = z.enum(['read', 'write'])
 
 export const RoleRowResponseSchema = z
   .object({
@@ -61,9 +61,9 @@ export const RoleRowResponseSchema = z
     description: z.string(),
     isSystem: z.boolean(),
   })
-  .openapi("RbacRoleRow");
+  .openapi('RbacRoleRow')
 
-export const ListRolesResponseSchema = z.array(RoleRowResponseSchema).openapi("RbacListRolesResponse");
+export const ListRolesResponseSchema = z.array(RoleRowResponseSchema).openapi('RbacListRolesResponse')
 
 export const PermissionCatalogRowSchema = z
   .object({
@@ -73,19 +73,19 @@ export const PermissionCatalogRowSchema = z
     action: permissionActionSchema,
     description: z.string(),
   })
-  .openapi("RbacPermissionCatalogRow");
+  .openapi('RbacPermissionCatalogRow')
 
 export const ListPermissionCatalogResponseSchema = z
   .array(PermissionCatalogRowSchema)
-  .openapi("RbacListPermissionCatalogResponse");
+  .openapi('RbacListPermissionCatalogResponse')
 
 export const RolePermissionEntryResponseSchema = z
   .object({
     permissionKey: PermissionKeySchema,
     scope: z.unknown().nullable().optional(),
   })
-  .openapi("RbacRolePermissionEntry");
+  .openapi('RbacRolePermissionEntry')
 
 export const ListRolePermissionsResponseSchema = z
   .array(RolePermissionEntryResponseSchema)
-  .openapi("RbacListRolePermissionsResponse");
+  .openapi('RbacListRolePermissionsResponse')

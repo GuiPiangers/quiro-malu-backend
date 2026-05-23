@@ -1,5 +1,5 @@
-import { db } from "../../database/knex";
-import { KnexMessageSendStrategyRepository } from "./KnexMessageSendStrategyRepository";
+import { db } from '../../database/knex'
+import { KnexMessageSendStrategyRepository } from './KnexMessageSendStrategyRepository'
 
 export const knexMessageSendStrategyRepository =
-  new KnexMessageSendStrategyRepository(db);
+  new KnexMessageSendStrategyRepository(db)

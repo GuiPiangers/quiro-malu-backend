@@ -1,5 +1,5 @@
-import { db } from "../../database/knex";
-import { KnexEventSuggestionRepository } from "./KnexEventSuggestionRepository";
+import { db } from '../../database/knex'
+import { KnexEventSuggestionRepository } from './KnexEventSuggestionRepository'
 
 export const knexEventSuggestionRepository =
-  new KnexEventSuggestionRepository(db);
+  new KnexEventSuggestionRepository(db)

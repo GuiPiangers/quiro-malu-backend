@@ -1,26 +1,26 @@
-import { ExamDTO } from "../../exams/models/Exam";
-import { PatientDTO } from "../../patients/models/Patient";
-import { BlockScheduleDto } from "../../scheduling/models/dtos/BlockSchedule.dto";
-import { SchedulingDTO } from "../../scheduling/models/Scheduling";
+import { ExamDTO } from '../../exams/models/Exam'
+import { PatientDTO } from '../../patients/models/Patient'
+import { BlockScheduleDto } from '../../scheduling/models/dtos/BlockSchedule.dto'
+import { SchedulingDTO } from '../../scheduling/models/Scheduling'
 
 type AppEvents = {
-  createPatient: Omit<PatientDTO, "id"> & { userId: string; patientId: string };
-  updatePatient: Partial<Omit<PatientDTO, "id">> & {
+  createPatient: Omit<PatientDTO, 'id'> & { userId: string; patientId: string };
+  updatePatient: Partial<Omit<PatientDTO, 'id'>> & {
     patientId: string;
     userId: string;
   };
   deletePatient: { userId: string; patientId: string };
-  patientBirthDay: Omit<PatientDTO, "id"> & {
+  patientBirthDay: Omit<PatientDTO, 'id'> & {
     userId: string;
     patientId: string;
   };
 
-  createSchedule: Omit<SchedulingDTO, "id"> & {
+  createSchedule: Omit<SchedulingDTO, 'id'> & {
     userId: string;
     clinicId: string;
     scheduleId: string;
   };
-  updateSchedule: Omit<SchedulingDTO, "id"> & {
+  updateSchedule: Omit<SchedulingDTO, 'id'> & {
     scheduleId: string;
     userId: string;
     clinicId: string;
@@ -120,45 +120,45 @@ type AppEvents = {
     messageLogId: string;
   };
 
-  createExam: Omit<ExamDTO, "id"> & { userId: string; examId: string };
-  updateExam: Partial<Omit<ExamDTO, "id">> & { userId: string; examId: string };
+  createExam: Omit<ExamDTO, 'id'> & { userId: string; examId: string };
+  updateExam: Partial<Omit<ExamDTO, 'id'>> & { userId: string; examId: string };
   deleteExam: { userId: string; clinicId: string; examId: string; patientId: string };
 
   createBlockSchedule: BlockScheduleDto & { userId: string };
-};
+}
 
-type Listener<T> = (data: T) => Promise<void>;
+type Listener<T> = (data: T) => Promise<void>
 
-export type AvailableAppEvents = keyof AppEvents;
+export type AvailableAppEvents = keyof AppEvents
 
 class AppEventListener {
-  private listeners: Map<string, Array<Listener<any>>> = new Map();
+  private listeners: Map<string, Array<Listener<any>>> = new Map()
 
   on<T extends keyof AppEvents>(
     identifier: T,
     callback: Listener<AppEvents[T]>,
   ) {
-    if (!this.listeners.has(identifier)) this.listeners.set(identifier, []);
+    if (!this.listeners.has(identifier)) this.listeners.set(identifier, [])
 
-    this.listeners.get(identifier)?.push(callback);
+    this.listeners.get(identifier)?.push(callback)
   }
 
   emit<T extends keyof AppEvents>(identifier: T, data: AppEvents[T]) {
     if (this.listeners.has(identifier)) {
       this.listeners.get(identifier)?.forEach((listener) => {
-        listener(data);
-      });
+        listener(data)
+      })
     }
   }
 
   clearAllListeners(): void {
-    this.listeners.clear();
+    this.listeners.clear()
   }
 }
 
-const appEventListener = new AppEventListener();
+const appEventListener = new AppEventListener()
 
 // Minimum contract for DI.
-export type IAppEventListener = Pick<typeof appEventListener, "emit">;
+export type IAppEventListener = Pick<typeof appEventListener, 'emit'>
 
-export { appEventListener, AppEventListener };
+export { appEventListener, AppEventListener }

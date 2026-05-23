@@ -1,9 +1,11 @@
-import { db } from "./index";
+import { db } from './index'
 
-const SIMPLE_IDENTIFIER_REGEX = /^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*$/;
+const SIMPLE_IDENTIFIER_REGEX = /^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*$/
 
 function normalizeOrientation(orientation: string) {
-  return `${orientation}`.toUpperCase() === "DESC" ? "DESC" : "ASC";
+  return `${orientation}`.toUpperCase() === 'DESC'
+    ? 'DESC'
+    : 'ASC'
 }
 
 export function order({
@@ -13,12 +15,12 @@ export function order({
   field: string;
   orientation: string;
 }) {
-  const direction = normalizeOrientation(orientation);
+  const direction = normalizeOrientation(orientation)
 
-  const normalizedField = `${field}`.replace(/[\\]/g, "").trim();
+  const normalizedField = `${field}`.replace(/[\\]/g, '').trim()
   const orderTarget = SIMPLE_IDENTIFIER_REGEX.test(normalizedField)
     ? db.ref(normalizedField).toQuery()
-    : normalizedField;
+    : normalizedField
 
-  return `${orderTarget} ${direction}`;
+  return `${orderTarget} ${direction}`
 }

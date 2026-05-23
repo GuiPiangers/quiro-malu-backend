@@ -1,5 +1,5 @@
-import { IBirthdayMessageRepository } from "../messages/IBirthdayMessageRepository";
-import type { Mocked } from "vitest";
+import { IBirthdayMessageRepository } from '../messages/IBirthdayMessageRepository'
+import type { Mocked } from 'vitest'
 
 export const createMockBirthdayMessageRepository =
   (): Mocked<IBirthdayMessageRepository> => ({
@@ -10,4 +10,4 @@ export const createMockBirthdayMessageRepository =
     update: vi.fn(),
     delete: vi.fn(),
     listByUserIdPaged: vi.fn(),
-  });
+  })

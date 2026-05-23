@@ -1,9 +1,9 @@
-import { ServiceDTO } from "../../core/service/models/Service";
+import { ServiceDTO } from '../../core/service/models/Service'
 
 export type listServiceProps = {
   clinicId: string;
   config?: { limit?: number; offSet?: number; search?: string };
-};
+}
 
 export interface IServiceRepository {
   save(data: ServiceDTO & { clinicId: string }): Promise<void>;

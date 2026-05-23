@@ -1,5 +1,5 @@
-import { IProgressRepository } from "../progress/IProgressRepository";
-import type { Mocked } from "vitest";
+import { IProgressRepository } from '../progress/IProgressRepository'
+import type { Mocked } from 'vitest'
 
 export const createMockProgressRepository =
   (): Mocked<IProgressRepository> => ({
@@ -10,4 +10,4 @@ export const createMockProgressRepository =
     list: vi.fn(),
     save: vi.fn(),
     update: vi.fn(),
-  });
+  })

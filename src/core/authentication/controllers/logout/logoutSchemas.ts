@@ -1,15 +1,15 @@
-import { z } from "../../../../schemas/zodOpenApi";
+import { z } from '../../../../schemas/zodOpenApi'
 
 export const LogoutBodySchema = z
   .object({
     refreshTokenId: z.string(),
   })
-  .openapi("LogoutBody");
+  .openapi('LogoutBody')
 
 export const LogoutResponseSchema = z
   .object({
     message: z.string(),
   })
-  .openapi("LogoutResponse");
+  .openapi('LogoutResponse')
 
-export type LogoutBody = z.infer<typeof LogoutBodySchema>;
+export type LogoutBody = z.infer<typeof LogoutBodySchema>

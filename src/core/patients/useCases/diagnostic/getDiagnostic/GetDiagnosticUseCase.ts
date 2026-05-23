@@ -1,4 +1,4 @@
-import { IDiagnosticRepository } from "../../../../../repositories/diagnostic/IDiagnosticRepository";
+import { IDiagnosticRepository } from '../../../../../repositories/diagnostic/IDiagnosticRepository'
 
 export class GetDiagnosticUseCase {
   constructor(private diagnosticRepository: IDiagnosticRepository) {}
@@ -7,8 +7,8 @@ export class GetDiagnosticUseCase {
     const diagnosticData = await this.diagnosticRepository.get(
       patientId,
       clinicId,
-    );
+    )
 
-    return diagnosticData ?? {};
+    return diagnosticData ?? {}
   }
 }

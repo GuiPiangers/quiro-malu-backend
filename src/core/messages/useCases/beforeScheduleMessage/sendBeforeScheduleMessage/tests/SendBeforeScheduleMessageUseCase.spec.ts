@@ -1,74 +1,74 @@
-import { createMockWhatsAppProvider } from "../../../../../../providers/whatsapp/_mocks/WhatsAppProviderMock";
-import { createMockBeforeScheduleMessageRepository } from "../../../../../../repositories/_mocks/BeforeScheduleMessageRepositoryMock";
-import { createMockPatientRepository } from "../../../../../../repositories/_mocks/PatientRepositoryMock";
-import { createMockSchedulingRepository } from "../../../../../../repositories/_mocks/SchedulingRepositoryMock";
-import { createMockWhatsAppInstanceRepository } from "../../../../../../repositories/_mocks/WhatsAppInstanceRepositoryMock";
-import { createMockWhatsAppMessageLogRepository } from "../../../../../../repositories/_mocks/WhatsAppMessageLogRepositoryMock";
-import { IAppEventListener } from "../../../../../shared/observers/EventListener";
-import { SendBeforeScheduleMessageUseCase } from "../sendBeforeScheduleMessageUseCase";
-import { ApiError } from "../../../../../../utils/ApiError";
+import { createMockWhatsAppProvider } from '../../../../../../providers/whatsapp/_mocks/WhatsAppProviderMock'
+import { createMockBeforeScheduleMessageRepository } from '../../../../../../repositories/_mocks/BeforeScheduleMessageRepositoryMock'
+import { createMockPatientRepository } from '../../../../../../repositories/_mocks/PatientRepositoryMock'
+import { createMockSchedulingRepository } from '../../../../../../repositories/_mocks/SchedulingRepositoryMock'
+import { createMockWhatsAppInstanceRepository } from '../../../../../../repositories/_mocks/WhatsAppInstanceRepositoryMock'
+import { createMockWhatsAppMessageLogRepository } from '../../../../../../repositories/_mocks/WhatsAppMessageLogRepositoryMock'
+import { IAppEventListener } from '../../../../../shared/observers/EventListener'
+import { SendBeforeScheduleMessageUseCase } from '../sendBeforeScheduleMessageUseCase'
+import { ApiError } from '../../../../../../utils/ApiError'
 
-const instanceName = "clinic-user-1";
+const instanceName = 'clinic-user-1'
 
 const registeredInstance = {
-  id: "inst-1",
-  userId: "user-1",
+  id: 'inst-1',
+  userId: 'user-1',
   instanceName,
-};
+}
 
 function createAppEventListenerMock(): IAppEventListener {
-  return { emit: vi.fn() };
+  return { emit: vi.fn() }
 }
 
 function createMessageSendStrategyEnforcerMock() {
-  return { isSendAllowed: vi.fn().mockResolvedValue(true) };
+  return { isSendAllowed: vi.fn().mockResolvedValue(true) }
 }
 
-describe("SendBeforeScheduleMessageUseCase", () => {
-  it("deve enviar mensagem renderizada quando config está ativa e provider está conectado", async () => {
+describe('SendBeforeScheduleMessageUseCase', () => {
+  it('deve enviar mensagem renderizada quando config está ativa e provider está conectado', async () => {
     const beforeScheduleMessageRepository =
-      createMockBeforeScheduleMessageRepository();
-    const patientRepository = createMockPatientRepository();
-    const schedulingRepository = createMockSchedulingRepository();
-    const whatsAppProvider = createMockWhatsAppProvider();
-    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
-    const appEventListener = createAppEventListenerMock();
+      createMockBeforeScheduleMessageRepository()
+    const patientRepository = createMockPatientRepository()
+    const schedulingRepository = createMockSchedulingRepository()
+    const whatsAppProvider = createMockWhatsAppProvider()
+    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
+    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const appEventListener = createAppEventListenerMock()
 
     whatsAppMessageLogRepository.getBySchedulingAndCampaignId.mockResolvedValue(
       null,
-    );
+    )
 
     beforeScheduleMessageRepository.getById.mockResolvedValue({
-      id: "cfg-1",
-      userId: "user-1",
-      name: "Envio",
+      id: 'cfg-1',
+      userId: 'user-1',
+      name: 'Envio',
       minutesBeforeSchedule: 60,
-      textTemplate: "Olá {{nome_paciente}}, consulta em {{data_consulta}} às {{horario_consulta}}.",
+      textTemplate: 'Olá {{nome_paciente}}, consulta em {{data_consulta}} às {{horario_consulta}}.',
       isActive: true,
-    });
+    })
 
-    whatsAppInstanceRepository.getByUserId.mockResolvedValue(registeredInstance);
-    whatsAppProvider.getConnectionState.mockResolvedValue("open");
+    whatsAppInstanceRepository.getByUserId.mockResolvedValue(registeredInstance)
+    whatsAppProvider.getConnectionState.mockResolvedValue('open')
 
     patientRepository.getById.mockResolvedValue([
-      { id: "patient-1", name: "Maria", phone: "(51) 99999 9999" } as any,
-    ]);
+      { id: 'patient-1', name: 'Maria', phone: '(51) 99999 9999' } as any,
+    ])
 
     schedulingRepository.get.mockResolvedValue([
       {
-        id: "schedule-1",
-        patientId: "patient-1",
-        date: "2025-01-01T10:00",
-        service: "Consulta",
-        status: "Agendado",
+        id: 'schedule-1',
+        patientId: 'patient-1',
+        date: '2025-01-01T10:00',
+        service: 'Consulta',
+        status: 'Agendado',
       } as any,
-    ]);
+    ])
 
     whatsAppProvider.sendMessage.mockResolvedValue({
       success: true,
-      providerMessageId: "wa-msg-1",
-    });
+      providerMessageId: 'wa-msg-1',
+    })
 
     const useCase = new SendBeforeScheduleMessageUseCase(
       beforeScheduleMessageRepository,
@@ -79,94 +79,94 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppMessageLogRepository,
       appEventListener,
       createMessageSendStrategyEnforcerMock() as any,
-    );
+    )
 
     await useCase.execute({
-      clinicId: "clinic-1",
-      userId: "user-1",
-      patientId: "patient-1",
-      schedulingId: "schedule-1",
-      beforeScheduleMessageId: "cfg-1",
-    });
+      clinicId: 'clinic-1',
+      userId: 'user-1',
+      patientId: 'patient-1',
+      schedulingId: 'schedule-1',
+      beforeScheduleMessageId: 'cfg-1',
+    })
 
     expect(
       whatsAppMessageLogRepository.getBySchedulingAndCampaignId,
     ).toHaveBeenCalledWith({
-      schedulingId: "schedule-1",
-      campaignId: "cfg-1",
-    });
-    expect(whatsAppProvider.getConnectionState).toHaveBeenCalledWith(instanceName);
+      schedulingId: 'schedule-1',
+      campaignId: 'cfg-1',
+    })
+    expect(whatsAppProvider.getConnectionState).toHaveBeenCalledWith(instanceName)
     expect(whatsAppProvider.sendMessage).toHaveBeenCalledWith({
-      to: "5551999999999",
-      body: "Olá Maria, consulta em 01/01/2025 às 10:00.",
+      to: '5551999999999',
+      body: 'Olá Maria, consulta em 01/01/2025 às 10:00.',
       instanceName,
-    });
+    })
 
     expect(whatsAppMessageLogRepository.save).toHaveBeenCalledWith(
       expect.objectContaining({
-        userId: "user-1",
-        patientId: "patient-1",
-        schedulingId: "schedule-1",
-        scheduleMessageType: "beforeSchedule",
-        scheduleMessageConfigId: "cfg-1",
-        message: "Olá Maria, consulta em 01/01/2025 às 10:00.",
-        toPhone: "5551999999999",
+        userId: 'user-1',
+        patientId: 'patient-1',
+        schedulingId: 'schedule-1',
+        scheduleMessageType: 'beforeSchedule',
+        scheduleMessageConfigId: 'cfg-1',
+        message: 'Olá Maria, consulta em 01/01/2025 às 10:00.',
+        toPhone: '5551999999999',
         instanceName,
-        status: "PENDING",
-        providerMessageId: "wa-msg-1",
+        status: 'PENDING',
+        providerMessageId: 'wa-msg-1',
       }),
-    );
+    )
 
     expect(appEventListener.emit).toHaveBeenCalledWith(
-      "beforeScheduleMessageSend",
+      'beforeScheduleMessageSend',
       expect.objectContaining({
-        userId: "user-1",
-        patientId: "patient-1",
-        schedulingId: "schedule-1",
-        beforeScheduleMessageId: "cfg-1",
+        userId: 'user-1',
+        patientId: 'patient-1',
+        schedulingId: 'schedule-1',
+        beforeScheduleMessageId: 'cfg-1',
         instanceName,
-        toPhone: "5551999999999",
-        providerMessageId: "wa-msg-1",
+        toPhone: '5551999999999',
+        providerMessageId: 'wa-msg-1',
       }),
-    );
-  });
+    )
+  })
 
-  it("deve persistir log PENDING sem providerMessageId quando a API não retorna id", async () => {
+  it('deve persistir log PENDING sem providerMessageId quando a API não retorna id', async () => {
     const beforeScheduleMessageRepository =
-      createMockBeforeScheduleMessageRepository();
-    const patientRepository = createMockPatientRepository();
-    const schedulingRepository = createMockSchedulingRepository();
-    const whatsAppProvider = createMockWhatsAppProvider();
-    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
-    const appEventListener = createAppEventListenerMock();
+      createMockBeforeScheduleMessageRepository()
+    const patientRepository = createMockPatientRepository()
+    const schedulingRepository = createMockSchedulingRepository()
+    const whatsAppProvider = createMockWhatsAppProvider()
+    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
+    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const appEventListener = createAppEventListenerMock()
 
     whatsAppMessageLogRepository.getBySchedulingAndCampaignId.mockResolvedValue(
       null,
-    );
+    )
 
     beforeScheduleMessageRepository.getById.mockResolvedValue({
-      id: "cfg-1",
-      userId: "user-1",
-      name: "x",
+      id: 'cfg-1',
+      userId: 'user-1',
+      name: 'x',
       minutesBeforeSchedule: 60,
-      textTemplate: "Oi {{nome_paciente}}",
+      textTemplate: 'Oi {{nome_paciente}}',
       isActive: true,
-    });
-    whatsAppInstanceRepository.getByUserId.mockResolvedValue(registeredInstance);
-    whatsAppProvider.getConnectionState.mockResolvedValue("open");
+    })
+    whatsAppInstanceRepository.getByUserId.mockResolvedValue(registeredInstance)
+    whatsAppProvider.getConnectionState.mockResolvedValue('open')
     patientRepository.getById.mockResolvedValue([
-      { id: "patient-1", name: "João", phone: "51988888888" } as any,
-    ]);
+      { id: 'patient-1', name: 'João', phone: '51988888888' } as any,
+    ])
     schedulingRepository.get.mockResolvedValue([
       {
-        id: "schedule-1",
-        patientId: "patient-1",
-        date: "2025-01-01T10:00",
-        status: "Agendado",
+        id: 'schedule-1',
+        patientId: 'patient-1',
+        date: '2025-01-01T10:00',
+        status: 'Agendado',
       } as any,
-    ]);
-    whatsAppProvider.sendMessage.mockResolvedValue({ success: true });
+    ])
+    whatsAppProvider.sendMessage.mockResolvedValue({ success: true })
 
     const useCase = new SendBeforeScheduleMessageUseCase(
       beforeScheduleMessageRepository,
@@ -177,47 +177,47 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppMessageLogRepository,
       appEventListener,
       createMessageSendStrategyEnforcerMock() as any,
-    );
+    )
 
     await useCase.execute({
-      clinicId: "clinic-1",
-      userId: "user-1",
-      patientId: "patient-1",
-      schedulingId: "schedule-1",
-      beforeScheduleMessageId: "cfg-1",
-    });
+      clinicId: 'clinic-1',
+      userId: 'user-1',
+      patientId: 'patient-1',
+      schedulingId: 'schedule-1',
+      beforeScheduleMessageId: 'cfg-1',
+    })
 
     expect(whatsAppMessageLogRepository.save).toHaveBeenCalledWith(
       expect.objectContaining({
-        status: "PENDING",
+        status: 'PENDING',
         providerMessageId: null,
-        message: "Oi João",
+        message: 'Oi João',
       }),
-    );
+    )
 
     expect(appEventListener.emit).toHaveBeenCalledWith(
-      "beforeScheduleMessageSend",
+      'beforeScheduleMessageSend',
       expect.objectContaining({
         providerMessageId: null,
       }),
-    );
-  });
+    )
+  })
 
-  it("não deve reenviar quando já existe log para o mesmo agendamento e campanha", async () => {
+  it('não deve reenviar quando já existe log para o mesmo agendamento e campanha', async () => {
     const beforeScheduleMessageRepository =
-      createMockBeforeScheduleMessageRepository();
-    const patientRepository = createMockPatientRepository();
-    const schedulingRepository = createMockSchedulingRepository();
-    const whatsAppProvider = createMockWhatsAppProvider();
-    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
-    const appEventListener = createAppEventListenerMock();
+      createMockBeforeScheduleMessageRepository()
+    const patientRepository = createMockPatientRepository()
+    const schedulingRepository = createMockSchedulingRepository()
+    const whatsAppProvider = createMockWhatsAppProvider()
+    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
+    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const appEventListener = createAppEventListenerMock()
 
     whatsAppMessageLogRepository.getBySchedulingAndCampaignId.mockResolvedValue({
-      id: "log-existente",
-      schedulingId: "schedule-1",
-      scheduleMessageConfigId: "cfg-1",
-    } as any);
+      id: 'log-existente',
+      schedulingId: 'schedule-1',
+      scheduleMessageConfigId: 'cfg-1',
+    } as any)
 
     const useCase = new SendBeforeScheduleMessageUseCase(
       beforeScheduleMessageRepository,
@@ -228,63 +228,63 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppMessageLogRepository,
       appEventListener,
       createMessageSendStrategyEnforcerMock() as any,
-    );
+    )
 
     await useCase.execute({
-      clinicId: "clinic-1",
-      userId: "user-1",
-      patientId: "patient-1",
-      schedulingId: "schedule-1",
-      beforeScheduleMessageId: "cfg-1",
-    });
+      clinicId: 'clinic-1',
+      userId: 'user-1',
+      patientId: 'patient-1',
+      schedulingId: 'schedule-1',
+      beforeScheduleMessageId: 'cfg-1',
+    })
 
     expect(
       whatsAppMessageLogRepository.getBySchedulingAndCampaignId,
     ).toHaveBeenCalledWith({
-      schedulingId: "schedule-1",
-      campaignId: "cfg-1",
-    });
-    expect(schedulingRepository.get).not.toHaveBeenCalled();
-    expect(beforeScheduleMessageRepository.getById).not.toHaveBeenCalled();
-    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled();
-    expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled();
-    expect(appEventListener.emit).not.toHaveBeenCalled();
-  });
+      schedulingId: 'schedule-1',
+      campaignId: 'cfg-1',
+    })
+    expect(schedulingRepository.get).not.toHaveBeenCalled()
+    expect(beforeScheduleMessageRepository.getById).not.toHaveBeenCalled()
+    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled()
+    expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled()
+    expect(appEventListener.emit).not.toHaveBeenCalled()
+  })
 
-  it("deve persistir log FAILED quando o provider retorna falha", async () => {
+  it('deve persistir log FAILED quando o provider retorna falha', async () => {
     const beforeScheduleMessageRepository =
-      createMockBeforeScheduleMessageRepository();
-    const patientRepository = createMockPatientRepository();
-    const schedulingRepository = createMockSchedulingRepository();
-    const whatsAppProvider = createMockWhatsAppProvider();
-    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
-    const appEventListener = createAppEventListenerMock();
+      createMockBeforeScheduleMessageRepository()
+    const patientRepository = createMockPatientRepository()
+    const schedulingRepository = createMockSchedulingRepository()
+    const whatsAppProvider = createMockWhatsAppProvider()
+    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
+    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const appEventListener = createAppEventListenerMock()
 
     whatsAppMessageLogRepository.getBySchedulingAndCampaignId.mockResolvedValue(
       null,
-    );
+    )
 
     beforeScheduleMessageRepository.getById.mockResolvedValue({
-      id: "cfg-1",
-      userId: "user-1",
-      name: "x",
+      id: 'cfg-1',
+      userId: 'user-1',
+      name: 'x',
       minutesBeforeSchedule: 60,
-      textTemplate: "x",
+      textTemplate: 'x',
       isActive: true,
-    });
-    whatsAppInstanceRepository.getByUserId.mockResolvedValue(registeredInstance);
-    whatsAppProvider.getConnectionState.mockResolvedValue("open");
+    })
+    whatsAppInstanceRepository.getByUserId.mockResolvedValue(registeredInstance)
+    whatsAppProvider.getConnectionState.mockResolvedValue('open')
     patientRepository.getById.mockResolvedValue([
-      { id: "patient-1", name: "Maria", phone: "51999999999" } as any,
-    ]);
+      { id: 'patient-1', name: 'Maria', phone: '51999999999' } as any,
+    ])
     schedulingRepository.get.mockResolvedValue([
-      { id: "schedule-1", patientId: "patient-1", status: "Agendado" } as any,
-    ]);
+      { id: 'schedule-1', patientId: 'patient-1', status: 'Agendado' } as any,
+    ])
     whatsAppProvider.sendMessage.mockResolvedValue({
       success: false,
-      errorMessage: "timeout",
-    });
+      errorMessage: 'timeout',
+    })
 
     const useCase = new SendBeforeScheduleMessageUseCase(
       beforeScheduleMessageRepository,
@@ -295,64 +295,64 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppMessageLogRepository,
       appEventListener,
       createMessageSendStrategyEnforcerMock() as any,
-    );
+    )
 
     await useCase.execute({
-      clinicId: "clinic-1",
-      userId: "user-1",
-      patientId: "patient-1",
-      schedulingId: "schedule-1",
-      beforeScheduleMessageId: "cfg-1",
-    });
+      clinicId: 'clinic-1',
+      userId: 'user-1',
+      patientId: 'patient-1',
+      schedulingId: 'schedule-1',
+      beforeScheduleMessageId: 'cfg-1',
+    })
 
     expect(whatsAppMessageLogRepository.save).toHaveBeenCalledWith(
       expect.objectContaining({
-        status: "FAILED",
+        status: 'FAILED',
         providerMessageId: null,
-        errorMessage: "timeout",
+        errorMessage: 'timeout',
       }),
-    );
-  });
+    )
+  })
 
-  it("não deve enviar quando o agendamento está cancelado", async () => {
+  it('não deve enviar quando o agendamento está cancelado', async () => {
     const beforeScheduleMessageRepository =
-      createMockBeforeScheduleMessageRepository();
-    const patientRepository = createMockPatientRepository();
-    const schedulingRepository = createMockSchedulingRepository();
-    const whatsAppProvider = createMockWhatsAppProvider();
-    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
-    const appEventListener = createAppEventListenerMock();
+      createMockBeforeScheduleMessageRepository()
+    const patientRepository = createMockPatientRepository()
+    const schedulingRepository = createMockSchedulingRepository()
+    const whatsAppProvider = createMockWhatsAppProvider()
+    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
+    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const appEventListener = createAppEventListenerMock()
 
     whatsAppMessageLogRepository.getBySchedulingAndCampaignId.mockResolvedValue(
       null,
-    );
+    )
 
     beforeScheduleMessageRepository.getById.mockResolvedValue({
-      id: "cfg-1",
-      userId: "user-1",
-      name: "Envio",
+      id: 'cfg-1',
+      userId: 'user-1',
+      name: 'Envio',
       minutesBeforeSchedule: 60,
-      textTemplate: "x",
+      textTemplate: 'x',
       isActive: true,
-    });
+    })
 
-    whatsAppInstanceRepository.getByUserId.mockResolvedValue(registeredInstance);
-    whatsAppProvider.getConnectionState.mockResolvedValue("open");
+    whatsAppInstanceRepository.getByUserId.mockResolvedValue(registeredInstance)
+    whatsAppProvider.getConnectionState.mockResolvedValue('open')
 
     patientRepository.getById.mockResolvedValue([
-      { id: "patient-1", name: "Maria", phone: "(51) 99999 9999" } as any,
-    ]);
+      { id: 'patient-1', name: 'Maria', phone: '(51) 99999 9999' } as any,
+    ])
 
     schedulingRepository.get.mockResolvedValue([
       {
-        id: "schedule-1",
-        patientId: "patient-1",
-        date: "2025-01-01T10:00",
-        service: "Consulta",
-        status: "Cancelado",
+        id: 'schedule-1',
+        patientId: 'patient-1',
+        date: '2025-01-01T10:00',
+        service: 'Consulta',
+        status: 'Cancelado',
       } as any,
-    ]);
+    ])
 
     const useCase = new SendBeforeScheduleMessageUseCase(
       beforeScheduleMessageRepository,
@@ -363,51 +363,51 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppMessageLogRepository,
       appEventListener,
       createMessageSendStrategyEnforcerMock() as any,
-    );
+    )
 
     await useCase.execute({
-      clinicId: "clinic-1",
-      userId: "user-1",
-      patientId: "patient-1",
-      schedulingId: "schedule-1",
-      beforeScheduleMessageId: "cfg-1",
-    });
+      clinicId: 'clinic-1',
+      userId: 'user-1',
+      patientId: 'patient-1',
+      schedulingId: 'schedule-1',
+      beforeScheduleMessageId: 'cfg-1',
+    })
 
-    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled();
-    expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled();
-  });
+    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled()
+    expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled()
+  })
 
-  it("não deve enviar quando config está inativa", async () => {
+  it('não deve enviar quando config está inativa', async () => {
     const beforeScheduleMessageRepository =
-      createMockBeforeScheduleMessageRepository();
-    const patientRepository = createMockPatientRepository();
-    const schedulingRepository = createMockSchedulingRepository();
-    const whatsAppProvider = createMockWhatsAppProvider();
-    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
-    const appEventListener = createAppEventListenerMock();
+      createMockBeforeScheduleMessageRepository()
+    const patientRepository = createMockPatientRepository()
+    const schedulingRepository = createMockSchedulingRepository()
+    const whatsAppProvider = createMockWhatsAppProvider()
+    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
+    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const appEventListener = createAppEventListenerMock()
 
     whatsAppMessageLogRepository.getBySchedulingAndCampaignId.mockResolvedValue(
       null,
-    );
+    )
 
     beforeScheduleMessageRepository.getById.mockResolvedValue({
-      id: "cfg-1",
-      userId: "user-1",
-      name: "Inativa",
+      id: 'cfg-1',
+      userId: 'user-1',
+      name: 'Inativa',
       minutesBeforeSchedule: 60,
-      textTemplate: "x",
+      textTemplate: 'x',
       isActive: false,
-    });
+    })
 
     schedulingRepository.get.mockResolvedValue([
       {
-        id: "schedule-1",
-        patientId: "patient-1",
-        date: "2025-01-01T10:00",
-        status: "Agendado",
+        id: 'schedule-1',
+        patientId: 'patient-1',
+        date: '2025-01-01T10:00',
+        status: 'Agendado',
       } as any,
-    ]);
+    ])
 
     const useCase = new SendBeforeScheduleMessageUseCase(
       beforeScheduleMessageRepository,
@@ -418,63 +418,63 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppMessageLogRepository,
       appEventListener,
       createMessageSendStrategyEnforcerMock() as any,
-    );
+    )
 
     await useCase.execute({
-      clinicId: "clinic-1",
-      userId: "user-1",
-      patientId: "patient-1",
-      schedulingId: "schedule-1",
-      beforeScheduleMessageId: "cfg-1",
-    });
+      clinicId: 'clinic-1',
+      userId: 'user-1',
+      patientId: 'patient-1',
+      schedulingId: 'schedule-1',
+      beforeScheduleMessageId: 'cfg-1',
+    })
 
-    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled();
-    expect(patientRepository.getById).not.toHaveBeenCalled();
-    expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled();
-  });
+    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled()
+    expect(patientRepository.getById).not.toHaveBeenCalled()
+    expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled()
+  })
 
-  it("não deve enviar quando a estratégia (isSendAllowed) retorna false", async () => {
+  it('não deve enviar quando a estratégia (isSendAllowed) retorna false', async () => {
     const beforeScheduleMessageRepository =
-      createMockBeforeScheduleMessageRepository();
-    const patientRepository = createMockPatientRepository();
-    const schedulingRepository = createMockSchedulingRepository();
-    const whatsAppProvider = createMockWhatsAppProvider();
-    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
-    const appEventListener = createAppEventListenerMock();
+      createMockBeforeScheduleMessageRepository()
+    const patientRepository = createMockPatientRepository()
+    const schedulingRepository = createMockSchedulingRepository()
+    const whatsAppProvider = createMockWhatsAppProvider()
+    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
+    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const appEventListener = createAppEventListenerMock()
     const messageSendStrategyEnforcer = {
       isSendAllowed: vi.fn().mockResolvedValue(false),
-    };
+    }
 
     whatsAppMessageLogRepository.getBySchedulingAndCampaignId.mockResolvedValue(
       null,
-    );
+    )
 
     beforeScheduleMessageRepository.getById.mockResolvedValue({
-      id: "cfg-1",
-      userId: "user-1",
-      name: "Envio",
+      id: 'cfg-1',
+      userId: 'user-1',
+      name: 'Envio',
       minutesBeforeSchedule: 60,
-      textTemplate: "Olá {{nome_paciente}}",
+      textTemplate: 'Olá {{nome_paciente}}',
       isActive: true,
-    });
+    })
 
-    whatsAppInstanceRepository.getByUserId.mockResolvedValue(registeredInstance);
-    whatsAppProvider.getConnectionState.mockResolvedValue("open");
+    whatsAppInstanceRepository.getByUserId.mockResolvedValue(registeredInstance)
+    whatsAppProvider.getConnectionState.mockResolvedValue('open')
 
     patientRepository.getById.mockResolvedValue([
-      { id: "patient-1", name: "Maria", phone: "(51) 99999 9999" } as any,
-    ]);
+      { id: 'patient-1', name: 'Maria', phone: '(51) 99999 9999' } as any,
+    ])
 
     schedulingRepository.get.mockResolvedValue([
       {
-        id: "schedule-1",
-        patientId: "patient-1",
-        date: "2025-01-01T10:00",
-        service: "Consulta",
-        status: "Agendado",
+        id: 'schedule-1',
+        patientId: 'patient-1',
+        date: '2025-01-01T10:00',
+        service: 'Consulta',
+        status: 'Agendado',
       } as any,
-    ]);
+    ])
 
     const useCase = new SendBeforeScheduleMessageUseCase(
       beforeScheduleMessageRepository,
@@ -485,51 +485,51 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppMessageLogRepository,
       appEventListener,
       messageSendStrategyEnforcer as any,
-    );
+    )
 
     await useCase.execute({
-      clinicId: "clinic-1",
-      userId: "user-1",
-      patientId: "patient-1",
-      schedulingId: "schedule-1",
-      beforeScheduleMessageId: "cfg-1",
-    });
+      clinicId: 'clinic-1',
+      userId: 'user-1',
+      patientId: 'patient-1',
+      schedulingId: 'schedule-1',
+      beforeScheduleMessageId: 'cfg-1',
+    })
 
     expect(messageSendStrategyEnforcer.isSendAllowed).toHaveBeenCalledWith({
-      userId: "user-1",
-      clinicId: "clinic-1",
-      campaignId: "cfg-1",
-      patientId: "patient-1",
-    });
-    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled();
-    expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled();
-    expect(appEventListener.emit).not.toHaveBeenCalled();
-  });
+      userId: 'user-1',
+      clinicId: 'clinic-1',
+      campaignId: 'cfg-1',
+      patientId: 'patient-1',
+    })
+    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled()
+    expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled()
+    expect(appEventListener.emit).not.toHaveBeenCalled()
+  })
 
-  it("não deve enviar quando config está ausente", async () => {
+  it('não deve enviar quando config está ausente', async () => {
     const beforeScheduleMessageRepository =
-      createMockBeforeScheduleMessageRepository();
-    const patientRepository = createMockPatientRepository();
-    const schedulingRepository = createMockSchedulingRepository();
-    const whatsAppProvider = createMockWhatsAppProvider();
-    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
-    const appEventListener = createAppEventListenerMock();
+      createMockBeforeScheduleMessageRepository()
+    const patientRepository = createMockPatientRepository()
+    const schedulingRepository = createMockSchedulingRepository()
+    const whatsAppProvider = createMockWhatsAppProvider()
+    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
+    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const appEventListener = createAppEventListenerMock()
 
     whatsAppMessageLogRepository.getBySchedulingAndCampaignId.mockResolvedValue(
       null,
-    );
+    )
 
-    beforeScheduleMessageRepository.getById.mockResolvedValue(null);
+    beforeScheduleMessageRepository.getById.mockResolvedValue(null)
 
     schedulingRepository.get.mockResolvedValue([
       {
-        id: "schedule-1",
-        patientId: "patient-1",
-        date: "2025-01-01T10:00",
-        status: "Agendado",
+        id: 'schedule-1',
+        patientId: 'patient-1',
+        date: '2025-01-01T10:00',
+        status: 'Agendado',
       } as any,
-    ]);
+    ])
 
     const useCase = new SendBeforeScheduleMessageUseCase(
       beforeScheduleMessageRepository,
@@ -540,51 +540,51 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppMessageLogRepository,
       appEventListener,
       createMessageSendStrategyEnforcerMock() as any,
-    );
+    )
 
     await useCase.execute({
-      clinicId: "clinic-1",
-      userId: "user-1",
-      patientId: "patient-1",
-      schedulingId: "schedule-1",
-      beforeScheduleMessageId: "cfg-1",
-    });
+      clinicId: 'clinic-1',
+      userId: 'user-1',
+      patientId: 'patient-1',
+      schedulingId: 'schedule-1',
+      beforeScheduleMessageId: 'cfg-1',
+    })
 
-    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled();
-    expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled();
-  });
+    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled()
+    expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled()
+  })
 
-  it("deve lançar ApiError quando não existe instância registrada no banco", async () => {
+  it('deve lançar ApiError quando não existe instância registrada no banco', async () => {
     const beforeScheduleMessageRepository =
-      createMockBeforeScheduleMessageRepository();
-    const patientRepository = createMockPatientRepository();
-    const schedulingRepository = createMockSchedulingRepository();
-    const whatsAppProvider = createMockWhatsAppProvider();
-    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
-    const appEventListener = createAppEventListenerMock();
+      createMockBeforeScheduleMessageRepository()
+    const patientRepository = createMockPatientRepository()
+    const schedulingRepository = createMockSchedulingRepository()
+    const whatsAppProvider = createMockWhatsAppProvider()
+    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
+    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const appEventListener = createAppEventListenerMock()
 
     whatsAppMessageLogRepository.getBySchedulingAndCampaignId.mockResolvedValue(
       null,
-    );
+    )
 
     beforeScheduleMessageRepository.getById.mockResolvedValue({
-      id: "cfg-1",
-      userId: "user-1",
-      name: "x",
+      id: 'cfg-1',
+      userId: 'user-1',
+      name: 'x',
       minutesBeforeSchedule: 60,
-      textTemplate: "x",
+      textTemplate: 'x',
       isActive: true,
-    });
+    })
     schedulingRepository.get.mockResolvedValue([
       {
-        id: "schedule-1",
-        patientId: "patient-1",
-        date: "2025-01-01T10:00",
-        status: "Agendado",
+        id: 'schedule-1',
+        patientId: 'patient-1',
+        date: '2025-01-01T10:00',
+        status: 'Agendado',
       } as any,
-    ]);
-    whatsAppInstanceRepository.getByUserId.mockResolvedValue(null);
+    ])
+    whatsAppInstanceRepository.getByUserId.mockResolvedValue(null)
 
     const useCase = new SendBeforeScheduleMessageUseCase(
       beforeScheduleMessageRepository,
@@ -595,55 +595,55 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppMessageLogRepository,
       appEventListener,
       createMessageSendStrategyEnforcerMock() as any,
-    );
+    )
 
     await expect(
       useCase.execute({
-        userId: "user-1",
-        clinicId: "clinic-1",
-        patientId: "patient-1",
-        schedulingId: "schedule-1",
-        beforeScheduleMessageId: "cfg-1",
+        userId: 'user-1',
+        clinicId: 'clinic-1',
+        patientId: 'patient-1',
+        schedulingId: 'schedule-1',
+        beforeScheduleMessageId: 'cfg-1',
       }),
-    ).rejects.toThrow(ApiError);
+    ).rejects.toThrow(ApiError)
 
-    expect(whatsAppProvider.getConnectionState).not.toHaveBeenCalled();
-    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled();
-    expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled();
-  });
+    expect(whatsAppProvider.getConnectionState).not.toHaveBeenCalled()
+    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled()
+    expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled()
+  })
 
-  it("deve lançar ApiError quando o provider reporta WhatsApp desconectado", async () => {
+  it('deve lançar ApiError quando o provider reporta WhatsApp desconectado', async () => {
     const beforeScheduleMessageRepository =
-      createMockBeforeScheduleMessageRepository();
-    const patientRepository = createMockPatientRepository();
-    const schedulingRepository = createMockSchedulingRepository();
-    const whatsAppProvider = createMockWhatsAppProvider();
-    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository();
-    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository();
-    const appEventListener = createAppEventListenerMock();
+      createMockBeforeScheduleMessageRepository()
+    const patientRepository = createMockPatientRepository()
+    const schedulingRepository = createMockSchedulingRepository()
+    const whatsAppProvider = createMockWhatsAppProvider()
+    const whatsAppInstanceRepository = createMockWhatsAppInstanceRepository()
+    const whatsAppMessageLogRepository = createMockWhatsAppMessageLogRepository()
+    const appEventListener = createAppEventListenerMock()
 
     whatsAppMessageLogRepository.getBySchedulingAndCampaignId.mockResolvedValue(
       null,
-    );
+    )
 
     beforeScheduleMessageRepository.getById.mockResolvedValue({
-      id: "cfg-1",
-      userId: "user-1",
-      name: "x",
+      id: 'cfg-1',
+      userId: 'user-1',
+      name: 'x',
       minutesBeforeSchedule: 60,
-      textTemplate: "x",
+      textTemplate: 'x',
       isActive: true,
-    });
+    })
     schedulingRepository.get.mockResolvedValue([
       {
-        id: "schedule-1",
-        patientId: "patient-1",
-        date: "2025-01-01T10:00",
-        status: "Agendado",
+        id: 'schedule-1',
+        patientId: 'patient-1',
+        date: '2025-01-01T10:00',
+        status: 'Agendado',
       } as any,
-    ]);
-    whatsAppInstanceRepository.getByUserId.mockResolvedValue(registeredInstance);
-    whatsAppProvider.getConnectionState.mockResolvedValue("close");
+    ])
+    whatsAppInstanceRepository.getByUserId.mockResolvedValue(registeredInstance)
+    whatsAppProvider.getConnectionState.mockResolvedValue('close')
 
     const useCase = new SendBeforeScheduleMessageUseCase(
       beforeScheduleMessageRepository,
@@ -654,19 +654,19 @@ describe("SendBeforeScheduleMessageUseCase", () => {
       whatsAppMessageLogRepository,
       appEventListener,
       createMessageSendStrategyEnforcerMock() as any,
-    );
+    )
 
     await expect(
       useCase.execute({
-        userId: "user-1",
-        clinicId: "clinic-1",
-        patientId: "patient-1",
-        schedulingId: "schedule-1",
-        beforeScheduleMessageId: "cfg-1",
+        userId: 'user-1',
+        clinicId: 'clinic-1',
+        patientId: 'patient-1',
+        schedulingId: 'schedule-1',
+        beforeScheduleMessageId: 'cfg-1',
       }),
-    ).rejects.toThrow(ApiError);
+    ).rejects.toThrow(ApiError)
 
-    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled();
-    expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled();
-  });
-});
+    expect(whatsAppProvider.sendMessage).not.toHaveBeenCalled()
+    expect(whatsAppMessageLogRepository.save).not.toHaveBeenCalled()
+  })
+})

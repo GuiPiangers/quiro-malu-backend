@@ -1,21 +1,21 @@
-import { NotificationDTO } from "../../core/notification/models/Notification";
-import { SubscriptionModel } from "../../database/mongoose/schemas/Sbuscription";
+import { NotificationDTO } from '../../core/notification/models/Notification'
+import { SubscriptionModel } from '../../database/mongoose/schemas/Sbuscription'
 import {
   GetSubscriptionsParams,
   IPushNotificationProvider,
   SubscribeParams,
   Subscription,
   UnsubscribeParams,
-} from "./IPushNotificationProvider";
-import PushNotifications from "node-pushnotifications";
+} from './IPushNotificationProvider'
+import PushNotifications from 'node-pushnotifications'
 
-const publicVapidKey = process.env.VAPID_PUBLIC_KEY!;
-const privateVapidKey = process.env.VAPID_PRIVATE_KEY!;
-const email = process.env.EMAIL!;
+const publicVapidKey = process.env.VAPID_PUBLIC_KEY!
+const privateVapidKey = process.env.VAPID_PRIVATE_KEY!
+const email = process.env.EMAIL!
 
 export class PushNotificationProvider implements IPushNotificationProvider {
   updateSubscription(data: SubscribeParams): Promise<void> {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.')
   }
 
   async send(
@@ -29,21 +29,21 @@ export class PushNotificationProvider implements IPushNotificationProvider {
           publicKey: publicVapidKey,
           privateKey: privateVapidKey,
         },
-        gcmAPIKey: "gcmkey",
+        gcmAPIKey: 'gcmkey',
         TTL: 2419200,
-        contentEncoding: "aes128gcm",
+        contentEncoding: 'aes128gcm',
         headers: {},
       },
       isAlwaysUseFCM: false,
-    };
-    const push = new PushNotifications(settings);
+    }
+    const push = new PushNotifications(settings)
 
-    const payload = { title, body: message };
+    const payload = { title, body: message }
     push.send(subscription, payload, (err, result) => {
       if (err) {
-        console.log(err);
+        console.log(err)
       }
-    });
+    })
   }
 
   async subscribe({ userId, subscription }: SubscribeParams): Promise<void> {
@@ -51,13 +51,13 @@ export class PushNotificationProvider implements IPushNotificationProvider {
       { userId },
       { $push: { subscriptions: subscription } },
       { upsert: true, new: true },
-    );
+    )
   }
 
   async unsubscribe({ userId }: UnsubscribeParams): Promise<void> {
     await SubscriptionModel.deleteOne({
       userId,
-    });
+    })
   }
 
   async getAllowedSubscriptions({ userId }: GetSubscriptionsParams): Promise<{
@@ -66,6 +66,6 @@ export class PushNotificationProvider implements IPushNotificationProvider {
   } | null> {
     return await SubscriptionModel.findOne({
       userId,
-    });
+    })
   }
 }

@@ -1,4 +1,4 @@
-import { Clinic } from "../../core/clinics/models/Clinic";
+import { Clinic } from '../../core/clinics/models/Clinic'
 
 export interface IClinicRepository {
   save(clinic: Clinic): Promise<Clinic>;

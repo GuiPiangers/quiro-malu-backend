@@ -1,4 +1,4 @@
-import { LocationDTO } from "../../core/shared/Location";
+import { LocationDTO } from '../../core/shared/Location'
 
 export interface ILocationRepository {
   save(location: LocationDTO, patientId: string, clinicId: string): Promise<void>;

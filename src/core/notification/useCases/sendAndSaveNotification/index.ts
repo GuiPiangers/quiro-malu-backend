@@ -1,10 +1,10 @@
-import { MongoNotificationRepository } from "../../../../repositories/notification/MongoNotificationRepository";
-import SaveSendNotificationUseCase from "./sendAndSaveNotification";
+import { MongoNotificationRepository } from '../../../../repositories/notification/MongoNotificationRepository'
+import SaveSendNotificationUseCase from './sendAndSaveNotification'
 
-const notificationRepository = new MongoNotificationRepository();
+const notificationRepository = new MongoNotificationRepository()
 
 const sendAndSaveNotificationUseCase = new SaveSendNotificationUseCase(
   notificationRepository,
-);
+)
 
-export { sendAndSaveNotificationUseCase };
+export { sendAndSaveNotificationUseCase }

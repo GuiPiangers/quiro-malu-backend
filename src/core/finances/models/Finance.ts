@@ -1,11 +1,11 @@
-import { DateTime } from "../../shared/Date";
-import { Entity } from "../../shared/Entity";
+import { DateTime } from '../../shared/Date'
+import { Entity } from '../../shared/Entity'
 
 export interface FinanceDTO {
   id?: string;
   date: string;
   description: string;
-  type: "income" | "expense";
+  type: 'income' | 'expense';
   paymentMethod: string;
   value: number;
   patientId?: string;
@@ -14,14 +14,14 @@ export interface FinanceDTO {
 }
 
 export class Finance extends Entity {
-  readonly description: string;
-  readonly date: string;
-  readonly type: "income" | "expense";
-  readonly paymentMethod: string;
-  readonly value: number;
-  readonly patientId?: string;
-  readonly schedulingId?: string;
-  readonly service?: string;
+  readonly description: string
+  readonly date: string
+  readonly type: 'income' | 'expense'
+  readonly paymentMethod: string
+  readonly value: number
+  readonly patientId?: string
+  readonly schedulingId?: string
+  readonly service?: string
 
   constructor({
     date,
@@ -34,16 +34,16 @@ export class Finance extends Entity {
     schedulingId,
     service,
   }: FinanceDTO) {
-    super(id);
+    super(id)
 
-    this.date = new DateTime(date).dateTime;
-    this.description = description;
-    this.type = type;
-    this.paymentMethod = paymentMethod;
-    this.value = value;
-    this.patientId = patientId;
-    this.schedulingId = schedulingId;
-    this.service = service;
+    this.date = new DateTime(date).dateTime
+    this.description = description
+    this.type = type
+    this.paymentMethod = paymentMethod
+    this.value = value
+    this.patientId = patientId
+    this.schedulingId = schedulingId
+    this.service = service
   }
 
   getDTO(): FinanceDTO {
@@ -57,6 +57,6 @@ export class Finance extends Entity {
       patientId: this.patientId,
       schedulingId: this.schedulingId,
       service: this.service,
-    };
+    }
   }
 }

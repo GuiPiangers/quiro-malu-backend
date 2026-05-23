@@ -1,19 +1,19 @@
-import { BlockSchedule } from "../../core/scheduling/models/BlockSchedule";
-import { ETableNames } from "../../database/ETableNames";
+import { BlockSchedule } from '../../core/scheduling/models/BlockSchedule'
+import { ETableNames } from '../../database/ETableNames'
 import {
   BlockScheduleDeleteParams,
   BlockScheduleListBetweenDatesParams,
   IBlockScheduleRepository,
-} from "./IBlockScheduleRepository";
-import { BlockScheduleDto } from "../../core/scheduling/models/dtos/BlockSchedule.dto";
-import { DateTime } from "../../core/shared/Date";
-import type { Knex } from "knex";
+} from './IBlockScheduleRepository'
+import { BlockScheduleDto } from '../../core/scheduling/models/dtos/BlockSchedule.dto'
+import { DateTime } from '../../core/shared/Date'
+import type { Knex } from 'knex'
 
 export class BlockScheduleRepository implements IBlockScheduleRepository {
   constructor(private readonly knex: Knex) {}
 
   async delete({ id, userId }: BlockScheduleDeleteParams): Promise<void> {
-    await this.knex(ETableNames.BLOCK_SCHEDULES).where({ userId, id }).del();
+    await this.knex(ETableNames.BLOCK_SCHEDULES).where({ userId, id }).del()
   }
 
   async edit(
@@ -26,8 +26,8 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
         startDate: startDate.dateTime,
         endDate: endDate.dateTime,
       })
-      .where("id", id)
-      .andWhere("userId", userId);
+      .where('id', id)
+      .andWhere('userId', userId)
   }
 
   async findById(id: string, userId: string): Promise<BlockSchedule | null> {
@@ -35,24 +35,24 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
       ETableNames.BLOCK_SCHEDULES,
     )
       .select(
-        "id",
-        "userId",
-        "description",
-        this.knex.raw(`DATE_FORMAT(startDate, '%Y-%m-%dT%H:%i') as date`),
-        this.knex.raw(`DATE_FORMAT(endDate, '%Y-%m-%dT%H:%i') as endDate`),
+        'id',
+        'userId',
+        'description',
+        this.knex.raw('DATE_FORMAT(startDate, \'%Y-%m-%dT%H:%i\') as date'),
+        this.knex.raw('DATE_FORMAT(endDate, \'%Y-%m-%dT%H:%i\') as endDate'),
       )
       .first()
       .where({
         userId,
         id,
-      });
+      })
 
-    if (!blockSchedulesDto) return null;
+    if (!blockSchedulesDto) return null
 
-    const date = new DateTime(blockSchedulesDto.date);
-    const endDate = new DateTime(blockSchedulesDto.endDate);
+    const date = new DateTime(blockSchedulesDto.date)
+    const endDate = new DateTime(blockSchedulesDto.endDate)
 
-    return new BlockSchedule({ ...blockSchedulesDto, date, endDate });
+    return new BlockSchedule({ ...blockSchedulesDto, date, endDate })
   }
 
   async count({
@@ -61,15 +61,15 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
     userId,
   }: BlockScheduleListBetweenDatesParams): Promise<{ total: number }> {
     const result = await this.knex(ETableNames.BLOCK_SCHEDULES)
-      .count("id")
-      .where("userId", userId)
-      .andWhereBetween("startDate", [startDate.dateTime, endDate.dateTime])
-      .andWhereBetween("endDate", [startDate.dateTime, endDate.dateTime])
-      .first();
+      .count('id')
+      .where('userId', userId)
+      .andWhereBetween('startDate', [startDate.dateTime, endDate.dateTime])
+      .andWhereBetween('endDate', [startDate.dateTime, endDate.dateTime])
+      .first()
 
     return {
       total: Number(result?.total) || 0,
-    };
+    }
   }
 
   async listBetweenDates({
@@ -81,22 +81,22 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
       ETableNames.BLOCK_SCHEDULES,
     )
       .select(
-        "id",
-        "userId",
-        "description",
-        this.knex.raw(`DATE_FORMAT(startDate, '%Y-%m-%dT%H:%i') as date`),
-        this.knex.raw(`DATE_FORMAT(endDate, '%Y-%m-%dT%H:%i') as endDate`),
+        'id',
+        'userId',
+        'description',
+        this.knex.raw('DATE_FORMAT(startDate, \'%Y-%m-%dT%H:%i\') as date'),
+        this.knex.raw('DATE_FORMAT(endDate, \'%Y-%m-%dT%H:%i\') as endDate'),
       )
-      .where("userId", userId)
+      .where('userId', userId)
       .andWhere((qb) => {
-        qb.whereBetween("startDate", [startDate.dateTime, endDate.dateTime])
-          .orWhereBetween("endDate", [startDate.dateTime, endDate.dateTime])
+        qb.whereBetween('startDate', [startDate.dateTime, endDate.dateTime])
+          .orWhereBetween('endDate', [startDate.dateTime, endDate.dateTime])
           .orWhere((subQb) => {
             subQb
-              .where("startDate", "<=", startDate.dateTime)
-              .andWhere("endDate", ">=", startDate.dateTime);
-          });
-      });
+              .where('startDate', '<=', startDate.dateTime)
+              .andWhere('endDate', '>=', startDate.dateTime)
+          })
+      })
 
     return blockSchedulesDto.map(
       (blockSchedule) =>
@@ -105,7 +105,7 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
           date: new DateTime(blockSchedule.date),
           endDate: new DateTime(blockSchedule.endDate),
         }),
-    );
+    )
   }
 
   async list(data: {
@@ -113,32 +113,32 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
     date: string;
     config?: { limit: number; offSet: number };
   }): Promise<BlockScheduleDto[]> {
-    const { userId, date, config } = data;
+    const { userId, date, config } = data
 
     const query = this.knex(ETableNames.BLOCK_SCHEDULES)
       .select(
-        "id",
-        "userId",
-        "description",
-        this.knex.raw(`DATE_FORMAT(startDate, '%Y-%m-%dT%H:%i') as startDate`),
-        this.knex.raw(`DATE_FORMAT(endDate, '%Y-%m-%dT%H:%i') as endDate`),
+        'id',
+        'userId',
+        'description',
+        this.knex.raw('DATE_FORMAT(startDate, \'%Y-%m-%dT%H:%i\') as startDate'),
+        this.knex.raw('DATE_FORMAT(endDate, \'%Y-%m-%dT%H:%i\') as endDate'),
       )
-      .where("userId", userId)
+      .where('userId', userId)
       .andWhere((qb) => {
-        qb.where("startDate", ">=", date)
-          .orWhere("endDate", "<=", date)
+        qb.where('startDate', '>=', date)
+          .orWhere('endDate', '<=', date)
           .orWhere((subQb) => {
             subQb
-              .where("startDate", "<=", date)
-              .andWhere("endDate", ">=", date);
-          });
-      });
+              .where('startDate', '<=', date)
+              .andWhere('endDate', '>=', date)
+          })
+      })
 
     if (config) {
-      return query.limit(config.limit).offset(config.offSet);
+      return query.limit(config.limit).offset(config.offSet)
     }
 
-    return query;
+    return query
   }
 
   async save(
@@ -151,6 +151,6 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
       startDate: startDate.dateTime,
       endDate: endDate.dateTime,
       userId,
-    });
+    })
   }
 }

@@ -1,16 +1,16 @@
-import { RealizeSchedulingUseCase } from "../../useCases/realizeScheduling/realizeSchedulingUseCase";
-import { RealizeSchedulingController } from "./RealizeSchedulingController";
-import { knexProgressRepository } from "../../../../repositories/progress/knexInstances";
-import { knexSchedulingRepository } from "../../../../repositories/scheduling/knexInstances";
+import { RealizeSchedulingUseCase } from '../../useCases/realizeScheduling/realizeSchedulingUseCase'
+import { RealizeSchedulingController } from './RealizeSchedulingController'
+import { knexProgressRepository } from '../../../../repositories/progress/knexInstances'
+import { knexSchedulingRepository } from '../../../../repositories/scheduling/knexInstances'
 
-const schedulingRepository = knexSchedulingRepository;
-const progressRepository = knexProgressRepository;
+const schedulingRepository = knexSchedulingRepository
+const progressRepository = knexProgressRepository
 const realizeSchedulingUseCase = new RealizeSchedulingUseCase(
   schedulingRepository,
   progressRepository,
-);
+)
 const realizeSchedulingController = new RealizeSchedulingController(
   realizeSchedulingUseCase,
-);
+)
 
-export { realizeSchedulingController };
+export { realizeSchedulingController }

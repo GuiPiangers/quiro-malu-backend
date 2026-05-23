@@ -1,6 +1,6 @@
 export enum EIdentifierObserver {
-  SCHEDULING = "scheduling",
-  PROGRESS = "progress",
+  SCHEDULING = 'scheduling',
+  PROGRESS = 'progress',
 }
 
 export type observerParams = {
@@ -9,21 +9,21 @@ export type observerParams = {
   service: string;
   userId: string;
   clinicId: string;
-};
+}
 
 export class SchedulingSyncService {
   private observers: Map<string, (data: observerParams) => Promise<unknown>> =
-    new Map();
+    new Map()
 
   addObserver<T>(
     identifier: string,
     observer: (data: observerParams) => Promise<T>,
   ) {
-    this.observers.set(identifier, observer);
+    this.observers.set(identifier, observer)
   }
 
   list() {
-    return Array.from(this.observers);
+    return Array.from(this.observers)
   }
 
   async synchronizeSchedulingService({
@@ -37,9 +37,9 @@ export class SchedulingSyncService {
       .filter(([key]) => key !== EIdentifierObserver.SCHEDULING)
       .map(([_, values]) =>
         values({ id: schedulingId, patientId, service, userId, clinicId }),
-      );
+      )
 
-    return Promise.all(syncItens);
+    return Promise.all(syncItens)
   }
 
   async synchronizeProgressService({
@@ -53,8 +53,8 @@ export class SchedulingSyncService {
       .filter(([key]) => key !== EIdentifierObserver.PROGRESS)
       .map(([_, values]) =>
         values({ id: progressId, patientId, service, userId, clinicId }),
-      );
+      )
 
-    return Promise.all(syncItens);
+    return Promise.all(syncItens)
   }
 }

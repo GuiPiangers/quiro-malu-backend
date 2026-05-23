@@ -6,9 +6,9 @@ export abstract class IQueueProvider<T> {
       jobId?: string;
       delay?: number;
     },
-  ): Promise<void>;
+  ): Promise<void>
 
-  abstract addRepeatableEvery(jobTemplate: T, everyMs: number): Promise<void>;
+  abstract addRepeatableEvery(jobTemplate: T, everyMs: number): Promise<void>
 
   abstract addRepeatableCron(
     jobTemplate: T,
@@ -20,12 +20,12 @@ export abstract class IQueueProvider<T> {
       endDate?: Date;
       limit?: number;
     },
-  ): Promise<void>;
+  ): Promise<void>
 
-  abstract delete(data: { jobId: string }): Promise<void>;
-  abstract deleteRepeat(data: { jobId: string }): Promise<void>;
+  abstract delete(data: { jobId: string }): Promise<void>
+  abstract deleteRepeat(data: { jobId: string }): Promise<void>
 
-  abstract removeAllRepeatableJobs(): Promise<void>;
+  abstract removeAllRepeatableJobs(): Promise<void>
 
-  abstract process(callback: (job: T) => Promise<void>): Promise<void>;
+  abstract process(callback: (job: T) => Promise<void>): Promise<void>
 }

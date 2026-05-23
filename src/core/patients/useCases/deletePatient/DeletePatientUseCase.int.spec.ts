@@ -1,44 +1,44 @@
-import type { Knex } from "knex";
-import { ETableNames } from "../../../../database/ETableNames";
-import { KnexPatientRepository } from "../../../../repositories/patient/KnexPatientRepository";
-import { createKnexForIntegrationTests } from "../../../../test/integration/knexTestConnection";
+import type { Knex } from 'knex'
+import { ETableNames } from '../../../../database/ETableNames'
+import { KnexPatientRepository } from '../../../../repositories/patient/KnexPatientRepository'
+import { createKnexForIntegrationTests } from '../../../../test/integration/knexTestConnection'
 import {
   insertIntegrationUser,
   insertPatientForIntegration,
   shouldRunPatientIntegrationSuite,
-} from "../../../../test/integration/patientIntegrationHelpers";
-import { withRollbackTransaction } from "../../../../test/integration/transactionRollback";
-import { DeletePatientUseCase } from "./DeletePatientUseCase";
+} from '../../../../test/integration/patientIntegrationHelpers'
+import { withRollbackTransaction } from '../../../../test/integration/transactionRollback'
+import { DeletePatientUseCase } from './DeletePatientUseCase'
 
 describe.skipIf(!shouldRunPatientIntegrationSuite())(
-  "DeletePatientUseCase (integration)",
+  'DeletePatientUseCase (integration)',
   () => {
-    let knex: Knex;
+    let knex: Knex
 
     beforeAll(() => {
-      knex = createKnexForIntegrationTests();
-    });
+      knex = createKnexForIntegrationTests()
+    })
 
     afterAll(async () => {
-      await knex.destroy();
-    });
+      await knex.destroy()
+    })
 
-    it("remove o paciente do banco", async () => {
+    it('remove o paciente do banco', async () => {
       await withRollbackTransaction(knex, async (trx) => {
-        const { userId } = await insertIntegrationUser(trx);
+        const { userId } = await insertIntegrationUser(trx)
         const { patientId } = await insertPatientForIntegration(trx, userId, {
-          name: "Paciente Para Excluir",
-          phone: "(51) 96666 5555",
-        });
+          name: 'Paciente Para Excluir',
+          phone: '(51) 96666 5555',
+        })
 
-        const useCase = new DeletePatientUseCase(new KnexPatientRepository(trx));
-        await useCase.execute(patientId, userId);
+        const useCase = new DeletePatientUseCase(new KnexPatientRepository(trx))
+        await useCase.execute(patientId, userId)
 
         const row = await trx(ETableNames.PATIENTS)
           .where({ id: patientId, clinicId: userId })
-          .first();
-        expect(row).toBeUndefined();
-      });
-    });
+          .first()
+        expect(row).toBeUndefined()
+      })
+    })
   },
-);
+)

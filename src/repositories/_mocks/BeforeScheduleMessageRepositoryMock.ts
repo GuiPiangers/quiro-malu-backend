@@ -1,5 +1,5 @@
-import { IBeforeScheduleMessageRepository } from "../messages/IBeforeScheduleMessageRepository";
-import type { Mocked } from "vitest";
+import { IBeforeScheduleMessageRepository } from '../messages/IBeforeScheduleMessageRepository'
+import type { Mocked } from 'vitest'
 
 export const createMockBeforeScheduleMessageRepository =
   (): Mocked<IBeforeScheduleMessageRepository> => ({
@@ -10,4 +10,4 @@ export const createMockBeforeScheduleMessageRepository =
     listByUserId: vi.fn(),
     listByUserIdPaged: vi.fn(),
     getById: vi.fn(),
-  });
+  })

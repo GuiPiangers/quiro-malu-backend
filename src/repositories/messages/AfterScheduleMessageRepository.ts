@@ -1,6 +1,6 @@
-import type { Knex } from "knex";
-import { ETableNames } from "../../database/ETableNames";
-import { ApiError } from "../../utils/ApiError";
+import type { Knex } from 'knex'
+import { ETableNames } from '../../database/ETableNames'
+import { ApiError } from '../../utils/ApiError'
 import {
   AfterScheduleMessageConfigDTO,
   DeleteAfterScheduleMessageProps,
@@ -11,18 +11,17 @@ import {
   ListAfterScheduleMessagesPagedResult,
   SaveAfterScheduleMessageProps,
   UpdateAfterScheduleMessageProps,
-} from "./IAfterScheduleMessageRepository";
+} from './IAfterScheduleMessageRepository'
 
 export class AfterScheduleMessageRepository
-  implements IAfterScheduleMessageRepository
-{
+implements IAfterScheduleMessageRepository {
   constructor(private readonly knex: Knex) {}
 
   async save(data: SaveAfterScheduleMessageProps): Promise<void> {
     try {
-      await this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES).insert(data);
+      await this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES).insert(data)
     } catch (error: any) {
-      throw new ApiError(error.message, 500);
+      throw new ApiError(error.message, 500)
     }
   }
 
@@ -30,49 +29,46 @@ export class AfterScheduleMessageRepository
     try {
       await this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES)
         .where({ id: data.id, userId: data.userId })
-        .del();
+        .del()
     } catch (error: any) {
-      throw new ApiError(error.message, 500);
+      throw new ApiError(error.message, 500)
     }
   }
 
   async update(data: UpdateAfterScheduleMessageProps): Promise<void> {
     try {
-      const updateData: Record<string, unknown> = {};
+      const updateData: Record<string, unknown> = {}
 
-      if (data.name !== undefined) updateData.name = data.name;
-      if (data.minutesAfterSchedule !== undefined)
-        updateData.minutesAfterSchedule = data.minutesAfterSchedule;
-      if (data.textTemplate !== undefined)
-        updateData.textTemplate = data.textTemplate;
-      if (data.isActive !== undefined)
-        updateData.isActive = data.isActive;
+      if (data.name !== undefined) updateData.name = data.name
+      if (data.minutesAfterSchedule !== undefined) { updateData.minutesAfterSchedule = data.minutesAfterSchedule }
+      if (data.textTemplate !== undefined) { updateData.textTemplate = data.textTemplate }
+      if (data.isActive !== undefined) { updateData.isActive = data.isActive }
 
       await this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES)
         .where({ id: data.id, userId: data.userId })
-        .update(updateData);
+        .update(updateData)
     } catch (error: any) {
-      throw new ApiError(error.message, 500);
+      throw new ApiError(error.message, 500)
     }
   }
 
   async listAll(): Promise<AfterScheduleMessageConfigDTO[]> {
     try {
       const rows = await this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES).select(
-        "id",
-        "userId",
-        "name",
-        "minutesAfterSchedule",
-        "textTemplate",
-        "isActive",
-      );
+        'id',
+        'userId',
+        'name',
+        'minutesAfterSchedule',
+        'textTemplate',
+        'isActive',
+      )
 
       return rows.map((row: AfterScheduleMessageConfigDTO) => ({
         ...row,
         isActive: !!row.isActive,
-      })) as AfterScheduleMessageConfigDTO[];
+      })) as AfterScheduleMessageConfigDTO[]
     } catch (error: any) {
-      throw new ApiError(error.message, 500);
+      throw new ApiError(error.message, 500)
     }
   }
 
@@ -82,21 +78,21 @@ export class AfterScheduleMessageRepository
     try {
       const rows = await this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES)
         .select(
-          "id",
-          "userId",
-          "name",
-          "minutesAfterSchedule",
-          "textTemplate",
-          "isActive",
+          'id',
+          'userId',
+          'name',
+          'minutesAfterSchedule',
+          'textTemplate',
+          'isActive',
         )
-        .where({ userId: data.userId });
+        .where({ userId: data.userId })
 
       return rows.map((row: any) => ({
         ...row,
         isActive: !!row.isActive,
-      })) as AfterScheduleMessageConfigDTO[];
+      })) as AfterScheduleMessageConfigDTO[]
     } catch (error: any) {
-      throw new ApiError(error.message, 500);
+      throw new ApiError(error.message, 500)
     }
   }
 
@@ -105,35 +101,37 @@ export class AfterScheduleMessageRepository
   ): Promise<ListAfterScheduleMessagesPagedResult> {
     try {
       const base = () =>
-        this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES).where({ userId: data.userId });
+        this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES).where({ userId: data.userId })
 
-      const countRows = await base().clone().count("* as total");
+      const countRows = await base().clone().count('* as total')
       const total = Number(
-        (Array.isArray(countRows) ? countRows[0] : countRows)?.total ?? 0,
-      );
+        (Array.isArray(countRows)
+          ? countRows[0]
+          : countRows)?.total ?? 0,
+      )
 
       const rows = await base()
         .clone()
         .select(
-          "id",
-          "userId",
-          "name",
-          "minutesAfterSchedule",
-          "textTemplate",
-          "isActive",
+          'id',
+          'userId',
+          'name',
+          'minutesAfterSchedule',
+          'textTemplate',
+          'isActive',
         )
-        .orderBy("updated_at", "desc")
+        .orderBy('updated_at', 'desc')
         .limit(data.limit)
-        .offset(data.offset);
+        .offset(data.offset)
 
       const items = rows.map((row: any) => ({
         ...row,
         isActive: !!row.isActive,
-      })) as AfterScheduleMessageConfigDTO[];
+      })) as AfterScheduleMessageConfigDTO[]
 
-      return { items, total };
+      return { items, total }
     } catch (error: any) {
-      throw new ApiError(error.message, 500);
+      throw new ApiError(error.message, 500)
     }
   }
 
@@ -143,24 +141,24 @@ export class AfterScheduleMessageRepository
     try {
       const row = await this.knex(ETableNames.AFTER_SCHEDULE_MESSAGES)
         .select(
-          "id",
-          "userId",
-          "name",
-          "minutesAfterSchedule",
-          "textTemplate",
-          "isActive",
+          'id',
+          'userId',
+          'name',
+          'minutesAfterSchedule',
+          'textTemplate',
+          'isActive',
         )
         .first()
-        .where({ id: data.id, userId: data.userId });
+        .where({ id: data.id, userId: data.userId })
 
-      if (!row) return null;
+      if (!row) return null
 
       return {
         ...row,
         isActive: !!(row as any).isActive,
-      } as AfterScheduleMessageConfigDTO;
+      } as AfterScheduleMessageConfigDTO
     } catch (error: any) {
-      throw new ApiError(error.message, 500);
+      throw new ApiError(error.message, 500)
     }
   }
 }

@@ -1,91 +1,91 @@
-import { createMockProgressRepository } from "../../../../../repositories/_mocks/ProgressRepositoryMock";
-import { ProgressDTO } from "../../../models/Progress";
-import { SetProgressUseCase } from "./SetProgressUseCase";
+import { createMockProgressRepository } from '../../../../../repositories/_mocks/ProgressRepositoryMock'
+import { ProgressDTO } from '../../../models/Progress'
+import { SetProgressUseCase } from './SetProgressUseCase'
 
-describe("setProgressUseCase", () => {
-  let setProgressUseCase: SetProgressUseCase;
-  const mockProgressRepository = createMockProgressRepository();
+describe('setProgressUseCase', () => {
+  let setProgressUseCase: SetProgressUseCase
+  const mockProgressRepository = createMockProgressRepository()
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    setProgressUseCase = new SetProgressUseCase(mockProgressRepository);
-  });
+    vi.clearAllMocks()
+    setProgressUseCase = new SetProgressUseCase(mockProgressRepository)
+  })
 
-  describe("execute", () => {
-    it("should call the repository Save method with the correct Data if Progress does not exist", async () => {
-      const patientId = "test-patient-id";
-      const clinicId = "test-user-id";
+  describe('execute', () => {
+    it('should call the repository Save method with the correct Data if Progress does not exist', async () => {
+      const patientId = 'test-patient-id'
+      const clinicId = 'test-user-id'
 
-      const userId = "test-clinician-id";
+      const userId = 'test-clinician-id'
       const progressData: ProgressDTO = {
-        id: "test-progress-id",
+        id: 'test-progress-id',
         userId,
         patientId,
-        actualProblem: "actualProblem",
-        date: "2025-01-10T00:00",
-        procedures: "procedures",
-        schedulingId: "schedulingId",
-        service: "service",
-      };
+        actualProblem: 'actualProblem',
+        date: '2025-01-10T00:00',
+        procedures: 'procedures',
+        schedulingId: 'schedulingId',
+        service: 'service',
+      }
 
-      mockProgressRepository.get.mockResolvedValue([]);
+      mockProgressRepository.get.mockResolvedValue([])
 
-      await setProgressUseCase.execute({ ...progressData, clinicId });
+      await setProgressUseCase.execute({ ...progressData, clinicId })
 
-      expect(mockProgressRepository.save).toHaveBeenCalledTimes(1);
+      expect(mockProgressRepository.save).toHaveBeenCalledTimes(1)
       expect(mockProgressRepository.save).toHaveBeenCalledWith({
         ...progressData,
         clinicId,
-      });
-      expect(mockProgressRepository.update).not.toHaveBeenCalled();
-    });
+      })
+      expect(mockProgressRepository.update).not.toHaveBeenCalled()
+    })
 
-    it("should call the repository Update method with the correct Data if Progress does not exist", async () => {
-      const patientId = "test-patient-id";
-      const clinicId = "test-user-id";
-      const userId = "test-clinician-id";
+    it('should call the repository Update method with the correct Data if Progress does not exist', async () => {
+      const patientId = 'test-patient-id'
+      const clinicId = 'test-user-id'
+      const userId = 'test-clinician-id'
       const progressData: ProgressDTO = {
-        id: "test-progress-id",
+        id: 'test-progress-id',
         userId,
         patientId,
-        actualProblem: "actualProblem",
-        date: "2025-01-10T00:00",
-        procedures: "procedures",
-        schedulingId: "schedulingId",
-        service: "service",
-      };
+        actualProblem: 'actualProblem',
+        date: '2025-01-10T00:00',
+        procedures: 'procedures',
+        schedulingId: 'schedulingId',
+        service: 'service',
+      }
 
       mockProgressRepository.get.mockResolvedValue([
-        { patientId, id: "progress-id", userId },
-      ]);
+        { patientId, id: 'progress-id', userId },
+      ])
 
-      await setProgressUseCase.execute({ ...progressData, clinicId });
+      await setProgressUseCase.execute({ ...progressData, clinicId })
 
-      expect(mockProgressRepository.update).toHaveBeenCalledTimes(1);
+      expect(mockProgressRepository.update).toHaveBeenCalledTimes(1)
       expect(mockProgressRepository.update).toHaveBeenCalledWith({
         ...progressData,
         clinicId,
-      });
-    });
+      })
+    })
 
-    it("should Update data if optional params were not passed", async () => {
-      const patientId = "test-patient-id";
-      const clinicId = "test-user-id";
-      const progressId = "test-progress-id";
+    it('should Update data if optional params were not passed', async () => {
+      const patientId = 'test-patient-id'
+      const clinicId = 'test-user-id'
+      const progressId = 'test-progress-id'
 
-      const userId = "test-clinician-id";
+      const userId = 'test-clinician-id'
       mockProgressRepository.get.mockResolvedValue([
         { patientId, id: progressId, userId },
-      ]);
+      ])
 
       await setProgressUseCase.execute({
         patientId,
         clinicId,
         id: progressId,
         userId,
-      });
+      })
 
-      expect(mockProgressRepository.update).toHaveBeenCalledTimes(1);
+      expect(mockProgressRepository.update).toHaveBeenCalledTimes(1)
       expect(mockProgressRepository.update).toHaveBeenCalledWith({
         patientId,
         clinicId,
@@ -96,42 +96,42 @@ describe("setProgressUseCase", () => {
         procedures: undefined,
         schedulingId: undefined,
         service: undefined,
-      });
-    });
+      })
+    })
 
-    it("should save data if optional params were not passed", async () => {
-      const patientId = "test-patient-id";
-      const clinicId = "test-user-id";
-      const progressId = "test-progress-id";
+    it('should save data if optional params were not passed', async () => {
+      const patientId = 'test-patient-id'
+      const clinicId = 'test-user-id'
+      const progressId = 'test-progress-id'
 
-      mockProgressRepository.get.mockResolvedValue([]);
+      mockProgressRepository.get.mockResolvedValue([])
 
       await expect(
         setProgressUseCase.execute({
           patientId,
           clinicId,
           id: progressId,
-          userId: "",
+          userId: '',
         }),
-      ).rejects.toThrow("O clínico (userId) é obrigatório");
+      ).rejects.toThrow('O clínico (userId) é obrigatório')
 
-      expect(mockProgressRepository.save).not.toHaveBeenCalled();
-    });
+      expect(mockProgressRepository.save).not.toHaveBeenCalled()
+    })
 
-    it("should propagate an error if the repository set method throws", async () => {
-      const patientId = "test-patient-id";
-      const clinicId = "test-user-id";
-      const errorMessage = "Failed to set patient";
+    it('should propagate an error if the repository set method throws', async () => {
+      const patientId = 'test-patient-id'
+      const clinicId = 'test-user-id'
+      const errorMessage = 'Failed to set patient'
 
-      mockProgressRepository.get.mockRejectedValueOnce(new Error(errorMessage));
+      mockProgressRepository.get.mockRejectedValueOnce(new Error(errorMessage))
 
       await expect(
         setProgressUseCase.execute({
           patientId,
           clinicId,
-          userId: "test-clinician-id",
+          userId: 'test-clinician-id',
         }),
-      ).rejects.toThrow(errorMessage);
-    });
-  });
-});
+      ).rejects.toThrow(errorMessage)
+    })
+  })
+})

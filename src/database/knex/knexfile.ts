@@ -1,11 +1,11 @@
-import { Knex } from "knex";
-import path from "path";
-import * as dotenv from "dotenv";
+import { Knex } from 'knex'
+import path from 'path'
+import * as dotenv from 'dotenv'
 
-dotenv.config({ path: path.join(__dirname, "..", "..", "..", ".env") });
+dotenv.config({ path: path.join(__dirname, '..', '..', '..', '.env') })
 
 export const development: Knex.Config = {
-  client: "mysql2",
+  client: 'mysql2',
   useNullAsDefault: true,
   connection: {
     host: process.env.DB_HOST,
@@ -18,14 +18,14 @@ export const development: Knex.Config = {
     max: 10,
   },
   migrations: {
-    directory: path.resolve(__dirname, "..", "migrations"),
+    directory: path.resolve(__dirname, '..', 'migrations'),
   },
   seeds: {
-    directory: path.resolve(__dirname, "..", "seeds"),
+    directory: path.resolve(__dirname, '..', 'seeds'),
   },
-};
+}
 export const production: Knex.Config = {
-  client: "mysql2",
+  client: 'mysql2',
   useNullAsDefault: true,
   connection: {
     host: process.env.DB_HOST,
@@ -38,14 +38,14 @@ export const production: Knex.Config = {
     max: 10,
   },
   migrations: {
-    directory: path.resolve(__dirname, "..", "migrations"),
+    directory: path.resolve(__dirname, '..', 'migrations'),
   },
   seeds: {
-    directory: path.resolve(__dirname, "..", "seeds"),
+    directory: path.resolve(__dirname, '..', 'seeds'),
   },
-};
+}
 export const test: Knex.Config = {
-  client: "mysql2",
+  client: 'mysql2',
   useNullAsDefault: true,
   connection: {
     host: process.env.DB_HOST,
@@ -58,9 +58,9 @@ export const test: Knex.Config = {
     max: 10,
   },
   migrations: {
-    directory: path.resolve(__dirname, "..", "migrations"),
+    directory: path.resolve(__dirname, '..', 'migrations'),
   },
   seeds: {
-    directory: path.resolve(__dirname, "..", "seeds"),
+    directory: path.resolve(__dirname, '..', 'seeds'),
   },
-};
+}

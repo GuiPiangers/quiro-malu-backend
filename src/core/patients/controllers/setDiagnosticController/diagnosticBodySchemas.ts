@@ -1,4 +1,4 @@
-import { z } from "../../../../schemas/zodOpenApi";
+import { z } from '../../../../schemas/zodOpenApi'
 
 export const SetDiagnosticBodySchema = z
   .object({
@@ -6,6 +6,6 @@ export const SetDiagnosticBodySchema = z
     diagnostic: z.string().optional(),
     treatmentPlan: z.string().optional(),
   })
-  .openapi("SetDiagnosticBody");
+  .openapi('SetDiagnosticBody')
 
-export type SetDiagnosticBody = z.infer<typeof SetDiagnosticBodySchema>;
+export type SetDiagnosticBody = z.infer<typeof SetDiagnosticBodySchema>

@@ -1,11 +1,11 @@
-import { setProgressUseCaseFactory } from "../../factories/setProgressUseCaseFactory";
-import { updateSchedulingUseCaseFactory } from "../../factories/updateSchedulingUseCaseFactory";
+import { setProgressUseCaseFactory } from '../../factories/setProgressUseCaseFactory'
+import { updateSchedulingUseCaseFactory } from '../../factories/updateSchedulingUseCaseFactory'
 import {
   EIdentifierObserver,
   SchedulingSyncService,
-} from "./SchedulingSyncService";
+} from './SchedulingSyncService'
 
-const schedulingSyncService = new SchedulingSyncService();
+const schedulingSyncService = new SchedulingSyncService()
 
 schedulingSyncService.addObserver(
   EIdentifierObserver.SCHEDULING,
@@ -16,9 +16,9 @@ schedulingSyncService.addObserver(
       service,
       userId,
       clinicId,
-    });
+    })
   },
-);
+)
 
 schedulingSyncService.addObserver(
   EIdentifierObserver.PROGRESS,
@@ -29,8 +29,8 @@ schedulingSyncService.addObserver(
       service,
       userId,
       clinicId,
-    });
+    })
   },
-);
+)
 
-export { schedulingSyncService };
+export { schedulingSyncService }

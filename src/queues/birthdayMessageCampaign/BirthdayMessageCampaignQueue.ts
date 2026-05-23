@@ -1,6 +1,6 @@
-import { sendBirthdayMessageUseCase } from "../../core/messages/useCases/birthdayMessage/sendBirthdayMessage";
-import { IQueueProvider } from "../../repositories/queueProvider/IQueueProvider";
-import { BirthdayMessageCampaignJobData } from "./birthdayMessageCampaignJobData";
+import { sendBirthdayMessageUseCase } from '../../core/messages/useCases/birthdayMessage/sendBirthdayMessage'
+import { IQueueProvider } from '../../repositories/queueProvider/IQueueProvider'
+import { BirthdayMessageCampaignJobData } from './birthdayMessageCampaignJobData'
 
 export class BirthdayMessageCampaignQueue {
   constructor(
@@ -12,16 +12,16 @@ export class BirthdayMessageCampaignQueue {
     data: BirthdayMessageCampaignJobData,
     delayMs: number,
   ): Promise<void> {
-    await this.remove(jobId);
+    await this.remove(jobId)
     await this.queueProvider.add(data, {
       jobId,
       delay: delayMs,
-    });
+    })
   }
 
   async remove(jobId: string): Promise<void> {
     try {
-      await this.queueProvider.delete({ jobId });
+      await this.queueProvider.delete({ jobId })
     } catch {
       // job inexistente
     }
@@ -29,7 +29,7 @@ export class BirthdayMessageCampaignQueue {
 
   async process(): Promise<void> {
     await this.queueProvider.process(async (job) => {
-      await sendBirthdayMessageUseCase.execute(job);
-    });
+      await sendBirthdayMessageUseCase.execute(job)
+    })
   }
 }

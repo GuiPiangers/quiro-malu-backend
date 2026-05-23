@@ -1,15 +1,15 @@
-import { Notification } from "../../../notification/models/Notification";
+import { Notification } from '../../../notification/models/Notification'
 
 export type NotificationObserverEvent = (data: {
   notification?: Notification;
   totalNotRead: number;
-}) => Promise<void>;
+}) => Promise<void>
 
 class NotificationObserver {
-  private observers: Map<string, NotificationObserverEvent> = new Map();
+  private observers: Map<string, NotificationObserverEvent> = new Map()
 
   addObserver(userId: string, observer: NotificationObserverEvent) {
-    this.observers.set(userId, observer);
+    this.observers.set(userId, observer)
   }
 
   async notify(
@@ -20,17 +20,17 @@ class NotificationObserver {
     }: { notification?: Notification; totalNotRead?: number },
   ) {
     if (this.observers.has(userId)) {
-      const executeObserver = this.observers.get(userId);
-      if (!executeObserver) return;
-      await executeObserver({ notification, totalNotRead });
+      const executeObserver = this.observers.get(userId)
+      if (!executeObserver) return
+      await executeObserver({ notification, totalNotRead })
     }
   }
 
   list() {
-    return Array.from(this.observers);
+    return Array.from(this.observers)
   }
 }
 
-const notificationObserver = new NotificationObserver();
+const notificationObserver = new NotificationObserver()
 
-export { notificationObserver };
+export { notificationObserver }

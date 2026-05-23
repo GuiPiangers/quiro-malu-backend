@@ -1,25 +1,25 @@
-import { Request, Response } from "express";
-import { DeletePatientUseCase } from "../../useCases/deletePatient/DeletePatientUseCase";
-import { responseError } from "../../../../utils/ResponseError";
-import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
-import { DeletePatientBodySchema } from "./deletePatientsSchemas";
+import { Request, Response } from 'express'
+import { DeletePatientUseCase } from '../../useCases/deletePatient/DeletePatientUseCase'
+import { responseError } from '../../../../utils/ResponseError'
+import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import { DeletePatientBodySchema } from './deletePatientsSchemas'
 
 export class DeletePatientsController {
   constructor(private deletePatientsUseCase: DeletePatientUseCase) {}
   async handle(request: Request, response: Response) {
-    const parsed = parseWithSchema(DeletePatientBodySchema, request.body);
+    const parsed = parseWithSchema(DeletePatientBodySchema, request.body)
     if (!parsed.success) {
-      return sendZodBadRequest(response, parsed.error);
+      return sendZodBadRequest(response, parsed.error)
     }
 
     try {
-      const clinicId = request.user.clinicId;
-      const { id: patientId } = parsed.data;
-      await this.deletePatientsUseCase.execute(patientId, clinicId!);
+      const clinicId = request.user.clinicId
+      const { id: patientId } = parsed.data
+      await this.deletePatientsUseCase.execute(patientId, clinicId!)
 
-      response.json({ message: "Paciente deletado com sucesso!" });
+      response.json({ message: 'Paciente deletado com sucesso!' })
     } catch (err: any) {
-      responseError(response, err);
+      responseError(response, err)
     }
   }
 }

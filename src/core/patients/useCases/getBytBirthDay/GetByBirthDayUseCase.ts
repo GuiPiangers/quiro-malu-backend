@@ -1,4 +1,4 @@
-import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
+import { IPatientRepository } from '../../../../repositories/patient/IPatientRepository'
 
 export class GetPatientsByBirthDayUseCase {
   constructor(private patientRepository: IPatientRepository) {}
@@ -16,6 +16,6 @@ export class GetPatientsByBirthDayUseCase {
       birthMonth,
       birthDay,
       clinicId,
-    });
+    })
   }
 }

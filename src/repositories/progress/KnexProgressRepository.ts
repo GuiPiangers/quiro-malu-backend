@@ -1,7 +1,7 @@
-import { ProgressDTO } from "../../core/patients/models/Progress";
-import { IProgressRepository } from "./IProgressRepository";
-import { ETableNames } from "../../database/ETableNames";
-import type { Knex } from "knex";
+import { ProgressDTO } from '../../core/patients/models/Progress'
+import { IProgressRepository } from './IProgressRepository'
+import { ETableNames } from '../../database/ETableNames'
+import type { Knex } from 'knex'
 
 interface ProgressWithPainScaleRow {
   id: string;
@@ -33,29 +33,29 @@ export class KnexProgressRepository implements IProgressRepository {
     const rows: ProgressWithPainScaleRow[] = await this.knex(
       `${ETableNames.PROGRESS} as p`,
     )
-      .leftJoin(`${ETableNames.PAIN_SCALES} as ps`, "p.id", "ps.progressId")
+      .leftJoin(`${ETableNames.PAIN_SCALES} as ps`, 'p.id', 'ps.progressId')
       .column(
-        "p.id",
-        "p.userId",
-        "p.patientId",
-        "p.clinicId",
-        "p.service",
-        "p.actualProblem",
-        "p.procedures",
-        "p.schedulingId",
-        "ps.id as painScaleId",
-        "ps.painLevel",
-        "ps.description",
+        'p.id',
+        'p.userId',
+        'p.patientId',
+        'p.clinicId',
+        'p.service',
+        'p.actualProblem',
+        'p.procedures',
+        'p.schedulingId',
+        'ps.id as painScaleId',
+        'ps.painLevel',
+        'ps.description',
         this.knex.raw('DATE_FORMAT(p.date, "%Y-%m-%dT%H:%i") as date'),
       )
       .select()
       .where({
-        "p.schedulingId": schedulingId,
-        "p.patientId": patientId,
-        "p.clinicId": clinicId,
-      });
+        'p.schedulingId': schedulingId,
+        'p.patientId': patientId,
+        'p.clinicId': clinicId,
+      })
 
-    return this.groupProgressPainScales(rows);
+    return this.groupProgressPainScales(rows)
   }
 
   async save({
@@ -71,8 +71,8 @@ export class KnexProgressRepository implements IProgressRepository {
           clinicId,
           patientId,
         },
-        ["id"],
-      );
+        ['id'],
+      )
 
       if (data.id && painScales && painScales.length > 0) {
         const painScaleRows = painScales.map((ps) => ({
@@ -80,11 +80,11 @@ export class KnexProgressRepository implements IProgressRepository {
           progressId: data.id,
           painLevel: ps.painLevel,
           description: ps.description,
-        }));
+        }))
 
-        await trx(ETableNames.PAIN_SCALES).insert(painScaleRows);
+        await trx(ETableNames.PAIN_SCALES).insert(painScaleRows)
       }
-    });
+    })
   }
 
   async update({
@@ -97,10 +97,10 @@ export class KnexProgressRepository implements IProgressRepository {
     await this.knex.transaction(async (trx) => {
       await trx(ETableNames.PROGRESS)
         .update(data)
-        .where({ id, patientId, clinicId });
+        .where({ id, patientId, clinicId })
 
       if (painScales) {
-        await trx(ETableNames.PAIN_SCALES).where({ progressId: id }).del();
+        await trx(ETableNames.PAIN_SCALES).where({ progressId: id }).del()
 
         if (painScales.length > 0) {
           const painScaleRows = painScales.map((ps) => ({
@@ -108,12 +108,12 @@ export class KnexProgressRepository implements IProgressRepository {
             progressId: id,
             painLevel: ps.painLevel,
             description: ps.description,
-          }));
+          }))
 
-          await trx(ETableNames.PAIN_SCALES).insert(painScaleRows);
+          await trx(ETableNames.PAIN_SCALES).insert(painScaleRows)
         }
       }
-    });
+    })
   }
 
   async get({
@@ -128,31 +128,31 @@ export class KnexProgressRepository implements IProgressRepository {
     const rows: ProgressWithPainScaleRow[] = await this.knex(
       `${ETableNames.PROGRESS} as p`,
     )
-      .leftJoin(`${ETableNames.PAIN_SCALES} as ps`, "p.id", "ps.progressId")
+      .leftJoin(`${ETableNames.PAIN_SCALES} as ps`, 'p.id', 'ps.progressId')
       .column(
-        "p.id",
-        "p.userId",
-        "p.patientId",
-        "p.clinicId",
-        "p.service",
-        "p.actualProblem",
-        "p.procedures",
-        "p.schedulingId",
-        "ps.id as painScaleId",
-        "ps.painLevel",
-        "ps.description",
+        'p.id',
+        'p.userId',
+        'p.patientId',
+        'p.clinicId',
+        'p.service',
+        'p.actualProblem',
+        'p.procedures',
+        'p.schedulingId',
+        'ps.id as painScaleId',
+        'ps.painLevel',
+        'ps.description',
         this.knex.raw('DATE_FORMAT(p.date, "%Y-%m-%dT%H:%i") as date'),
       )
       .select()
       .where({
-        "p.id": id,
-        "p.patientId": patientId,
-        "p.clinicId": clinicId,
-      });
+        'p.id': id,
+        'p.patientId': patientId,
+        'p.clinicId': clinicId,
+      })
 
-    const result = this.groupProgressPainScales(rows);
+    const result = this.groupProgressPainScales(rows)
 
-    return result;
+    return result
   }
 
   async list({
@@ -165,37 +165,37 @@ export class KnexProgressRepository implements IProgressRepository {
     config?: { limit: number; offSet: number };
   }): Promise<ProgressDTO[]> {
     const query = this.knex(`${ETableNames.PROGRESS} as p`)
-      .leftJoin(`${ETableNames.PAIN_SCALES} as ps`, "p.id", "ps.progressId")
+      .leftJoin(`${ETableNames.PAIN_SCALES} as ps`, 'p.id', 'ps.progressId')
       .column(
-        "p.id",
-        "p.userId",
-        "p.patientId",
-        "p.clinicId",
-        "p.service",
-        "p.actualProblem",
-        "p.procedures",
-        "p.schedulingId",
-        "ps.id as painScaleId",
-        "ps.painLevel",
-        "ps.description",
+        'p.id',
+        'p.userId',
+        'p.patientId',
+        'p.clinicId',
+        'p.service',
+        'p.actualProblem',
+        'p.procedures',
+        'p.schedulingId',
+        'ps.id as painScaleId',
+        'ps.painLevel',
+        'ps.description',
         this.knex.raw('DATE_FORMAT(p.date, "%Y-%m-%dT%H:%i") as date'),
       )
       .select()
       .where({
-        "p.patientId": patientId,
-        "p.clinicId": clinicId,
+        'p.patientId': patientId,
+        'p.clinicId': clinicId,
       })
-      .orderBy("date", "desc");
+      .orderBy('date', 'desc')
 
     if (config) {
       const resultWithFilter = await query
         .limit(config.limit)
-        .offset(config.offSet);
+        .offset(config.offSet)
 
-      return this.groupProgressPainScales(resultWithFilter);
+      return this.groupProgressPainScales(resultWithFilter)
     }
 
-    return this.groupProgressPainScales(await query);
+    return this.groupProgressPainScales(await query)
   }
 
   async count({
@@ -206,10 +206,10 @@ export class KnexProgressRepository implements IProgressRepository {
     clinicId: string;
   }): Promise<[{ total: number }]> {
     const [result] = await this.knex(ETableNames.PROGRESS)
-      .count("id as total")
-      .where({ clinicId, patientId });
+      .count('id as total')
+      .where({ clinicId, patientId })
 
-    return [result] as [{ total: number }];
+    return [result] as [{ total: number }]
   }
 
   async delete({
@@ -223,12 +223,12 @@ export class KnexProgressRepository implements IProgressRepository {
   }): Promise<void> {
     await this.knex(ETableNames.PROGRESS)
       .where({ id, patientId, clinicId })
-      .del();
+      .del()
   }
 
   private groupProgressPainScales(rows: ProgressWithPainScaleRow[]) {
     return rows.reduce((acc, row) => {
-      let progress = acc.find((p) => p.id === row.id);
+      let progress = acc.find((p) => p.id === row.id)
 
       if (!progress) {
         progress = {
@@ -241,8 +241,8 @@ export class KnexProgressRepository implements IProgressRepository {
           schedulingId: row.schedulingId,
           date: row.date,
           painScales: [],
-        };
-        acc.push(progress);
+        }
+        acc.push(progress)
       }
 
       if (row.painScaleId) {
@@ -250,10 +250,10 @@ export class KnexProgressRepository implements IProgressRepository {
           id: row.painScaleId,
           painLevel: row.painLevel,
           description: row.description,
-        });
+        })
       }
 
-      return acc;
-    }, [] as ProgressDTO[]);
+      return acc
+    }, [] as ProgressDTO[])
   }
 }

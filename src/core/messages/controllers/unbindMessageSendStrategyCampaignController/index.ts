@@ -1,9 +1,9 @@
-import { unbindMessageSendStrategyCampaignUseCase } from "../../useCases/messageSendStrategy/unbindMessageSendStrategyCampaign";
-import { UnbindMessageSendStrategyCampaignController } from "./UnbindMessageSendStrategyCampaignController";
+import { unbindMessageSendStrategyCampaignUseCase } from '../../useCases/messageSendStrategy/unbindMessageSendStrategyCampaign'
+import { UnbindMessageSendStrategyCampaignController } from './UnbindMessageSendStrategyCampaignController'
 
 const unbindMessageSendStrategyCampaignController =
   new UnbindMessageSendStrategyCampaignController(
     unbindMessageSendStrategyCampaignUseCase,
-  );
+  )
 
-export { unbindMessageSendStrategyCampaignController };
+export { unbindMessageSendStrategyCampaignController }

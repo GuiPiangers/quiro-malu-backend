@@ -1,6 +1,6 @@
-import { INotificationRepository } from "../../../repositories/notification/INotificationRepository";
-import { notificationObserver } from "../../shared/observers/NotificationObserver/NotificationObserver";
-import { Notification } from "../models/Notification";
+import { INotificationRepository } from '../../../repositories/notification/INotificationRepository'
+import { notificationObserver } from '../../shared/observers/NotificationObserver/NotificationObserver'
+import { Notification } from '../models/Notification'
 
 export class SendNotificationUseCase {
   constructor(private notificationRepository: INotificationRepository) {}
@@ -15,7 +15,7 @@ export class SendNotificationUseCase {
     const totalNotRead =
       await this.notificationRepository.countNotReadOrNeedAct({
         userId,
-      });
-    notificationObserver.notify(userId, { notification, totalNotRead });
+      })
+    notificationObserver.notify(userId, { notification, totalNotRead })
   }
 }

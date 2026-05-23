@@ -1,5 +1,5 @@
-import type { Clinician } from "./models/Clinician";
-import type { ServiceDTO } from "../service/models/Service";
+import type { Clinician } from './models/Clinician'
+import type { ServiceDTO } from '../service/models/Service'
 
 export type ClinicianPublicDTO = {
   id: string;
@@ -9,10 +9,10 @@ export type ClinicianPublicDTO = {
   clinicId: string;
   roleId?: string;
   services: ServiceDTO[];
-};
+}
 
 export function toClinicianPublicDTO(clinician: Clinician): ClinicianPublicDTO {
-  const dto = clinician.toClinicianDTO();
+  const dto = clinician.toClinicianDTO()
   return {
     id: clinician.id,
     name: dto.name,
@@ -21,5 +21,5 @@ export function toClinicianPublicDTO(clinician: Clinician): ClinicianPublicDTO {
     clinicId: dto.clinicId,
     roleId: dto.roleId,
     services: dto.services ?? [],
-  };
+  }
 }

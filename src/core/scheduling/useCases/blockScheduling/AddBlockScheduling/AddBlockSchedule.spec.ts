@@ -1,107 +1,107 @@
-import { createMockBlockScheduleRepository } from "../../../../../repositories/_mocks/BlockScheduleRepositoryMock";
-import { createMockSchedulingRepository } from "../../../../../repositories/_mocks/SchedulingRepositoryMock";
-import { DateTime } from "../../../../shared/Date";
-import { BlockSchedule } from "../../../models/BlockSchedule";
-import { Scheduling } from "../../../models/Scheduling";
+import { createMockBlockScheduleRepository } from '../../../../../repositories/_mocks/BlockScheduleRepositoryMock'
+import { createMockSchedulingRepository } from '../../../../../repositories/_mocks/SchedulingRepositoryMock'
+import { DateTime } from '../../../../shared/Date'
+import { BlockSchedule } from '../../../models/BlockSchedule'
+import { Scheduling } from '../../../models/Scheduling'
 
-import { IAppEventListener } from "../../../../shared/observers/EventListener";
+import { IAppEventListener } from '../../../../shared/observers/EventListener'
 import {
   AddBlockSchedulingUseCase,
   AddBlockSchedulingDTO,
-} from "./AddBlockSchedulingUseCase";
+} from './AddBlockSchedulingUseCase'
 
-describe("AddBlockScheduleUseCase", () => {
-  let addBlockSchedulingUseCase: AddBlockSchedulingUseCase;
-  const mockBlockSchedulingRepository = createMockBlockScheduleRepository();
-  const mockSchedulingRepository = createMockSchedulingRepository();
-  const eventsStub: IAppEventListener = { emit: vi.fn() };
+describe('AddBlockScheduleUseCase', () => {
+  let addBlockSchedulingUseCase: AddBlockSchedulingUseCase
+  const mockBlockSchedulingRepository = createMockBlockScheduleRepository()
+  const mockSchedulingRepository = createMockSchedulingRepository()
+  const eventsStub: IAppEventListener = { emit: vi.fn() }
 
   beforeAll(() => {
     vi
       .useFakeTimers()
-      .setSystemTime(new Date("2025-01-10T12:00:00Z").getTime());
-  });
+      .setSystemTime(new Date('2025-01-10T12:00:00Z').getTime())
+  })
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearAllMocks()
     addBlockSchedulingUseCase = new AddBlockSchedulingUseCase(
       mockBlockSchedulingRepository,
       mockSchedulingRepository,
       eventsStub,
-    );
-  });
+    )
+  })
 
-  it("Should call save method of BlockScheduleRepository with correct params", async () => {
+  it('Should call save method of BlockScheduleRepository with correct params', async () => {
     const blockSchedulingDTO: AddBlockSchedulingDTO = {
-      date: "2025-01-01T10:00",
-      endDate: "2025-01-01T11:00",
-      description: "Descrição",
-      userId: "userId",
-      clinicId: "clinic-1",
-    };
+      date: '2025-01-01T10:00',
+      endDate: '2025-01-01T11:00',
+      description: 'Descrição',
+      userId: 'userId',
+      clinicId: 'clinic-1',
+    }
 
-    await addBlockSchedulingUseCase.execute(blockSchedulingDTO);
+    await addBlockSchedulingUseCase.execute(blockSchedulingDTO)
 
-    mockSchedulingRepository.listBetweenDates.mockResolvedValue([]);
+    mockSchedulingRepository.listBetweenDates.mockResolvedValue([])
 
-    expect(mockBlockSchedulingRepository.save).toHaveBeenCalled();
+    expect(mockBlockSchedulingRepository.save).toHaveBeenCalled()
     expect(mockBlockSchedulingRepository.save).toHaveBeenCalledWith(
       expect.objectContaining({
-        description: "Descrição",
-        date: new DateTime("2025-01-01T10:00"),
-        endDate: new DateTime("2025-01-01T11:00"),
+        description: 'Descrição',
+        date: new DateTime('2025-01-01T10:00'),
+        endDate: new DateTime('2025-01-01T11:00'),
       }),
-      "userId",
-    );
-  });
+      'userId',
+    )
+  })
 
-  it("Should not save BlockSchedule if it overlaps with existing schedules", async () => {
+  it('Should not save BlockSchedule if it overlaps with existing schedules', async () => {
     const blockSchedulingDTO: AddBlockSchedulingDTO = {
-      date: "2025-01-01T10:00",
-      endDate: "2025-01-01T11:00",
-      description: "Descrição",
-      userId: "userId",
-      clinicId: "clinic-1",
-    };
+      date: '2025-01-01T10:00',
+      endDate: '2025-01-01T11:00',
+      description: 'Descrição',
+      userId: 'userId',
+      clinicId: 'clinic-1',
+    }
 
     mockSchedulingRepository.listBetweenDates.mockResolvedValue([
       new Scheduling({
-        patientId: "patientId",
-        date: "2025-01-01T10:00",
+        patientId: 'patientId',
+        date: '2025-01-01T10:00',
         duration: 60 * 60, // 1 hora
       }),
-    ]);
+    ])
 
     await expect(
       addBlockSchedulingUseCase.execute(blockSchedulingDTO),
     ).rejects.toThrow(
-      "Existe agendamentos marcados no horário que deseja bloquear",
-    );
-  });
+      'Existe agendamentos marcados no horário que deseja bloquear',
+    )
+  })
 
-  it("Should not save BlockSchedule if it overlaps with existing blockSchedule", async () => {
+  it('Should not save BlockSchedule if it overlaps with existing blockSchedule', async () => {
     const blockSchedulingDTO: AddBlockSchedulingDTO = {
-      date: "2025-01-01T10:00",
-      endDate: "2025-01-01T11:00",
-      description: "Descrição",
-      userId: "userId",
-      clinicId: "clinic-1",
-    };
+      date: '2025-01-01T10:00',
+      endDate: '2025-01-01T11:00',
+      description: 'Descrição',
+      userId: 'userId',
+      clinicId: 'clinic-1',
+    }
 
-    mockSchedulingRepository.listBetweenDates.mockResolvedValue([]);
+    mockSchedulingRepository.listBetweenDates.mockResolvedValue([])
     mockBlockSchedulingRepository.listBetweenDates.mockResolvedValue([
       new BlockSchedule({
         endDate: new DateTime(blockSchedulingDTO.endDate),
         date: new DateTime(blockSchedulingDTO.date),
       }),
-    ]);
+    ])
 
     await expect(
       addBlockSchedulingUseCase.execute(blockSchedulingDTO),
     ).rejects.toThrow(
-      "Existe agendamentos marcados no horário que deseja bloquear",
-    );
+      'Existe agendamentos marcados no horário que deseja bloquear',
+    )
 
-    expect(mockBlockSchedulingRepository.save).not.toHaveBeenCalled();
-  });
-});
+    expect(mockBlockSchedulingRepository.save).not.toHaveBeenCalled()
+  })
+})

@@ -1,94 +1,94 @@
-import { createMockProgressRepository } from "../../../../../repositories/_mocks/ProgressRepositoryMock";
-import { ApiError } from "../../../../../utils/ApiError";
-import { GetProgressUseCase } from "./GetProgressUseCase";
+import { createMockProgressRepository } from '../../../../../repositories/_mocks/ProgressRepositoryMock'
+import { ApiError } from '../../../../../utils/ApiError'
+import { GetProgressUseCase } from './GetProgressUseCase'
 
-describe("getProgressUseCase", () => {
-  let getProgressUseCase: GetProgressUseCase;
-  const mockProgressRepository = createMockProgressRepository();
+describe('getProgressUseCase', () => {
+  let getProgressUseCase: GetProgressUseCase
+  const mockProgressRepository = createMockProgressRepository()
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    getProgressUseCase = new GetProgressUseCase(mockProgressRepository);
-  });
+    vi.clearAllMocks()
+    getProgressUseCase = new GetProgressUseCase(mockProgressRepository)
+  })
 
-  describe("execute", () => {
-    it("should call the repository get method with the correct Params", async () => {
-      const id = "test-Progress-id";
-      const clinicId = "test-user-id";
-      const patientId = "test-patient-id";
+  describe('execute', () => {
+    it('should call the repository get method with the correct Params', async () => {
+      const id = 'test-Progress-id'
+      const clinicId = 'test-user-id'
+      const patientId = 'test-patient-id'
 
       mockProgressRepository.get.mockResolvedValue([
-        { id, patientId, userId: "test-clinician-id" },
-      ]);
+        { id, patientId, userId: 'test-clinician-id' },
+      ])
 
-      await getProgressUseCase.execute({ id, clinicId, patientId });
+      await getProgressUseCase.execute({ id, clinicId, patientId })
 
-      expect(mockProgressRepository.get).toHaveBeenCalledTimes(1);
+      expect(mockProgressRepository.get).toHaveBeenCalledTimes(1)
       expect(mockProgressRepository.get).toHaveBeenCalledWith({
         id,
         clinicId,
         patientId,
-      });
-    });
+      })
+    })
 
-    it("should return Progress data if it exists", async () => {
-      const id = "test-Progress-id";
-      const clinicId = "test-user-id";
-      const patientId = "test-patient-id";
+    it('should return Progress data if it exists', async () => {
+      const id = 'test-Progress-id'
+      const clinicId = 'test-user-id'
+      const patientId = 'test-patient-id'
       const progressData = {
         patientId,
-        userId: "test-clinician-id",
+        userId: 'test-clinician-id',
         id,
-        actualProblem: "actualProblem",
-        date: "2024-12-20T10:00",
-        procedures: "procedures",
-        schedulingId: "schedulingId",
-        service: "service",
-      };
-      mockProgressRepository.get.mockResolvedValue([progressData]);
+        actualProblem: 'actualProblem',
+        date: '2024-12-20T10:00',
+        procedures: 'procedures',
+        schedulingId: 'schedulingId',
+        service: 'service',
+      }
+      mockProgressRepository.get.mockResolvedValue([progressData])
 
       const result = await getProgressUseCase.execute({
         id,
         clinicId,
         patientId,
-      });
+      })
 
-      expect(result).toEqual(progressData);
-    });
+      expect(result).toEqual(progressData)
+    })
 
-    it("should throw an ApiError if progress not exists", async () => {
-      const id = "test-Progress-id";
-      const clinicId = "test-user-id";
-      const patientId = "test-patient-id";
+    it('should throw an ApiError if progress not exists', async () => {
+      const id = 'test-Progress-id'
+      const clinicId = 'test-user-id'
+      const patientId = 'test-patient-id'
 
-      mockProgressRepository.get.mockResolvedValue([]);
+      mockProgressRepository.get.mockResolvedValue([])
 
       const promiseResult = getProgressUseCase.execute({
         id,
         clinicId,
         patientId,
-      });
+      })
 
-      expect(promiseResult).rejects.toThrow(ApiError);
+      expect(promiseResult).rejects.toThrow(ApiError)
 
       expect(promiseResult).rejects.toMatchObject({
-        message: "Evolução não encontrada",
+        message: 'Evolução não encontrada',
         statusCode: 404,
         type: undefined,
-      });
-    });
+      })
+    })
 
-    it("should propagate an error if the repository get method throws", async () => {
-      const id = "test-Progress-id";
-      const clinicId = "test-user-id";
-      const patientId = "test-patient-id";
-      const errorMessage = "Failed to get Progress";
+    it('should propagate an error if the repository get method throws', async () => {
+      const id = 'test-Progress-id'
+      const clinicId = 'test-user-id'
+      const patientId = 'test-patient-id'
+      const errorMessage = 'Failed to get Progress'
 
-      mockProgressRepository.get.mockRejectedValueOnce(new Error(errorMessage));
+      mockProgressRepository.get.mockRejectedValueOnce(new Error(errorMessage))
 
       await expect(
         getProgressUseCase.execute({ id, clinicId, patientId }),
-      ).rejects.toThrow(errorMessage);
-    });
-  });
-});
+      ).rejects.toThrow(errorMessage)
+    })
+  })
+})

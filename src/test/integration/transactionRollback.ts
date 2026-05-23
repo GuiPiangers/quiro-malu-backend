@@ -1,9 +1,9 @@
-import type { Knex } from "knex";
+import type { Knex } from 'knex'
 
 class IntegrationTestRollback extends Error {
   constructor() {
-    super("INTEGRATION_TEST_ROLLBACK");
-    this.name = "IntegrationTestRollback";
+    super('INTEGRATION_TEST_ROLLBACK')
+    this.name = 'IntegrationTestRollback'
   }
 }
 
@@ -15,17 +15,17 @@ export async function withRollbackTransaction<T>(
   knex: Knex,
   fn: (trx: Knex.Transaction) => Promise<T>,
 ): Promise<T> {
-  let result!: T;
+  let result!: T
   try {
     await knex.transaction(async (trx) => {
-      result = await fn(trx);
-      throw new IntegrationTestRollback();
-    });
+      result = await fn(trx)
+      throw new IntegrationTestRollback()
+    })
   } catch (error) {
     if (error instanceof IntegrationTestRollback) {
-      return result;
+      return result
     }
-    throw error;
+    throw error
   }
-  return result;
+  return result
 }

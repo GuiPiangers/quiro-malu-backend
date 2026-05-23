@@ -1,8 +1,8 @@
-import { IPushNotificationProvider } from "../../../../repositories/notification/IPushNotificationProvider";
+import { IPushNotificationProvider } from '../../../../repositories/notification/IPushNotificationProvider'
 import {
   PushNotification,
   PushNotificationDTO,
-} from "../../models/PushNotification";
+} from '../../models/PushNotification'
 
 export class SendPushNotificationUseCase {
   constructor(private pushNotificationProvider: IPushNotificationProvider) {}
@@ -15,23 +15,23 @@ export class SendPushNotificationUseCase {
     notificationData: PushNotificationDTO;
   }) {
     try {
-      const notification = new PushNotification(notificationData);
-      const notificationDTO = notification.getDTO();
+      const notification = new PushNotification(notificationData)
+      const notificationDTO = notification.getDTO()
 
       const { subscriptions } =
         (await this.pushNotificationProvider.getAllowedSubscriptions({
           userId,
-        })) || {};
+        })) || {}
 
       if (!subscriptions) {
-        return;
+        return
       }
 
       subscriptions.map((subscription) =>
         this.pushNotificationProvider.send(subscription, notificationDTO),
-      );
+      )
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
 }

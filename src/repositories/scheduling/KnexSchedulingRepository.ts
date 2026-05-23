@@ -1,17 +1,17 @@
-import type { Knex } from "knex";
+import type { Knex } from 'knex'
 import {
   Scheduling,
   SchedulingDTO,
-} from "../../core/scheduling/models/Scheduling";
-import { SchedulingWithPatientDTO } from "../../core/scheduling/models/SchedulingWithPatient";
-import { ETableNames } from "../../database/ETableNames";
-import { ApiError } from "../../utils/ApiError";
-import { getValidObjectValues } from "../../utils/getValidObjectValues";
+} from '../../core/scheduling/models/Scheduling'
+import { SchedulingWithPatientDTO } from '../../core/scheduling/models/SchedulingWithPatient'
+import { ETableNames } from '../../database/ETableNames'
+import { ApiError } from '../../utils/ApiError'
+import { getValidObjectValues } from '../../utils/getValidObjectValues'
 import {
   ISchedulingRepository,
   ListBetweenDatesParams,
   UpdateSchedulingParams,
-} from "./ISchedulingRepository";
+} from './ISchedulingRepository'
 
 export class KnexSchedulingRepository implements ISchedulingRepository {
   constructor(private readonly knex: Knex) {}
@@ -23,23 +23,23 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
   }: ListBetweenDatesParams): Promise<Scheduling[]> {
     const result = await this.knex(ETableNames.SCHEDULES)
       .select(
-        "id",
-        "userId",
-        "patientId",
-        this.knex.raw(`DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date`),
+        'id',
+        'userId',
+        'patientId',
+        this.knex.raw('DATE_FORMAT(date, \'%Y-%m-%dT%H:%i\') as date'),
         this.knex.raw(
-          `DATE_FORMAT(reminderSentAt, '%Y-%m-%dT%H:%i') as reminderSentAt`,
+          'DATE_FORMAT(reminderSentAt, \'%Y-%m-%dT%H:%i\') as reminderSentAt',
         ),
-        "duration",
-        "status",
-        "service",
+        'duration',
+        'status',
+        'service',
       )
       .where({
         clinicId,
       })
-      .andWhereBetween("date", [startDate.dateTime, endDate.dateTime]);
+      .andWhereBetween('date', [startDate.dateTime, endDate.dateTime])
 
-    return result.map((schedulingDTO) => new Scheduling(schedulingDTO));
+    return result.map((schedulingDTO) => new Scheduling(schedulingDTO))
   }
 
   async save({
@@ -47,7 +47,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     updateAt,
     ...data
   }: SchedulingDTO & { userId: string; clinicId: string }): Promise<void> {
-    await this.knex(ETableNames.SCHEDULES).insert(data);
+    await this.knex(ETableNames.SCHEDULES).insert(data)
   }
 
   async update({
@@ -57,7 +57,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     updateAt,
     ...data
   }: UpdateSchedulingParams): Promise<void> {
-    await this.knex(ETableNames.SCHEDULES).update(data).where({ id, clinicId });
+    await this.knex(ETableNames.SCHEDULES).update(data).where({ id, clinicId })
   }
 
   async list({
@@ -73,45 +73,45 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     try {
       const query = this.knex(`${ETableNames.SCHEDULES} as s`)
         .leftJoin(`${ETableNames.PATIENTS} as p`, function joinPatients() {
-          this.on("s.patientId", "=", "p.id").andOn(
-            "s.clinicId",
-            "=",
-            "p.clinicId",
-          );
+          this.on('s.patientId', '=', 'p.id').andOn(
+            's.clinicId',
+            '=',
+            'p.clinicId',
+          )
         })
         .select(
-          "s.id",
-          "s.patientId",
-          this.knex.raw("p.name as patient"),
-          "p.phone",
-          this.knex.raw(`DATE_FORMAT(s.date, '%Y-%m-%dT%H:%i') as date`),
+          's.id',
+          's.patientId',
+          this.knex.raw('p.name as patient'),
+          'p.phone',
+          this.knex.raw('DATE_FORMAT(s.date, \'%Y-%m-%dT%H:%i\') as date'),
           this.knex.raw(
-            `DATE_FORMAT(s.reminderSentAt, '%Y-%m-%dT%H:%i') as reminderSentAt`,
+            'DATE_FORMAT(s.reminderSentAt, \'%Y-%m-%dT%H:%i\') as reminderSentAt',
           ),
-          "s.duration",
-          "s.service",
-          "s.status",
-          this.knex.raw("s.updated_at as updateAt"),
-          this.knex.raw("s.created_at as createAt"),
+          's.duration',
+          's.service',
+          's.status',
+          this.knex.raw('s.updated_at as updateAt'),
+          this.knex.raw('s.created_at as createAt'),
         )
-        .where("s.clinicId", clinicId)
+        .where('s.clinicId', clinicId)
         .andWhereRaw("date_format(s.date, '%Y-%m-%d') = ?", [date])
         .modify((qb) => {
-          if (userId !== undefined && userId !== "") {
-            qb.andWhere("s.userId", userId);
+          if (userId !== undefined && userId !== '') {
+            qb.andWhere('s.userId', userId)
           }
         })
-        .orderBy("s.updated_at", "desc");
+        .orderBy('s.updated_at', 'desc')
 
-      const result = await query;
+      const result = await query
 
       return result.map((scheduling: SchedulingWithPatientDTO) =>
         getValidObjectValues(
           scheduling,
         ),
-      );
+      )
     } catch {
-      throw new ApiError("Não foi possível realizar a busca", 500);
+      throw new ApiError('Não foi possível realizar a busca', 500)
     }
   }
 
@@ -124,14 +124,14 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
   }): Promise<[{ total: number }]> {
     try {
       const [result] = await this.knex(ETableNames.SCHEDULES)
-        .count("id as total")
+        .count('id as total')
         .where({ clinicId })
-        .andWhereRaw("date_format(date, '%Y-%m-%d') = ?", [date]);
+        .andWhereRaw("date_format(date, '%Y-%m-%d') = ?", [date])
 
-      const total = Number((result as any)?.total ?? 0);
-      return [{ total }];
+      const total = Number((result as any)?.total ?? 0)
+      return [{ total }]
     } catch {
-      throw new ApiError("Não foi possível realizar a busca", 500);
+      throw new ApiError('Não foi possível realizar a busca', 500)
     }
   }
 
@@ -148,28 +148,28 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
       const result = await this.knex(ETableNames.SCHEDULES)
         .select(
           this.knex.raw("date_format(date, '%Y-%m-%d') as formattedDate"),
-          this.knex.raw("count(id) as qtd"),
+          this.knex.raw('count(id) as qtd'),
         )
         .where({ clinicId })
-        .andWhereRaw("month(date) = ? AND year(date) = ?", [month, year])
-        .groupByRaw("date_format(date, '%Y-%m-%d')");
+        .andWhereRaw('month(date) = ? AND year(date) = ?', [month, year])
+        .groupByRaw("date_format(date, '%Y-%m-%d')")
 
       return result.map((row: any) => ({
         formattedDate: row.formattedDate,
         qtd: Number(row.qtd ?? 0),
-      }));
+      }))
     } catch {
-      throw new ApiError("Não foi possível realizar a busca", 500);
+      throw new ApiError('Não foi possível realizar a busca', 500)
     }
   }
 
   async listIdsByClinicId({ clinicId }: { clinicId: string }): Promise<string[]> {
     const rows = await this.knex(ETableNames.SCHEDULES)
-      .select("id")
+      .select('id')
       .where({ clinicId })
-      .andWhereRaw("date > NOW()");
+      .andWhereRaw('date > NOW()')
 
-    return rows.map((row: { id: string }) => row.id);
+    return rows.map((row: { id: string }) => row.id)
   }
 
   async listPatientIdsByClinicIdOrderBySchedulingCountDesc(
@@ -180,21 +180,21 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
       const rows = await this.knex(`${ETableNames.SCHEDULES} as s`)
         .join(`${ETableNames.PATIENTS} as p`, (join) => {
           join
-            .on("p.id", "=", "s.patientId")
-            .andOn("p.clinicId", "=", "s.clinicId");
+            .on('p.id', '=', 's.patientId')
+            .andOn('p.clinicId', '=', 's.clinicId')
         })
-        .where("s.clinicId", clinicId)
+        .where('s.clinicId', clinicId)
         .where((b) => {
-          b.whereNull("s.status").orWhere("s.status", "<>", "Cancelado");
+          b.whereNull('s.status').orWhere('s.status', '<>', 'Cancelado')
         })
-        .groupBy("s.patientId")
-        .select("s.patientId as patientId")
-        .orderByRaw("COUNT(*) DESC, MAX(p.created_at) DESC")
-        .limit(limit);
+        .groupBy('s.patientId')
+        .select('s.patientId as patientId')
+        .orderByRaw('COUNT(*) DESC, MAX(p.created_at) DESC')
+        .limit(limit)
 
-      return rows.map((row: { patientId: string }) => String(row.patientId));
+      return rows.map((row: { patientId: string }) => String(row.patientId))
     } catch (error: any) {
-      throw new ApiError(error.message, 500);
+      throw new ApiError(error.message, 500)
     }
   }
 
@@ -208,38 +208,38 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
     try {
       const result = await this.knex(`${ETableNames.SCHEDULES} as s`)
         .leftJoin(`${ETableNames.PATIENTS} as p`, function joinPatients() {
-          this.on("s.patientId", "=", "p.id").andOn(
-            "s.clinicId",
-            "=",
-            "p.clinicId",
-          );
+          this.on('s.patientId', '=', 'p.id').andOn(
+            's.clinicId',
+            '=',
+            'p.clinicId',
+          )
         })
         .select(
-          "s.id",
-          "s.patientId",
-          this.knex.raw("p.name as patient"),
-          "p.phone",
-          this.knex.raw(`DATE_FORMAT(s.date, '%Y-%m-%dT%H:%i') as date`),
+          's.id',
+          's.patientId',
+          this.knex.raw('p.name as patient'),
+          'p.phone',
+          this.knex.raw('DATE_FORMAT(s.date, \'%Y-%m-%dT%H:%i\') as date'),
           this.knex.raw(
-            `DATE_FORMAT(s.reminderSentAt, '%Y-%m-%dT%H:%i') as reminderSentAt`,
+            'DATE_FORMAT(s.reminderSentAt, \'%Y-%m-%dT%H:%i\') as reminderSentAt',
           ),
-          "s.duration",
-          "s.service",
-          "s.status",
-          this.knex.raw("s.updated_at as updateAt"),
-          this.knex.raw("s.created_at as createAt"),
+          's.duration',
+          's.service',
+          's.status',
+          this.knex.raw('s.updated_at as updateAt'),
+          this.knex.raw('s.created_at as createAt'),
         )
-        .where({ "s.id": id, "s.clinicId": clinicId });
+        .where({ 's.id': id, 's.clinicId': clinicId })
 
       return result.map((scheduling) =>
         getValidObjectValues(scheduling as SchedulingWithPatientDTO),
-      );
+      )
     } catch {
-      throw new ApiError("Não foi possível realizar a busca", 500);
+      throw new ApiError('Não foi possível realizar a busca', 500)
     }
   }
 
   async delete({ id, clinicId }: { id: string; clinicId: string }): Promise<void> {
-    await this.knex(ETableNames.SCHEDULES).where({ id, clinicId }).del();
+    await this.knex(ETableNames.SCHEDULES).where({ id, clinicId }).del()
   }
 }

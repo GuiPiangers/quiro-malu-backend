@@ -1,4 +1,4 @@
-import { db } from "../../database/knex";
-import { KnexProgressRepository } from "./KnexProgressRepository";
+import { db } from '../../database/knex'
+import { KnexProgressRepository } from './KnexProgressRepository'
 
-export const knexProgressRepository = new KnexProgressRepository(db);
+export const knexProgressRepository = new KnexProgressRepository(db)

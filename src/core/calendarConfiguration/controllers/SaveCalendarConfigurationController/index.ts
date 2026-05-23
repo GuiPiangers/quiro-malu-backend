@@ -1,13 +1,13 @@
-import { MongooseCalendarConfigurationRepository } from "../../../../repositories/calendarConfiguration/MongooseCalendarConfigurationRepository";
-import { SaveCalendarConfigurationUseCase } from "../../useCases/saveCalendarConfiguration/SaveCalendarConfiguration";
-import { SaveCalendarConfigurationController } from "./SaveCalendarConfigurationController";
+import { MongooseCalendarConfigurationRepository } from '../../../../repositories/calendarConfiguration/MongooseCalendarConfigurationRepository'
+import { SaveCalendarConfigurationUseCase } from '../../useCases/saveCalendarConfiguration/SaveCalendarConfiguration'
+import { SaveCalendarConfigurationController } from './SaveCalendarConfigurationController'
 
 const calendarConfigurationRepository =
-  new MongooseCalendarConfigurationRepository();
+  new MongooseCalendarConfigurationRepository()
 const saveCalendarConfigurationUseCase = new SaveCalendarConfigurationUseCase(
   calendarConfigurationRepository,
-);
+)
 const saveCalendarConfigurationController =
-  new SaveCalendarConfigurationController(saveCalendarConfigurationUseCase);
+  new SaveCalendarConfigurationController(saveCalendarConfigurationUseCase)
 
-export { saveCalendarConfigurationController };
+export { saveCalendarConfigurationController }

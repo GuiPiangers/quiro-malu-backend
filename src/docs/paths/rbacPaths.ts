@@ -1,8 +1,8 @@
-import { UserDetailSchema } from "../../core/authentication/controllers/getUserController/userDetailSchemas";
+import { UserDetailSchema } from '../../core/authentication/controllers/getUserController/userDetailSchemas'
 import {
   ListUsersResponseSchema,
   UserItemSchema,
-} from "../../core/authentication/controllers/listUsersController/listUsersSchemas";
+} from '../../core/authentication/controllers/listUsersController/listUsersSchemas'
 import {
   CreateRoleBodySchema,
   ListPermissionCatalogResponseSchema,
@@ -14,263 +14,263 @@ import {
   RoleRowResponseSchema,
   UpdateRoleBodySchema,
   UserIdParamsSchema,
-} from "../../core/rbac/schemas/rbacSchemas";
-import { openApiRegistry } from "../registry";
+} from '../../core/rbac/schemas/rbacSchemas'
+import { openApiRegistry } from '../registry'
 
-const bearer = [{ bearerAuth: [] }];
+const bearer = [{ bearerAuth: [] }]
 
 /** Usuários da clínica (agrupado para teste no Swagger, logo após Auth). */
 openApiRegistry.registerPath({
-  method: "get",
-  path: "/users",
-  tags: ["Users"],
+  method: 'get',
+  path: '/users',
+  tags: ['Users'],
   summary:
-    "Lista usuários da clínica do token (sem senha). Requer permissão `users:read`.",
+    'Lista usuários da clínica do token (sem senha). Requer permissão `users:read`.',
   security: bearer,
   responses: {
     200: {
-      description: "Lista de usuários",
+      description: 'Lista de usuários',
       content: {
-        "application/json": { schema: ListUsersResponseSchema },
+        'application/json': { schema: ListUsersResponseSchema },
       },
     },
-    401: { description: "Não autenticado" },
-    403: { description: "Sem permissão `users:read`" },
+    401: { description: 'Não autenticado' },
+    403: { description: 'Sem permissão `users:read`' },
   },
-});
+})
 
 openApiRegistry.registerPath({
-  method: "get",
-  path: "/users/{id}",
-  tags: ["Users"],
-  summary: "Buscar usuário da clínica por id",
+  method: 'get',
+  path: '/users/{id}',
+  tags: ['Users'],
+  summary: 'Buscar usuário da clínica por id',
   description:
-    "Retorna usuário comum (`kind: user`) ou clínico (`kind: clinician` + `services`) conforme existir perfil em `clinicians`. Sem senha. Requer `users:read`.",
+    'Retorna usuário comum (`kind: user`) ou clínico (`kind: clinician` + `services`) conforme existir perfil em `clinicians`. Sem senha. Requer `users:read`.',
   security: bearer,
   request: {
     params: UserIdParamsSchema,
   },
   responses: {
     200: {
-      description: "Usuário encontrado",
+      description: 'Usuário encontrado',
       content: {
-        "application/json": { schema: UserDetailSchema },
+        'application/json': { schema: UserDetailSchema },
       },
     },
-    401: { description: "Não autenticado" },
-    403: { description: "Sem permissão `users:read`" },
-    404: { description: "Usuário não encontrado" },
+    401: { description: 'Não autenticado' },
+    403: { description: 'Sem permissão `users:read`' },
+    404: { description: 'Usuário não encontrado' },
   },
-});
+})
 
 openApiRegistry.registerPath({
-  method: "patch",
-  path: "/users/{id}/role",
-  tags: ["Users"],
-  summary: "Define o papel do usuário na clínica",
+  method: 'patch',
+  path: '/users/{id}/role',
+  tags: ['Users'],
+  summary: 'Define o papel do usuário na clínica',
   description:
-    "Atualiza `roleId` apenas se o usuário existir com `clinicId` igual ao da sessão (filtro no repositório). Ver `docs/PROJECT_GUIDE.md` (Escopo por clínica).",
+    'Atualiza `roleId` apenas se o usuário existir com `clinicId` igual ao da sessão (filtro no repositório). Ver `docs/PROJECT_GUIDE.md` (Escopo por clínica).',
   security: bearer,
   request: {
     params: UserIdParamsSchema,
     body: {
       content: {
-        "application/json": {
+        'application/json': {
           schema: PatchUserRoleBodySchema,
           example: {
-            roleId: "bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbbb",
+            roleId: 'bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbbb',
           },
         },
       },
     },
   },
   responses: {
-    204: { description: "Papel atualizado" },
-    400: { description: "Corpo ou parâmetros inválidos (Zod)" },
-    401: { description: "Não autenticado" },
-    403: { description: "Sem permissão `users:write`" },
-    404: { description: "Usuário ou papel não encontrado" },
+    204: { description: 'Papel atualizado' },
+    400: { description: 'Corpo ou parâmetros inválidos (Zod)' },
+    401: { description: 'Não autenticado' },
+    403: { description: 'Sem permissão `users:write`' },
+    404: { description: 'Usuário ou papel não encontrado' },
   },
-});
+})
 
 openApiRegistry.registerPath({
-  method: "delete",
-  path: "/users/{id}",
-  tags: ["Users"],
-  summary: "Remove usuário da clínica",
+  method: 'delete',
+  path: '/users/{id}',
+  tags: ['Users'],
+  summary: 'Remove usuário da clínica',
   description:
-    "Exclui o registro do usuário na clínica do token. Agendamentos ligados a esse usuário mantêm a linha com `userId` nulo (FK `schedules.userId` ON DELETE SET NULL). Requer `users:write`.",
+    'Exclui o registro do usuário na clínica do token. Agendamentos ligados a esse usuário mantêm a linha com `userId` nulo (FK `schedules.userId` ON DELETE SET NULL). Requer `users:write`.',
   security: bearer,
   request: {
     params: UserIdParamsSchema,
   },
   responses: {
-    204: { description: "Usuário removido" },
-    400: { description: "Tentativa de remover a si mesmo" },
-    401: { description: "Não autenticado" },
-    403: { description: "Sem permissão `users:write`" },
-    404: { description: "Usuário não encontrado" },
+    204: { description: 'Usuário removido' },
+    400: { description: 'Tentativa de remover a si mesmo' },
+    401: { description: 'Não autenticado' },
+    403: { description: 'Sem permissão `users:write`' },
+    404: { description: 'Usuário não encontrado' },
   },
-});
+})
 
 /** Catálogo de permissões e papéis (RBAC). */
 openApiRegistry.registerPath({
-  method: "get",
-  path: "/permissions",
-  tags: ["RBAC"],
-  summary: "Lista permissões fixas do sistema",
+  method: 'get',
+  path: '/permissions',
+  tags: ['RBAC'],
+  summary: 'Lista permissões fixas do sistema',
   description:
-    "Catálogo para montar formulários de papéis. Requer permissão `users:read`.",
+    'Catálogo para montar formulários de papéis. Requer permissão `users:read`.',
   security: bearer,
   responses: {
     200: {
-      description: "Lista ordenada por módulo e ação",
+      description: 'Lista ordenada por módulo e ação',
       content: {
-        "application/json": { schema: ListPermissionCatalogResponseSchema },
+        'application/json': { schema: ListPermissionCatalogResponseSchema },
       },
     },
-    401: { description: "Não autenticado" },
-    403: { description: "Sem permissão `users:read`" },
+    401: { description: 'Não autenticado' },
+    403: { description: 'Sem permissão `users:read`' },
   },
-});
+})
 
 openApiRegistry.registerPath({
-  method: "get",
-  path: "/roles",
-  tags: ["RBAC"],
-  summary: "Lista papéis da clínica do usuário",
+  method: 'get',
+  path: '/roles',
+  tags: ['RBAC'],
+  summary: 'Lista papéis da clínica do usuário',
   security: bearer,
   responses: {
     200: {
-      description: "Papéis da clínica",
+      description: 'Papéis da clínica',
       content: {
-        "application/json": { schema: ListRolesResponseSchema },
+        'application/json': { schema: ListRolesResponseSchema },
       },
     },
-    401: { description: "Não autenticado" },
-    403: { description: "Sem permissão `users:read`" },
+    401: { description: 'Não autenticado' },
+    403: { description: 'Sem permissão `users:read`' },
   },
-});
+})
 
 openApiRegistry.registerPath({
-  method: "post",
-  path: "/roles",
-  tags: ["RBAC"],
-  summary: "Cria papel na clínica",
+  method: 'post',
+  path: '/roles',
+  tags: ['RBAC'],
+  summary: 'Cria papel na clínica',
   security: bearer,
   request: {
     body: {
       content: {
-        "application/json": {
+        'application/json': {
           schema: CreateRoleBodySchema,
-          example: { name: "Recepcionista", description: "Acesso restrito" },
+          example: { name: 'Recepcionista', description: 'Acesso restrito' },
         },
       },
     },
   },
   responses: {
     201: {
-      description: "Papel criado",
+      description: 'Papel criado',
       content: {
-        "application/json": { schema: RoleRowResponseSchema },
+        'application/json': { schema: RoleRowResponseSchema },
       },
     },
-    400: { description: "Corpo inválido ou nome duplicado" },
-    401: { description: "Não autenticado" },
-    403: { description: "Sem permissão `users:write`" },
+    400: { description: 'Corpo inválido ou nome duplicado' },
+    401: { description: 'Não autenticado' },
+    403: { description: 'Sem permissão `users:write`' },
   },
-});
+})
 
 openApiRegistry.registerPath({
-  method: "patch",
-  path: "/roles/{id}",
-  tags: ["RBAC"],
-  summary: "Atualiza nome ou descrição do papel",
+  method: 'patch',
+  path: '/roles/{id}',
+  tags: ['RBAC'],
+  summary: 'Atualiza nome ou descrição do papel',
   security: bearer,
   request: {
     params: RoleIdParamsSchema,
     body: {
       content: {
-        "application/json": {
+        'application/json': {
           schema: UpdateRoleBodySchema,
-          example: { name: "Recepcionista (noite)" },
+          example: { name: 'Recepcionista (noite)' },
         },
       },
     },
   },
   responses: {
-    204: { description: "Atualizado" },
-    400: { description: "Corpo ou parâmetros inválidos" },
-    401: { description: "Não autenticado" },
-    403: { description: "Sem permissão `users:write`" },
-    404: { description: "Papel não encontrado" },
+    204: { description: 'Atualizado' },
+    400: { description: 'Corpo ou parâmetros inválidos' },
+    401: { description: 'Não autenticado' },
+    403: { description: 'Sem permissão `users:write`' },
+    404: { description: 'Papel não encontrado' },
   },
-});
+})
 
 openApiRegistry.registerPath({
-  method: "delete",
-  path: "/roles/{id}",
-  tags: ["RBAC"],
-  summary: "Remove papel (não permite excluir papel de sistema)",
+  method: 'delete',
+  path: '/roles/{id}',
+  tags: ['RBAC'],
+  summary: 'Remove papel (não permite excluir papel de sistema)',
   security: bearer,
   request: { params: RoleIdParamsSchema },
   responses: {
-    204: { description: "Removido" },
-    400: { description: "Regra de negócio (ex.: papel de sistema)" },
-    401: { description: "Não autenticado" },
-    403: { description: "Sem permissão `users:write`" },
-    404: { description: "Papel não encontrado" },
+    204: { description: 'Removido' },
+    400: { description: 'Regra de negócio (ex.: papel de sistema)' },
+    401: { description: 'Não autenticado' },
+    403: { description: 'Sem permissão `users:write`' },
+    404: { description: 'Papel não encontrado' },
   },
-});
+})
 
 openApiRegistry.registerPath({
-  method: "get",
-  path: "/roles/{id}/permissions",
-  tags: ["RBAC"],
-  summary: "Lista permissões e escopos do papel",
+  method: 'get',
+  path: '/roles/{id}/permissions',
+  tags: ['RBAC'],
+  summary: 'Lista permissões e escopos do papel',
   security: bearer,
   request: { params: RoleIdParamsSchema },
   responses: {
     200: {
-      description: "Permissões do papel",
+      description: 'Permissões do papel',
       content: {
-        "application/json": { schema: ListRolePermissionsResponseSchema },
+        'application/json': { schema: ListRolePermissionsResponseSchema },
       },
     },
-    400: { description: "Parâmetros inválidos" },
-    401: { description: "Não autenticado" },
-    403: { description: "Sem permissão `users:read`" },
-    404: { description: "Papel não encontrado" },
+    400: { description: 'Parâmetros inválidos' },
+    401: { description: 'Não autenticado' },
+    403: { description: 'Sem permissão `users:read`' },
+    404: { description: 'Papel não encontrado' },
   },
-});
+})
 
 openApiRegistry.registerPath({
-  method: "put",
-  path: "/roles/{id}/permissions",
-  tags: ["RBAC"],
-  summary: "Substitui permissões do papel (corpo completo)",
+  method: 'put',
+  path: '/roles/{id}/permissions',
+  tags: ['RBAC'],
+  summary: 'Substitui permissões do papel (corpo completo)',
   description:
-    "Não permite alterar permissões de um papel de sistema (`isSystem`). `scope` é JSON opcional (ex.: `{ \"type\": \"all\" }`).",
+    'Não permite alterar permissões de um papel de sistema (`isSystem`). `scope` é JSON opcional (ex.: `{ "type": "all" }`).',
   security: bearer,
   request: {
     params: RoleIdParamsSchema,
     body: {
       content: {
-        "application/json": {
+        'application/json': {
           schema: ReplaceRolePermissionsBodySchema,
           example: [
-            { permissionKey: "patients:read", scope: null },
-            { permissionKey: "schedules:read", scope: { type: "own" } },
+            { permissionKey: 'patients:read', scope: null },
+            { permissionKey: 'schedules:read', scope: { type: 'own' } },
           ],
         },
       },
     },
   },
   responses: {
-    204: { description: "Permissões atualizadas" },
-    400: { description: "Corpo inválido ou papel de sistema" },
-    401: { description: "Não autenticado" },
-    403: { description: "Sem permissão `users:write`" },
-    404: { description: "Papel não encontrado" },
+    204: { description: 'Permissões atualizadas' },
+    400: { description: 'Corpo inválido ou papel de sistema' },
+    401: { description: 'Não autenticado' },
+    403: { description: 'Sem permissão `users:write`' },
+    404: { description: 'Papel não encontrado' },
   },
-});
+})

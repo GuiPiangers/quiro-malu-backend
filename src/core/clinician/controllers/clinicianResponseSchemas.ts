@@ -1,5 +1,5 @@
-import { z } from "../../../schemas/zodOpenApi";
-import { ServiceItemSchema } from "../../service/controllers/serviceResponseSchemas";
+import { z } from '../../../schemas/zodOpenApi'
+import { ServiceItemSchema } from '../../service/controllers/serviceResponseSchemas'
 
 export const ClinicianItemSchema = z
   .object({
@@ -11,10 +11,10 @@ export const ClinicianItemSchema = z
     roleId: z.string().optional(),
     services: z.array(ServiceItemSchema),
   })
-  .openapi("ClinicianItem");
+  .openapi('ClinicianItem')
 
 export const ListClinicianUsersResponseSchema = z
   .object({
     result: z.array(ClinicianItemSchema),
   })
-  .openapi("ListClinicianUsersResponse");
+  .openapi('ListClinicianUsersResponse')

@@ -1,4 +1,4 @@
-import { z } from "../../../../schemas/zodOpenApi";
+import { z } from '../../../../schemas/zodOpenApi'
 
 export const SetAnamnesisBodySchema = z
   .object({
@@ -8,12 +8,12 @@ export const SetAnamnesisBodySchema = z
     history: z.string().optional(),
     familiarHistory: z.string().optional(),
     activities: z.string().optional(),
-    smoke: z.enum(["yes", "no", "passive"]).optional(),
+    smoke: z.enum(['yes', 'no', 'passive']).optional(),
     useMedicine: z.boolean().optional(),
     medicines: z.string().optional(),
     underwentSurgery: z.boolean().optional(),
     surgeries: z.string().optional(),
   })
-  .openapi("SetAnamnesisBody");
+  .openapi('SetAnamnesisBody')
 
-export type SetAnamnesisBody = z.infer<typeof SetAnamnesisBodySchema>;
+export type SetAnamnesisBody = z.infer<typeof SetAnamnesisBodySchema>

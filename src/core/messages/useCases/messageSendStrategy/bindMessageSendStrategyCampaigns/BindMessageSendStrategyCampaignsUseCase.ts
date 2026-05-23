@@ -1,12 +1,12 @@
-import { ApiError } from "../../../../../utils/ApiError";
-import { IMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
-import { UNIQUE_USER_STRATEGY_ID } from "../../../sendStrategy/sendStrategyKind";
+import { ApiError } from '../../../../../utils/ApiError'
+import { IMessageSendStrategyRepository } from '../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository'
+import { UNIQUE_USER_STRATEGY_ID } from '../../../sendStrategy/sendStrategyKind'
 
 export type BindMessageSendStrategyCampaignsDTO = {
   userId: string;
   campaignId: string;
   strategyIds: string[];
-};
+}
 
 export class BindMessageSendStrategyCampaignsUseCase {
   constructor(
@@ -16,32 +16,32 @@ export class BindMessageSendStrategyCampaignsUseCase {
   async execute(dto: BindMessageSendStrategyCampaignsDTO): Promise<void> {
     if (!dto.strategyIds?.length) {
       throw new ApiError(
-        "strategyIds deve ter ao menos um item",
+        'strategyIds deve ter ao menos um item',
         400,
-        "strategyIds",
-      );
+        'strategyIds',
+      )
     }
 
-    const seen = new Set<string>();
-    const uniqueStrategyIds: string[] = [];
+    const seen = new Set<string>()
+    const uniqueStrategyIds: string[] = []
     for (const strategyId of dto.strategyIds) {
       if (seen.has(strategyId)) {
-        continue;
+        continue
       }
-      seen.add(strategyId);
-      uniqueStrategyIds.push(strategyId);
+      seen.add(strategyId)
+      uniqueStrategyIds.push(strategyId)
     }
 
     for (const strategyId of uniqueStrategyIds) {
       if (strategyId === UNIQUE_USER_STRATEGY_ID) {
-        continue;
+        continue
       }
       const strategy = await this.messageSendStrategyRepository.findByIdAndUserId(
         strategyId,
         dto.userId,
-      );
+      )
       if (!strategy) {
-        throw new ApiError("Estratégia não encontrada", 404);
+        throw new ApiError('Estratégia não encontrada', 404)
       }
     }
 
@@ -49,6 +49,6 @@ export class BindMessageSendStrategyCampaignsUseCase {
       dto.userId,
       dto.campaignId,
       uniqueStrategyIds,
-    );
+    )
   }
 }

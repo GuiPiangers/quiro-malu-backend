@@ -1,13 +1,13 @@
-import { z } from "../../../schemas/zodOpenApi";
+import { z } from '../../../schemas/zodOpenApi'
 import {
   MessageTemplateNestedSchema,
-} from "./messagesCommonSchemas";
+} from './messagesCommonSchemas'
 
 const MINUTES_BEFORE_DOC =
-  "Minutos antes do horário da consulta para enviar a mensagem (inteiro > 0).";
+  'Minutos antes do horário da consulta para enviar a mensagem (inteiro > 0).'
 
 const MINUTES_AFTER_DOC =
-  "Minutos após o horário da consulta para enviar a mensagem (inteiro > 0).";
+  'Minutos após o horário da consulta para enviar a mensagem (inteiro > 0).'
 
 export const CreateBeforeScheduleMessageBodySchema = z
   .object({
@@ -20,7 +20,7 @@ export const CreateBeforeScheduleMessageBodySchema = z
     isActive: z.boolean().optional(),
     messageTemplate: MessageTemplateNestedSchema,
   })
-  .openapi("CreateBeforeScheduleMessageBody");
+  .openapi('CreateBeforeScheduleMessageBody')
 
 export const UpdateBeforeScheduleMessageBodySchema = z
   .object({
@@ -34,7 +34,7 @@ export const UpdateBeforeScheduleMessageBodySchema = z
     isActive: z.boolean().optional(),
     messageTemplate: MessageTemplateNestedSchema.optional(),
   })
-  .openapi("UpdateBeforeScheduleMessageBody");
+  .openapi('UpdateBeforeScheduleMessageBody')
 
 export const CreateAfterScheduleMessageBodySchema = z
   .object({
@@ -47,7 +47,7 @@ export const CreateAfterScheduleMessageBodySchema = z
     isActive: z.boolean().optional(),
     messageTemplate: MessageTemplateNestedSchema,
   })
-  .openapi("CreateAfterScheduleMessageBody");
+  .openapi('CreateAfterScheduleMessageBody')
 
 export const UpdateAfterScheduleMessageBodySchema = z
   .object({
@@ -61,4 +61,4 @@ export const UpdateAfterScheduleMessageBodySchema = z
     isActive: z.boolean().optional(),
     messageTemplate: MessageTemplateNestedSchema.optional(),
   })
-  .openapi("UpdateAfterScheduleMessageBody");
+  .openapi('UpdateAfterScheduleMessageBody')

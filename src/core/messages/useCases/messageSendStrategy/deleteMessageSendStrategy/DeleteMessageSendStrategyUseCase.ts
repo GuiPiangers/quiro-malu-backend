@@ -1,9 +1,9 @@
-import { IMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
+import { IMessageSendStrategyRepository } from '../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository'
 
 export type DeleteMessageSendStrategyDTO = {
   userId: string;
   strategyId: string;
-};
+}
 
 export class DeleteMessageSendStrategyUseCase {
   constructor(
@@ -14,6 +14,6 @@ export class DeleteMessageSendStrategyUseCase {
     await this.messageSendStrategyRepository.deleteByIdAndUserId(
       dto.strategyId,
       dto.userId,
-    );
+    )
   }
 }

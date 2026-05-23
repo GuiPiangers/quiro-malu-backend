@@ -1,4 +1,4 @@
-import { RefreshTokenDTO } from "../../core/authentication/models/RefreshToken";
+import { RefreshTokenDTO } from '../../core/authentication/models/RefreshToken'
 
 export interface IRefreshTokenProvider {
   generate(refreshToken: RefreshTokenDTO): Promise<void>;

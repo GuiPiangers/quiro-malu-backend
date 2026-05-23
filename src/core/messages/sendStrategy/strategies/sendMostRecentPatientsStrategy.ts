@@ -1,9 +1,9 @@
-import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
-import { IMessageSendStrategy, SendStrategyContext } from "../IMessageSendStrategy";
-import { SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS } from "../sendStrategyKind";
+import { IPatientRepository } from '../../../../repositories/patient/IPatientRepository'
+import { IMessageSendStrategy, SendStrategyContext } from '../IMessageSendStrategy'
+import { SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS } from '../sendStrategyKind'
 
 export class SendMostRecentPatientsStrategy implements IMessageSendStrategy {
-  readonly kind = SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS;
+  readonly kind = SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS
 
   constructor(
     private readonly amount: number,
@@ -14,8 +14,8 @@ export class SendMostRecentPatientsStrategy implements IMessageSendStrategy {
     const recent = await this.patientRepository.getMostRecent(
       ctx.clinicId,
       this.amount,
-    );
-    const ids = new Set(recent.map((p) => p.id).filter(Boolean) as string[]);
-    return ids.has(ctx.patientId);
+    )
+    const ids = new Set(recent.map((p) => p.id).filter(Boolean) as string[])
+    return ids.has(ctx.patientId)
   }
 }

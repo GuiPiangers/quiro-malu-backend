@@ -1,5 +1,5 @@
-import { z } from "../../../schemas/zodOpenApi";
-import { SERVICE_DURATION_SECONDS_DOC } from "./serviceSharedSchemas";
+import { z } from '../../../schemas/zodOpenApi'
+import { SERVICE_DURATION_SECONDS_DOC } from './serviceSharedSchemas'
 
 /** Retorno de `Service.getDTO()` / repositório. */
 export const ServiceItemSchema = z
@@ -9,7 +9,7 @@ export const ServiceItemSchema = z
     value: z.number(),
     duration: z.number().describe(SERVICE_DURATION_SECONDS_DOC),
   })
-  .openapi("ServiceItem");
+  .openapi('ServiceItem')
 
 export const ListServicesResponseSchema = z
   .object({
@@ -17,4 +17,4 @@ export const ListServicesResponseSchema = z
     total: z.number(),
     limit: z.number(),
   })
-  .openapi("ListServicesResponse");
+  .openapi('ListServicesResponse')

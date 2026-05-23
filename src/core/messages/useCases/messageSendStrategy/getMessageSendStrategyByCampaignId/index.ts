@@ -1,9 +1,9 @@
-import { GetMessageSendStrategyByCampaignIdUseCase } from "./GetMessageSendStrategyByCampaignIdUseCase";
-import { knexMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/knexInstances";
+import { GetMessageSendStrategyByCampaignIdUseCase } from './GetMessageSendStrategyByCampaignIdUseCase'
+import { knexMessageSendStrategyRepository } from '../../../../../repositories/messageSendStrategy/knexInstances'
 
-const messageSendStrategyRepository = knexMessageSendStrategyRepository;
+const messageSendStrategyRepository = knexMessageSendStrategyRepository
 
 const getMessageSendStrategyByCampaignIdUseCase =
-  new GetMessageSendStrategyByCampaignIdUseCase(messageSendStrategyRepository);
+  new GetMessageSendStrategyByCampaignIdUseCase(messageSendStrategyRepository)
 
-export { getMessageSendStrategyByCampaignIdUseCase };
+export { getMessageSendStrategyByCampaignIdUseCase }

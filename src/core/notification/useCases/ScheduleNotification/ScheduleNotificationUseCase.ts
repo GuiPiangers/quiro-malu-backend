@@ -1,9 +1,9 @@
-import { DateTime as Luxon } from "luxon";
-import { IPushNotificationQueue } from "../../../../database/bull/pushNotifications/IPushNotificationQueue";
-import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
-import { SchedulingDTO } from "../../../scheduling/models/Scheduling";
-import { DateTime } from "../../../shared/Date";
-import { PushNotification } from "../../models/PushNotification";
+import { DateTime as Luxon } from 'luxon'
+import { IPushNotificationQueue } from '../../../../database/bull/pushNotifications/IPushNotificationQueue'
+import { ISchedulingRepository } from '../../../../repositories/scheduling/ISchedulingRepository'
+import { SchedulingDTO } from '../../../scheduling/models/Scheduling'
+import { DateTime } from '../../../shared/Date'
+import { PushNotification } from '../../models/PushNotification'
 
 export class ScheduleNotificationUseCase {
   constructor(
@@ -17,50 +17,49 @@ export class ScheduleNotificationUseCase {
     ...schedule
   }: SchedulingDTO & { userId: string; clinicId: string }) {
     try {
-      if (!schedule.id) return;
-      const preTimer = 15;
-      const maxOldDelay = 3600 * 1000; // 1 hora
+      if (!schedule.id) return
+      const preTimer = 15
+      const maxOldDelay = 3600 * 1000 // 1 hora
 
       const [data] = await this.scheduleRepository.get({
         id: schedule.id,
         clinicId,
-      });
+      })
 
-      if (!data || !schedule.date) return;
-      if (schedule.status === "Cancelado" || schedule.status === "Atendido")
-        return;
+      if (!data || !schedule.date) return
+      if (schedule.status === 'Cancelado' || schedule.status === 'Atendido') { return }
 
-      const delay = this.calculateDelay(schedule.date, preTimer);
+      const delay = this.calculateDelay(schedule.date, preTimer)
 
-      if (delay < -maxOldDelay) return;
+      if (delay < -maxOldDelay) return
 
       const scheduleData = DateTime.toLocaleDate(
         new DateTime(schedule.date).date,
-      );
-      const scheduleTime = new DateTime(schedule.date).time;
+      )
+      const scheduleTime = new DateTime(schedule.date).time
 
       const notification = new PushNotification({
         id: schedule.id,
-        type: "scheduling",
+        type: 'scheduling',
         title: `Consulta agendada com o(a) ${data.patient} está prestes a começar`,
         message: `A consulta está agendada para às ${scheduleTime} do dia ${scheduleData}`,
-      }).getDTO();
+      }).getDTO()
 
       this.pushNotificationQueue.add({
         delay,
         notification,
         userId,
-      });
+      })
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
 
   async deleteSchedule({ scheduleId }: { scheduleId: string }) {
     try {
-      await this.pushNotificationQueue.delete({ id: scheduleId });
+      await this.pushNotificationQueue.delete({ id: scheduleId })
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
 
@@ -70,22 +69,22 @@ export class ScheduleNotificationUseCase {
     ...schedule
   }: SchedulingDTO & { userId: string; clinicId: string }) {
     try {
-      if (!schedule.id) return;
+      if (!schedule.id) return
 
-      await this.deleteSchedule({ scheduleId: schedule.id });
-      await this.schedule({ userId, clinicId, ...schedule });
+      await this.deleteSchedule({ scheduleId: schedule.id })
+      await this.schedule({ userId, clinicId, ...schedule })
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
 
   private calculateDelay(date: string, preTimer: number) {
     const scheduledDate = Luxon.fromISO(date, {
-      zone: "America/Sao_Paulo",
-    }).minus({ minutes: preTimer });
-    const scheduleDateTime = new DateTime(scheduledDate.toISO()!);
+      zone: 'America/Sao_Paulo',
+    }).minus({ minutes: preTimer })
+    const scheduleDateTime = new DateTime(scheduledDate.toISO()!)
 
-    const delay = DateTime.difference(scheduleDateTime, DateTime.now());
-    return delay;
+    const delay = DateTime.difference(scheduleDateTime, DateTime.now())
+    return delay
   }
 }

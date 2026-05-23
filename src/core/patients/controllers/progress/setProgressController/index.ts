@@ -1,7 +1,7 @@
-import { setProgressUseCaseFactory } from "../../../../shared/factories/setProgressUseCaseFactory";
-import { SetProgressController } from "./SetProgressController";
+import { setProgressUseCaseFactory } from '../../../../shared/factories/setProgressUseCaseFactory'
+import { SetProgressController } from './SetProgressController'
 
-const setProgressUseCase = setProgressUseCaseFactory();
-const setProgressController = new SetProgressController(setProgressUseCase);
+const setProgressUseCase = setProgressUseCaseFactory()
+const setProgressController = new SetProgressController(setProgressUseCase)
 
-export { setProgressController };
+export { setProgressController }

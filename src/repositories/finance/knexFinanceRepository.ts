@@ -1,6 +1,6 @@
-import type { Knex } from "knex";
-import { Finance, FinanceDTO } from "../../core/finances/models/Finance";
-import { ETableNames } from "../../database/ETableNames";
+import type { Knex } from 'knex'
+import { Finance, FinanceDTO } from '../../core/finances/models/Finance'
+import { ETableNames } from '../../database/ETableNames'
 import {
   setFinanceProps,
   updateFinanceProps,
@@ -9,7 +9,7 @@ import {
   IFinanceRepository,
   listFinanceProps,
   getBySchedulingFinanceProps,
-} from "./IFinanceRepository";
+} from './IFinanceRepository'
 
 export class KnexFinanceRepository implements IFinanceRepository {
   constructor(private readonly knex: Knex) {}
@@ -18,19 +18,19 @@ export class KnexFinanceRepository implements IFinanceRepository {
     return await this.knex(ETableNames.FINANCES).insert({
       ...data,
       clinicId,
-    });
+    })
   }
 
   async update({ clinicId, id, ...data }: updateFinanceProps): Promise<void> {
     await this.knex(ETableNames.FINANCES)
       .update(data)
-      .where({ id, clinicId });
+      .where({ id, clinicId })
   }
 
   async delete({ clinicId, id }: deleteFinanceProps): Promise<void> {
     await this.knex(ETableNames.FINANCES)
       .where({ clinicId, id })
-      .del();
+      .del()
   }
 
   async get({ id, clinicId }: getFinanceProps): Promise<FinanceDTO> {
@@ -40,7 +40,7 @@ export class KnexFinanceRepository implements IFinanceRepository {
           "value, description, DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date, id, patientId, type, paymentMethod",
         ),
       )
-      .where({ id, clinicId });
+      .where({ id, clinicId })
   }
 
   async getByScheduling({
@@ -53,7 +53,7 @@ export class KnexFinanceRepository implements IFinanceRepository {
           "value, description, DATE_FORMAT(date, '%Y-%m-%dT%H:%i') as date, id, patientId, type, paymentMethod",
         ),
       )
-      .where({ schedulingId, clinicId });
+      .where({ schedulingId, clinicId })
   }
 
   async list({
@@ -68,13 +68,13 @@ export class KnexFinanceRepository implements IFinanceRepository {
         ),
       )
       .where({ clinicId })
-      .andWhere(this.knex.raw("date_format(date, '%Y-%m')"), "=", `${date}`)
-      .orderByRaw("date");
+      .andWhere(this.knex.raw("date_format(date, '%Y-%m')"), '=', `${date}`)
+      .orderByRaw('date')
 
     if (config?.limit !== undefined && config?.offSet !== undefined) {
-      return await result.limit(config.limit).offset(config.offSet);
+      return await result.limit(config.limit).offset(config.offSet)
     }
 
-    return await result;
+    return await result
   }
 }

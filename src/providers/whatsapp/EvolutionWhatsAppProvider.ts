@@ -1,10 +1,10 @@
-import axios from "axios";
+import axios from 'axios'
 import {
   IWhatsAppProvider,
   SendMessageParams,
   SendMessageResult,
-} from "./IWhatsAppProvider";
-import { ApiError } from "../../utils/ApiError";
+} from './IWhatsAppProvider'
+import { ApiError } from '../../utils/ApiError'
 
 export class EvolutionWhatsAppProvider implements IWhatsAppProvider {
   constructor(
@@ -13,14 +13,14 @@ export class EvolutionWhatsAppProvider implements IWhatsAppProvider {
   ) {}
 
   private get url() {
-    return this.baseUrl.replace(/\/$/, "");
+    return this.baseUrl.replace(/\/$/, '')
   }
 
   private get headers() {
     return {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       apikey: this.apiKey,
-    };
+    }
   }
 
   async sendMessage({
@@ -33,86 +33,86 @@ export class EvolutionWhatsAppProvider implements IWhatsAppProvider {
         `${this.url}/message/sendText/${instanceName}`,
         { number: to, text: body },
         { headers: this.headers },
-      );
+      )
 
-      const providerMessageId = response.data?.key?.id;
+      const providerMessageId = response.data?.key?.id
 
       return {
         success: true,
         providerMessageId: providerMessageId
           ? String(providerMessageId)
           : undefined,
-      };
+      }
     } catch (err: any) {
       const errorMessage =
-        err?.response?.data?.message ?? err?.message ?? "Unknown error";
+        err?.response?.data?.message ?? err?.message ?? 'Unknown error'
 
       return {
         success: false,
         errorMessage: String(errorMessage),
-      };
+      }
     }
   }
 
   async createInstance(instanceName: string): Promise<void> {
-    const appUrl = process.env.APP_URL?.replace(/\/$/, "");
+    const appUrl = process.env.APP_URL?.replace(/\/$/, '')
     const body: Record<string, unknown> = {
       instanceName,
       qrcode: true,
-      integration: "WHATSAPP-BAILEYS",
-    };
+      integration: 'WHATSAPP-BAILEYS',
+    }
 
     if (appUrl) {
-      const webhookUrl = `${appUrl}/webhooks/whatsapp`;
-      const secret = process.env.WHATSAPP_WEBHOOK_SECRET;
+      const webhookUrl = `${appUrl}/webhooks/whatsapp`
+      const secret = process.env.WHATSAPP_WEBHOOK_SECRET
       body.webhook = {
         url: webhookUrl,
         byEvents: false,
         base64: false,
-        events: ["MESSAGES_UPDATE", "SEND_MESSAGE"],
+        events: ['MESSAGES_UPDATE', 'SEND_MESSAGE'],
         ...(secret
           ? {
               headers: {
-                "x-webhook-secret": secret,
+                'x-webhook-secret': secret,
               },
             }
           : {}),
-      };
+      }
     }
 
     await axios.post(`${this.url}/instance/create`, body, {
       headers: this.headers,
-    });
+    })
   }
 
   async getQrCode(instanceName: string): Promise<string | null> {
     const response = await axios.get(
       `${this.url}/instance/connect/${instanceName}`,
       { headers: this.headers },
-    );
-    return response.data?.base64 ?? null;
+    )
+    return response.data?.base64 ?? null
   }
 
   async getConnectionState(
     instanceName: string,
-  ): Promise<"open" | "close" | "connecting"> {
+  ): Promise<'open' | 'close' | 'connecting'> {
     try {
       const response = await axios.get(
         `${this.url}/instance/connectionState/${instanceName}`,
         { headers: this.headers },
-      );
-      return response.data?.instance?.state ?? "close";
+      )
+      return response.data?.instance?.state ?? 'close'
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 404) {
-        return "close";
+        return 'close'
       }
-      throw new ApiError("Erro ao obter estado da conexão do WhatsApp", 500);
+      throw new ApiError('Erro ao obter estado da conexão do WhatsApp', 500)
     }
   }
 
   async deleteInstance(instanceName: string): Promise<void> {
     await axios.delete(`${this.url}/instance/delete/${instanceName}`, {
       headers: this.headers,
-    });
+    })
   }
 }

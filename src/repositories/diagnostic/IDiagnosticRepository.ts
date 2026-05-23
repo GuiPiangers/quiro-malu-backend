@@ -1,4 +1,4 @@
-import { DiagnosticDTO } from "../../core/patients/models/Diagnostic";
+import { DiagnosticDTO } from '../../core/patients/models/Diagnostic'
 
 export interface IDiagnosticRepository {
   save(data: DiagnosticDTO, clinicId: string): Promise<void>;

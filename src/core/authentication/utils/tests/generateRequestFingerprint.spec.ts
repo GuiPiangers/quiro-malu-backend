@@ -1,24 +1,24 @@
-import { Request } from "express";
-import { generateRequestFingerprint } from "../generateRequestFingerprint";
+import { Request } from 'express'
+import { generateRequestFingerprint } from '../generateRequestFingerprint'
 
 function buildRequest(partial: Partial<Request>): Request {
-  return partial as Request;
+  return partial as Request
 }
 
-describe("generateRequestFingerprint", () => {
-  it("deve gerar o mesmo hash para os mesmos componentes", () => {
+describe('generateRequestFingerprint', () => {
+  it('deve gerar o mesmo hash para os mesmos componentes', () => {
     const req = buildRequest({
-      ip: "203.0.113.1",
-      socket: { remoteAddress: "203.0.113.1" } as any,
+      ip: '203.0.113.1',
+      socket: { remoteAddress: '203.0.113.1' } as any,
       headers: {
-        "user-agent": "Mozilla/5.0",
-        "x-device-id": "1234567890",
+        'user-agent': 'Mozilla/5.0',
+        'x-device-id': '1234567890',
       },
-    });
-    const a = generateRequestFingerprint(req);
-    const b = generateRequestFingerprint(req);
-    expect(a).toBe(b);
-  });
+    })
+    const a = generateRequestFingerprint(req)
+    const b = generateRequestFingerprint(req)
+    expect(a).toBe(b)
+  })
 
   // it("deve gerar hash diferente quando o IP muda", () => {
   //   const baseHeaders = {
@@ -34,4 +34,4 @@ describe("generateRequestFingerprint", () => {
   //   );
   //   expect(fp1).not.toBe(fp2);
   // });
-});
+})

@@ -4,7 +4,7 @@ export type SendStrategyContext = {
   patientId: string;
   /** Id da campanha (config de mensagem), alinhado a `scheduleMessageConfigId` nos logs. */
   campaignId?: string;
-};
+}
 
 export interface IMessageSendStrategy {
   readonly kind: string;

@@ -1,10 +1,10 @@
-import client from "prom-client";
+import client from 'prom-client'
 
-const register = new client.Registry();
+const register = new client.Registry()
 
-client.collectDefaultMetrics({ 
+client.collectDefaultMetrics({
   register,
   prefix: 'nodejs_',
-});
+})
 
-export { register };
+export { register }

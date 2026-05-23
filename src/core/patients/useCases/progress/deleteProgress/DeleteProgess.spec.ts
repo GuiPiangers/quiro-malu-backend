@@ -1,44 +1,44 @@
-import { createMockProgressRepository } from "../../../../../repositories/_mocks/ProgressRepositoryMock";
-import { DeleteProgressUseCase } from "./DeleteProgressUseCase";
+import { createMockProgressRepository } from '../../../../../repositories/_mocks/ProgressRepositoryMock'
+import { DeleteProgressUseCase } from './DeleteProgressUseCase'
 
-describe("DeleteProgressUseCase", () => {
-  let deleteProgressUseCase: DeleteProgressUseCase;
-  const mockProgressRepository = createMockProgressRepository();
+describe('DeleteProgressUseCase', () => {
+  let deleteProgressUseCase: DeleteProgressUseCase
+  const mockProgressRepository = createMockProgressRepository()
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    deleteProgressUseCase = new DeleteProgressUseCase(mockProgressRepository);
-  });
+    vi.clearAllMocks()
+    deleteProgressUseCase = new DeleteProgressUseCase(mockProgressRepository)
+  })
 
-  describe("execute", () => {
-    it("should call the repository delete method with the correct params", async () => {
-      const id = "test-Progress-id";
-      const clinicId = "test-user-id";
-      const patientId = "test-patient-id";
+  describe('execute', () => {
+    it('should call the repository delete method with the correct params', async () => {
+      const id = 'test-Progress-id'
+      const clinicId = 'test-user-id'
+      const patientId = 'test-patient-id'
 
-      await deleteProgressUseCase.execute({ id, clinicId, patientId });
+      await deleteProgressUseCase.execute({ id, clinicId, patientId })
 
-      expect(mockProgressRepository.delete).toHaveBeenCalledTimes(1);
+      expect(mockProgressRepository.delete).toHaveBeenCalledTimes(1)
       expect(mockProgressRepository.delete).toHaveBeenCalledWith({
         id,
         clinicId,
         patientId,
-      });
-    });
+      })
+    })
 
-    it("should propagate an error if the repository delete method throws", async () => {
-      const id = "test-Progress-id";
-      const clinicId = "test-user-id";
-      const patientId = "test-patient-id";
-      const errorMessage = "Failed to delete Progress";
+    it('should propagate an error if the repository delete method throws', async () => {
+      const id = 'test-Progress-id'
+      const clinicId = 'test-user-id'
+      const patientId = 'test-patient-id'
+      const errorMessage = 'Failed to delete Progress'
 
       mockProgressRepository.delete.mockRejectedValueOnce(
         new Error(errorMessage),
-      );
+      )
 
       await expect(
         deleteProgressUseCase.execute({ id, clinicId, patientId }),
-      ).rejects.toThrow(errorMessage);
-    });
-  });
-});
+      ).rejects.toThrow(errorMessage)
+    })
+  })
+})

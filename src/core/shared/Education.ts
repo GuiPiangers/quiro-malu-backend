@@ -1,60 +1,59 @@
-import { ApiError } from "../../utils/ApiError";
-import { Normalize } from "./Normalize";
+import { ApiError } from '../../utils/ApiError'
+import { Normalize } from './Normalize'
 
 export type EducationType =
-  | "superior completo"
-  | "superior incompleto"
-  | "medio completo"
-  | "medio incompleto"
-  | "fundamental completo"
-  | "fundamental incompleto";
+  | 'superior completo'
+  | 'superior incompleto'
+  | 'medio completo'
+  | 'medio incompleto'
+  | 'fundamental completo'
+  | 'fundamental incompleto'
 
 export class Education {
-  readonly value?: EducationType;
+  readonly value?: EducationType
 
   constructor(education?: string) {
-    const convertEdeducation = this.convertEducation(education);
-    if (this.validateEducation(convertEdeducation))
-      this.value = convertEdeducation;
+    const convertEdeducation = this.convertEducation(education)
+    if (this.validateEducation(convertEdeducation)) { this.value = convertEdeducation }
   }
 
   private validateEducation(education?: string): education is EducationType {
     const educationPossibility = [
-      "superior completo",
-      "superior incompleto",
-      "medio completo",
-      "medio incompleto",
-      "fundamental completo",
-      "fundamental incompleto",
-    ];
+      'superior completo',
+      'superior incompleto',
+      'medio completo',
+      'medio incompleto',
+      'fundamental completo',
+      'fundamental incompleto',
+    ]
 
     if (
       education &&
       educationPossibility.every((possibility) => possibility !== education)
     ) {
       throw new ApiError(
-        "A escolaridade definida é inválida",
+        'A escolaridade definida é inválida',
         400,
-        "education",
-      );
+        'education',
+      )
     }
-    return true;
+    return true
   }
 
   private convertEducation(education?: string) {
-    if (!education) return undefined;
-    const lowerCaseEducation = education.toLowerCase().trim();
-    const finishCorrectly = /completo|incompleto$/;
+    if (!education) return undefined
+    const lowerCaseEducation = education.toLowerCase().trim()
+    const finishCorrectly = /completo|incompleto$/
 
     const resultWithCompleto = finishCorrectly.test(lowerCaseEducation)
       ? lowerCaseEducation
-      : lowerCaseEducation + " completo";
+      : lowerCaseEducation + ' completo'
 
     const result = Normalize.removeAccent(resultWithCompleto).replace(
       /ensino ?/,
-      "",
-    );
+      '',
+    )
 
-    return result;
+    return result
   }
 }

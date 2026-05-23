@@ -1,32 +1,32 @@
-import { Request, Response } from "express";
-import { DeleteSchedulingUseCase } from "../../useCases/deleteScheduling/DeleteSchedulingUseCase";
-import { responseError } from "../../../../utils/ResponseError";
-import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
-import { DeleteSchedulingBodySchema } from "../schedulingSharedSchemas";
+import { Request, Response } from 'express'
+import { DeleteSchedulingUseCase } from '../../useCases/deleteScheduling/DeleteSchedulingUseCase'
+import { responseError } from '../../../../utils/ResponseError'
+import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import { DeleteSchedulingBodySchema } from '../schedulingSharedSchemas'
 
 export class DeleteSchedulingController {
   constructor(private deleteSchedulingUseCase: DeleteSchedulingUseCase) {}
 
   async handle(request: Request, response: Response) {
-    const parsed = parseWithSchema(DeleteSchedulingBodySchema, request.body);
+    const parsed = parseWithSchema(DeleteSchedulingBodySchema, request.body)
     if (!parsed.success) {
-      return sendZodBadRequest(response, parsed.error);
+      return sendZodBadRequest(response, parsed.error)
     }
 
     try {
-      const userId = request.user.id;
-      const clinicId = request.user.clinicId as string;
-      const { id } = parsed.data;
+      const userId = request.user.id
+      const clinicId = request.user.clinicId as string
+      const { id } = parsed.data
 
       await this.deleteSchedulingUseCase.execute({
         id,
         userId: userId!,
         clinicId,
-      });
+      })
 
-      response.json({ message: "Paciente deletado com sucesso!" });
+      response.json({ message: 'Paciente deletado com sucesso!' })
     } catch (err: any) {
-      responseError(response, err);
+      responseError(response, err)
     }
   }
 }

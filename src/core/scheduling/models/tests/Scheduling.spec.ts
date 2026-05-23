@@ -1,27 +1,27 @@
-import { DateTime as Luxon } from "luxon";
-import { Scheduling, SchedulingDTO } from "../Scheduling";
-import { DateTime } from "../../../shared/Date";
+import { DateTime as Luxon } from 'luxon'
+import { Scheduling, SchedulingDTO } from '../Scheduling'
+import { DateTime } from '../../../shared/Date'
 
-describe("Scheduling", () => {
-  const validDate = "2024-11-01T10:00";
+describe('Scheduling', () => {
+  const validDate = '2024-11-01T10:00'
 
-  it("should create an instance of Scheduling with valid data", () => {
+  it('should create an instance of Scheduling with valid data', () => {
     const schedulingData: SchedulingDTO = {
-      patientId: "patient-1",
+      patientId: 'patient-1',
       date: validDate,
       duration: 60 * 30,
-      service: "Consultation",
-      status: "Atendido",
-    };
+      service: 'Consultation',
+      status: 'Atendido',
+    }
 
-    const scheduling = new Scheduling(schedulingData);
+    const scheduling = new Scheduling(schedulingData)
 
-    expect(scheduling.id).toBeDefined();
-    expect(scheduling.patientId).toBe(schedulingData.patientId);
-    expect(scheduling.date?.dateTime).toBe(validDate);
-    expect(scheduling.duration).toBe(schedulingData.duration);
-    expect(scheduling.service).toBe(schedulingData.service);
-  });
+    expect(scheduling.id).toBeDefined()
+    expect(scheduling.patientId).toBe(schedulingData.patientId)
+    expect(scheduling.date?.dateTime).toBe(validDate)
+    expect(scheduling.duration).toBe(schedulingData.duration)
+    expect(scheduling.service).toBe(schedulingData.service)
+  })
 
   // it("should calculate status using the strategy pattern", () => {
   //   const schedulingData: SchedulingDTO = {
@@ -44,81 +44,81 @@ describe("Scheduling", () => {
   //   }
   // });
 
-  it("should return the correct DTO", () => {
+  it('should return the correct DTO', () => {
     const schedulingData: SchedulingDTO = {
-      id: "1",
-      patientId: "patient-3",
+      id: '1',
+      patientId: 'patient-3',
       date: validDate,
       duration: 60 * 30, // 30 min
-      status: "Atendido",
-    };
+      status: 'Atendido',
+    }
 
-    const scheduling = new Scheduling(schedulingData);
-    const dto = scheduling.getDTO();
+    const scheduling = new Scheduling(schedulingData)
+    const dto = scheduling.getDTO()
 
     expect(dto).toEqual({
       id: scheduling.id,
       patientId: scheduling.patientId,
       date: validDate,
       duration: scheduling.duration,
-      status: "Atendido",
+      status: 'Atendido',
       createAt: undefined,
       updateAt: undefined,
       service: scheduling.service,
       patient: undefined,
       phone: undefined,
-    });
-  });
+    })
+  })
 
-  it("should check if the date is available", () => {
+  it('should check if the date is available', () => {
     const schedulingData: SchedulingDTO = {
-      patientId: "patient-4",
-      date: "2024-11-01T09:30",
+      patientId: 'patient-4',
+      date: '2024-11-01T09:30',
       duration: 60 * 60, // 60 minutes
-      status: "Agendado",
-    };
+      status: 'Agendado',
+    }
 
-    const scheduling = new Scheduling(schedulingData);
+    const scheduling = new Scheduling(schedulingData)
     const existingSchedules: SchedulingDTO[] = [
       {
-        patientId: "patient-5",
+        patientId: 'patient-5',
         duration: 60 * 60, // 60 minutes
-        date: "2024-11-01T09:30",
+        date: '2024-11-01T09:30',
       },
       {
-        patientId: "patient-5",
+        patientId: 'patient-5',
         duration: 60 * 60, // 60 minutes,
-        date: "2024-11-01T10:30",
+        date: '2024-11-01T10:30',
       },
-    ];
+    ]
 
-    expect(scheduling.notAvailableDate(existingSchedules)).toBe(true);
+    expect(scheduling.notAvailableDate(existingSchedules)).toBe(true)
 
     const newSchedulingData: SchedulingDTO = {
-      patientId: "patient-7",
-      date: "2024-10-01T13:00",
+      patientId: 'patient-7',
+      date: '2024-10-01T13:00',
       duration: 60 * 60, // 60 minutes,
-      status: "Agendado",
-    };
+      status: 'Agendado',
+    }
 
-    const newScheduling = new Scheduling(newSchedulingData);
-    expect(newScheduling.notAvailableDate(existingSchedules)).toBe(false); // This time does not overlap
-  });
+    const newScheduling = new Scheduling(newSchedulingData)
+    expect(newScheduling.notAvailableDate(existingSchedules)).toBe(false) // This time does not overlap
+  })
 
-  describe("endDate", () => {
-    it("should return the end date based on duration time", () => {
-      const duration = 75 * 60; // duration in ms
+  describe('endDate', () => {
+    it('should return the end date based on duration time', () => {
+      const duration = 75 * 60 // duration in ms
 
       const scheduling = new Scheduling({
-        patientId: "test",
-        date: "2025-01-01T10:00",
+        patientId: 'test',
+        date: '2025-01-01T10:00',
         duration,
-      });
+      })
 
-      const endDate = scheduling.endDate;
+      const endDate = scheduling.endDate
 
-      expect(endDate?.dateTime).toBe("2025-01-01T11:15");
-      expect(endDate).toBeInstanceOf(DateTime);
-    });
-  });
-});
+      expect(endDate?.dateTime).toBe('2025-01-01T11:15')
+      expect(endDate).toBeInstanceOf(DateTime)
+    })
+  })
+})

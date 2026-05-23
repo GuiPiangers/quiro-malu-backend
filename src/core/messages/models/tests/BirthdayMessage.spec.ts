@@ -1,168 +1,168 @@
-import { ApiError } from "../../../../utils/ApiError";
-import { BirthdayMessage } from "../BirthdayMessage";
-import { MessageTemplate } from "../MessageTemplate";
+import { ApiError } from '../../../../utils/ApiError'
+import { BirthdayMessage } from '../BirthdayMessage'
+import { MessageTemplate } from '../MessageTemplate'
 
-const defaultSend = "09:00";
+const defaultSend = '09:00'
 
-describe("BirthdayMessage", () => {
-  it("should create entity with message template", () => {
+describe('BirthdayMessage', () => {
+  it('should create entity with message template', () => {
     const messageTemplate = new MessageTemplate({
-      id: "template-1",
-      textTemplate: "Parabéns {{nome_paciente}}",
-    });
+      id: 'template-1',
+      textTemplate: 'Parabéns {{nome_paciente}}',
+    })
 
     const entity = new BirthdayMessage({
-      id: "bd-1",
-      name: "Aniversário padrão",
+      id: 'bd-1',
+      name: 'Aniversário padrão',
       messageTemplate,
       sendTime: defaultSend,
-    });
+    })
 
-    expect(entity.id).toBe("bd-1");
-    expect(entity.name).toBe("Aniversário padrão");
-    expect(entity.sendTime).toBe("09:00");
-    expect(entity.isActive).toBe(true);
-    expect(entity.messageTemplate).toBe(messageTemplate);
-  });
+    expect(entity.id).toBe('bd-1')
+    expect(entity.name).toBe('Aniversário padrão')
+    expect(entity.sendTime).toBe('09:00')
+    expect(entity.isActive).toBe(true)
+    expect(entity.messageTemplate).toBe(messageTemplate)
+  })
 
-  it("should accept isActive false", () => {
-    const messageTemplate = new MessageTemplate({ textTemplate: "x" });
+  it('should accept isActive false', () => {
+    const messageTemplate = new MessageTemplate({ textTemplate: 'x' })
 
     const entity = new BirthdayMessage({
-      name: "Inativa",
+      name: 'Inativa',
       messageTemplate,
-      sendTime: "14:30",
+      sendTime: '14:30',
       isActive: false,
-    });
+    })
 
-    expect(entity.isActive).toBe(false);
-    expect(entity.sendTime).toBe("14:30");
-  });
+    expect(entity.isActive).toBe(false)
+    expect(entity.sendTime).toBe('14:30')
+  })
 
-  it("should render nome_paciente, telefone_paciente e dia_aniversario em pt-BR", () => {
+  it('should render nome_paciente, telefone_paciente e dia_aniversario em pt-BR', () => {
     const entity = new BirthdayMessage({
-      name: "Aniversário",
+      name: 'Aniversário',
       sendTime: defaultSend,
       messageTemplate: new MessageTemplate({
         textTemplate:
-          "Olá {{nome_paciente}}, tel {{telefone_paciente}}, seu aniversário é {{dia_aniversario}}.",
+          'Olá {{nome_paciente}}, tel {{telefone_paciente}}, seu aniversário é {{dia_aniversario}}.',
       }),
-    });
+    })
 
     const rendered = entity.render({
       patient: {
-        name: "Maria",
-        phone: "51999999999",
-        birthDate: "1990-03-05",
+        name: 'Maria',
+        phone: '51999999999',
+        birthDate: '1990-03-05',
       },
-    });
+    })
 
     expect(rendered).toBe(
-      "Olá Maria, tel 51999999999, seu aniversário é 05 de março.",
-    );
-  });
+      'Olá Maria, tel 51999999999, seu aniversário é 05 de março.',
+    )
+  })
 
-  it("should render nome_paciente como primeiro nome e nome_completo_paciente com nome inteiro", () => {
+  it('should render nome_paciente como primeiro nome e nome_completo_paciente com nome inteiro', () => {
     const entity = new BirthdayMessage({
-      name: "Aniversário",
+      name: 'Aniversário',
       sendTime: defaultSend,
       messageTemplate: new MessageTemplate({
         textTemplate:
-          "Olá {{nome_paciente}} ({{nome_completo_paciente}}), tel {{telefone_paciente}}.",
+          'Olá {{nome_paciente}} ({{nome_completo_paciente}}), tel {{telefone_paciente}}.',
       }),
-    });
+    })
 
     const rendered = entity.render({
       patient: {
-        name: "Maria Silva",
-        phone: "51999999999",
-        birthDate: "1990-03-05",
+        name: 'Maria Silva',
+        phone: '51999999999',
+        birthDate: '1990-03-05',
       },
-    });
+    })
 
     expect(rendered).toBe(
-      "Olá Maria (Maria Silva), tel 51999999999.",
-    );
-  });
+      'Olá Maria (Maria Silva), tel 51999999999.',
+    )
+  })
 
-  it("should render empty dia_aniversario when birthDate is missing or invalid", () => {
+  it('should render empty dia_aniversario when birthDate is missing or invalid', () => {
     const entity = new BirthdayMessage({
-      name: "x",
+      name: 'x',
       sendTime: defaultSend,
       messageTemplate: new MessageTemplate({
-        textTemplate: "{{dia_aniversario}}",
+        textTemplate: '{{dia_aniversario}}',
       }),
-    });
+    })
 
     expect(
       entity.render({
-        patient: { name: "A", phone: "1", birthDate: "" },
+        patient: { name: 'A', phone: '1', birthDate: '' },
       }),
-    ).toBe("");
+    ).toBe('')
 
     expect(
       entity.render({
-        patient: { name: "A", phone: "1", birthDate: "invalid" },
+        patient: { name: 'A', phone: '1', birthDate: 'invalid' },
       }),
-    ).toBe("");
+    ).toBe('')
 
     expect(
       entity.render({
-        patient: { name: "A", phone: "1", birthDate: undefined },
+        patient: { name: 'A', phone: '1', birthDate: undefined },
       }),
-    ).toBe("");
-  });
+    ).toBe('')
+  })
 
-  it("should render dia_aniversario quando birthDate é Date (ex.: retorno Knex)", () => {
+  it('should render dia_aniversario quando birthDate é Date (ex.: retorno Knex)', () => {
     const entity = new BirthdayMessage({
-      name: "x",
+      name: 'x',
       sendTime: defaultSend,
       messageTemplate: new MessageTemplate({
-        textTemplate: "{{dia_aniversario}}",
+        textTemplate: '{{dia_aniversario}}',
       }),
-    });
+    })
 
-    const birthDate = new Date(Date.UTC(1990, 2, 5, 12, 0, 0));
+    const birthDate = new Date(Date.UTC(1990, 2, 5, 12, 0, 0))
 
     expect(
       entity.render({
-        patient: { name: "A", phone: "1", birthDate },
+        patient: { name: 'A', phone: '1', birthDate },
       }),
-    ).toBe("05 de março");
-  });
+    ).toBe('05 de março')
+  })
 
-  it("should throw ApiError when name is not a string", () => {
+  it('should throw ApiError when name is not a string', () => {
     expect(() => {
       new BirthdayMessage({
         name: 123 as unknown as string,
         sendTime: defaultSend,
-        messageTemplate: new MessageTemplate({ textTemplate: "x" }),
-      });
-    }).toThrow(ApiError);
-  });
+        messageTemplate: new MessageTemplate({ textTemplate: 'x' }),
+      })
+    }).toThrow(ApiError)
+  })
 
-  it("should return DTO including nested messageTemplate", () => {
+  it('should return DTO including nested messageTemplate', () => {
     const messageTemplate = new MessageTemplate({
-      id: "template-2",
-      textTemplate: "Feliz aniversário {{nome_paciente}}",
-    });
+      id: 'template-2',
+      textTemplate: 'Feliz aniversário {{nome_paciente}}',
+    })
 
     const entity = new BirthdayMessage({
-      id: "bd-2",
-      name: "DTO test",
-      sendTime: "11:15",
+      id: 'bd-2',
+      name: 'DTO test',
+      sendTime: '11:15',
       messageTemplate,
-    });
+    })
 
     expect(entity.getDTO()).toEqual({
-      id: "bd-2",
-      name: "DTO test",
+      id: 'bd-2',
+      name: 'DTO test',
       isActive: true,
-      sendTime: "11:15",
+      sendTime: '11:15',
       messageTemplate: {
-        id: "template-2",
-        textTemplate: "Feliz aniversário {{nome_paciente}}",
+        id: 'template-2',
+        textTemplate: 'Feliz aniversário {{nome_paciente}}',
       },
-    });
-  });
-});
+    })
+  })
+})

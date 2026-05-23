@@ -1,29 +1,29 @@
-import { createMockExamRepository } from "../../../../repositories/_mocks/ExamRepositoryMock";
-import { RestoreExamUseCase } from "./RestoreExamUseCase";
+import { createMockExamRepository } from '../../../../repositories/_mocks/ExamRepositoryMock'
+import { RestoreExamUseCase } from './RestoreExamUseCase'
 
-describe("restoreExamUseCase", () => {
-  let restoreExamUseCase: RestoreExamUseCase;
-  const mockExamRepository = createMockExamRepository();
+describe('restoreExamUseCase', () => {
+  let restoreExamUseCase: RestoreExamUseCase
+  const mockExamRepository = createMockExamRepository()
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearAllMocks()
     vi
       .useFakeTimers()
-      .setSystemTime(new Date("2025-01-10T12:00:00Z").getTime());
-    restoreExamUseCase = new RestoreExamUseCase(mockExamRepository);
-  });
+      .setSystemTime(new Date('2025-01-10T12:00:00Z').getTime())
+    restoreExamUseCase = new RestoreExamUseCase(mockExamRepository)
+  })
 
-  describe("execute", () => {
-    it("Should call repository update method with correct arguments to set as restored", async () => {
-      const userId = "test-user-id";
-      const examId = "test-Exam-id";
-      const patientId = "test-patient-id";
+  describe('execute', () => {
+    it('Should call repository update method with correct arguments to set as restored', async () => {
+      const userId = 'test-user-id'
+      const examId = 'test-Exam-id'
+      const patientId = 'test-patient-id'
 
       await restoreExamUseCase.execute({
         userId,
         id: examId,
         patientId,
-      });
+      })
 
       expect(mockExamRepository.update).toHaveBeenCalledWith({
         id: examId,
@@ -31,18 +31,18 @@ describe("restoreExamUseCase", () => {
         patientId,
         deleted: false,
         deletedDate: null,
-      });
-      expect(mockExamRepository.update).toHaveBeenCalledTimes(1);
-    });
+      })
+      expect(mockExamRepository.update).toHaveBeenCalledTimes(1)
+    })
 
-    it("Should throw an Error if repository method throws", async () => {
-      const userId = "test-user-id";
-      const examId = "test-Exam-id";
-      const patientId = "test-patient-id";
+    it('Should throw an Error if repository method throws', async () => {
+      const userId = 'test-user-id'
+      const examId = 'test-Exam-id'
+      const patientId = 'test-patient-id'
 
-      const errorMessage = "Error deleting Exam";
+      const errorMessage = 'Error deleting Exam'
 
-      mockExamRepository.update.mockRejectedValue(new Error(errorMessage));
+      mockExamRepository.update.mockRejectedValue(new Error(errorMessage))
 
       await expect(
         restoreExamUseCase.execute({
@@ -50,7 +50,7 @@ describe("restoreExamUseCase", () => {
           userId,
           id: examId,
         }),
-      ).rejects.toThrow(errorMessage);
-    });
-  });
-});
+      ).rejects.toThrow(errorMessage)
+    })
+  })
+})

@@ -1,15 +1,17 @@
-import { DateTime as Luxon } from "luxon";
+import { DateTime as Luxon } from 'luxon'
 
-const DEFAULT_ZONE = "America/Sao_Paulo";
+const DEFAULT_ZONE = 'America/Sao_Paulo'
 
 function normalizeSendTimeToHms(sendTime: string): string {
-  const t = sendTime.trim();
-  const m = t.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
-  if (!m) return "09:00:00";
-  const h = Math.min(23, Math.max(0, Number(m[1])));
-  const min = Math.min(59, Math.max(0, Number(m[2])));
-  const s = m[3] != null ? Math.min(59, Math.max(0, Number(m[3]))) : 0;
-  return `${String(h).padStart(2, "0")}:${String(min).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  const t = sendTime.trim()
+  const m = t.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/)
+  if (!m) return '09:00:00'
+  const h = Math.min(23, Math.max(0, Number(m[1])))
+  const min = Math.min(59, Math.max(0, Number(m[2])))
+  const s = m[3] != null
+    ? Math.min(59, Math.max(0, Number(m[3])))
+    : 0
+  return `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}:${String(s).padStart(2, '0')}`
 }
 
 /**
@@ -22,17 +24,17 @@ export function computeDelayMsUntilSendTimeToday(
 ): number {
   const now = (referenceNow ?? Luxon.now().setZone(DEFAULT_ZONE)).set({
     millisecond: 0,
-  });
-  const hms = normalizeSendTimeToHms(sendTime);
-  const [hh, mm, ss] = hms.split(":").map((x) => Number(x));
-  let target = now.set({
+  })
+  const hms = normalizeSendTimeToHms(sendTime)
+  const [hh, mm, ss] = hms.split(':').map((x) => Number(x))
+  const target = now.set({
     hour: hh,
     minute: mm,
     second: ss,
     millisecond: 0,
-  });
+  })
   if (target.toMillis() <= now.toMillis()) {
-    return 0;
+    return 0
   }
-  return target.toMillis() - now.toMillis();
+  return target.toMillis() - now.toMillis()
 }

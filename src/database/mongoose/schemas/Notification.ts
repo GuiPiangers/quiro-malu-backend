@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose'
 
 const notificationSchema = new mongoose.Schema({
   id: { type: String, required: true, index: true },
@@ -17,9 +17,9 @@ const notificationSchema = new mongoose.Schema({
   },
   actionNeeded: Boolean,
   params: Schema.Types.Mixed,
-});
+})
 
 export const NotificationModel = mongoose.model(
-  "Notification",
+  'Notification',
   notificationSchema,
-);
+)

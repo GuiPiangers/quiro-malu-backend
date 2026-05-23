@@ -1,5 +1,5 @@
-import knex, { type Knex } from "knex";
-import { test as testKnexConfig } from "../../database/knex/knexfile";
+import knex, { type Knex } from 'knex'
+import { test as testKnexConfig } from '../../database/knex/knexfile'
 
 /**
  * Instância Knex alinhada ao export `test` de `src/database/knex/knexfile.ts`
@@ -7,5 +7,5 @@ import { test as testKnexConfig } from "../../database/knex/knexfile";
  * Sempre use esta fábrica em testes de integração que falem com MySQL.
  */
 export function createKnexForIntegrationTests(): Knex {
-  return knex(testKnexConfig);
+  return knex(testKnexConfig)
 }

@@ -6,7 +6,7 @@ export type SaveBirthdayMessageProps = {
   isActive: boolean;
   /** Horário de envio no dia do aniversário (MySQL TIME, ex.: "09:30:00"). */
   sendTime: string;
-};
+}
 
 export type BirthdayMessageCampaignDTO = {
   id: string;
@@ -16,23 +16,23 @@ export type BirthdayMessageCampaignDTO = {
   isActive: boolean;
   /** "HH:mm" no fuso usado na campanha (valor persistido). */
   sendTime: string;
-};
+}
 
 export type ListBirthdayMessagesByUserIdProps = {
   userId: string;
   limit: number;
   offset: number;
-};
+}
 
 export type ListBirthdayMessagesResult = {
   items: BirthdayMessageCampaignDTO[];
   total: number;
-};
+}
 
 export type GetBirthdayMessageByIdProps = {
   id: string;
   userId: string;
-};
+}
 
 export type UpdateBirthdayMessageProps = {
   id: string;
@@ -42,12 +42,12 @@ export type UpdateBirthdayMessageProps = {
   isActive?: boolean;
   /** MySQL TIME (ex.: "09:30:00"). */
   sendTime?: string;
-};
+}
 
 export type DeleteBirthdayMessageProps = {
   id: string;
   userId: string;
-};
+}
 
 export interface IBirthdayMessageRepository {
   save(data: SaveBirthdayMessageProps): Promise<void>;

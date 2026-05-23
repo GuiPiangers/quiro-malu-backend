@@ -1,285 +1,285 @@
-import { DateTime as Luxon } from "luxon";
-import { createMockBeforeScheduleMessageRepository } from "../../../../../repositories/_mocks/BeforeScheduleMessageRepositoryMock";
-import type { BeforeScheduleMessageConfigDTO } from "../../../../../repositories/messages/IBeforeScheduleMessageRepository";
-import { logger } from "../../../../../utils/logger";
-import { AppEventListener } from "../../../../shared/observers/EventListener";
-import { BeforeScheduleMessageEventHandlers } from "../beforeScheduleMessageEventHandlers";
+import { DateTime as Luxon } from 'luxon'
+import { createMockBeforeScheduleMessageRepository } from '../../../../../repositories/_mocks/BeforeScheduleMessageRepositoryMock'
+import type { BeforeScheduleMessageConfigDTO } from '../../../../../repositories/messages/IBeforeScheduleMessageRepository'
+import { logger } from '../../../../../utils/logger'
+import { AppEventListener } from '../../../../shared/observers/EventListener'
+import { BeforeScheduleMessageEventHandlers } from '../beforeScheduleMessageEventHandlers'
 
 const flushPromises = async () => {
-  await Promise.resolve();
-  await Promise.resolve();
-};
+  await Promise.resolve()
+  await Promise.resolve()
+}
 
 function dtoFromConfig(
   partial: Pick<
     BeforeScheduleMessageConfigDTO,
-    "id" | "userId" | "minutesBeforeSchedule" | "isActive"
+    'id' | 'userId' | 'minutesBeforeSchedule' | 'isActive'
   > &
-    Partial<Pick<BeforeScheduleMessageConfigDTO, "name" | "textTemplate">>,
+    Partial<Pick<BeforeScheduleMessageConfigDTO, 'name' | 'textTemplate'>>,
 ): BeforeScheduleMessageConfigDTO {
   return {
     id: partial.id,
     userId: partial.userId,
-    name: partial.name ?? "cfg",
+    name: partial.name ?? 'cfg',
     minutesBeforeSchedule: partial.minutesBeforeSchedule,
-    textTemplate: partial.textTemplate ?? "",
+    textTemplate: partial.textTemplate ?? '',
     isActive: partial.isActive,
-  };
+  }
 }
 
-describe("BeforeScheduleMessageEventHandlers", () => {
+describe('BeforeScheduleMessageEventHandlers', () => {
   beforeAll(() => {
-    vi.useFakeTimers();
-  });
+    vi.useFakeTimers()
+  })
 
   afterAll(() => {
-    vi.useRealTimers();
-  });
+    vi.useRealTimers()
+  })
 
-  it("should schedule a BullMQ job on createSchedule for active configs", async () => {
+  it('should schedule a BullMQ job on createSchedule for active configs', async () => {
     vi.setSystemTime(
-      Luxon.fromISO("2025-01-01T12:00", { zone: "America/Sao_Paulo" }).toMillis(),
-    );
+      Luxon.fromISO('2025-01-01T12:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+    )
 
     const beforeScheduleQueue = {
       upsert: vi.fn().mockResolvedValue(undefined),
       remove: vi.fn().mockResolvedValue(undefined),
-    };
+    }
 
-    const repo = createMockBeforeScheduleMessageRepository();
+    const repo = createMockBeforeScheduleMessageRepository()
     repo.listByUserId.mockResolvedValue([
       dtoFromConfig({
-        id: "cfg-1",
-        userId: "user-1",
+        id: 'cfg-1',
+        userId: 'user-1',
         minutesBeforeSchedule: 60,
         isActive: true,
       }),
-    ]);
+    ])
 
-    const appEventListener = new AppEventListener();
+    const appEventListener = new AppEventListener()
 
     const handlers = new BeforeScheduleMessageEventHandlers(
       beforeScheduleQueue as any,
       appEventListener,
       repo,
-    );
+    )
 
-    handlers.register();
+    handlers.register()
 
-    appEventListener.emit("createSchedule", {
-      userId: "user-1",
-      clinicId: "clinic-1",
-      scheduleId: "schedule-1",
-      patientId: "patient-1",
-      date: "2025-01-01T14:00",
+    appEventListener.emit('createSchedule', {
+      userId: 'user-1',
+      clinicId: 'clinic-1',
+      scheduleId: 'schedule-1',
+      patientId: 'patient-1',
+      date: '2025-01-01T14:00',
       duration: 3600,
-      service: "Consulta",
-      status: "Agendado",
+      service: 'Consulta',
+      status: 'Agendado',
       reminderSentAt: null,
-    });
+    })
 
-    await flushPromises();
+    await flushPromises()
 
     expect(beforeScheduleQueue.upsert).toHaveBeenCalledWith(
-      "before-schedule_user-1_schedule-1_cfg-1",
+      'before-schedule_user-1_schedule-1_cfg-1',
       {
-        userId: "user-1",
-        clinicId: "clinic-1",
-        patientId: "patient-1",
-        schedulingId: "schedule-1",
-        beforeScheduleMessageId: "cfg-1",
+        userId: 'user-1',
+        clinicId: 'clinic-1',
+        patientId: 'patient-1',
+        schedulingId: 'schedule-1',
+        beforeScheduleMessageId: 'cfg-1',
       },
       60 * 60 * 1000,
-    );
-  });
+    )
+  })
 
-  it("should not schedule a job when config is inactive", async () => {
+  it('should not schedule a job when config is inactive', async () => {
     vi.setSystemTime(
-      Luxon.fromISO("2025-01-01T12:00", { zone: "America/Sao_Paulo" }).toMillis(),
-    );
+      Luxon.fromISO('2025-01-01T12:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+    )
 
     const beforeScheduleQueue = {
       upsert: vi.fn().mockResolvedValue(undefined),
       remove: vi.fn().mockResolvedValue(undefined),
-    };
+    }
 
-    const repo = createMockBeforeScheduleMessageRepository();
+    const repo = createMockBeforeScheduleMessageRepository()
     repo.listByUserId.mockResolvedValue([
       dtoFromConfig({
-        id: "cfg-1",
-        userId: "user-1",
+        id: 'cfg-1',
+        userId: 'user-1',
         minutesBeforeSchedule: 60,
         isActive: false,
       }),
-    ]);
+    ])
 
-    const appEventListener = new AppEventListener();
+    const appEventListener = new AppEventListener()
 
     const handlers = new BeforeScheduleMessageEventHandlers(
       beforeScheduleQueue as any,
       appEventListener,
       repo,
-    );
+    )
 
-    handlers.register();
+    handlers.register()
 
-    appEventListener.emit("createSchedule", {
-      userId: "user-1",
-      clinicId: "clinic-1",
-      scheduleId: "schedule-1",
-      patientId: "patient-1",
-      date: "2025-01-01T14:00",
+    appEventListener.emit('createSchedule', {
+      userId: 'user-1',
+      clinicId: 'clinic-1',
+      scheduleId: 'schedule-1',
+      patientId: 'patient-1',
+      date: '2025-01-01T14:00',
       duration: 3600,
-      service: "Consulta",
-      status: "Agendado",
+      service: 'Consulta',
+      status: 'Agendado',
       reminderSentAt: null,
-    });
+    })
 
-    await flushPromises();
+    await flushPromises()
 
-    expect(beforeScheduleQueue.upsert).not.toHaveBeenCalled();
-  });
+    expect(beforeScheduleQueue.upsert).not.toHaveBeenCalled()
+  })
 
-  it("should remove the job on updateSchedule when target time is in the past", async () => {
+  it('should remove the job on updateSchedule when target time is in the past', async () => {
     vi.setSystemTime(
-      Luxon.fromISO("2025-01-01T12:00", { zone: "America/Sao_Paulo" }).toMillis(),
-    );
+      Luxon.fromISO('2025-01-01T12:00', { zone: 'America/Sao_Paulo' }).toMillis(),
+    )
 
     const beforeScheduleQueue = {
       upsert: vi.fn().mockResolvedValue(undefined),
       remove: vi.fn().mockResolvedValue(undefined),
-    };
+    }
 
-    const repo = createMockBeforeScheduleMessageRepository();
+    const repo = createMockBeforeScheduleMessageRepository()
     repo.listByUserId.mockResolvedValue([
       dtoFromConfig({
-        id: "cfg-1",
-        userId: "user-1",
+        id: 'cfg-1',
+        userId: 'user-1',
         minutesBeforeSchedule: 60,
         isActive: true,
       }),
-    ]);
+    ])
 
-    const appEventListener = new AppEventListener();
+    const appEventListener = new AppEventListener()
 
     const handlers = new BeforeScheduleMessageEventHandlers(
       beforeScheduleQueue as any,
       appEventListener,
       repo,
-    );
+    )
 
-    handlers.register();
+    handlers.register()
 
-    appEventListener.emit("updateSchedule", {
-      userId: "user-1",
-      clinicId: "clinic-1",
-      scheduleId: "schedule-1",
-      patientId: "patient-1",
-      date: "2025-01-01T12:30",
+    appEventListener.emit('updateSchedule', {
+      userId: 'user-1',
+      clinicId: 'clinic-1',
+      scheduleId: 'schedule-1',
+      patientId: 'patient-1',
+      date: '2025-01-01T12:30',
       duration: 3600,
-      service: "Consulta",
-      status: "Agendado",
+      service: 'Consulta',
+      status: 'Agendado',
       reminderSentAt: null,
-    });
+    })
 
-    await flushPromises();
+    await flushPromises()
 
     expect(beforeScheduleQueue.remove).toHaveBeenCalledWith(
-      "before-schedule_user-1_schedule-1_cfg-1",
-    );
-  });
+      'before-schedule_user-1_schedule-1_cfg-1',
+    )
+  })
 
-  it("should remove jobs on deleteSchedule", async () => {
+  it('should remove jobs on deleteSchedule', async () => {
     const beforeScheduleQueue = {
       upsert: vi.fn().mockResolvedValue(undefined),
       remove: vi.fn().mockResolvedValue(undefined),
-    };
+    }
 
-    const repo = createMockBeforeScheduleMessageRepository();
+    const repo = createMockBeforeScheduleMessageRepository()
     repo.listByUserId.mockResolvedValue([
       dtoFromConfig({
-        id: "cfg-1",
-        userId: "user-1",
+        id: 'cfg-1',
+        userId: 'user-1',
         minutesBeforeSchedule: 60,
         isActive: true,
       }),
       dtoFromConfig({
-        id: "cfg-2",
-        userId: "user-1",
+        id: 'cfg-2',
+        userId: 'user-1',
         minutesBeforeSchedule: 15,
         isActive: false,
       }),
-    ]);
+    ])
 
-    const appEventListener = new AppEventListener();
+    const appEventListener = new AppEventListener()
 
     const handlers = new BeforeScheduleMessageEventHandlers(
       beforeScheduleQueue as any,
       appEventListener,
       repo,
-    );
+    )
 
-    handlers.register();
+    handlers.register()
 
-    appEventListener.emit("deleteSchedule", {
-      userId: "user-1",
-      clinicId: "clinic-1",
-      scheduleId: "schedule-1",
-    });
+    appEventListener.emit('deleteSchedule', {
+      userId: 'user-1',
+      clinicId: 'clinic-1',
+      scheduleId: 'schedule-1',
+    })
 
-    await flushPromises();
-
-    expect(beforeScheduleQueue.remove).toHaveBeenCalledWith(
-      "before-schedule_user-1_schedule-1_cfg-1",
-    );
+    await flushPromises()
 
     expect(beforeScheduleQueue.remove).toHaveBeenCalledWith(
-      "before-schedule_user-1_schedule-1_cfg-2",
-    );
-  });
+      'before-schedule_user-1_schedule-1_cfg-1',
+    )
 
-  it("should log on beforeScheduleMessageSend", async () => {
-    const infoSpy = vi.spyOn(logger, "info").mockImplementation(() => logger as any);
+    expect(beforeScheduleQueue.remove).toHaveBeenCalledWith(
+      'before-schedule_user-1_schedule-1_cfg-2',
+    )
+  })
+
+  it('should log on beforeScheduleMessageSend', async () => {
+    const infoSpy = vi.spyOn(logger, 'info').mockImplementation(() => logger as any)
 
     const beforeScheduleQueue = {
       upsert: vi.fn(),
       remove: vi.fn(),
-    };
+    }
 
-    const repo = createMockBeforeScheduleMessageRepository();
+    const repo = createMockBeforeScheduleMessageRepository()
 
-    const appEventListener = new AppEventListener();
+    const appEventListener = new AppEventListener()
     const handlers = new BeforeScheduleMessageEventHandlers(
       beforeScheduleQueue as any,
       appEventListener,
       repo,
-    );
+    )
 
-    handlers.register();
+    handlers.register()
 
-    appEventListener.emit("beforeScheduleMessageSend", {
-      userId: "user-1",
-      patientId: "patient-1",
-      schedulingId: "schedule-1",
-      beforeScheduleMessageId: "cfg-1",
-      instanceName: "clinic-user-1",
-      toPhone: "5551999999999",
-      providerMessageId: "wa-1",
-      messageLogId: "log-1",
-    });
+    appEventListener.emit('beforeScheduleMessageSend', {
+      userId: 'user-1',
+      patientId: 'patient-1',
+      schedulingId: 'schedule-1',
+      beforeScheduleMessageId: 'cfg-1',
+      instanceName: 'clinic-user-1',
+      toPhone: '5551999999999',
+      providerMessageId: 'wa-1',
+      messageLogId: 'log-1',
+    })
 
-    await flushPromises();
+    await flushPromises()
 
     expect(infoSpy).toHaveBeenCalledWith(
       expect.objectContaining({
-        appEvent: "BeforeScheduleMessageSend",
-        userId: "user-1",
-        messageLogId: "log-1",
-        providerMessageId: "wa-1",
+        appEvent: 'BeforeScheduleMessageSend',
+        userId: 'user-1',
+        messageLogId: 'log-1',
+        providerMessageId: 'wa-1',
       }),
-      "before schedule WhatsApp message sent successfully",
-    );
+      'before schedule WhatsApp message sent successfully',
+    )
 
-    infoSpy.mockRestore();
-  });
-});
+    infoSpy.mockRestore()
+  })
+})

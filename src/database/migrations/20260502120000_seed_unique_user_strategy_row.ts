@@ -1,4 +1,4 @@
-import type { Knex } from "knex";
+import type { Knex } from 'knex'
 
 /**
  * Antes: seed de linha em `message_send_strategies` só para satisfazer FK.

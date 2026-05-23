@@ -1,9 +1,9 @@
-import { BeforeScheduleQueue } from "../../../../queues/beforeScheduleMessage/BeforeScheduleQueue";
-import type { IBeforeScheduleMessageRepository } from "../../../../repositories/messages/IBeforeScheduleMessageRepository";
-import { logger } from "../../../../utils/logger";
-import { buildBeforeScheduleMessageJobId } from "../../utils/buildBeforeScheduleMessageJobId";
-import { calculateScheduleMessageDelay } from "../../utils/calculateScheduleMessageDelay";
-import { AppEventListener } from "../../../shared/observers/EventListener";
+import { BeforeScheduleQueue } from '../../../../queues/beforeScheduleMessage/BeforeScheduleQueue'
+import type { IBeforeScheduleMessageRepository } from '../../../../repositories/messages/IBeforeScheduleMessageRepository'
+import { logger } from '../../../../utils/logger'
+import { buildBeforeScheduleMessageJobId } from '../../utils/buildBeforeScheduleMessageJobId'
+import { calculateScheduleMessageDelay } from '../../utils/calculateScheduleMessageDelay'
+import { AppEventListener } from '../../../shared/observers/EventListener'
 
 export type BeforeScheduleMessageListenerConfig = {
   id: string;
@@ -11,10 +11,10 @@ export type BeforeScheduleMessageListenerConfig = {
   name: string;
   minutesBeforeSchedule: number;
   isActive: boolean;
-};
+}
 
 export class BeforeScheduleMessageEventHandlers {
-  private isRegistered = false;
+  private isRegistered = false
 
   constructor(
     private beforeScheduleQueue: BeforeScheduleQueue,
@@ -23,42 +23,42 @@ export class BeforeScheduleMessageEventHandlers {
   ) {}
 
   register() {
-    if (this.isRegistered) return;
+    if (this.isRegistered) return
 
-    this.appEventListener.on("createSchedule", async (data) => {
+    this.appEventListener.on('createSchedule', async (data) => {
       await this.handleCreateOrUpdateSchedule({
-        type: "create",
+        type: 'create',
         userId: data.userId,
         clinicId: data.clinicId,
         scheduleId: data.scheduleId,
         patientId: data.patientId,
         scheduleDate: data.date,
-      });
-    });
+      })
+    })
 
-    this.appEventListener.on("updateSchedule", async (data) => {
+    this.appEventListener.on('updateSchedule', async (data) => {
       await this.handleCreateOrUpdateSchedule({
-        type: "update",
+        type: 'update',
         userId: data.userId,
         clinicId: data.clinicId,
         scheduleId: data.scheduleId,
         patientId: data.patientId,
         scheduleDate: data.date,
-      });
-    });
+      })
+    })
 
-    this.appEventListener.on("deleteSchedule", async (data) => {
+    this.appEventListener.on('deleteSchedule', async (data) => {
       await this.handleDeleteSchedule({
         userId: data.userId,
         clinicId: data.clinicId,
         scheduleId: data.scheduleId,
-      });
-    });
+      })
+    })
 
-    this.appEventListener.on("beforeScheduleMessageSend", async (data) => {
+    this.appEventListener.on('beforeScheduleMessageSend', async (data) => {
       logger.info(
         {
-          appEvent: "BeforeScheduleMessageSend",
+          appEvent: 'BeforeScheduleMessageSend',
           userId: data.userId,
           patientId: data.patientId,
           schedulingId: data.schedulingId,
@@ -68,11 +68,11 @@ export class BeforeScheduleMessageEventHandlers {
           providerMessageId: data.providerMessageId,
           messageLogId: data.messageLogId,
         },
-        "before schedule WhatsApp message sent successfully",
-      );
-    });
+        'before schedule WhatsApp message sent successfully',
+      )
+    })
 
-    this.isRegistered = true;
+    this.isRegistered = true
   }
 
   private async handleCreateOrUpdateSchedule({
@@ -83,7 +83,7 @@ export class BeforeScheduleMessageEventHandlers {
     patientId,
     scheduleDate,
   }: {
-    type: "create" | "update";
+    type: 'create' | 'update';
     userId: string;
     clinicId: string;
     scheduleId: string;
@@ -92,8 +92,8 @@ export class BeforeScheduleMessageEventHandlers {
   }) {
     const rows = await this.beforeScheduleMessageRepository.listByUserId({
       userId,
-    });
-    const configs = rows.filter((row) => row.isActive);
+    })
+    const configs = rows.filter((row) => row.isActive)
 
     await Promise.all(
       configs.map(async (config) => {
@@ -101,16 +101,16 @@ export class BeforeScheduleMessageEventHandlers {
           userId,
           scheduleId,
           beforeScheduleMessageId: config.id,
-        });
+        })
 
         const delay = this.calculateDelay(
           scheduleDate,
           config.minutesBeforeSchedule,
-        );
+        )
 
         if (delay <= 0) {
-          if (type === "update") await this.beforeScheduleQueue.remove(jobId);
-          return;
+          if (type === 'update') await this.beforeScheduleQueue.remove(jobId)
+          return
         }
 
         await this.beforeScheduleQueue.upsert(
@@ -123,9 +123,9 @@ export class BeforeScheduleMessageEventHandlers {
             beforeScheduleMessageId: config.id,
           },
           delay,
-        );
+        )
       }),
-    );
+    )
   }
 
   private async handleDeleteSchedule({
@@ -139,7 +139,7 @@ export class BeforeScheduleMessageEventHandlers {
   }) {
     const configs = await this.beforeScheduleMessageRepository.listByUserId({
       userId,
-    });
+    })
 
     await Promise.all(
       configs.map(async (config) => {
@@ -147,11 +147,11 @@ export class BeforeScheduleMessageEventHandlers {
           userId,
           scheduleId,
           beforeScheduleMessageId: config.id,
-        });
+        })
 
-        await this.beforeScheduleQueue.remove(jobId);
+        await this.beforeScheduleQueue.remove(jobId)
       }),
-    );
+    )
   }
 
   private calculateDelay(
@@ -161,7 +161,7 @@ export class BeforeScheduleMessageEventHandlers {
     return calculateScheduleMessageDelay({
       scheduleDate,
       minutesOffset: minutesBefore,
-      direction: "before",
-    });
+      direction: 'before',
+    })
   }
 }

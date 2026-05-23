@@ -1,7 +1,7 @@
 import type {
   IUserFingerprintRepository,
   UserFingerprintUpsertProps,
-} from "../../../../repositories/userFingerprint/IUserFingerprintRepository";
+} from '../../../../repositories/userFingerprint/IUserFingerprintRepository'
 
 export class RegisterUserFingerprintUseCase {
   constructor(
@@ -9,6 +9,6 @@ export class RegisterUserFingerprintUseCase {
   ) {}
 
   async execute(dto: UserFingerprintUpsertProps): Promise<void> {
-    await this.userFingerprintRepository.registerNewFingerprint(dto);
+    await this.userFingerprintRepository.registerNewFingerprint(dto)
   }
 }

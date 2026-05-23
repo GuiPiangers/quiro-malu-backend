@@ -2,26 +2,26 @@ import {
   IMessageSendStrategyRepository,
   type MessageSendStrategyRow,
   type UpdateMessageSendStrategyPatch,
-} from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
-import { IPatientRepository } from "../../../../../repositories/patient/IPatientRepository";
-import { ApiError } from "../../../../../utils/ApiError";
-import { MessageSendStrategyDisplayName } from "../../../models/MessageSendStrategyDisplayName";
-import { SendMostFrequencyPatientsMessageSendStrategy } from "../../../models/SendMostFrequencyPatientsMessageSendStrategy";
-import { SendMostRecentPatientsMessageSendStrategy } from "../../../models/SendMostRecentPatientsMessageSendStrategy";
-import { ExcludePatientsListMessageSendStrategy } from "../../../models/ExcludePatientsListMessageSendStrategy";
-import { SendSelectedListMessageSendStrategy } from "../../../models/SendSelectedListMessageSendStrategy";
+} from '../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository'
+import { IPatientRepository } from '../../../../../repositories/patient/IPatientRepository'
+import { ApiError } from '../../../../../utils/ApiError'
+import { MessageSendStrategyDisplayName } from '../../../models/MessageSendStrategyDisplayName'
+import { SendMostFrequencyPatientsMessageSendStrategy } from '../../../models/SendMostFrequencyPatientsMessageSendStrategy'
+import { SendMostRecentPatientsMessageSendStrategy } from '../../../models/SendMostRecentPatientsMessageSendStrategy'
+import { ExcludePatientsListMessageSendStrategy } from '../../../models/ExcludePatientsListMessageSendStrategy'
+import { SendSelectedListMessageSendStrategy } from '../../../models/SendSelectedListMessageSendStrategy'
 import {
   toMessageSendStrategyDTO,
   type MessageSendStrategyCreateParamsByKind,
-} from "../../../sendStrategy/messageSendStrategyKindTypeMaps";
+} from '../../../sendStrategy/messageSendStrategyKindTypeMaps'
 import {
   SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
   SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
   type SendStrategyKind,
-} from "../../../sendStrategy/sendStrategyKind";
-import type { ListedMessageSendStrategyDTO } from "../listMessageSendStrategy/ListMessageSendStrategyUseCase";
+} from '../../../sendStrategy/sendStrategyKind'
+import type { ListedMessageSendStrategyDTO } from '../listMessageSendStrategy/ListMessageSendStrategyUseCase'
 
 export type UpdateMessageSendStrategyDTO = {
   userId: string;
@@ -30,7 +30,7 @@ export type UpdateMessageSendStrategyDTO = {
   name?: string;
   kind?: SendStrategyKind;
   params?: MessageSendStrategyCreateParamsByKind[SendStrategyKind];
-};
+}
 
 export class UpdateMessageSendStrategyUseCase {
   constructor(
@@ -43,18 +43,18 @@ export class UpdateMessageSendStrategyUseCase {
     patientIdList: readonly string[],
   ): Promise<void> {
     if (patientIdList.length === 0) {
-      return;
+      return
     }
     const owned = await this.patientRepository.countPatientsOwnedByUser({
       clinicId,
       patientIds: [...patientIdList],
-    });
+    })
     if (owned !== patientIdList.length) {
       throw new ApiError(
-        "Um ou mais pacientes não existem ou não pertencem ao usuário",
+        'Um ou mais pacientes não existem ou não pertencem ao usuário',
         400,
-        "params.patientIdList",
-      );
+        'params.patientIdList',
+      )
     }
   }
 
@@ -63,18 +63,18 @@ export class UpdateMessageSendStrategyUseCase {
     strategyId: string,
   ): UpdateMessageSendStrategyPatch {
     const params =
-      dto.params as MessageSendStrategyCreateParamsByKind[typeof SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS];
-    const displayName = new MessageSendStrategyDisplayName(dto.name ?? "");
+      dto.params as MessageSendStrategyCreateParamsByKind[typeof SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS]
+    const displayName = new MessageSendStrategyDisplayName(dto.name ?? '')
     const entity = new SendMostRecentPatientsMessageSendStrategy({
       id: strategyId,
       displayName,
       amount: params.amount,
-    });
+    })
     return {
       kind: entity.kind,
       name: entity.displayName.value,
       params: { amount: entity.amount },
-    };
+    }
   }
 
   private buildFrequencyFullReplacePatch(
@@ -82,18 +82,18 @@ export class UpdateMessageSendStrategyUseCase {
     strategyId: string,
   ): UpdateMessageSendStrategyPatch {
     const params =
-      dto.params as MessageSendStrategyCreateParamsByKind[typeof SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS];
-    const displayName = new MessageSendStrategyDisplayName(dto.name ?? "");
+      dto.params as MessageSendStrategyCreateParamsByKind[typeof SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS]
+    const displayName = new MessageSendStrategyDisplayName(dto.name ?? '')
     const entity = new SendMostFrequencyPatientsMessageSendStrategy({
       id: strategyId,
       displayName,
       amount: params.amount,
-    });
+    })
     return {
       kind: entity.kind,
       name: entity.displayName.value,
       params: { amount: entity.amount },
-    };
+    }
   }
 
   private async buildSelectedListFullReplacePatch(
@@ -101,19 +101,19 @@ export class UpdateMessageSendStrategyUseCase {
     strategyId: string,
   ): Promise<UpdateMessageSendStrategyPatch> {
     const params =
-      dto.params as MessageSendStrategyCreateParamsByKind[typeof SEND_STRATEGY_KIND_SEND_SELECTED_LIST];
-    const displayName = new MessageSendStrategyDisplayName(dto.name ?? "");
+      dto.params as MessageSendStrategyCreateParamsByKind[typeof SEND_STRATEGY_KIND_SEND_SELECTED_LIST]
+    const displayName = new MessageSendStrategyDisplayName(dto.name ?? '')
     const entity = new SendSelectedListMessageSendStrategy({
       id: strategyId,
       displayName,
       patientIdList: params.patientIdList,
-    });
-    await this.assertAllPatientsOwnedByClinic(dto.clinicId, entity.patientIdList);
+    })
+    await this.assertAllPatientsOwnedByClinic(dto.clinicId, entity.patientIdList)
     return {
       kind: entity.kind,
       name: entity.displayName.value,
       params: { patientIdList: [...entity.patientIdList] },
-    };
+    }
   }
 
   private async buildExcludePatientsListFullReplacePatch(
@@ -121,37 +121,37 @@ export class UpdateMessageSendStrategyUseCase {
     strategyId: string,
   ): Promise<UpdateMessageSendStrategyPatch> {
     const params =
-      dto.params as MessageSendStrategyCreateParamsByKind[typeof SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST];
-    const displayName = new MessageSendStrategyDisplayName(dto.name ?? "");
+      dto.params as MessageSendStrategyCreateParamsByKind[typeof SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST]
+    const displayName = new MessageSendStrategyDisplayName(dto.name ?? '')
     const entity = new ExcludePatientsListMessageSendStrategy({
       id: strategyId,
       displayName,
       patientIdList: params.patientIdList,
-    });
-    await this.assertAllPatientsOwnedByClinic(dto.clinicId, entity.patientIdList);
+    })
+    await this.assertAllPatientsOwnedByClinic(dto.clinicId, entity.patientIdList)
     return {
       kind: entity.kind,
       name: entity.displayName.value,
       params: { patientIdList: [...entity.patientIdList] },
-    };
+    }
   }
 
   private async resolveFullReplacePatch(
     dto: UpdateMessageSendStrategyDTO,
     existing: MessageSendStrategyRow,
   ): Promise<UpdateMessageSendStrategyPatch> {
-    const kind = dto.kind as SendStrategyKind;
+    const kind = dto.kind as SendStrategyKind
     switch (kind) {
       case SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS:
-        return this.buildRecentFullReplacePatch(dto, existing.id);
+        return this.buildRecentFullReplacePatch(dto, existing.id)
       case SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS:
-        return this.buildFrequencyFullReplacePatch(dto, existing.id);
+        return this.buildFrequencyFullReplacePatch(dto, existing.id)
       case SEND_STRATEGY_KIND_SEND_SELECTED_LIST:
-        return await this.buildSelectedListFullReplacePatch(dto, existing.id);
+        return await this.buildSelectedListFullReplacePatch(dto, existing.id)
       case SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST:
-        return await this.buildExcludePatientsListFullReplacePatch(dto, existing.id);
+        return await this.buildExcludePatientsListFullReplacePatch(dto, existing.id)
       default:
-        throw new ApiError("Tipo de estratégia ainda não suportado", 501, "kind");
+        throw new ApiError('Tipo de estratégia ainda não suportado', 501, 'kind')
     }
   }
 
@@ -159,26 +159,26 @@ export class UpdateMessageSendStrategyUseCase {
     dto: UpdateMessageSendStrategyDTO,
     existing: MessageSendStrategyRow,
   ): Promise<UpdateMessageSendStrategyPatch | null> {
-    const hasKind = dto.kind !== undefined;
-    const hasParams = dto.params !== undefined;
+    const hasKind = dto.kind !== undefined
+    const hasParams = dto.params !== undefined
     if (hasKind !== hasParams) {
       throw new ApiError(
-        "kind e params devem ser informados juntos para alterar o tipo ou os parâmetros da estratégia",
+        'kind e params devem ser informados juntos para alterar o tipo ou os parâmetros da estratégia',
         400,
-        "kind",
-      );
+        'kind',
+      )
     }
 
     if (hasKind && hasParams) {
-      return await this.resolveFullReplacePatch(dto, existing);
+      return await this.resolveFullReplacePatch(dto, existing)
     }
 
     if (dto.name !== undefined) {
-      const displayName = new MessageSendStrategyDisplayName(dto.name ?? "");
-      return { name: displayName.value };
+      const displayName = new MessageSendStrategyDisplayName(dto.name ?? '')
+      return { name: displayName.value }
     }
 
-    return null;
+    return null
   }
 
   async execute(
@@ -187,28 +187,28 @@ export class UpdateMessageSendStrategyUseCase {
     const existing = await this.messageSendStrategyRepository.findByIdAndUserId(
       dto.strategyId,
       dto.userId,
-    );
+    )
 
     if (!existing) {
-      throw new ApiError("Estratégia de envio não encontrada", 404);
+      throw new ApiError('Estratégia de envio não encontrada', 404)
     }
 
-    const patch = await this.resolveUpdatePatch(dto, existing);
+    const patch = await this.resolveUpdatePatch(dto, existing)
     if (patch === null) {
-      return toMessageSendStrategyDTO(existing);
+      return toMessageSendStrategyDTO(existing)
     }
 
     await this.messageSendStrategyRepository.updateByIdAndUserId(
       dto.strategyId,
       dto.userId,
       patch,
-    );
+    )
 
     const updated = await this.messageSendStrategyRepository.findByIdAndUserId(
       dto.strategyId,
       dto.userId,
-    );
+    )
 
-    return toMessageSendStrategyDTO(updated!);
+    return toMessageSendStrategyDTO(updated!)
   }
 }

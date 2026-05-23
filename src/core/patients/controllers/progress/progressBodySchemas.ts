@@ -1,4 +1,4 @@
-import { z } from "../../../../schemas/zodOpenApi";
+import { z } from '../../../../schemas/zodOpenApi'
 
 export const PainScaleItemSchema = z
   .object({
@@ -6,7 +6,7 @@ export const PainScaleItemSchema = z
     painLevel: z.number().min(0).max(10),
     description: z.string().min(1),
   })
-  .openapi("PainScaleItem");
+  .openapi('PainScaleItem')
 
 export const SetProgressBodySchema = z
   .object({
@@ -14,7 +14,7 @@ export const SetProgressBodySchema = z
     userId: z
       .string()
       .min(1)
-      .describe("Id do clínico (usuário) responsável pela evolução"),
+      .describe('Id do clínico (usuário) responsável pela evolução'),
     schedulingId: z.string().optional(),
     patientId: z.string().min(1),
     service: z.string().optional(),
@@ -25,28 +25,28 @@ export const SetProgressBodySchema = z
     updateAt: z.string().optional(),
     painScales: z.array(PainScaleItemSchema).optional(),
   })
-  .openapi("SetProgressBody");
+  .openapi('SetProgressBody')
 
 export const DeleteProgressBodySchema = z
   .object({
     id: z.string().min(1),
     patientId: z.string().min(1),
   })
-  .openapi("DeleteProgressBody");
+  .openapi('DeleteProgressBody')
 
 export const ProgressEntryParamsSchema = z
   .object({
     patientId: z.string().min(1),
     id: z.string().min(1),
   })
-  .openapi("ProgressEntryParams");
+  .openapi('ProgressEntryParams')
 
 export const ProgressBySchedulingParamsSchema = z
   .object({
     patientId: z.string().min(1),
     schedulingId: z.string().min(1),
   })
-  .openapi("ProgressBySchedulingParams");
+  .openapi('ProgressBySchedulingParams')
 
-export type SetProgressBody = z.infer<typeof SetProgressBodySchema>;
-export type DeleteProgressBody = z.infer<typeof DeleteProgressBodySchema>;
+export type SetProgressBody = z.infer<typeof SetProgressBodySchema>
+export type DeleteProgressBody = z.infer<typeof DeleteProgressBodySchema>

@@ -1,4 +1,4 @@
-import { PatientDTO } from "../../core/patients/models/Patient";
+import { PatientDTO } from '../../core/patients/models/Patient'
 
 export interface IPatientRepository {
   save(patient: PatientDTO, clinicId: string): Promise<void>;
@@ -10,7 +10,7 @@ export interface IPatientRepository {
       limit: number;
       offSet: number;
       search?: { name?: string };
-      orderBy?: { field: string; orientation: "ASC" | "DESC" }[];
+      orderBy?: { field: string; orientation: 'ASC' | 'DESC' }[];
     },
   ): Promise<PatientDTO[]>;
   countAll(

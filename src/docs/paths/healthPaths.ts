@@ -1,19 +1,19 @@
-import { HealthResponseSchema } from "../../schemas/healthSchemas";
-import { openApiRegistry } from "../registry";
+import { HealthResponseSchema } from '../../schemas/healthSchemas'
+import { openApiRegistry } from '../registry'
 
 openApiRegistry.registerPath({
-  method: "get",
-  path: "/health",
-  tags: ["System"],
-  summary: "Health check",
+  method: 'get',
+  path: '/health',
+  tags: ['System'],
+  summary: 'Health check',
   responses: {
     200: {
-      description: "API em execução",
+      description: 'API em execução',
       content: {
-        "application/json": {
+        'application/json': {
           schema: HealthResponseSchema,
         },
       },
     },
   },
-});
+})

@@ -1,6 +1,6 @@
-import { UpdateServiceUseCase } from "../../useCases/updateService/UpdateServiceUseCase";
-import { UpdateServiceController } from "./UpdateServiceController";
-import { knexServiceRepository } from "../../../../repositories/service/knexInstances";
+import { UpdateServiceUseCase } from '../../useCases/updateService/UpdateServiceUseCase'
+import { UpdateServiceController } from './UpdateServiceController'
+import { knexServiceRepository } from '../../../../repositories/service/knexInstances'
 
 const ServiceRepository = knexServiceRepository
 const updateServiceUseCase = new UpdateServiceUseCase(ServiceRepository)

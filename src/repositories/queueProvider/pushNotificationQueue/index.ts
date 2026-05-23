@@ -1,14 +1,14 @@
-import { PushNotificationDTO } from "../../../core/notification/models/PushNotification";
-import { QueueProvider } from "../queueProvider";
-import { PushNotificationQueue } from "./pushNotificationsQueue";
+import { PushNotificationDTO } from '../../../core/notification/models/PushNotification'
+import { QueueProvider } from '../queueProvider'
+import { PushNotificationQueue } from './pushNotificationsQueue'
 
 const queueProvider = new QueueProvider<{
   notification: PushNotificationDTO;
   userId: string;
-}>("pushNotification");
+}>('pushNotification')
 
-const pushNotificationQueue = new PushNotificationQueue(queueProvider);
+const pushNotificationQueue = new PushNotificationQueue(queueProvider)
 
-pushNotificationQueue.process();
+pushNotificationQueue.process()
 
-export { pushNotificationQueue };
+export { pushNotificationQueue }

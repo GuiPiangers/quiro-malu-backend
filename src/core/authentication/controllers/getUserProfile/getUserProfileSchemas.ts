@@ -1,5 +1,5 @@
-import { z } from "../../../../schemas/zodOpenApi";
-import type { UserDTO } from "../../models/User";
+import { z } from '../../../../schemas/zodOpenApi'
+import type { UserDTO } from '../../models/User'
 
 /**
  * Perfil público (sem senha). Alinhado a `UserDTO` omitindo `password`;
@@ -15,6 +15,6 @@ export const GetUserProfileResponseSchema = z
     roleId: z.string().optional(),
   })
   .passthrough()
-  .openapi("GetUserProfileResponse");
+  .openapi('GetUserProfileResponse')
 
-export type GetUserProfileResponse = Omit<UserDTO, "password">;
+export type GetUserProfileResponse = Omit<UserDTO, 'password'>

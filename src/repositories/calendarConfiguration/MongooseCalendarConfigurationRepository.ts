@@ -1,24 +1,23 @@
-import { CalendarConfiguration } from "../../core/calendarConfiguration/models/CalendarConfiguration";
-import { CalendarConfigurationModel } from "../../database/mongoose/schemas/calendarConfiguration";
+import { CalendarConfiguration } from '../../core/calendarConfiguration/models/CalendarConfiguration'
+import { CalendarConfigurationModel } from '../../database/mongoose/schemas/calendarConfiguration'
 import {
   GetCalendarConfiguration,
   ICalendarConfigurationRepository,
   SaveCalendarConfiguration,
   UpdateCalendarConfiguration,
-} from "./ICalendarConfigurationRepository";
+} from './ICalendarConfigurationRepository'
 
 export class MongooseCalendarConfigurationRepository
-  implements ICalendarConfigurationRepository
-{
+implements ICalendarConfigurationRepository {
   async get({
     userId,
   }: GetCalendarConfiguration): Promise<CalendarConfiguration | null> {
     const configDoc = await CalendarConfigurationModel.findOne({
       userId,
-    }).lean();
+    }).lean()
 
     if (!configDoc) {
-      return null;
+      return null
     }
 
     return new CalendarConfiguration({
@@ -30,23 +29,23 @@ export class MongooseCalendarConfigurationRepository
       quinta: configDoc.quinta || undefined,
       sexta: configDoc.sexta || undefined,
       sabado: configDoc.sabado || undefined,
-    });
+    })
   }
 
   async save({
     calendarConfiguration,
   }: SaveCalendarConfiguration): Promise<void> {
-    const dto = calendarConfiguration.getDTO();
-    await CalendarConfigurationModel.create(dto);
+    const dto = calendarConfiguration.getDTO()
+    await CalendarConfigurationModel.create(dto)
   }
 
   async update({
     calendarConfiguration,
   }: UpdateCalendarConfiguration): Promise<void> {
-    const { userId, ...dataToUpdate } = calendarConfiguration.getDTO();
+    const { userId, ...dataToUpdate } = calendarConfiguration.getDTO()
     await CalendarConfigurationModel.updateOne(
       { userId },
       { $set: dataToUpdate },
-    );
+    )
   }
 }

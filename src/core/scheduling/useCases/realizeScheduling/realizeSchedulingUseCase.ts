@@ -1,6 +1,6 @@
-import { IProgressRepository } from "../../../../repositories/progress/IProgressRepository";
-import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
-import { ApiError } from "../../../../utils/ApiError";
+import { IProgressRepository } from '../../../../repositories/progress/IProgressRepository'
+import { ISchedulingRepository } from '../../../../repositories/scheduling/ISchedulingRepository'
+import { ApiError } from '../../../../utils/ApiError'
 
 export class RealizeSchedulingUseCase {
   constructor(
@@ -23,18 +23,18 @@ export class RealizeSchedulingUseCase {
         clinicId,
         patientId,
       }),
-    ]);
+    ])
 
     if (!progress?.schedulingId) {
       throw new ApiError(
-        "A evolução deve ser salva para poder realizar a consulta",
+        'A evolução deve ser salva para poder realizar a consulta',
         424,
-      );
+      )
     }
     await this.schedulingRepository.update({
       id: schedulingId,
       clinicId,
-      status: "Atendido",
-    });
+      status: 'Atendido',
+    })
   }
 }

@@ -1,52 +1,52 @@
-import { GetAnamnesisUseCase } from "./GetAnamnesisUseCase";
-import { AnamnesisDTO } from "../../../models/Anamnesis";
-import { createMockAnamnesisRepository } from "../../../../../repositories/_mocks/AnamnesisRepositoryMock";
+import { GetAnamnesisUseCase } from './GetAnamnesisUseCase'
+import { AnamnesisDTO } from '../../../models/Anamnesis'
+import { createMockAnamnesisRepository } from '../../../../../repositories/_mocks/AnamnesisRepositoryMock'
 
-describe("Get anamnesis use case", () => {
-  let getAnamnesisUseCase: GetAnamnesisUseCase;
-  const mockAnamnesisRepository = createMockAnamnesisRepository();
+describe('Get anamnesis use case', () => {
+  let getAnamnesisUseCase: GetAnamnesisUseCase
+  const mockAnamnesisRepository = createMockAnamnesisRepository()
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    getAnamnesisUseCase = new GetAnamnesisUseCase(mockAnamnesisRepository);
-  });
+    vi.clearAllMocks()
+    getAnamnesisUseCase = new GetAnamnesisUseCase(mockAnamnesisRepository)
+  })
 
-  it("Should return anamnesis data when found", async () => {
-    const clinicId = "123";
-    const patientId = "12345";
+  it('Should return anamnesis data when found', async () => {
+    const clinicId = '123'
+    const patientId = '12345'
 
     const anamnesisData: AnamnesisDTO = {
       patientId,
-      activities: "atividade",
-      currentIllness: "doença atual",
-      familiarHistory: "historico familiar",
-      history: "historico",
-      mainProblem: "problema principal",
-      medicines: "medicamentos",
-      smoke: "no",
-      surgeries: "cirurgias",
+      activities: 'atividade',
+      currentIllness: 'doença atual',
+      familiarHistory: 'historico familiar',
+      history: 'historico',
+      mainProblem: 'problema principal',
+      medicines: 'medicamentos',
+      smoke: 'no',
+      surgeries: 'cirurgias',
       underwentSurgery: true,
       useMedicine: true,
-    };
+    }
 
-    mockAnamnesisRepository.get.mockResolvedValue(anamnesisData);
+    mockAnamnesisRepository.get.mockResolvedValue(anamnesisData)
 
-    const result = await getAnamnesisUseCase.execute(patientId, clinicId);
-    expect(result).toEqual(anamnesisData);
-    expect(mockAnamnesisRepository.get).toHaveBeenCalledTimes(1);
-    expect(mockAnamnesisRepository.get).toHaveBeenCalledWith(patientId, clinicId);
-  });
+    const result = await getAnamnesisUseCase.execute(patientId, clinicId)
+    expect(result).toEqual(anamnesisData)
+    expect(mockAnamnesisRepository.get).toHaveBeenCalledTimes(1)
+    expect(mockAnamnesisRepository.get).toHaveBeenCalledWith(patientId, clinicId)
+  })
 
-  test("should return undefined when no anamnesis data is found", async () => {
-    const patientId = "patient123";
-    const clinicId = "user456";
+  test('should return undefined when no anamnesis data is found', async () => {
+    const patientId = 'patient123'
+    const clinicId = 'user456'
 
-    mockAnamnesisRepository.get.mockResolvedValue(undefined as any);
+    mockAnamnesisRepository.get.mockResolvedValue(undefined as any)
 
-    const result = await getAnamnesisUseCase.execute(patientId, clinicId);
+    const result = await getAnamnesisUseCase.execute(patientId, clinicId)
 
-    expect(result).toEqual({});
-    expect(mockAnamnesisRepository.get).toHaveBeenCalledTimes(1);
-    expect(mockAnamnesisRepository.get).toHaveBeenCalledWith(patientId, clinicId);
-  });
-});
+    expect(result).toEqual({})
+    expect(mockAnamnesisRepository.get).toHaveBeenCalledTimes(1)
+    expect(mockAnamnesisRepository.get).toHaveBeenCalledWith(patientId, clinicId)
+  })
+})

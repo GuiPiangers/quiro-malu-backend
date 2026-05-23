@@ -1,6 +1,6 @@
-import { GetServiceUseCase } from "../../useCases/getService/GetServiceUseCase";
-import { GetServiceController } from "./GetServiceController";
-import { knexServiceRepository } from "../../../../repositories/service/knexInstances";
+import { GetServiceUseCase } from '../../useCases/getService/GetServiceUseCase'
+import { GetServiceController } from './GetServiceController'
+import { knexServiceRepository } from '../../../../repositories/service/knexInstances'
 
 const serviceRepository = knexServiceRepository
 const getServiceUseCase = new GetServiceUseCase(serviceRepository)

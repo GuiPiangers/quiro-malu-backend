@@ -1,55 +1,59 @@
-import { Request, Response, NextFunction } from "express";
-import { randomUUID } from "crypto";
-import { NODE_ENV } from "../config/nodeEnv";
-import { logger } from "../utils/logger";
+import { Request, Response, NextFunction } from 'express'
+import { randomUUID } from 'crypto'
+import { NODE_ENV } from '../config/nodeEnv'
+import { logger } from '../utils/logger'
 
-type LogEvent = Record<string, unknown>;
+type LogEvent = Record<string, unknown>
 
 const isObservedRoute = (path: string) => {
-  const ignoredRoutes = ["/health", "/metrics"];
-  return !ignoredRoutes.some(route => path.includes(route));
-};
+  const ignoredRoutes = ['/health', '/metrics']
+  return !ignoredRoutes.some(route => path.includes(route))
+}
 
 export const requestLoggerMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  const startTime = Date.now();
-  const requestId = req.get("x-request-id") ?? randomUUID();
+  const startTime = Date.now()
+  const requestId = req.get('x-request-id') ?? randomUUID()
 
   const event: LogEvent = {
     requestId,
     method: req.method,
     path: req.originalUrl,
     ip: req.ip,
-    userAgent: req.get("user-agent"),
+    userAgent: req.get('user-agent'),
   };
 
-  (req as any).logEvent = event;
-  res.locals.logEvent = event;
-  res.setHeader("X-Request-Id", requestId);
+  (req as any).logEvent = event
+  res.locals.logEvent = event
+  res.setHeader('X-Request-Id', requestId)
 
-  res.on("finish", () => {
-    const userId = (req)?.user?.id;
-    if (userId) event.userId = userId;
+  res.on('finish', () => {
+    const userId = (req)?.user?.id
+    if (userId) event.userId = userId
 
-    event.statusCode = res.statusCode;
-    event.durationMs = Date.now() - startTime;
+    event.statusCode = res.statusCode
+    event.durationMs = Date.now() - startTime
 
     const level =
-      res.statusCode >= 500 ? "error" : res.statusCode >= 400 ? "warn" : "info";
+      res.statusCode >= 500
+        ? 'error'
+        : res.statusCode >= 400
+          ? 'warn'
+          : 'info'
 
     if (!isObservedRoute(event.path as string)) {
-      return;
+      return
     }
 
-    if (NODE_ENV === "development" && res.statusCode < 400) {
-      return;
+    if (NODE_ENV === 'development' && res.statusCode < 400) {
+      return
     }
 
-    logger[level]({ ...event }, "request completed");
-  });
+    logger[level]({ ...event }, 'request completed')
+  })
 
-  next();
-};
+  next()
+}

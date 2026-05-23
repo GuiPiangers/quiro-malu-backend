@@ -1,5 +1,5 @@
-import { IMessageSendStrategyRepository } from "../messageSendStrategy/IMessageSendStrategyRepository";
-import type { Mocked } from "vitest";
+import { IMessageSendStrategyRepository } from '../messageSendStrategy/IMessageSendStrategyRepository'
+import type { Mocked } from 'vitest'
 
 export const createMockMessageSendStrategyRepository =
   (): Mocked<IMessageSendStrategyRepository> => ({
@@ -11,4 +11,4 @@ export const createMockMessageSendStrategyRepository =
     deleteCampaignBinding: vi.fn(),
     updateByIdAndUserId: vi.fn(),
     deleteByIdAndUserId: vi.fn(),
-  });
+  })

@@ -1,28 +1,28 @@
-import { BirthdayMessageCampaignQueue } from "../../../queues/birthdayMessageCampaign/BirthdayMessageCampaignQueue";
-import { BirthdayMessageCampaignJobData } from "../../../queues/birthdayMessageCampaign/birthdayMessageCampaignJobData";
-import { QueueProvider } from "../queueProvider";
-import { birthdayMessageRepository } from "../../messages/knexInstances";
-import { knexPatientRepository } from "../../patient/knexInstances";
+import { BirthdayMessageCampaignQueue } from '../../../queues/birthdayMessageCampaign/BirthdayMessageCampaignQueue'
+import { BirthdayMessageCampaignJobData } from '../../../queues/birthdayMessageCampaign/birthdayMessageCampaignJobData'
+import { QueueProvider } from '../queueProvider'
+import { birthdayMessageRepository } from '../../messages/knexInstances'
+import { knexPatientRepository } from '../../patient/knexInstances'
 import {
   PatientsBirthDayQueue,
   PatientsBirthdayJobData,
-} from "./patientsBirthDayQueue";
+} from './patientsBirthDayQueue'
 
-const queueProvider = new QueueProvider<PatientsBirthdayJobData>("birthDays");
+const queueProvider = new QueueProvider<PatientsBirthdayJobData>('birthDays')
 
 const campaignQueueProvider = new QueueProvider<BirthdayMessageCampaignJobData>(
-  "birthdayMessageCampaign",
-);
+  'birthdayMessageCampaign',
+)
 
 const birthdayMessageCampaignQueue = new BirthdayMessageCampaignQueue(
   campaignQueueProvider,
-);
+)
 
 const patientsBirthDayQueue = new PatientsBirthDayQueue(
   knexPatientRepository,
   queueProvider,
   birthdayMessageRepository,
   birthdayMessageCampaignQueue,
-);
+)
 
-export { patientsBirthDayQueue, birthdayMessageCampaignQueue };
+export { patientsBirthDayQueue, birthdayMessageCampaignQueue }

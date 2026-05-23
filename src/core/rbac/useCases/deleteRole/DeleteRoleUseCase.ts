@@ -1,5 +1,5 @@
-import type { IRbacRepository } from "../../../../repositories/rbac/IRbacRepository";
-import { ApiError } from "../../../../utils/ApiError";
+import type { IRbacRepository } from '../../../../repositories/rbac/IRbacRepository'
+import { ApiError } from '../../../../utils/ApiError'
 
 export class DeleteRoleUseCase {
   constructor(private rbac: IRbacRepository) {}
@@ -8,13 +8,13 @@ export class DeleteRoleUseCase {
     const role = await this.rbac.findRoleByIdForClinic({
       id: data.id,
       clinicId: data.clinicId,
-    });
+    })
     if (!role) {
-      throw new ApiError("Papel não encontrado", 404, "role");
+      throw new ApiError('Papel não encontrado', 404, 'role')
     }
     if (role.isSystem) {
-      throw new ApiError("Não é permitido excluir um papel de sistema", 400, "role");
+      throw new ApiError('Não é permitido excluir um papel de sistema', 400, 'role')
     }
-    await this.rbac.deleteRole(data);
+    await this.rbac.deleteRole(data)
   }
 }

@@ -1,30 +1,30 @@
-import { CreateSchedulingUseCase } from "../../useCases/createScheduling/CreateSchedulingUseCase";
-import { Request, Response } from "express";
-import { responseError } from "../../../../utils/ResponseError";
-import { parseWithSchema, sendZodBadRequest } from "../../../../utils/zodValidation";
-import { CreateSchedulingBodySchema } from "../schedulingSharedSchemas";
+import { CreateSchedulingUseCase } from '../../useCases/createScheduling/CreateSchedulingUseCase'
+import { Request, Response } from 'express'
+import { responseError } from '../../../../utils/ResponseError'
+import { parseWithSchema, sendZodBadRequest } from '../../../../utils/zodValidation'
+import { CreateSchedulingBodySchema } from '../schedulingSharedSchemas'
 
 export class CreateSchedulingController {
   constructor(private createScheduleUseCase: CreateSchedulingUseCase) {}
 
   async handle(request: Request, response: Response) {
-    const parsed = parseWithSchema(CreateSchedulingBodySchema, request.body);
+    const parsed = parseWithSchema(CreateSchedulingBodySchema, request.body)
     if (!parsed.success) {
-      return sendZodBadRequest(response, parsed.error);
+      return sendZodBadRequest(response, parsed.error)
     }
 
     try {
-      const { userId, ...schedulingInput } = parsed.data;
-      const clinicId = request.user.clinicId as string;
+      const { userId, ...schedulingInput } = parsed.data
+      const clinicId = request.user.clinicId as string
 
       const scheduling = await this.createScheduleUseCase.execute({
         ...schedulingInput,
         userId,
         clinicId,
-      });
-      response.status(201).json(scheduling);
+      })
+      response.status(201).json(scheduling)
     } catch (err: any) {
-      return responseError(response, err);
+      return responseError(response, err)
     }
   }
 }

@@ -1,169 +1,169 @@
-import { ScheduleNotificationUseCase } from "./ScheduleNotificationUseCase";
-import { createMockPushNotificationQueue } from "../../../../repositories/_mocks/PushNotificationQueueMock";
-import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
-import { DateTime as Luxon } from "luxon";
-import type { Mock } from "vitest";
+import { ScheduleNotificationUseCase } from './ScheduleNotificationUseCase'
+import { createMockPushNotificationQueue } from '../../../../repositories/_mocks/PushNotificationQueueMock'
+import { createMockSchedulingRepository } from '../../../../repositories/_mocks/SchedulingRepositoryMock'
+import { DateTime as Luxon } from 'luxon'
+import type { Mock } from 'vitest'
 
-describe("ScheduleNotificationUseCase", () => {
-  let pushNotificationQueue: typeof createMockPushNotificationQueue;
-  let schedulingRepository: ReturnType<typeof createMockSchedulingRepository>;
-  let useCase: ScheduleNotificationUseCase;
+describe('ScheduleNotificationUseCase', () => {
+  let pushNotificationQueue: typeof createMockPushNotificationQueue
+  let schedulingRepository: ReturnType<typeof createMockSchedulingRepository>
+  let useCase: ScheduleNotificationUseCase
 
   beforeEach(() => {
     pushNotificationQueue = {
       add: vi.fn(),
       delete: vi.fn(),
-    };
-    schedulingRepository = createMockSchedulingRepository();
+    }
+    schedulingRepository = createMockSchedulingRepository()
     useCase = new ScheduleNotificationUseCase(
       pushNotificationQueue,
       schedulingRepository,
-    );
-  });
+    )
+  })
 
   beforeAll(() => {
     vi.useFakeTimers().setSystemTime(
-      Luxon.fromISO("2025-01-01T12:15", {
-        zone: "America/Sao_Paulo",
+      Luxon.fromISO('2025-01-01T12:15', {
+        zone: 'America/Sao_Paulo',
       }).toMillis(),
-    );
-  });
+    )
+  })
 
   afterAll(() => {
-    vi.useRealTimers();
-  });
+    vi.useRealTimers()
+  })
 
-  describe("schedule", () => {
-    it("should not schedule if id is missing", async () => {
+  describe('schedule', () => {
+    it('should not schedule if id is missing', async () => {
       await useCase.schedule({
-        userId: "user1",
-        clinicId: "clinic-1",
-        status: "Agendado",
-        patientId: "123",
-      });
+        userId: 'user1',
+        clinicId: 'clinic-1',
+        status: 'Agendado',
+        patientId: '123',
+      })
 
-      expect(schedulingRepository.get).not.toHaveBeenCalled();
-      expect(pushNotificationQueue.add).not.toHaveBeenCalled();
-    });
+      expect(schedulingRepository.get).not.toHaveBeenCalled()
+      expect(pushNotificationQueue.add).not.toHaveBeenCalled()
+    })
 
-    it("should not schedule if no data returned from repository", async () => {
-      schedulingRepository.get.mockResolvedValue([]);
+    it('should not schedule if no data returned from repository', async () => {
+      schedulingRepository.get.mockResolvedValue([])
 
       await useCase.schedule({
-        id: "123",
-        userId: "user1",
-        clinicId: "clinic-1",
-        status: "Agendado",
-        patientId: "123",
-      });
+        id: '123',
+        userId: 'user1',
+        clinicId: 'clinic-1',
+        status: 'Agendado',
+        patientId: '123',
+      })
 
-      expect(pushNotificationQueue.add).not.toHaveBeenCalled();
-    });
+      expect(pushNotificationQueue.add).not.toHaveBeenCalled()
+    })
 
-    it("should not schedule if status is Cancelado or Atendido", async () => {
+    it('should not schedule if status is Cancelado or Atendido', async () => {
       schedulingRepository.get.mockResolvedValue([
-        { patient: "John", patientId: "123", phone: "(51) 99999 9999" },
-      ]);
+        { patient: 'John', patientId: '123', phone: '(51) 99999 9999' },
+      ])
 
       await useCase.schedule({
-        id: "123",
-        userId: "user1",
-        clinicId: "clinic-1",
-        status: "Cancelado",
-        patientId: "123",
-      });
+        id: '123',
+        userId: 'user1',
+        clinicId: 'clinic-1',
+        status: 'Cancelado',
+        patientId: '123',
+      })
 
       await useCase.schedule({
-        id: "123",
-        userId: "user1",
-        clinicId: "clinic-1",
-        status: "Atendido",
-        patientId: "123",
-      });
+        id: '123',
+        userId: 'user1',
+        clinicId: 'clinic-1',
+        status: 'Atendido',
+        patientId: '123',
+      })
 
-      expect(pushNotificationQueue.add).not.toHaveBeenCalled();
-    });
+      expect(pushNotificationQueue.add).not.toHaveBeenCalled()
+    })
 
-    it("should not schedule if delay is more than 1 hour negative", async () => {
+    it('should not schedule if delay is more than 1 hour negative', async () => {
       schedulingRepository.get.mockResolvedValue([
-        { patient: "John", patientId: "123", phone: "(51) 99999 9999" },
-      ]);
+        { patient: 'John', patientId: '123', phone: '(51) 99999 9999' },
+      ])
 
       await useCase.schedule({
-        id: "123",
-        userId: "user1",
-        clinicId: "clinic-1",
-        date: "2025-01-01T11:15",
-        status: "Agendado",
-        patientId: "123",
-      });
+        id: '123',
+        userId: 'user1',
+        clinicId: 'clinic-1',
+        date: '2025-01-01T11:15',
+        status: 'Agendado',
+        patientId: '123',
+      })
 
-      expect(pushNotificationQueue.add).not.toHaveBeenCalled();
-    });
+      expect(pushNotificationQueue.add).not.toHaveBeenCalled()
+    })
 
-    it("should schedule notification with correct parameters", async () => {
+    it('should schedule notification with correct parameters', async () => {
       schedulingRepository.get.mockResolvedValue([
-        { patient: "Maria", patientId: "123", phone: "(51) 99999 9999" },
-      ]);
+        { patient: 'Maria', patientId: '123', phone: '(51) 99999 9999' },
+      ])
 
       await useCase.schedule({
-        id: "123",
-        userId: "user1",
-        clinicId: "clinic-1",
-        date: "2025-01-01T12:30",
-        status: "Agendado",
-        patientId: "123",
-      });
+        id: '123',
+        userId: 'user1',
+        clinicId: 'clinic-1',
+        date: '2025-01-01T12:30',
+        status: 'Agendado',
+        patientId: '123',
+      })
 
       expect(pushNotificationQueue.add).toHaveBeenCalledWith({
         delay: 0,
         notification: expect.objectContaining({
-          title: "Consulta agendada com o(a) Maria está prestes a começar",
-          message: "A consulta está agendada para às 12:30 do dia 01/01/2025",
-          type: "scheduling",
+          title: 'Consulta agendada com o(a) Maria está prestes a começar',
+          message: 'A consulta está agendada para às 12:30 do dia 01/01/2025',
+          type: 'scheduling',
         }),
-        userId: "user1",
-      });
-    });
-  });
+        userId: 'user1',
+      })
+    })
+  })
 
-  describe("deleteSchedule", () => {
-    it("should delete notification from queue", async () => {
-      await useCase.deleteSchedule({ scheduleId: "123" });
-      expect(pushNotificationQueue.delete).toHaveBeenCalledWith({ id: "123" });
-    });
-  });
+  describe('deleteSchedule', () => {
+    it('should delete notification from queue', async () => {
+      await useCase.deleteSchedule({ scheduleId: '123' })
+      expect(pushNotificationQueue.delete).toHaveBeenCalledWith({ id: '123' })
+    })
+  })
 
-  describe("update", () => {
-    it("should update existing schedule", async () => {
+  describe('update', () => {
+    it('should update existing schedule', async () => {
       schedulingRepository.get.mockResolvedValue([
-        { patient: "Carlos", patientId: "123", phone: "(51) 99999 9999" },
-      ]);
+        { patient: 'Carlos', patientId: '123', phone: '(51) 99999 9999' },
+      ])
 
       await useCase.update({
-        id: "123",
-        userId: "user1",
-        clinicId: "clinic-1",
-        date: "2025-01-01T12:30",
-        status: "Agendado",
-        patientId: "123",
-      });
+        id: '123',
+        userId: 'user1',
+        clinicId: 'clinic-1',
+        date: '2025-01-01T12:30',
+        status: 'Agendado',
+        patientId: '123',
+      })
 
-      expect(pushNotificationQueue.delete).toHaveBeenCalledWith({ id: "123" });
-      expect(pushNotificationQueue.add).toHaveBeenCalled();
-    });
+      expect(pushNotificationQueue.delete).toHaveBeenCalledWith({ id: '123' })
+      expect(pushNotificationQueue.add).toHaveBeenCalled()
+    })
 
-    it("should not update if id is missing", async () => {
+    it('should not update if id is missing', async () => {
       await useCase.update({
-        userId: "user1",
-        clinicId: "clinic-1",
-        status: "Agendado",
-        patientId: "123",
-      });
-      expect(pushNotificationQueue.delete).not.toHaveBeenCalled();
-      expect(pushNotificationQueue.add).not.toHaveBeenCalled();
-    });
-  });
+        userId: 'user1',
+        clinicId: 'clinic-1',
+        status: 'Agendado',
+        patientId: '123',
+      })
+      expect(pushNotificationQueue.delete).not.toHaveBeenCalled()
+      expect(pushNotificationQueue.add).not.toHaveBeenCalled()
+    })
+  })
 
   //   describe("calculateDelay", () => {
   //     it("should calculate correct delay time", () => {
@@ -178,4 +178,4 @@ describe("ScheduleNotificationUseCase", () => {
   //       expect(result).toBe(900000);
   //     });
   //   });
-});
+})

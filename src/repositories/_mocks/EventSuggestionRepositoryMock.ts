@@ -1,5 +1,5 @@
-import { IEventSuggestionRepository } from "../eventSuggestion/IEventSuggestionRepository";
-import type { Mocked } from "vitest";
+import { IEventSuggestionRepository } from '../eventSuggestion/IEventSuggestionRepository'
+import type { Mocked } from 'vitest'
 
 export const createMockEventSuggestionRepository =
   (): Mocked<IEventSuggestionRepository> => ({
@@ -7,4 +7,4 @@ export const createMockEventSuggestionRepository =
     list: vi.fn(),
     getByDescription: vi.fn(),
     update: vi.fn(),
-  });
+  })

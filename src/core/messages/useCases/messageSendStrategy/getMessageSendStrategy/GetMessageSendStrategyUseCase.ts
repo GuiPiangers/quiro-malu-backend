@@ -1,41 +1,41 @@
-import { IMessageSendStrategyRepository } from "../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
-import { IPatientRepository } from "../../../../../repositories/patient/IPatientRepository";
-import { ISchedulingRepository } from "../../../../../repositories/scheduling/ISchedulingRepository";
-import { ApiError } from "../../../../../utils/ApiError";
-import type { PatientDTO } from "../../../../patients/models/Patient";
+import { IMessageSendStrategyRepository } from '../../../../../repositories/messageSendStrategy/IMessageSendStrategyRepository'
+import { IPatientRepository } from '../../../../../repositories/patient/IPatientRepository'
+import { ISchedulingRepository } from '../../../../../repositories/scheduling/ISchedulingRepository'
+import { ApiError } from '../../../../../utils/ApiError'
+import type { PatientDTO } from '../../../../patients/models/Patient'
 import {
   toMessageSendStrategyDTO,
   type MessageSendStrategyDTO,
-} from "../../../sendStrategy/messageSendStrategyKindTypeMaps";
+} from '../../../sendStrategy/messageSendStrategyKindTypeMaps'
 import {
   SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST,
   SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS,
   SEND_STRATEGY_KIND_SEND_MOST_RECENT_PATIENTS,
   SEND_STRATEGY_KIND_SEND_SELECTED_LIST,
-} from "../../../sendStrategy/sendStrategyKind";
+} from '../../../sendStrategy/sendStrategyKind'
 
 export type GetMessageSendStrategyDTO = {
   userId: string;
   clinicId: string;
   strategyId: string;
-};
+}
 
 export type GetMessageSendStrategyPatientView = {
   name: string;
   phone: string;
   cpf?: string;
-};
+}
 
 export type GetMessageSendStrategyOutput = MessageSendStrategyDTO & {
   patients: GetMessageSendStrategyPatientView[];
-};
+}
 
 function patientToView(patient: PatientDTO): GetMessageSendStrategyPatientView {
   return {
     name: patient.name,
     phone: patient.phone,
     cpf: patient.cpf,
-  };
+  }
 }
 
 export class GetMessageSendStrategyUseCase {
@@ -49,20 +49,20 @@ export class GetMessageSendStrategyUseCase {
     const row = await this.messageSendStrategyRepository.findByIdAndUserId(
       dto.strategyId,
       dto.userId,
-    );
+    )
 
     if (!row) {
-      throw new ApiError("Estratégia de envio não encontrada", 404);
+      throw new ApiError('Estratégia de envio não encontrada', 404)
     }
 
-    const strategy = toMessageSendStrategyDTO(row);
+    const strategy = toMessageSendStrategyDTO(row)
     const patients = await this.resolvePatientsForStrategy(
       dto.userId,
       dto.clinicId,
       strategy,
-    );
+    )
 
-    return { ...strategy, patients };
+    return { ...strategy, patients }
   }
 
   private async resolvePatientsForStrategy(
@@ -75,34 +75,34 @@ export class GetMessageSendStrategyUseCase {
         const list = await this.patientRepository.getMostRecent(
           clinicId,
           strategy.params.amount,
-        );
-        return list.map(patientToView);
+        )
+        return list.map(patientToView)
       }
       case SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS: {
         const patientIds =
           await this.schedulingRepository.listPatientIdsByClinicIdOrderBySchedulingCountDesc(
             clinicId,
             strategy.params.amount,
-          );
+          )
         if (patientIds.length === 0) {
-          return [];
+          return []
         }
         const list = await this.patientRepository.listPatientsById({
           clinicId,
           patientIds,
-        });
-        return list.map(patientToView);
+        })
+        return list.map(patientToView)
       }
       case SEND_STRATEGY_KIND_SEND_SELECTED_LIST:
       case SEND_STRATEGY_KIND_EXCLUDE_PATIENTS_LIST: {
         const list = await this.patientRepository.listPatientsById({
           clinicId,
           patientIds: strategy.params.patientIdList,
-        });
-        return list.map(patientToView);
+        })
+        return list.map(patientToView)
       }
       default:
-        return [];
+        return []
     }
   }
 }

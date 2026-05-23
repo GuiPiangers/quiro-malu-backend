@@ -1,5 +1,5 @@
-import type { Mocked } from "vitest";
-import type { IRbacRepository } from "../rbac/IRbacRepository";
+import type { Mocked } from 'vitest'
+import type { IRbacRepository } from '../rbac/IRbacRepository'
 
 export const createMockRbacRepository = (): Mocked<IRbacRepository> => ({
   findResolvedPermissionsByUser: vi.fn(),
@@ -13,4 +13,4 @@ export const createMockRbacRepository = (): Mocked<IRbacRepository> => ({
   replaceRolePermissions: vi.fn(),
   setUserRole: vi.fn(),
   createClinicAdminRole: vi.fn(),
-});
+})

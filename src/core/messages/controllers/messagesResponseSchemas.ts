@@ -1,11 +1,11 @@
-import { z } from "../../../schemas/zodOpenApi";
+import { z } from '../../../schemas/zodOpenApi'
 
 export const MessageTemplateDtoSchema = z
   .object({
     id: z.string().optional(),
     textTemplate: z.string(),
   })
-  .openapi("MessageTemplateDto");
+  .openapi('MessageTemplateDto')
 
 export const BeforeScheduleMessageDtoSchema = z
   .object({
@@ -15,7 +15,7 @@ export const BeforeScheduleMessageDtoSchema = z
     isActive: z.boolean(),
     messageTemplate: MessageTemplateDtoSchema,
   })
-  .openapi("BeforeScheduleMessageDto");
+  .openapi('BeforeScheduleMessageDto')
 
 export const AfterScheduleMessageDtoSchema = z
   .object({
@@ -25,7 +25,7 @@ export const AfterScheduleMessageDtoSchema = z
     isActive: z.boolean(),
     messageTemplate: MessageTemplateDtoSchema,
   })
-  .openapi("AfterScheduleMessageDto");
+  .openapi('AfterScheduleMessageDto')
 
 export const BirthdayMessageDtoSchema = z
   .object({
@@ -35,7 +35,7 @@ export const BirthdayMessageDtoSchema = z
     sendTime: z.string(),
     messageTemplate: MessageTemplateDtoSchema,
   })
-  .openapi("BirthdayMessageDto");
+  .openapi('BirthdayMessageDto')
 
 export const BeforeScheduleMessagesListResponseSchema = z
   .object({
@@ -44,7 +44,7 @@ export const BeforeScheduleMessagesListResponseSchema = z
     page: z.number(),
     limit: z.number(),
   })
-  .openapi("BeforeScheduleMessagesListResponse");
+  .openapi('BeforeScheduleMessagesListResponse')
 
 export const AfterScheduledMessagesListResponseSchema = z
   .object({
@@ -53,7 +53,7 @@ export const AfterScheduledMessagesListResponseSchema = z
     page: z.number(),
     limit: z.number(),
   })
-  .openapi("AfterScheduleMessagesListResponse");
+  .openapi('AfterScheduleMessagesListResponse')
 
 export const BirthdayMessagesListResponseSchema = z
   .object({
@@ -62,7 +62,7 @@ export const BirthdayMessagesListResponseSchema = z
     page: z.number(),
     limit: z.number(),
   })
-  .openapi("BirthdayMessagesListResponse");
+  .openapi('BirthdayMessagesListResponse')
 
 export const MessageSendStrategyItemResponseSchema = z
   .object({
@@ -74,7 +74,7 @@ export const MessageSendStrategyItemResponseSchema = z
     campaignBindingsCount: z.number(),
   })
   .passthrough()
-  .openapi("MessageSendStrategyItem");
+  .openapi('MessageSendStrategyItem')
 
 export const GetMessageSendStrategyResponseSchema =
   MessageSendStrategyItemResponseSchema.extend({
@@ -85,7 +85,7 @@ export const GetMessageSendStrategyResponseSchema =
         cpf: z.string().optional(),
       }),
     ),
-  }).openapi("GetMessageSendStrategyResponse");
+  }).openapi('GetMessageSendStrategyResponse')
 
 export const ListMessageSendStrategyResponseSchema = z
   .object({
@@ -94,7 +94,7 @@ export const ListMessageSendStrategyResponseSchema = z
     page: z.number(),
     limit: z.number(),
   })
-  .openapi("ListMessageSendStrategyResponse");
+  .openapi('ListMessageSendStrategyResponse')
 
 export const WhatsAppMessageLogDtoSchema = z
   .object({
@@ -102,12 +102,12 @@ export const WhatsAppMessageLogDtoSchema = z
     userId: z.string(),
     patientId: z.string(),
     schedulingId: z.string(),
-    scheduleMessageType: z.enum(["beforeSchedule", "afterSchedule", "birthday"]),
+    scheduleMessageType: z.enum(['beforeSchedule', 'afterSchedule', 'birthday']),
     scheduleMessageConfigId: z.string(),
     message: z.string(),
     toPhone: z.string(),
     instanceName: z.string(),
-    status: z.enum(["PENDING", "SENT", "DELIVERED", "READ", "FAILED"]),
+    status: z.enum(['PENDING', 'SENT', 'DELIVERED', 'READ', 'FAILED']),
     providerMessageId: z.string().nullable(),
     errorMessage: z.string().nullable(),
     sentAt: z.string().nullable(),
@@ -117,7 +117,7 @@ export const WhatsAppMessageLogDtoSchema = z
     updatedAt: z.string(),
   })
   .passthrough()
-  .openapi("WhatsAppMessageLogDto");
+  .openapi('WhatsAppMessageLogDto')
 
 export const ListWhatsAppMessageLogsResponseSchema = z
   .object({
@@ -126,7 +126,7 @@ export const ListWhatsAppMessageLogsResponseSchema = z
     page: z.number(),
     limit: z.number(),
   })
-  .openapi("ListWhatsAppMessageLogsResponse");
+  .openapi('ListWhatsAppMessageLogsResponse')
 
 export const WhatsAppMessageLogsSummaryResponseSchema = z
   .object({
@@ -135,4 +135,4 @@ export const WhatsAppMessageLogsSummaryResponseSchema = z
     deliveryRate: z.number().nullable(),
     readRate: z.number().nullable(),
   })
-  .openapi("WhatsAppMessageLogsSummary");
+  .openapi('WhatsAppMessageLogsSummary')

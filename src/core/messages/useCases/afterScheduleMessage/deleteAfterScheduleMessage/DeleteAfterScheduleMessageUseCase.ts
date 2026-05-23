@@ -1,9 +1,9 @@
-import { AfterScheduleQueue } from "../../../../../queues/afterScheduleMessage/AfterScheduleQueue";
-import { IAfterScheduleMessageRepository } from "../../../../../repositories/messages/IAfterScheduleMessageRepository";
-import { ISchedulingRepository } from "../../../../../repositories/scheduling/ISchedulingRepository";
-import { ApiError } from "../../../../../utils/ApiError";
-import { buildAfterScheduleMessageJobId } from "../../../utils/buildAfterScheduleMessageJobId";
-import { AppEventListener } from "../../../../shared/observers/EventListener";
+import { AfterScheduleQueue } from '../../../../../queues/afterScheduleMessage/AfterScheduleQueue'
+import { IAfterScheduleMessageRepository } from '../../../../../repositories/messages/IAfterScheduleMessageRepository'
+import { ISchedulingRepository } from '../../../../../repositories/scheduling/ISchedulingRepository'
+import { ApiError } from '../../../../../utils/ApiError'
+import { buildAfterScheduleMessageJobId } from '../../../utils/buildAfterScheduleMessageJobId'
+import { AppEventListener } from '../../../../shared/observers/EventListener'
 
 export class DeleteAfterScheduleMessageUseCase {
   constructor(
@@ -25,19 +25,19 @@ export class DeleteAfterScheduleMessageUseCase {
     const existing = await this.afterScheduleMessageRepository.getById({
       id,
       userId,
-    });
+    })
 
     if (!existing) {
-      throw new ApiError("Mensagem agendada não encontrada", 404);
+      throw new ApiError('Mensagem agendada não encontrada', 404)
     }
 
-    await this.afterScheduleMessageRepository.delete({ id, userId });
+    await this.afterScheduleMessageRepository.delete({ id, userId })
 
-    this.appEventListener.emit("afterScheduleMessageDelete", { id });
+    this.appEventListener.emit('afterScheduleMessageDelete', { id })
 
     const scheduleIds = await this.schedulingRepository.listIdsByClinicId({
       clinicId,
-    });
+    })
 
     await Promise.all(
       scheduleIds.map((scheduleId) =>
@@ -49,6 +49,6 @@ export class DeleteAfterScheduleMessageUseCase {
           }),
         ),
       ),
-    );
+    )
   }
 }

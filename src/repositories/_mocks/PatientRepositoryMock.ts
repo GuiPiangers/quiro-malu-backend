@@ -1,5 +1,5 @@
-import { IPatientRepository } from "../patient/IPatientRepository";
-import type { Mocked } from "vitest";
+import { IPatientRepository } from '../patient/IPatientRepository'
+import type { Mocked } from 'vitest'
 
 export const createMockPatientRepository =
   (): Mocked<IPatientRepository> => ({
@@ -16,4 +16,4 @@ export const createMockPatientRepository =
     getMostRecent: vi.fn(),
     listPatientsById: vi.fn(),
     countPatientsOwnedByUser: vi.fn(),
-  });
+  })

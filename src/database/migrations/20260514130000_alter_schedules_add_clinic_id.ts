@@ -1,5 +1,5 @@
-import type { Knex } from "knex";
-import { ETableNames } from "../ETableNames";
+import type { Knex } from 'knex'
+import { ETableNames } from '../ETableNames'
 
 async function hasClinicForeignKey(knex: Knex): Promise<boolean> {
   const [rows] = await knex.raw(
@@ -10,21 +10,21 @@ async function hasClinicForeignKey(knex: Knex): Promise<boolean> {
         and COLUMN_NAME = 'clinicId'
         and REFERENCED_TABLE_NAME = ?`,
     [ETableNames.SCHEDULES, ETableNames.CLINICS],
-  );
+  )
 
-  return rows.length > 0;
+  return rows.length > 0
 }
 
 export async function up(knex: Knex): Promise<void> {
   const hasClinicId = await knex.schema.hasColumn(
     ETableNames.SCHEDULES,
-    "clinicId",
-  );
+    'clinicId',
+  )
 
   if (!hasClinicId) {
     await knex.schema.alterTable(ETableNames.SCHEDULES, (table) => {
-      table.string("clinicId", 100).nullable().index();
-    });
+      table.string('clinicId', 100).nullable().index()
+    })
   }
 
   await knex.raw(
@@ -33,39 +33,39 @@ export async function up(knex: Knex): Promise<void> {
        set s.clinicId = u.clinicId
      where s.clinicId is null`,
     [ETableNames.SCHEDULES, ETableNames.USERS],
-  );
+  )
 
   await knex.schema.alterTable(ETableNames.SCHEDULES, (table) => {
-    table.string("clinicId", 100).notNullable().alter();
-  });
+    table.string('clinicId', 100).notNullable().alter()
+  })
 
-  if (await hasClinicForeignKey(knex)) return;
+  if (await hasClinicForeignKey(knex)) return
 
   await knex.schema.alterTable(ETableNames.SCHEDULES, (table) => {
     table
-      .foreign("clinicId")
-      .references("id")
+      .foreign('clinicId')
+      .references('id')
       .inTable(ETableNames.CLINICS)
-      .onDelete("CASCADE")
-      .onUpdate("CASCADE");
-  });
+      .onDelete('CASCADE')
+      .onUpdate('CASCADE')
+  })
 }
 
 export async function down(knex: Knex): Promise<void> {
   const hasClinicId = await knex.schema.hasColumn(
     ETableNames.SCHEDULES,
-    "clinicId",
-  );
+    'clinicId',
+  )
 
-  if (!hasClinicId) return;
+  if (!hasClinicId) return
 
   if (await hasClinicForeignKey(knex)) {
     await knex.schema.alterTable(ETableNames.SCHEDULES, (table) => {
-      table.dropForeign(["clinicId"]);
-    });
+      table.dropForeign(['clinicId'])
+    })
   }
 
   await knex.schema.alterTable(ETableNames.SCHEDULES, (table) => {
-    table.dropColumn("clinicId");
-  });
+    table.dropColumn('clinicId')
+  })
 }

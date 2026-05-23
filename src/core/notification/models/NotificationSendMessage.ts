@@ -1,28 +1,28 @@
-import { Phone } from "../../shared/Phone";
-import { ComplexNotification, ComplexNotificationDTO } from "./Notification";
+import { Phone } from '../../shared/Phone'
+import { ComplexNotification, ComplexNotificationDTO } from './Notification'
 
 export type NotificationSendMessageParams = {
   patientId: string;
   patientPhone: Phone;
   templateMessage: string;
-};
+}
 
 type ComplexNotificationParams = Omit<
   NotificationSendMessageParams,
-  "patientPhone"
+  'patientPhone'
 > & {
   patientPhone: string;
-};
+}
 
 export class NotificationSendMessage extends ComplexNotification<ComplexNotificationParams> {
   constructor(data: ComplexNotificationDTO<NotificationSendMessageParams>) {
     super({
       ...data,
-      type: "sendMessage",
+      type: 'sendMessage',
       params: {
         ...data.params,
         patientPhone: data.params.patientPhone.value,
       },
-    });
+    })
   }
 }

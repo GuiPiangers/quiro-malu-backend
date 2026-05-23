@@ -1,9 +1,9 @@
-import { ICalendarConfigurationRepository } from "../../../../repositories/calendarConfiguration/ICalendarConfigurationRepository";
-import { CalendarConfigurationDTO } from "../../models/CalendarConfiguration";
+import { ICalendarConfigurationRepository } from '../../../../repositories/calendarConfiguration/ICalendarConfigurationRepository'
+import { CalendarConfigurationDTO } from '../../models/CalendarConfiguration'
 
 export type GetCalendarConfigurationDTO = {
   userId: string;
-};
+}
 
 export class GetCalendarConfigurationUseCase {
   constructor(
@@ -13,12 +13,12 @@ export class GetCalendarConfigurationUseCase {
   async execute({
     userId,
   }: GetCalendarConfigurationDTO): Promise<CalendarConfigurationDTO | null> {
-    const config = await this.calendarConfigurationRepository.get({ userId });
+    const config = await this.calendarConfigurationRepository.get({ userId })
 
     if (!config) {
-      return null;
+      return null
     }
 
-    return config.getDTO();
+    return config.getDTO()
   }
 }

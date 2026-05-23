@@ -1,5 +1,5 @@
-import { IPushNotificationProvider } from "../notification/IPushNotificationProvider";
-import type { Mocked } from "vitest";
+import { IPushNotificationProvider } from '../notification/IPushNotificationProvider'
+import type { Mocked } from 'vitest'
 
 export const createMockPushNotificationProvider =
   (): Mocked<IPushNotificationProvider> => ({
@@ -8,4 +8,4 @@ export const createMockPushNotificationProvider =
     updateSubscription: vi.fn(),
     unsubscribe: vi.fn(),
     getAllowedSubscriptions: vi.fn(),
-  });
+  })

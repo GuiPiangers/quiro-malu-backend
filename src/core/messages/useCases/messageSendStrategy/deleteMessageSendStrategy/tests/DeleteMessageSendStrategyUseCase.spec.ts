@@ -1,15 +1,15 @@
-import { createMockMessageSendStrategyRepository } from "../../../../../../repositories/_mocks/MessageSendStrategyRepositoryMock";
-import { DeleteMessageSendStrategyUseCase } from "../DeleteMessageSendStrategyUseCase";
+import { createMockMessageSendStrategyRepository } from '../../../../../../repositories/_mocks/MessageSendStrategyRepositoryMock'
+import { DeleteMessageSendStrategyUseCase } from '../DeleteMessageSendStrategyUseCase'
 
-describe("DeleteMessageSendStrategyUseCase", () => {
-  it("deve delegar delete ao repositório", async () => {
-    const repo = createMockMessageSendStrategyRepository();
-    repo.deleteByIdAndUserId.mockResolvedValue(undefined);
+describe('DeleteMessageSendStrategyUseCase', () => {
+  it('deve delegar delete ao repositório', async () => {
+    const repo = createMockMessageSendStrategyRepository()
+    repo.deleteByIdAndUserId.mockResolvedValue(undefined)
 
-    const sut = new DeleteMessageSendStrategyUseCase(repo);
+    const sut = new DeleteMessageSendStrategyUseCase(repo)
 
-    await sut.execute({ userId: "user-1", strategyId: "s-1" });
+    await sut.execute({ userId: 'user-1', strategyId: 's-1' })
 
-    expect(repo.deleteByIdAndUserId).toHaveBeenCalledWith("s-1", "user-1");
-  });
-});
+    expect(repo.deleteByIdAndUserId).toHaveBeenCalledWith('s-1', 'user-1')
+  })
+})

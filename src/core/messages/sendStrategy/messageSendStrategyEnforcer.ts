@@ -1,12 +1,12 @@
-import { IMessageSendStrategyRepository } from "../../../repositories/messageSendStrategy/IMessageSendStrategyRepository";
-import { MessageSendStrategyFactory } from "./messageSendStrategyFactory";
+import { IMessageSendStrategyRepository } from '../../../repositories/messageSendStrategy/IMessageSendStrategyRepository'
+import { MessageSendStrategyFactory } from './messageSendStrategyFactory'
 
 export type IsSendAllowedParams = {
   userId: string;
   clinicId: string;
   campaignId: string;
   patientId: string;
-};
+}
 
 export class MessageSendStrategyEnforcer {
   constructor(
@@ -15,19 +15,19 @@ export class MessageSendStrategyEnforcer {
   ) {}
 
   async isSendAllowed(params: IsSendAllowedParams): Promise<boolean> {
-    const { userId, clinicId, campaignId, patientId } = params;
+    const { userId, clinicId, campaignId, patientId } = params
     const rows =
       await this.messageSendStrategyRepository.findActiveStrategiesByUserAndCampaign(
         userId,
         campaignId,
-      );
+      )
 
     if (rows.length === 0) {
-      return true;
+      return true
     }
 
     for (const row of rows) {
-      const strategy = this.messageSendStrategyFactory.create(row);
+      const strategy = this.messageSendStrategyFactory.create(row)
       if (
         !(await strategy.allowsSend({
           userId,
@@ -36,10 +36,10 @@ export class MessageSendStrategyEnforcer {
           campaignId,
         }))
       ) {
-        return false;
+        return false
       }
     }
 
-    return true;
+    return true
   }
 }

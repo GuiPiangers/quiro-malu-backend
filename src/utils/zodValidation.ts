@@ -1,10 +1,10 @@
-import type { Response } from "express";
-import type { ZodError, ZodSchema } from "zod";
+import type { Response } from 'express'
+import type { ZodError, ZodSchema } from 'zod'
 
-export type ZodFieldErrors = ReturnType<ZodError["flatten"]>;
+export type ZodFieldErrors = ReturnType<ZodError['flatten']>
 
 export function zodFieldErrors(error: ZodError): ZodFieldErrors {
-  return error.flatten();
+  return error.flatten()
 }
 
 export function parseWithSchema<T>(
@@ -13,11 +13,11 @@ export function parseWithSchema<T>(
 ):
   | { success: true; data: T }
   | { success: false; error: ZodError } {
-  const result = schema.safeParse(data);
+  const result = schema.safeParse(data)
   if (result.success) {
-    return { success: true, data: result.data };
+    return { success: true, data: result.data }
   }
-  return { success: false, error: result.error };
+  return { success: false, error: result.error }
 }
 
 export function sendZodBadRequest(
@@ -26,7 +26,7 @@ export function sendZodBadRequest(
 ): Response {
   return response.status(400).json({
     error: true,
-    message: "Validation failed",
+    message: 'Validation failed',
     errors: zodFieldErrors(error),
-  });
+  })
 }

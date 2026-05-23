@@ -1,14 +1,14 @@
-import { ApiError } from "../../../utils/ApiError";
-import { DateTime } from "../../shared/Date";
-import { Entity } from "../../shared/Entity";
-import ClientStatusStrategy from "./status/ClientStatusStrategy";
-import { StatusStrategy } from "./status/StatusStrategy";
+import { ApiError } from '../../../utils/ApiError'
+import { DateTime } from '../../shared/Date'
+import { Entity } from '../../shared/Entity'
+import ClientStatusStrategy from './status/ClientStatusStrategy'
+import { StatusStrategy } from './status/StatusStrategy'
 
 export type SchedulingStatus =
-  | "Agendado"
-  | "Atendido"
-  | "Atrasado"
-  | "Cancelado";
+  | 'Agendado'
+  | 'Atendido'
+  | 'Atrasado'
+  | 'Cancelado'
 
 export interface SchedulingDTO {
   id?: string;
@@ -23,15 +23,15 @@ export interface SchedulingDTO {
 }
 
 export class Scheduling extends Entity {
-  readonly patientId: string;
-  readonly date?: DateTime;
-  readonly duration?: number;
-  readonly service?: string;
-  readonly createAt?: string;
-  readonly updateAt?: string;
-  readonly reminderSentAt?: string | null;
-  private _status?: SchedulingStatus;
-  private statusStrategy?: StatusStrategy;
+  readonly patientId: string
+  readonly date?: DateTime
+  readonly duration?: number
+  readonly service?: string
+  readonly createAt?: string
+  readonly updateAt?: string
+  readonly reminderSentAt?: string | null
+  private _status?: SchedulingStatus
+  private statusStrategy?: StatusStrategy
 
   constructor(
     {
@@ -47,31 +47,35 @@ export class Scheduling extends Entity {
     }: SchedulingDTO,
     statusStrategy?: StatusStrategy,
   ) {
-    super(id || `${Date.now()}`);
-    this.statusStrategy = statusStrategy || new ClientStatusStrategy();
-    this.patientId = patientId;
-    this.date = date ? new DateTime(date) : undefined;
-    this.service = service;
-    this.duration = duration;
-    this._status = status;
+    super(id || `${Date.now()}`)
+    this.statusStrategy = statusStrategy || new ClientStatusStrategy()
+    this.patientId = patientId
+    this.date = date
+      ? new DateTime(date)
+      : undefined
+    this.service = service
+    this.duration = duration
+    this._status = status
 
-    this.createAt = createAt;
-    this.updateAt = updateAt;
-    this.reminderSentAt = reminderSentAt;
+    this.createAt = createAt
+    this.updateAt = updateAt
+    this.reminderSentAt = reminderSentAt
   }
 
   get status() {
     return this.statusStrategy?.calculateStatus({
       scheduling: this,
       status: this._status,
-    });
+    })
   }
 
   get endDate(): DateTime | undefined {
-    const durationInMinutes = this.duration ? this.duration / 60 : 0;
-    const endDate = this.date?.setMinutes(durationInMinutes);
+    const durationInMinutes = this.duration
+      ? this.duration / 60
+      : 0
+    const endDate = this.date?.setMinutes(durationInMinutes)
 
-    return endDate ?? this.date;
+    return endDate ?? this.date
   }
 
   getDTO() {
@@ -83,40 +87,40 @@ export class Scheduling extends Entity {
       status: this.status,
       service: this.service,
       reminderSentAt: this.reminderSentAt,
-    };
+    }
   }
 
   notAvailableDate(data: SchedulingDTO[]): boolean {
-    if (!this.date?.dateTime) throw new ApiError("A data deve ser definida");
-    if (!this.duration) throw new ApiError("A duração deve ser definida");
+    if (!this.date?.dateTime) throw new ApiError('A data deve ser definida')
+    if (!this.duration) throw new ApiError('A duração deve ser definida')
 
     return data.some((schedulingValue) => {
-      const endDate = new Date(`${schedulingValue.date}:00.000Z`);
-      endDate.setSeconds(schedulingValue.duration!);
+      const endDate = new Date(`${schedulingValue.date}:00.000Z`)
+      endDate.setSeconds(schedulingValue.duration!)
 
-      const schedulingDate = new Date(`${this.date!.dateTime}:00.000Z`);
-      schedulingDate.setSeconds(this.duration!);
+      const schedulingDate = new Date(`${this.date!.dateTime}:00.000Z`)
+      schedulingDate.setSeconds(this.duration!)
 
-      const schedulingStart = this.date!.dateTime;
+      const schedulingStart = this.date!.dateTime
       const schedulingEnd = new DateTime(schedulingDate.toISOString(), {})
-        .dateTime;
+        .dateTime
 
-      const start = new DateTime(schedulingValue.date!).dateTime;
-      const end = new DateTime(endDate.toISOString()).dateTime;
+      const start = new DateTime(schedulingValue.date!).dateTime
+      const end = new DateTime(endDate.toISOString()).dateTime
 
       const unavailableStartDate =
-        start <= schedulingStart && schedulingStart < end;
-      const unavailableEndDate = start < schedulingEnd && schedulingEnd < end;
+        start <= schedulingStart && schedulingStart < end
+      const unavailableEndDate = start < schedulingEnd && schedulingEnd < end
 
       const statusAllowsOverlap =
-        schedulingValue.status === "Cancelado" ||
-        schedulingValue.status === "Atendido";
+        schedulingValue.status === 'Cancelado' ||
+        schedulingValue.status === 'Atendido'
 
       return (
         !statusAllowsOverlap &&
         schedulingValue.id !== this.id &&
         (unavailableEndDate || unavailableStartDate)
-      );
-    });
+      )
+    })
   }
 }

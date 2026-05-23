@@ -1,4 +1,4 @@
-import { IExamsRepository } from "../../../../repositories/examsRepository/IExamsRepository";
+import { IExamsRepository } from '../../../../repositories/examsRepository/IExamsRepository'
 
 export class GetExamUseCase {
   constructor(private examRepository: IExamsRepository) {}
@@ -16,8 +16,8 @@ export class GetExamUseCase {
       patientId,
       userId,
       id,
-    });
+    })
 
-    return exam;
+    return exam
   }
 }

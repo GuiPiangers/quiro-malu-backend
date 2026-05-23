@@ -1,138 +1,138 @@
-import { ApiError } from "../../../utils/ApiError";
-import { DateTime } from "../Date";
-import { DateTime as Luxon } from "luxon";
+import { ApiError } from '../../../utils/ApiError'
+import { DateTime } from '../Date'
+import { DateTime as Luxon } from 'luxon'
 
-describe("DateTime", () => {
-  describe("instantiation", () => {
-    it("should create an instance when the date is valid", () => {
-      const dateStr = "2024-11-01T10:30";
-      const timezone = "Etc/UTC";
-      const dateTime = new DateTime(dateStr, {}, timezone);
+describe('DateTime', () => {
+  describe('instantiation', () => {
+    it('should create an instance when the date is valid', () => {
+      const dateStr = '2024-11-01T10:30'
+      const timezone = 'Etc/UTC'
+      const dateTime = new DateTime(dateStr, {}, timezone)
 
-      expect(dateTime.dateTime).toMatch(/^2024-11-01T10:30$/);
-    });
+      expect(dateTime.dateTime).toMatch(/^2024-11-01T10:30$/)
+    })
 
-    it("should throw an ApiError when the date is invalid", () => {
-      const invalidDateStr = "invalid-date";
-      const invalidDateStr2 = "1999-00-00";
-      const timezone = "Etc/UTC";
+    it('should throw an ApiError when the date is invalid', () => {
+      const invalidDateStr = 'invalid-date'
+      const invalidDateStr2 = '1999-00-00'
+      const timezone = 'Etc/UTC'
 
       expect(() => new DateTime(invalidDateStr, {}, timezone)).toThrow(
         ApiError,
-      );
+      )
       expect(() => new DateTime(invalidDateStr, {}, timezone)).toThrow(
-        "A data informada não é válida",
-      );
+        'A data informada não é válida',
+      )
       expect(() => new DateTime(invalidDateStr2, {}, timezone)).toThrow(
         ApiError,
-      );
+      )
       expect(() => new DateTime(invalidDateStr2, {}, timezone)).toThrow(
-        "A data informada não é válida",
-      );
-    });
+        'A data informada não é válida',
+      )
+    })
 
-    it("should throw an ApiError if onlyPassDate is true and date is in the future", () => {
-      const futureDateStr = "2050-01-01T10:30";
-      const timezone = "Etc/UTC";
+    it('should throw an ApiError if onlyPassDate is true and date is in the future', () => {
+      const futureDateStr = '2050-01-01T10:30'
+      const timezone = 'Etc/UTC'
 
       expect(
         () => new DateTime(futureDateStr, { onlyPassDate: true }, timezone),
-      ).toThrow(ApiError);
+      ).toThrow(ApiError)
       expect(
         () => new DateTime(futureDateStr, { onlyPassDate: true }, timezone),
-      ).toThrow("A data informada precisa ser anterior a data atual");
-    });
+      ).toThrow('A data informada precisa ser anterior a data atual')
+    })
 
-    it("should throw an ApiError if onlyFutureDate is true and date is in the past", () => {
-      const pastDateStr = "2000-01-01T10:30";
-      const timezone = "Etc/UTC";
+    it('should throw an ApiError if onlyFutureDate is true and date is in the past', () => {
+      const pastDateStr = '2000-01-01T10:30'
+      const timezone = 'Etc/UTC'
 
       expect(
         () => new DateTime(pastDateStr, { onlyFutureDate: true }, timezone),
-      ).toThrow(ApiError);
+      ).toThrow(ApiError)
       expect(
         () => new DateTime(pastDateStr, { onlyFutureDate: true }, timezone),
-      ).toThrow("A data informada precisa ser posterior a data atual");
-    });
+      ).toThrow('A data informada precisa ser posterior a data atual')
+    })
 
-    it("should return the correct attributes date, time, dateTime and value", () => {
-      const dateStr = "2024-11-01T12:00";
-      const timezone = "Etc/UTC";
-      const date = new DateTime(dateStr, {}, timezone);
+    it('should return the correct attributes date, time, dateTime and value', () => {
+      const dateStr = '2024-11-01T12:00'
+      const timezone = 'Etc/UTC'
+      const date = new DateTime(dateStr, {}, timezone)
 
-      expect(date.date).toBe("2024-11-01");
-      expect(date.time).toBe("12:00");
-      expect(date.dateTime).toBe("2024-11-01T12:00");
-      expect(date.value).toBeInstanceOf(Luxon);
-    });
+      expect(date.date).toBe('2024-11-01')
+      expect(date.time).toBe('12:00')
+      expect(date.dateTime).toBe('2024-11-01T12:00')
+      expect(date.value).toBeInstanceOf(Luxon)
+    })
 
-    it("should handle timezone correctly", () => {
-      const dateStr = "2024-11-01T10:30:00";
-      const timezone = "Etc/UTC";
-      const dateTime = new DateTime(dateStr, {}, timezone);
+    it('should handle timezone correctly', () => {
+      const dateStr = '2024-11-01T10:30:00'
+      const timezone = 'Etc/UTC'
+      const dateTime = new DateTime(dateStr, {}, timezone)
 
-      expect(dateTime.dateTime).toMatch(/^2024-11-01T10:30$/);
-    });
+      expect(dateTime.dateTime).toMatch(/^2024-11-01T10:30$/)
+    })
 
-    it("should create DataTime with only date", () => {
-      const dateStr = "2024-11-01";
-      const dateTime = new DateTime(dateStr);
+    it('should create DataTime with only date', () => {
+      const dateStr = '2024-11-01'
+      const dateTime = new DateTime(dateStr)
 
-      expect(dateTime).toBeInstanceOf(DateTime);
-      expect(dateTime.dateTime).toBe("2024-11-01");
-    });
-  });
+      expect(dateTime).toBeInstanceOf(DateTime)
+      expect(dateTime.dateTime).toBe('2024-11-01')
+    })
+  })
 
-  describe("now", () => {
+  describe('now', () => {
     beforeAll(() => {
       vi.useFakeTimers().setSystemTime(
-        Luxon.fromISO("2025-01-10T12:00", {
-          zone: "America/Sao_Paulo",
+        Luxon.fromISO('2025-01-10T12:00', {
+          zone: 'America/Sao_Paulo',
         }).toMillis(),
-      );
-    });
-    it("should return new DateTime instance with current date and time", () => {
-      const nowDateTime = DateTime.now();
+      )
+    })
+    it('should return new DateTime instance with current date and time', () => {
+      const nowDateTime = DateTime.now()
 
-      expect(nowDateTime).toBeInstanceOf(DateTime);
-      expect(nowDateTime.date).toBe("2025-01-10");
-      expect(nowDateTime.time).toBe("12:00");
-      expect(nowDateTime.dateTime).toBe("2025-01-10T12:00");
-    });
-  });
+      expect(nowDateTime).toBeInstanceOf(DateTime)
+      expect(nowDateTime.date).toBe('2025-01-10')
+      expect(nowDateTime.time).toBe('12:00')
+      expect(nowDateTime.dateTime).toBe('2025-01-10T12:00')
+    })
+  })
 
-  describe("difference", () => {
-    it("should return new DateTime instance with current date and time", () => {
-      const date1 = new DateTime("2025-01-11T12:00");
-      const date2 = new DateTime("2025-01-10T12:00");
+  describe('difference', () => {
+    it('should return new DateTime instance with current date and time', () => {
+      const date1 = new DateTime('2025-01-11T12:00')
+      const date2 = new DateTime('2025-01-10T12:00')
 
-      const dateDifference = DateTime.difference(date1, date2);
+      const dateDifference = DateTime.difference(date1, date2)
 
-      expect(dateDifference).toBe(3600000 * 24);
-    });
-  });
+      expect(dateDifference).toBe(3600000 * 24)
+    })
+  })
 
-  describe("toIsoDate", () => {
-    it("should return new DateTime instance with current date and time", () => {
-      const date1 = "10/01/2025";
+  describe('toIsoDate', () => {
+    it('should return new DateTime instance with current date and time', () => {
+      const date1 = '10/01/2025'
 
-      const isoDate = DateTime.toIsoDate(date1);
+      const isoDate = DateTime.toIsoDate(date1)
 
-      expect(isoDate).toBe("2025-01-10");
-    });
-  });
+      expect(isoDate).toBe('2025-01-10')
+    })
+  })
 
-  describe("setMinutes", () => {
-    it("Should return new DateTime with minutes updated", () => {
-      const newMinutes = 75;
+  describe('setMinutes', () => {
+    it('Should return new DateTime with minutes updated', () => {
+      const newMinutes = 75
 
-      const date = new DateTime("2025-01-01T10:00");
-      const date2 = new DateTime("2025-01-01T10:30");
-      const dateUpdated = date.setMinutes(newMinutes);
-      const dateUpdated2 = date2.setMinutes(newMinutes);
+      const date = new DateTime('2025-01-01T10:00')
+      const date2 = new DateTime('2025-01-01T10:30')
+      const dateUpdated = date.setMinutes(newMinutes)
+      const dateUpdated2 = date2.setMinutes(newMinutes)
 
-      expect(dateUpdated?.dateTime).toBe("2025-01-01T11:15");
-      expect(dateUpdated2?.dateTime).toBe("2025-01-01T11:45");
-    });
-  });
-});
+      expect(dateUpdated?.dateTime).toBe('2025-01-01T11:15')
+      expect(dateUpdated2?.dateTime).toBe('2025-01-01T11:45')
+    })
+  })
+})

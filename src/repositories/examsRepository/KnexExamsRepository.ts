@@ -1,6 +1,6 @@
-import type { Knex } from "knex";
-import { ExamDTO } from "../../core/exams/models/Exam";
-import { ETableNames } from "../../database/ETableNames";
+import type { Knex } from 'knex'
+import { ExamDTO } from '../../core/exams/models/Exam'
+import { ETableNames } from '../../database/ETableNames'
 import {
   countExamRepositoryProps,
   deleteExamRepositoryProps,
@@ -9,7 +9,7 @@ import {
   listExamRepositoryProps,
   saveExamRepositoryRepositoryProps,
   updateExamRepositoryRepositoryProps,
-} from "./IExamsRepository";
+} from './IExamsRepository'
 
 export class KnexExamsRepository implements IExamsRepository {
   constructor(private readonly knex: Knex) {}
@@ -19,16 +19,16 @@ export class KnexExamsRepository implements IExamsRepository {
     userId,
   }: countExamRepositoryProps): Promise<{ total: number }> {
     const result = await this.knex(ETableNames.EXAMS)
-      .count("id as total")
+      .count('id as total')
       .where({ patientId, userId })
-      .andWhere("deleted", false)
-      .first();
+      .andWhere('deleted', false)
+      .first()
 
-    return result as { total: number };
+    return result as { total: number }
   }
 
   async save(data: saveExamRepositoryRepositoryProps) {
-    await this.knex(ETableNames.EXAMS).insert(data);
+    await this.knex(ETableNames.EXAMS).insert(data)
   }
 
   async update({
@@ -37,7 +37,7 @@ export class KnexExamsRepository implements IExamsRepository {
     patientId,
     ...data
   }: updateExamRepositoryRepositoryProps) {
-    await this.knex(ETableNames.EXAMS).update(data).where({ id, userId, patientId });
+    await this.knex(ETableNames.EXAMS).update(data).where({ id, userId, patientId })
   }
 
   async get({
@@ -46,8 +46,8 @@ export class KnexExamsRepository implements IExamsRepository {
     userId,
   }: getExamRepositoryProps): Promise<ExamDTO> {
     return await this.knex(ETableNames.EXAMS)
-      .first("*")
-      .where({ id, patientId, userId });
+      .first('*')
+      .where({ id, patientId, userId })
   }
 
   async list({
@@ -56,11 +56,11 @@ export class KnexExamsRepository implements IExamsRepository {
     config,
   }: listExamRepositoryProps): Promise<ExamDTO[]> {
     return await this.knex(ETableNames.EXAMS)
-      .select("*")
+      .select('*')
       .where({ patientId, userId })
-      .andWhere("deleted", false)
+      .andWhere('deleted', false)
       .limit(config.limit)
-      .offset(config.offset);
+      .offset(config.offset)
   }
 
   async delete({
@@ -68,6 +68,6 @@ export class KnexExamsRepository implements IExamsRepository {
     userId,
     patientId,
   }: deleteExamRepositoryProps): Promise<void> {
-    await this.knex(ETableNames.EXAMS).where({ id, userId, patientId }).del();
+    await this.knex(ETableNames.EXAMS).where({ id, userId, patientId }).del()
   }
 }

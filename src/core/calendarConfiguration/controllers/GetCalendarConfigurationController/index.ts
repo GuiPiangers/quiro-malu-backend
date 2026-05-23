@@ -1,13 +1,13 @@
-import { MongooseCalendarConfigurationRepository } from "../../../../repositories/calendarConfiguration/MongooseCalendarConfigurationRepository";
-import { GetCalendarConfigurationUseCase } from "../../useCases/getCalendarConfiguration/GetCalendarConfiguration";
-import { GetCalendarConfigurationController } from "./GetCalendarConfigurationController";
+import { MongooseCalendarConfigurationRepository } from '../../../../repositories/calendarConfiguration/MongooseCalendarConfigurationRepository'
+import { GetCalendarConfigurationUseCase } from '../../useCases/getCalendarConfiguration/GetCalendarConfiguration'
+import { GetCalendarConfigurationController } from './GetCalendarConfigurationController'
 
 const calendarConfigurationRepository =
-  new MongooseCalendarConfigurationRepository();
+  new MongooseCalendarConfigurationRepository()
 const getCalendarConfigurationUseCase = new GetCalendarConfigurationUseCase(
   calendarConfigurationRepository,
-);
+)
 const getCalendarConfigurationController =
-  new GetCalendarConfigurationController(getCalendarConfigurationUseCase);
+  new GetCalendarConfigurationController(getCalendarConfigurationUseCase)
 
-export { getCalendarConfigurationController };
+export { getCalendarConfigurationController }

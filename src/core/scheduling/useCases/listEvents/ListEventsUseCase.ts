@@ -1,9 +1,9 @@
-import { SchedulingDTO } from "../../models/Scheduling";
-import { BlockSchedule } from "../../models/BlockSchedule";
-import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
-import { IBlockScheduleRepository } from "../../../../repositories/blockScheduleRepository/IBlockScheduleRepository";
-import { DateTime } from "../../../shared/Date";
-import { BlockScheduleDto } from "../../models/dtos/BlockSchedule.dto";
+import { SchedulingDTO } from '../../models/Scheduling'
+import { BlockSchedule } from '../../models/BlockSchedule'
+import { ISchedulingRepository } from '../../../../repositories/scheduling/ISchedulingRepository'
+import { IBlockScheduleRepository } from '../../../../repositories/blockScheduleRepository/IBlockScheduleRepository'
+import { DateTime } from '../../../shared/Date'
+import { BlockScheduleDto } from '../../models/dtos/BlockSchedule.dto'
 
 export interface IListEventsUseCaseRequest {
   date: string;
@@ -26,9 +26,9 @@ export class ListEventsUseCase {
     clinicId,
     userId,
   }: IListEventsUseCaseRequest): Promise<IListEventsUseCaseResponse> {
-    const onlyDate = date.substring(0, 10);
-    const startDate = new DateTime(`${onlyDate}T00:00`);
-    const endDate = new DateTime(`${onlyDate}T23:59`);
+    const onlyDate = date.substring(0, 10)
+    const startDate = new DateTime(`${onlyDate}T00:00`)
+    const endDate = new DateTime(`${onlyDate}T23:59`)
 
     const [schedules, blockedSchedules] = await Promise.all([
       this.scheduleRepository.list({
@@ -41,24 +41,30 @@ export class ListEventsUseCase {
         startDate,
         endDate,
       }),
-    ]);
+    ])
 
     const combinedList = [...schedules, ...blockedSchedules].sort((a, b) => {
-      const dateA = this.isBlockSchedule(a) ? a.date.dateTime : a.date;
-      const dateB = this.isBlockSchedule(b) ? b.endDate.dateTime : b.date;
-      return dateA?.localeCompare(dateB || "") ?? 0;
-    });
+      const dateA = this.isBlockSchedule(a)
+        ? a.date.dateTime
+        : a.date
+      const dateB = this.isBlockSchedule(b)
+        ? b.endDate.dateTime
+        : b.date
+      return dateA?.localeCompare(dateB || '') ?? 0
+    })
 
     return {
       data: combinedList.map((event) =>
-        this.isBlockSchedule(event) ? event.getDTO() : event,
+        this.isBlockSchedule(event)
+          ? event.getDTO()
+          : event,
       ),
-    };
+    }
   }
 
   private isBlockSchedule(
     event: SchedulingDTO | BlockSchedule,
   ): event is BlockSchedule {
-    return event instanceof BlockSchedule;
+    return event instanceof BlockSchedule
   }
 }

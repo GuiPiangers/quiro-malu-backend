@@ -1,4 +1,4 @@
-import { z } from "../../../../schemas/zodOpenApi";
+import { z } from '../../../../schemas/zodOpenApi'
 
 export const UserItemSchema = z
   .object({
@@ -9,8 +9,8 @@ export const UserItemSchema = z
     clinicId: z.string(),
     roleId: z.string().nullable(),
   })
-  .openapi("UserItem");
+  .openapi('UserItem')
 
 export const ListUsersResponseSchema = z
   .array(UserItemSchema)
-  .openapi("ListUsersResponse");
+  .openapi('ListUsersResponse')

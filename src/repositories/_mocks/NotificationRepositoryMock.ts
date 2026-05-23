@@ -1,5 +1,5 @@
-import { INotificationRepository } from "../notification/INotificationRepository";
-import type { Mocked } from "vitest";
+import { INotificationRepository } from '../notification/INotificationRepository'
+import type { Mocked } from 'vitest'
 
 export const createMockNotificationRepository =
   (): Mocked<INotificationRepository> => ({
@@ -10,4 +10,4 @@ export const createMockNotificationRepository =
     update: vi.fn(),
     countNotReadOrNeedAct: vi.fn(),
     deleteMany: vi.fn(),
-  });
+  })

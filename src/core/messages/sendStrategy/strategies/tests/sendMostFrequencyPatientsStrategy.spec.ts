@@ -1,41 +1,41 @@
-import { createMockSchedulingRepository } from "../../../../../repositories/_mocks/SchedulingRepositoryMock";
-import { SendMostFrequencyPatientsStrategy } from "../sendMostFrequencyPatientsStrategy";
+import { createMockSchedulingRepository } from '../../../../../repositories/_mocks/SchedulingRepositoryMock'
+import { SendMostFrequencyPatientsStrategy } from '../sendMostFrequencyPatientsStrategy'
 
-describe("SendMostFrequencyPatientsStrategy", () => {
-  it("deve permitir paciente dentro do top N por contagem de agendamentos", async () => {
-    const schedulingRepository = createMockSchedulingRepository();
+describe('SendMostFrequencyPatientsStrategy', () => {
+  it('deve permitir paciente dentro do top N por contagem de agendamentos', async () => {
+    const schedulingRepository = createMockSchedulingRepository()
     schedulingRepository.listPatientIdsByClinicIdOrderBySchedulingCountDesc.mockResolvedValue(
-      ["p-top", "p-second"],
-    );
+      ['p-top', 'p-second'],
+    )
 
-    const sut = new SendMostFrequencyPatientsStrategy(2, schedulingRepository);
+    const sut = new SendMostFrequencyPatientsStrategy(2, schedulingRepository)
 
     const ok = await sut.allowsSend({
-      userId: "u-1",
-      clinicId: "c-1",
-      patientId: "p-top",
-    });
+      userId: 'u-1',
+      clinicId: 'c-1',
+      patientId: 'p-top',
+    })
 
-    expect(ok).toBe(true);
+    expect(ok).toBe(true)
     expect(
       schedulingRepository.listPatientIdsByClinicIdOrderBySchedulingCountDesc,
-    ).toHaveBeenCalledWith("c-1", 2);
-  });
+    ).toHaveBeenCalledWith('c-1', 2)
+  })
 
-  it("deve negar paciente fora do top N", async () => {
-    const schedulingRepository = createMockSchedulingRepository();
+  it('deve negar paciente fora do top N', async () => {
+    const schedulingRepository = createMockSchedulingRepository()
     schedulingRepository.listPatientIdsByClinicIdOrderBySchedulingCountDesc.mockResolvedValue(
-      ["p-1"],
-    );
+      ['p-1'],
+    )
 
-    const sut = new SendMostFrequencyPatientsStrategy(1, schedulingRepository);
+    const sut = new SendMostFrequencyPatientsStrategy(1, schedulingRepository)
 
     const ok = await sut.allowsSend({
-      userId: "u-1",
-      clinicId: "c-1",
-      patientId: "p-other",
-    });
+      userId: 'u-1',
+      clinicId: 'c-1',
+      patientId: 'p-other',
+    })
 
-    expect(ok).toBe(false);
-  });
-});
+    expect(ok).toBe(false)
+  })
+})

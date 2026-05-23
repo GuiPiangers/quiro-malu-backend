@@ -1,14 +1,14 @@
-import { MongoNotificationRepository } from "../../../../repositories/notification/MongoNotificationRepository";
-import { SetActionDoneNotificationController } from "./setActionDoneNotificationsController";
-import { SetActionDoneNotificationUseCase } from "../../useCases/setActionDoneNotifications/setActionDoneNotificationUseCase";
+import { MongoNotificationRepository } from '../../../../repositories/notification/MongoNotificationRepository'
+import { SetActionDoneNotificationController } from './setActionDoneNotificationsController'
+import { SetActionDoneNotificationUseCase } from '../../useCases/setActionDoneNotifications/setActionDoneNotificationUseCase'
 
-const notificationRepository = new MongoNotificationRepository();
+const notificationRepository = new MongoNotificationRepository()
 
 const setActionDoneNotificationUseCase = new SetActionDoneNotificationUseCase(
   notificationRepository,
-);
+)
 
 const setActionDoneNotificationController =
-  new SetActionDoneNotificationController(setActionDoneNotificationUseCase);
+  new SetActionDoneNotificationController(setActionDoneNotificationUseCase)
 
-export { setActionDoneNotificationController };
+export { setActionDoneNotificationController }

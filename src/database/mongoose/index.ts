@@ -1,29 +1,35 @@
-import mongoose from "mongoose";
-import dotenv from "dotenv";
+import mongoose from 'mongoose'
+import dotenv from 'dotenv'
 
-dotenv.config();
+dotenv.config()
 
-const isProduction = process.env.NODE_ENV === "production";
-const MONGO_DATABASE = process.env.MONGO_INITDB_DATABASE;
+const isProduction = process.env.NODE_ENV === 'production'
+const MONGO_DATABASE = process.env.MONGO_INITDB_DATABASE
 
-const mongoHost = process.env.DB_MONGO_HOST ?? "localhost";
+const mongoHost = process.env.DB_MONGO_HOST ?? 'localhost'
 
 const MONGO_URI =
   isProduction && process.env.MONGO_ATLAS_URI
     ? process.env.MONGO_ATLAS_URI
-    : `mongodb://${mongoHost}:27017/${MONGO_DATABASE}`;
+    : `mongodb://${mongoHost}:27017/${MONGO_DATABASE}`
 
 export const mongoConnect = async () => {
   try {
     await mongoose.connect(MONGO_URI, {
-      authSource: isProduction ? undefined : "admin",
-      user: isProduction ? undefined : process.env.MONGO_INITDB_ROOT_USERNAME,
-      pass: isProduction ? undefined : process.env.MONGO_INITDB_ROOT_PASSWORD,
-    });
+      authSource: isProduction
+        ? undefined
+        : 'admin',
+      user: isProduction
+        ? undefined
+        : process.env.MONGO_INITDB_ROOT_USERNAME,
+      pass: isProduction
+        ? undefined
+        : process.env.MONGO_INITDB_ROOT_PASSWORD,
+    })
 
-    console.log("MongoDB conectado com sucesso!");
+    console.log('MongoDB conectado com sucesso!')
   } catch (error) {
-    console.error("Erro ao conectar ao MongoDB:", error);
-    process.exit(1);
+    console.error('Erro ao conectar ao MongoDB:', error)
+    process.exit(1)
   }
-};
+}

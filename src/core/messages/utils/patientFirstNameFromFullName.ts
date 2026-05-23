@@ -1,7 +1,7 @@
 export function patientFirstNameFromFullName(fullName: string): string {
-  const trimmed = `${fullName}`.trim();
+  const trimmed = `${fullName}`.trim()
   if (!trimmed) {
-    return "";
+    return ''
   }
-  return trimmed.split(/\s+/)[0] ?? "";
+  return trimmed.split(/\s+/)[0] ?? ''
 }

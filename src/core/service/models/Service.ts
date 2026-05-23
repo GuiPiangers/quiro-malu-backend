@@ -1,4 +1,4 @@
-import { Entity } from "../../shared/Entity";
+import { Entity } from '../../shared/Entity'
 
 export interface ServiceDTO {
   id?: string;
@@ -9,16 +9,16 @@ export interface ServiceDTO {
 }
 
 export class Service extends Entity {
-  readonly name: string;
-  readonly value: number;
+  readonly name: string
+  readonly value: number
   /** Duração do serviço em segundos. */
-  readonly duration: number;
+  readonly duration: number
 
   constructor({ id, duration, value, name }: ServiceDTO) {
-    super(id || `${Date.now()}`);
-    this.name = name;
-    this.duration = duration;
-    this.value = value;
+    super(id || `${Date.now()}`)
+    this.name = name
+    this.duration = duration
+    this.value = value
   }
 
   getDTO() {
@@ -27,6 +27,6 @@ export class Service extends Entity {
       name: this.name,
       duration: this.duration,
       value: this.value,
-    };
+    }
   }
 }

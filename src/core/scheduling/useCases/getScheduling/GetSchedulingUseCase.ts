@@ -1,6 +1,6 @@
-import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
-import { ApiError } from "../../../../utils/ApiError";
-import { SchedulingWithPatient } from "../../models/SchedulingWithPatient";
+import { ISchedulingRepository } from '../../../../repositories/scheduling/ISchedulingRepository'
+import { ApiError } from '../../../../utils/ApiError'
+import { SchedulingWithPatient } from '../../models/SchedulingWithPatient'
 
 export class GetSchedulingUseCase {
   constructor(private SchedulingRepository: ISchedulingRepository) {}
@@ -9,10 +9,10 @@ export class GetSchedulingUseCase {
     const [schedulingData] = await this.SchedulingRepository.get({
       id,
       clinicId,
-    });
+    })
 
-    if (!schedulingData) throw new ApiError("Agendamento não encontrado", 404);
+    if (!schedulingData) throw new ApiError('Agendamento não encontrado', 404)
 
-    return new SchedulingWithPatient(schedulingData).getDTO();
+    return new SchedulingWithPatient(schedulingData).getDTO()
   }
 }

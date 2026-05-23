@@ -1,55 +1,55 @@
-import { v4 as uuidv4 } from "uuid";
-import { ETableNames } from "../../../../database/ETableNames";
-import { BlockScheduleRepository } from "../../../../repositories/blockScheduleRepository/BlockScheduleRepository";
-import { KnexClinicianRepository } from "../../../../repositories/clinician/KnexClinicianRepository";
-import { KnexSchedulingRepository } from "../../../../repositories/scheduling/KnexSchedulingRepository";
-import { ApiError } from "../../../../utils/ApiError";
-import { createKnexForIntegrationTests } from "../../../../test/integration/knexTestConnection";
-import { withRollbackTransaction } from "../../../../test/integration/transactionRollback";
+import { v4 as uuidv4 } from 'uuid'
+import { ETableNames } from '../../../../database/ETableNames'
+import { BlockScheduleRepository } from '../../../../repositories/blockScheduleRepository/BlockScheduleRepository'
+import { KnexClinicianRepository } from '../../../../repositories/clinician/KnexClinicianRepository'
+import { KnexSchedulingRepository } from '../../../../repositories/scheduling/KnexSchedulingRepository'
+import { ApiError } from '../../../../utils/ApiError'
+import { createKnexForIntegrationTests } from '../../../../test/integration/knexTestConnection'
+import { withRollbackTransaction } from '../../../../test/integration/transactionRollback'
 import {
   AppEventListener,
   type IAppEventListener,
-} from "../../../shared/observers/EventListener";
-import { DateTime } from "../../../shared/Date";
-import { BlockSchedule } from "../../models/BlockSchedule";
-import { CreateSchedulingUseCase } from "./CreateSchedulingUseCase";
-import type { Knex } from "knex";
+} from '../../../shared/observers/EventListener'
+import { DateTime } from '../../../shared/Date'
+import { BlockSchedule } from '../../models/BlockSchedule'
+import { CreateSchedulingUseCase } from './CreateSchedulingUseCase'
+import type { Knex } from 'knex'
 
 const integrationEnvReady = Boolean(
   process.env.DB_HOST &&
     process.env.MYSQL_ROOT_USER &&
     process.env.MYSQL_DATABASE,
-);
+)
 
-const runIntegrationTests = ["1", "true", "yes"].includes(
-  String(process.env.RUN_INTEGRATION_TESTS ?? "").toLowerCase(),
-);
+const runIntegrationTests = ['1', 'true', 'yes'].includes(
+  String(process.env.RUN_INTEGRATION_TESTS ?? '').toLowerCase(),
+)
 
-const shouldRunIntegrationSuite = integrationEnvReady && runIntegrationTests;
+const shouldRunIntegrationSuite = integrationEnvReady && runIntegrationTests
 
 async function insertUserAndPatient(trx: Knex.Transaction) {
-  const userId = uuidv4();
-  const patientId = uuidv4();
+  const userId = uuidv4()
+  const patientId = uuidv4()
   await trx(ETableNames.CLINICS).insert({
     id: userId,
     name: `Clinic ${userId}`,
-  });
+  })
   await trx(ETableNames.USERS).insert({
     id: userId,
     clinicId: userId,
-    name: "Integration user",
+    name: 'Integration user',
     email: `${userId}@integration.test`,
-    phone: "(51) 99999 9999",
-    password: "not-used",
-  });
-  await trx(ETableNames.CLINICIANS).insert({ id: userId });
+    phone: '(51) 99999 9999',
+    password: 'not-used',
+  })
+  await trx(ETableNames.CLINICIANS).insert({ id: userId })
   await trx(ETableNames.PATIENTS).insert({
     id: patientId,
-    name: "Integration patient",
+    name: 'Integration patient',
     userId,
     clinicId: userId,
-  });
-  return { userId, patientId };
+  })
+  return { userId, patientId }
 }
 
 function createCreateSchedulingUseCase(
@@ -61,71 +61,71 @@ function createCreateSchedulingUseCase(
     new BlockScheduleRepository(trx),
     new KnexClinicianRepository(trx),
     events,
-  );
+  )
 }
 
 describe.skipIf(!shouldRunIntegrationSuite)(
-  "CreateSchedulingUseCase (integration)",
+  'CreateSchedulingUseCase (integration)',
   () => {
-    let knex: Knex;
+    let knex: Knex
 
     beforeAll(() => {
-      knex = createKnexForIntegrationTests();
-    });
+      knex = createKnexForIntegrationTests()
+    })
 
     afterAll(async () => {
-      await knex.destroy();
-    });
+      await knex.destroy()
+    })
 
     afterEach(() => {
-      vi.restoreAllMocks();
-    });
+      vi.restoreAllMocks()
+    })
 
-    it("persiste o agendamento no banco (consulta na mesma transação)", async () => {
+    it('persiste o agendamento no banco (consulta na mesma transação)', async () => {
       await withRollbackTransaction(knex, async (trx) => {
-        const { userId, patientId } = await insertUserAndPatient(trx);
-        const schedulingId = uuidv4();
-        const useCase = createCreateSchedulingUseCase(trx);
+        const { userId, patientId } = await insertUserAndPatient(trx)
+        const schedulingId = uuidv4()
+        const useCase = createCreateSchedulingUseCase(trx)
 
         await useCase.execute({
           userId,
           clinicId: userId,
           patientId,
           id: schedulingId,
-          date: "2030-06-15T10:00",
+          date: '2030-06-15T10:00',
           duration: 3600,
-          status: "Agendado",
-          service: "Quiropraxia",
-        });
+          status: 'Agendado',
+          service: 'Quiropraxia',
+        })
 
         const row = await trx(ETableNames.SCHEDULES)
           .where({ id: schedulingId, userId })
-          .first();
+          .first()
 
-        expect(row).toBeDefined();
-        expect(row.patientId).toBe(patientId);
-        expect(row.service).toBe("Quiropraxia");
-        expect(row.status).toBe("Agendado");
-        expect(row.duration).toBe(3600);
-      });
-    });
+        expect(row).toBeDefined()
+        expect(row.patientId).toBe(patientId)
+        expect(row.service).toBe('Quiropraxia')
+        expect(row.status).toBe('Agendado')
+        expect(row.duration).toBe(3600)
+      })
+    })
 
-    it("rejeita sobreposição com agendamento em status que bloqueia o horário", async () => {
+    it('rejeita sobreposição com agendamento em status que bloqueia o horário', async () => {
       await withRollbackTransaction(knex, async (trx) => {
-        const { userId, patientId } = await insertUserAndPatient(trx);
-        const existingId = uuidv4();
+        const { userId, patientId } = await insertUserAndPatient(trx)
+        const existingId = uuidv4()
         await trx(ETableNames.SCHEDULES).insert({
           id: existingId,
           userId,
           clinicId: userId,
           patientId,
-          date: "2030-06-15T10:30:00",
+          date: '2030-06-15T10:30:00',
           duration: 3600,
-          service: "Quiropraxia",
-          status: "Agendado",
-        });
+          service: 'Quiropraxia',
+          status: 'Agendado',
+        })
 
-        const useCase = createCreateSchedulingUseCase(trx);
+        const useCase = createCreateSchedulingUseCase(trx)
 
         await expect(
           useCase.execute({
@@ -133,101 +133,101 @@ describe.skipIf(!shouldRunIntegrationSuite)(
             clinicId: userId,
             patientId,
             id: uuidv4(),
-            date: "2030-06-15T10:00",
+            date: '2030-06-15T10:00',
             duration: 3600,
-            status: "Agendado",
-            service: "Quiropraxia",
+            status: 'Agendado',
+            service: 'Quiropraxia',
           }),
         ).rejects.toMatchObject({
-          message: "Horário indisponível",
-        });
+          message: 'Horário indisponível',
+        })
 
         const count = await trx(ETableNames.SCHEDULES)
           .where({ userId })
-          .count("id as c")
-          .first();
-        expect(Number((count as { c: number | string }).c)).toBe(1);
-      });
-    });
+          .count('id as c')
+          .first()
+        expect(Number((count as { c: number | string }).c)).toBe(1)
+      })
+    })
 
-    it("permite sobreposição quando o agendamento existente está Atendido", async () => {
+    it('permite sobreposição quando o agendamento existente está Atendido', async () => {
       await withRollbackTransaction(knex, async (trx) => {
-        const { userId, patientId } = await insertUserAndPatient(trx);
+        const { userId, patientId } = await insertUserAndPatient(trx)
         await trx(ETableNames.SCHEDULES).insert({
           id: uuidv4(),
           userId,
           clinicId: userId,
           patientId,
-          date: "2030-06-15T10:30:00",
+          date: '2030-06-15T10:30:00',
           duration: 3600,
-          service: "Quiropraxia",
-          status: "Atendido",
-        });
+          service: 'Quiropraxia',
+          status: 'Atendido',
+        })
 
-        const useCase = createCreateSchedulingUseCase(trx);
+        const useCase = createCreateSchedulingUseCase(trx)
 
-        const newId = uuidv4();
+        const newId = uuidv4()
         await useCase.execute({
           userId,
           clinicId: userId,
           patientId,
           id: newId,
-          date: "2030-06-15T10:00",
+          date: '2030-06-15T10:00',
           duration: 3600,
-          status: "Agendado",
-          service: "Quiropraxia",
-        });
+          status: 'Agendado',
+          service: 'Quiropraxia',
+        })
 
-        const rows = await trx(ETableNames.SCHEDULES).where({ userId });
-        expect(rows).toHaveLength(2);
-      });
-    });
+        const rows = await trx(ETableNames.SCHEDULES).where({ userId })
+        expect(rows).toHaveLength(2)
+      })
+    })
 
-    it("permite sobreposição quando o agendamento existente está Cancelado", async () => {
+    it('permite sobreposição quando o agendamento existente está Cancelado', async () => {
       await withRollbackTransaction(knex, async (trx) => {
-        const { userId, patientId } = await insertUserAndPatient(trx);
+        const { userId, patientId } = await insertUserAndPatient(trx)
         await trx(ETableNames.SCHEDULES).insert({
           id: uuidv4(),
           userId,
           clinicId: userId,
           patientId,
-          date: "2030-06-15T10:30:00",
+          date: '2030-06-15T10:30:00',
           duration: 3600,
-          service: "Quiropraxia",
-          status: "Cancelado",
-        });
+          service: 'Quiropraxia',
+          status: 'Cancelado',
+        })
 
-        const useCase = createCreateSchedulingUseCase(trx);
+        const useCase = createCreateSchedulingUseCase(trx)
 
         await useCase.execute({
           userId,
           clinicId: userId,
           patientId,
           id: uuidv4(),
-          date: "2030-06-15T10:00",
+          date: '2030-06-15T10:00',
           duration: 3600,
-          status: "Agendado",
-          service: "Quiropraxia",
-        });
+          status: 'Agendado',
+          service: 'Quiropraxia',
+        })
 
-        const rows = await trx(ETableNames.SCHEDULES).where({ userId });
-        expect(rows).toHaveLength(2);
-      });
-    });
+        const rows = await trx(ETableNames.SCHEDULES).where({ userId })
+        expect(rows).toHaveLength(2)
+      })
+    })
 
-    it("rejeita horário coberto por evento (bloqueio)", async () => {
+    it('rejeita horário coberto por evento (bloqueio)', async () => {
       await withRollbackTransaction(knex, async (trx) => {
-        const { userId, patientId } = await insertUserAndPatient(trx);
-        const blockRepo = new BlockScheduleRepository(trx);
+        const { userId, patientId } = await insertUserAndPatient(trx)
+        const blockRepo = new BlockScheduleRepository(trx)
         const block = new BlockSchedule({
           id: uuidv4(),
-          date: new DateTime("2030-06-15T08:00"),
-          endDate: new DateTime("2030-06-15T18:00"),
-          description: "Evento teste",
-        });
-        await blockRepo.save(block, userId);
+          date: new DateTime('2030-06-15T08:00'),
+          endDate: new DateTime('2030-06-15T18:00'),
+          description: 'Evento teste',
+        })
+        await blockRepo.save(block, userId)
 
-        const useCase = createCreateSchedulingUseCase(trx);
+        const useCase = createCreateSchedulingUseCase(trx)
 
         await expect(
           useCase.execute({
@@ -235,59 +235,59 @@ describe.skipIf(!shouldRunIntegrationSuite)(
             clinicId: userId,
             patientId,
             id: uuidv4(),
-            date: "2030-06-15T10:00",
+            date: '2030-06-15T10:00',
             duration: 3600,
-            status: "Agendado",
-            service: "Quiropraxia",
+            status: 'Agendado',
+            service: 'Quiropraxia',
           }),
         ).rejects.toSatisfy((err: unknown) => {
-          expect(err).toBeInstanceOf(ApiError);
-          expect((err as ApiError).message).toMatch(/bloqueado por um evento/);
-          return true;
-        });
-      });
-    });
+          expect(err).toBeInstanceOf(ApiError)
+          expect((err as ApiError).message).toMatch(/bloqueado por um evento/)
+          return true
+        })
+      })
+    })
 
-    it("emite createSchedule no appEventListener e executa listeners registrados", async () => {
+    it('emite createSchedule no appEventListener e executa listeners registrados', async () => {
       await withRollbackTransaction(knex, async (trx) => {
-        const { userId, patientId } = await insertUserAndPatient(trx);
-        const events = new AppEventListener();
-        const listener = vi.fn().mockResolvedValue(undefined);
-        events.on("createSchedule", listener);
-        const emitSpy = vi.spyOn(events, "emit");
+        const { userId, patientId } = await insertUserAndPatient(trx)
+        const events = new AppEventListener()
+        const listener = vi.fn().mockResolvedValue(undefined)
+        events.on('createSchedule', listener)
+        const emitSpy = vi.spyOn(events, 'emit')
 
-        const schedulingId = uuidv4();
-        const useCase = createCreateSchedulingUseCase(trx, events);
+        const schedulingId = uuidv4()
+        const useCase = createCreateSchedulingUseCase(trx, events)
 
         await useCase.execute({
           userId,
           clinicId: userId,
           patientId,
           id: schedulingId,
-          date: "2030-06-20T11:00",
+          date: '2030-06-20T11:00',
           duration: 1800,
-          status: "Agendado",
-          service: "Avaliação",
-        });
+          status: 'Agendado',
+          service: 'Avaliação',
+        })
 
         expect(emitSpy).toHaveBeenCalledWith(
-          "createSchedule",
+          'createSchedule',
           expect.objectContaining({
             userId,
             patientId,
             scheduleId: schedulingId,
-            service: "Avaliação",
+            service: 'Avaliação',
           }),
-        );
-        expect(listener).toHaveBeenCalledTimes(1);
+        )
+        expect(listener).toHaveBeenCalledTimes(1)
         expect(listener).toHaveBeenCalledWith(
           expect.objectContaining({
             userId,
             patientId,
             scheduleId: schedulingId,
           }),
-        );
-      });
-    });
+        )
+      })
+    })
   },
-);
+)

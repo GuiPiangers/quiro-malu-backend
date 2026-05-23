@@ -1,29 +1,28 @@
 import {
   EventSuggestion,
   EventSuggestionDTO,
-} from "../../core/scheduling/models/EventSuggestion";
-import { ETableNames } from "../../database/ETableNames";
-import { IEventSuggestionRepository } from "./IEventSuggestionRepository";
-import type { Knex } from "knex";
+} from '../../core/scheduling/models/EventSuggestion'
+import { ETableNames } from '../../database/ETableNames'
+import { IEventSuggestionRepository } from './IEventSuggestionRepository'
+import type { Knex } from 'knex'
 
 export class KnexEventSuggestionRepository
-  implements IEventSuggestionRepository
-{
+implements IEventSuggestionRepository {
   constructor(private readonly knex: Knex) {}
 
   async getByDescription(params: {
     description: string;
     userId: string;
   }): Promise<EventSuggestion | null> {
-    const { description, userId } = params;
+    const { description, userId } = params
     const result = await this.knex(ETableNames.EVENT_SUGGESTIONS)
       .select<EventSuggestionDTO>()
       .where({ description, userId })
-      .first();
+      .first()
 
-    if (!result) return null;
+    if (!result) return null
 
-    return new EventSuggestion(result);
+    return new EventSuggestion(result)
   }
 
   async update(
@@ -32,34 +31,34 @@ export class KnexEventSuggestionRepository
   ): Promise<void> {
     await this.knex(ETableNames.EVENT_SUGGESTIONS)
       .update(eventSuggestion.getDTO())
-      .where({ id: eventSuggestion.id, userId });
+      .where({ id: eventSuggestion.id, userId })
   }
 
   async save(eventSuggestion: EventSuggestion, userId: string): Promise<void> {
     await this.knex(ETableNames.EVENT_SUGGESTIONS).insert({
       ...eventSuggestion.getDTO(),
       userId,
-    });
+    })
   }
 
   async list(params: {
     userId: string;
     config?: { filter?: string };
   }): Promise<EventSuggestion[]> {
-    const { userId, config } = params;
+    const { userId, config } = params
 
     const query = this.knex(ETableNames.EVENT_SUGGESTIONS)
       .select<EventSuggestionDTO[]>()
       .where({ userId })
-      .orderBy("frequency", "desc")
-      .limit(10);
+      .orderBy('frequency', 'desc')
+      .limit(10)
 
     if (config?.filter) {
-      query.andWhere("description", "like", `%${config.filter}%`);
+      query.andWhere('description', 'like', `%${config.filter}%`)
     }
 
-    const result = await query;
+    const result = await query
 
-    return result.map((dto) => new EventSuggestion(dto));
+    return result.map((dto) => new EventSuggestion(dto))
   }
 }

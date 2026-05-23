@@ -1,17 +1,17 @@
-import { BlockSchedule } from "../../core/scheduling/models/BlockSchedule";
-import { BlockScheduleDto } from "../../core/scheduling/models/dtos/BlockSchedule.dto";
-import { DateTime } from "../../core/shared/Date";
+import { BlockSchedule } from '../../core/scheduling/models/BlockSchedule'
+import { BlockScheduleDto } from '../../core/scheduling/models/dtos/BlockSchedule.dto'
+import { DateTime } from '../../core/shared/Date'
 
 export type BlockScheduleListBetweenDatesParams = {
   userId: string;
   startDate: DateTime;
   endDate: DateTime;
-};
+}
 
 export type BlockScheduleDeleteParams = {
   id: string;
   userId: string;
-};
+}
 
 export interface IBlockScheduleRepository {
   save(data: BlockSchedule, userId: string): Promise<void>;

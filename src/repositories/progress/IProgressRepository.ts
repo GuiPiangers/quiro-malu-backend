@@ -1,4 +1,4 @@
-import { ProgressDTO } from "../../core/patients/models/Progress";
+import { ProgressDTO } from '../../core/patients/models/Progress'
 
 export interface IProgressRepository {
   save(data: ProgressDTO & { clinicId: string }): Promise<void>;

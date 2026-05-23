@@ -5,7 +5,7 @@ export type MessageSendStrategyRow = {
   kind: string;
   params: Record<string, unknown>;
   campaignBindingsCount: number;
-};
+}
 
 export type SaveMessageSendStrategyProps = {
   id: string;
@@ -13,24 +13,24 @@ export type SaveMessageSendStrategyProps = {
   name: string;
   kind: string;
   params: Record<string, unknown>;
-};
+}
 
 export type ListMessageSendStrategiesByUserIdProps = {
   userId: string;
   limit: number;
   offset: number;
-};
+}
 
 export type ListMessageSendStrategiesByUserIdResult = {
   items: MessageSendStrategyRow[];
   total: number;
-};
+}
 
 export type UpdateMessageSendStrategyPatch = {
   name?: string;
   kind?: string;
   params?: Record<string, unknown>;
-};
+}
 
 export interface IMessageSendStrategyRepository {
   save(data: SaveMessageSendStrategyProps): Promise<void>;

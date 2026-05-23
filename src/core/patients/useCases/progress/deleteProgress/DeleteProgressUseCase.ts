@@ -1,4 +1,4 @@
-import { IProgressRepository } from "../../../../../repositories/progress/IProgressRepository";
+import { IProgressRepository } from '../../../../../repositories/progress/IProgressRepository'
 
 export class DeleteProgressUseCase {
   constructor(private ProgressRepository: IProgressRepository) {}
@@ -12,6 +12,6 @@ export class DeleteProgressUseCase {
     patientId: string;
     clinicId: string;
   }) {
-    await this.ProgressRepository.delete({ id, patientId, clinicId });
+    await this.ProgressRepository.delete({ id, patientId, clinicId })
   }
 }

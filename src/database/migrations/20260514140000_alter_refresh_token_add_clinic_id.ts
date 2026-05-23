@@ -1,17 +1,17 @@
-import type { Knex } from "knex";
-import { ETableNames } from "../ETableNames";
+import type { Knex } from 'knex'
+import { ETableNames } from '../ETableNames'
 
-const FK_REFRESH_TOKEN_CLINIC = "fk_refresh_token_clinic_id";
+const FK_REFRESH_TOKEN_CLINIC = 'fk_refresh_token_clinic_id'
 
 export async function up(knex: Knex): Promise<void> {
   const hasColumn = await knex.schema.hasColumn(
     ETableNames.REFRESH_TOKEN,
-    "clinicId",
-  );
+    'clinicId',
+  )
   if (!hasColumn) {
     await knex.schema.alterTable(ETableNames.REFRESH_TOKEN, (table) => {
-      table.string("clinicId", 100).nullable().index();
-    });
+      table.string('clinicId', 100).nullable().index()
+    })
   }
 
   await knex.raw(`
@@ -19,12 +19,12 @@ export async function up(knex: Knex): Promise<void> {
     INNER JOIN ?? AS u ON u.id = rt.userId
     SET rt.clinicId = u.clinicId
     WHERE rt.clinicId IS NULL`,
-    [ETableNames.REFRESH_TOKEN, ETableNames.USERS],
-  );
+  [ETableNames.REFRESH_TOKEN, ETableNames.USERS],
+  )
 
   await knex.schema.alterTable(ETableNames.REFRESH_TOKEN, (table) => {
-    table.string("clinicId", 100).notNullable().alter();
-  });
+    table.string('clinicId', 100).notNullable().alter()
+  })
 
   const [rows] = await knex.raw(
     `select CONSTRAINT_NAME
@@ -34,17 +34,17 @@ export async function up(knex: Knex): Promise<void> {
         and COLUMN_NAME = 'clinicId'
         and REFERENCED_TABLE_NAME = ?`,
     [ETableNames.REFRESH_TOKEN, ETableNames.CLINICS],
-  );
+  )
 
   if (!rows?.length) {
     await knex.schema.alterTable(ETableNames.REFRESH_TOKEN, (table) => {
       table
-        .foreign("clinicId", FK_REFRESH_TOKEN_CLINIC)
-        .references("id")
+        .foreign('clinicId', FK_REFRESH_TOKEN_CLINIC)
+        .references('id')
         .inTable(ETableNames.CLINICS)
-        .onDelete("CASCADE")
-        .onUpdate("CASCADE");
-    });
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE')
+    })
   }
 }
 
@@ -57,24 +57,24 @@ async function hasRefreshTokenClinicForeignKey(knex: Knex): Promise<boolean> {
         and CONSTRAINT_TYPE = 'FOREIGN KEY'
         and CONSTRAINT_NAME = ?`,
     [ETableNames.REFRESH_TOKEN, FK_REFRESH_TOKEN_CLINIC],
-  );
-  return rows.length > 0;
+  )
+  return rows.length > 0
 }
 
 export async function down(knex: Knex): Promise<void> {
   const hasColumn = await knex.schema.hasColumn(
     ETableNames.REFRESH_TOKEN,
-    "clinicId",
-  );
-  if (!hasColumn) return;
+    'clinicId',
+  )
+  if (!hasColumn) return
 
   if (await hasRefreshTokenClinicForeignKey(knex)) {
     await knex.schema.alterTable(ETableNames.REFRESH_TOKEN, (table) => {
-      table.dropForeign(["clinicId"], FK_REFRESH_TOKEN_CLINIC);
-    });
+      table.dropForeign(['clinicId'], FK_REFRESH_TOKEN_CLINIC)
+    })
   }
 
   await knex.schema.alterTable(ETableNames.REFRESH_TOKEN, (table) => {
-    table.dropColumn("clinicId");
-  });
+    table.dropColumn('clinicId')
+  })
 }

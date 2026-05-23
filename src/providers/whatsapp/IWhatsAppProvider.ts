@@ -16,6 +16,6 @@ export interface IWhatsAppProvider {
   getQrCode(instanceName: string): Promise<string | null>;
   getConnectionState(
     instanceName: string,
-  ): Promise<"open" | "close" | "connecting">;
+  ): Promise<'open' | 'close' | 'connecting'>;
   deleteInstance(instanceName: string): Promise<void>;
 }

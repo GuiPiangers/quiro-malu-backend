@@ -1,7 +1,7 @@
-import { Patient, PatientDTO } from "../../models/Patient";
-import { ILocationRepository } from "../../../../repositories/location/ILocationRepository";
-import { IPatientRepository } from "../../../../repositories/patient/IPatientRepository";
-import { ApiError } from "../../../../utils/ApiError";
+import { Patient, PatientDTO } from '../../models/Patient'
+import { ILocationRepository } from '../../../../repositories/location/ILocationRepository'
+import { IPatientRepository } from '../../../../repositories/patient/IPatientRepository'
+import { ApiError } from '../../../../utils/ApiError'
 
 export class UpdatePatientUseCase {
   constructor(
@@ -10,20 +10,20 @@ export class UpdatePatientUseCase {
   ) {}
 
   async execute(data: PatientDTO, clinicId: string) {
-    const patient = new Patient(data);
-    const { location, id, ...patientDTO } = patient.getPatientDTO();
+    const patient = new Patient(data)
+    const { location, id, ...patientDTO } = patient.getPatientDTO()
 
     await this.validateCpfNotExist({
       cpf: patientDTO.cpf,
       clinicId,
       patientId: patient.id,
-    });
+    })
 
     const updatePatient = this.patientRepository.update(
       patientDTO,
       patient.id,
       clinicId,
-    );
+    )
 
     if (
       location &&
@@ -32,28 +32,28 @@ export class UpdatePatientUseCase {
       const [validateLocation] = await this.locationRepository.getLocation(
         patient.id,
         clinicId,
-      );
+      )
 
       if (validateLocation) {
         const updateLocation = this.locationRepository.update(
           location,
           patient.id,
           clinicId,
-        );
-        await Promise.all([updatePatient, updateLocation]);
+        )
+        await Promise.all([updatePatient, updateLocation])
       } else {
         const saveLocation = this.locationRepository.save(
           location,
           patient.id,
           clinicId,
-        );
-        await Promise.all([updatePatient, saveLocation]);
+        )
+        await Promise.all([updatePatient, saveLocation])
       }
     } else {
-      await updatePatient;
+      await updatePatient
     }
 
-    return patient;
+    return patient
   }
 
   private async validateCpfNotExist({
@@ -69,10 +69,10 @@ export class UpdatePatientUseCase {
       const [verifyPatient] = await this.patientRepository.getByCpf(
         cpf,
         clinicId,
-      );
+      )
 
       if (verifyPatient?.id && verifyPatient?.id !== patientId) {
-        throw new ApiError("Já existe um usuário cadastrado com esse CPF", 400);
+        throw new ApiError('Já existe um usuário cadastrado com esse CPF', 400)
       }
     }
   }

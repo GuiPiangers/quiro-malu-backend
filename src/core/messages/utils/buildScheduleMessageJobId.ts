@@ -9,6 +9,6 @@ export function buildScheduleMessageJobId({
   scheduleId: string;
   configId: string;
 }): string {
-  const raw = `${prefix}_${userId}_${scheduleId}_${configId}`;
-  return raw.substring(0, 250);
+  const raw = `${prefix}_${userId}_${scheduleId}_${configId}`
+  return raw.substring(0, 250)
 }

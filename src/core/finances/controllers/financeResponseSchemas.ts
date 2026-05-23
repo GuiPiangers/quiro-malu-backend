@@ -1,5 +1,5 @@
-import { z } from "../../../schemas/zodOpenApi";
-import { FinanceTypeSchema } from "./financeSharedSchemas";
+import { z } from '../../../schemas/zodOpenApi'
+import { FinanceTypeSchema } from './financeSharedSchemas'
 
 export const FinanceItemSchema = z
   .object({
@@ -13,8 +13,8 @@ export const FinanceItemSchema = z
     schedulingId: z.string().optional(),
     service: z.string().optional(),
   })
-  .openapi("FinanceItem");
+  .openapi('FinanceItem')
 
 export const ListFinancesResponseSchema = z
   .array(FinanceItemSchema)
-  .openapi("ListFinancesResponse");
+  .openapi('ListFinancesResponse')

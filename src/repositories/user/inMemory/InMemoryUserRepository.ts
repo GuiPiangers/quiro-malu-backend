@@ -1,20 +1,20 @@
-import { UserDTO } from "../../../core/authentication/models/User";
-import type { ClinicUserListItem, IUserRepository } from "../IUserRepository";
+import { UserDTO } from '../../../core/authentication/models/User'
+import type { ClinicUserListItem, IUserRepository } from '../IUserRepository'
 
 export class InMemoryUserRepository implements IUserRepository {
-  private dbUsers: UserDTO[] = [];
+  private dbUsers: UserDTO[] = []
 
   async save(user: UserDTO): Promise<void> {
-    this.dbUsers.push(user);
+    this.dbUsers.push(user)
   }
 
   async getByEmail(email: string): Promise<UserDTO[]> {
     const selectedUser = await this.dbUsers.find(
       (user) => user.email === email,
-    );
+    )
 
-    if (selectedUser) return [selectedUser];
-    else return [];
+    if (selectedUser) return [selectedUser]
+    return []
   }
 
   async getById(params: {
@@ -24,10 +24,10 @@ export class InMemoryUserRepository implements IUserRepository {
     const selectedUser = await this.dbUsers.find(
       (user) =>
         user.id === params.userId && user.clinicId === params.clinicId,
-    );
+    )
 
-    if (selectedUser) return [selectedUser];
-    else return [];
+    if (selectedUser) return [selectedUser]
+    return []
   }
 
   async listByClinicId(params: {
@@ -43,7 +43,7 @@ export class InMemoryUserRepository implements IUserRepository {
         clinicId: u.clinicId,
         roleId: u.roleId ?? null,
       }))
-      .sort((a, b) => a.name.localeCompare(b.name));
+      .sort((a, b) => a.name.localeCompare(b.name))
   }
 
   async deleteByIdForClinic(params: {
@@ -52,9 +52,9 @@ export class InMemoryUserRepository implements IUserRepository {
   }): Promise<number> {
     const idx = this.dbUsers.findIndex(
       (u) => u.id === params.id && u.clinicId === params.clinicId,
-    );
-    if (idx === -1) return 0;
-    this.dbUsers.splice(idx, 1);
-    return 1;
+    )
+    if (idx === -1) return 0
+    this.dbUsers.splice(idx, 1)
+    return 1
   }
 }

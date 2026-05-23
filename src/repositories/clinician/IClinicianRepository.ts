@@ -1,14 +1,14 @@
-import { Clinician } from "../../core/clinician/models/Clinician";
-import type { ServiceDTO } from "../../core/service/models/Service";
+import { Clinician } from '../../core/clinician/models/Clinician'
+import type { ServiceDTO } from '../../core/service/models/Service'
 
 export type ClinicianFindByIdParams = {
   id: string;
   clinicId: string;
-};
+}
 
 export type SetClinicianServicesParams = ClinicianFindByIdParams & {
   services: ServiceDTO[];
-};
+}
 
 export interface IClinicianRepository {
   findById(params: ClinicianFindByIdParams): Promise<Clinician | null>;

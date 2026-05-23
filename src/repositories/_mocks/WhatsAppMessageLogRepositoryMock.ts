@@ -1,5 +1,5 @@
-import { IWhatsAppMessageLogRepository } from "../whatsapp/IWhatsAppMessageLogRepository";
-import type { Mocked } from "vitest";
+import { IWhatsAppMessageLogRepository } from '../whatsapp/IWhatsAppMessageLogRepository'
+import type { Mocked } from 'vitest'
 
 export const createMockWhatsAppMessageLogRepository =
   (): Mocked<IWhatsAppMessageLogRepository> => ({
@@ -9,4 +9,4 @@ export const createMockWhatsAppMessageLogRepository =
     listByUserId: vi.fn(),
     summaryByUserId: vi.fn(),
     getBySchedulingAndCampaignId: vi.fn(),
-  });
+  })

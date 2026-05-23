@@ -1,35 +1,35 @@
-import { getValidObjectValues } from "../getValidObjectValues";
+import { getValidObjectValues } from '../getValidObjectValues'
 
-describe("Get valid values of objects", () => {
-  it("should remove fields with invalid values and keep fields with valid values", () => {
+describe('Get valid values of objects', () => {
+  it('should remove fields with invalid values and keep fields with valid values', () => {
     const invalidObject = {
-      name: "Guilherme",
+      name: 'Guilherme',
       phone: undefined,
       age: undefined,
       number: 0,
       array: [],
       object: {
         marcos: {
-          id: "123",
+          id: '123',
         },
       },
       objectEmpty: {},
       boolean: false,
-    };
+    }
 
-    const validObject = getValidObjectValues(invalidObject);
+    const validObject = getValidObjectValues(invalidObject)
 
     expect(validObject).toEqual({
-      name: "Guilherme",
+      name: 'Guilherme',
       number: 0,
       array: [],
       object: {
         marcos: {
-          id: "123",
+          id: '123',
         },
       },
       objectEmpty: {},
       boolean: false,
-    });
-  });
-});
+    })
+  })
+})

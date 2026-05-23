@@ -1,5 +1,5 @@
-import { IBlockScheduleRepository } from "../blockScheduleRepository/IBlockScheduleRepository";
-import type { Mocked } from "vitest";
+import { IBlockScheduleRepository } from '../blockScheduleRepository/IBlockScheduleRepository'
+import type { Mocked } from 'vitest'
 
 export const createMockBlockScheduleRepository =
   (): Mocked<IBlockScheduleRepository> => ({
@@ -10,4 +10,4 @@ export const createMockBlockScheduleRepository =
     list: vi.fn(),
     count: vi.fn(),
     delete: vi.fn(),
-  });
+  })

@@ -1,9 +1,9 @@
-import { BeforeScheduleQueue } from "../../../../../queues/beforeScheduleMessage/BeforeScheduleQueue";
-import { IBeforeScheduleMessageRepository } from "../../../../../repositories/messages/IBeforeScheduleMessageRepository";
-import { ISchedulingRepository } from "../../../../../repositories/scheduling/ISchedulingRepository";
-import { ApiError } from "../../../../../utils/ApiError";
-import { buildBeforeScheduleMessageJobId } from "../../../utils/buildBeforeScheduleMessageJobId";
-import { AppEventListener } from "../../../../shared/observers/EventListener";
+import { BeforeScheduleQueue } from '../../../../../queues/beforeScheduleMessage/BeforeScheduleQueue'
+import { IBeforeScheduleMessageRepository } from '../../../../../repositories/messages/IBeforeScheduleMessageRepository'
+import { ISchedulingRepository } from '../../../../../repositories/scheduling/ISchedulingRepository'
+import { ApiError } from '../../../../../utils/ApiError'
+import { buildBeforeScheduleMessageJobId } from '../../../utils/buildBeforeScheduleMessageJobId'
+import { AppEventListener } from '../../../../shared/observers/EventListener'
 
 export class DeleteBeforeScheduleMessageUseCase {
   constructor(
@@ -25,19 +25,19 @@ export class DeleteBeforeScheduleMessageUseCase {
     const existing = await this.beforeScheduleMessageRepository.getById({
       id,
       userId,
-    });
+    })
 
     if (!existing) {
-      throw new ApiError("Mensagem agendada não encontrada", 404);
+      throw new ApiError('Mensagem agendada não encontrada', 404)
     }
 
-    await this.beforeScheduleMessageRepository.delete({ id, userId });
+    await this.beforeScheduleMessageRepository.delete({ id, userId })
 
-    this.appEventListener.emit("beforeScheduleMessageDelete", { id });
+    this.appEventListener.emit('beforeScheduleMessageDelete', { id })
 
     const scheduleIds = await this.schedulingRepository.listIdsByClinicId({
       clinicId,
-    });
+    })
 
     await Promise.all(
       scheduleIds.map((scheduleId) =>
@@ -49,6 +49,6 @@ export class DeleteBeforeScheduleMessageUseCase {
           }),
         ),
       ),
-    );
+    )
   }
 }

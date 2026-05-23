@@ -1,5 +1,5 @@
-import { IExamsFileStorageRepository } from "../../../../repositories/examsFileStorage/IExamsFileStorageRepository";
-import { IExamsRepository } from "../../../../repositories/examsRepository/IExamsRepository";
+import { IExamsFileStorageRepository } from '../../../../repositories/examsFileStorage/IExamsFileStorageRepository'
+import { IExamsRepository } from '../../../../repositories/examsRepository/IExamsRepository'
 
 export class ListExamUseCase {
   constructor(
@@ -16,9 +16,9 @@ export class ListExamUseCase {
     patientId: string;
     page?: number;
   }) {
-    if (page < 1) page = 1;
-    const limit = 5;
-    const offset = (page - 1) * limit;
+    if (page < 1) page = 1
+    const limit = 5
+    const offset = (page - 1) * limit
 
     const examsDataQuery = this.examRepository.list({
       patientId,
@@ -27,14 +27,14 @@ export class ListExamUseCase {
         limit,
         offset,
       },
-    });
+    })
 
     const totalQuery = this.examRepository.count({
       patientId,
       userId,
-    });
+    })
 
-    const [examsData, total] = await Promise.all([examsDataQuery, totalQuery]);
+    const [examsData, total] = await Promise.all([examsDataQuery, totalQuery])
 
     const examsQuery = examsData.map(async (exam) => {
       const examFileUrl = await this.getFileUrl({
@@ -42,13 +42,13 @@ export class ListExamUseCase {
         userId,
         id: exam.id!,
         originalName: exam.fileName,
-      });
-      return { ...exam, url: examFileUrl };
-    });
+      })
+      return { ...exam, url: examFileUrl }
+    })
 
-    const exams = await Promise.all(examsQuery);
+    const exams = await Promise.all(examsQuery)
 
-    return { ...total, exams };
+    return { ...total, exams }
   }
 
   private async getFileUrl({
@@ -67,8 +67,8 @@ export class ListExamUseCase {
       patientId,
       userId,
       originalName,
-    });
+    })
 
-    return url;
+    return url
   }
 }

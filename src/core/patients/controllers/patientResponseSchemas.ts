@@ -1,6 +1,6 @@
-import { z } from "../../../schemas/zodOpenApi";
-import { PainScaleItemSchema } from "./progress/progressBodySchemas";
-import { PatientWriteBodySchema } from "./patientSharedSchemas";
+import { z } from '../../../schemas/zodOpenApi'
+import { PainScaleItemSchema } from './progress/progressBodySchemas'
+import { PatientWriteBodySchema } from './patientSharedSchemas'
 
 /**
  * Paciente como retornado pelo repositório (`select *`) + `getPatientDTO` após save.
@@ -10,7 +10,7 @@ export const PatientSavedSchema = PatientWriteBodySchema.extend({
   id: z.string().optional(),
   hashData: z.string().optional(),
   createAt: z.string().optional(),
-}).passthrough().openapi("PatientSavedDTO");
+}).passthrough().openapi('PatientSavedDTO')
 
 export const ListPatientsResponseSchema = z
   .object({
@@ -18,7 +18,7 @@ export const ListPatientsResponseSchema = z
     total: z.number(),
     limit: z.number(),
   })
-  .openapi("ListPatientsResponse");
+  .openapi('ListPatientsResponse')
 
 export const AnamnesisResponseSchema = z
   .object({
@@ -28,13 +28,13 @@ export const AnamnesisResponseSchema = z
     history: z.string().optional(),
     familiarHistory: z.string().optional(),
     activities: z.string().optional(),
-    smoke: z.enum(["yes", "no", "passive"]).optional(),
+    smoke: z.enum(['yes', 'no', 'passive']).optional(),
     useMedicine: z.boolean().optional(),
     medicines: z.string().optional(),
     underwentSurgery: z.boolean().optional(),
     surgeries: z.string().optional(),
   })
-  .openapi("AnamnesisResponse");
+  .openapi('AnamnesisResponse')
 
 export const GetDiagnosticResponseSchema = z
   .object({
@@ -42,7 +42,7 @@ export const GetDiagnosticResponseSchema = z
     diagnostic: z.string().optional(),
     treatmentPlan: z.string().optional(),
   })
-  .openapi("GetDiagnosticResponse");
+  .openapi('GetDiagnosticResponse')
 
 /** Item de lista ou persistência de evolução (`ProgressDTO` / `Progress.getDTO`). */
 export const ProgressDTOSchema = z
@@ -59,7 +59,7 @@ export const ProgressDTOSchema = z
     updateAt: z.string().optional(),
     painScales: z.array(PainScaleItemSchema).optional(),
   })
-  .openapi("ProgressDTO");
+  .openapi('ProgressDTO')
 
 export const ListProgressResponseSchema = z
   .object({
@@ -67,14 +67,14 @@ export const ListProgressResponseSchema = z
     total: z.number(),
     limit: z.number(),
   })
-  .openapi("ListProgressResponse");
+  .openapi('ListProgressResponse')
 
 export const UploadPatientErrorRowSchema = z
   .object({
     error: z.string(),
     patient: z.record(z.string(), z.unknown()),
   })
-  .openapi("UploadPatientErrorRow");
+  .openapi('UploadPatientErrorRow')
 
 export const UploadPatientsResponseSchema = z
   .object({
@@ -84,4 +84,4 @@ export const UploadPatientsResponseSchema = z
     successCounter: z.number(),
     duplicateCounter: z.number(),
   })
-  .openapi("UploadPatientsResult");
+  .openapi('UploadPatientsResult')

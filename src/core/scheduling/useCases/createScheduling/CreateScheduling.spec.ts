@@ -1,287 +1,287 @@
-import { createMockBlockScheduleRepository } from "../../../../repositories/_mocks/BlockScheduleRepositoryMock";
-import { createMockSchedulingRepository } from "../../../../repositories/_mocks/SchedulingRepositoryMock";
-import { ApiError } from "../../../../utils/ApiError";
-import { DateTime } from "../../../shared/Date";
-import { BlockSchedule } from "../../models/BlockSchedule";
-import { SchedulingDTO } from "../../models/Scheduling";
-import { IAppEventListener } from "../../../shared/observers/EventListener";
-import type { Clinician } from "../../../clinician/models/Clinician";
-import { createMockClinicianRepository } from "../../../../repositories/_mocks/ClinicianRepositoryMock";
-import { CreateSchedulingUseCase } from "./CreateSchedulingUseCase";
+import { createMockBlockScheduleRepository } from '../../../../repositories/_mocks/BlockScheduleRepositoryMock'
+import { createMockSchedulingRepository } from '../../../../repositories/_mocks/SchedulingRepositoryMock'
+import { ApiError } from '../../../../utils/ApiError'
+import { DateTime } from '../../../shared/Date'
+import { BlockSchedule } from '../../models/BlockSchedule'
+import { SchedulingDTO } from '../../models/Scheduling'
+import { IAppEventListener } from '../../../shared/observers/EventListener'
+import type { Clinician } from '../../../clinician/models/Clinician'
+import { createMockClinicianRepository } from '../../../../repositories/_mocks/ClinicianRepositoryMock'
+import { CreateSchedulingUseCase } from './CreateSchedulingUseCase'
 
-describe("createSchedulingUseCase", () => {
-  let createSchedulingUseCase: CreateSchedulingUseCase;
-  const mockSchedulingRepository = createMockSchedulingRepository();
-  const mockBlockScheduleRepository = createMockBlockScheduleRepository();
-  const mockClinicianRepository = createMockClinicianRepository();
-  const eventsStub: IAppEventListener = { emit: vi.fn() };
+describe('createSchedulingUseCase', () => {
+  let createSchedulingUseCase: CreateSchedulingUseCase
+  const mockSchedulingRepository = createMockSchedulingRepository()
+  const mockBlockScheduleRepository = createMockBlockScheduleRepository()
+  const mockClinicianRepository = createMockClinicianRepository()
+  const eventsStub: IAppEventListener = { emit: vi.fn() }
 
   beforeAll(() => {
     vi
       .useFakeTimers()
-      .setSystemTime(new Date("2025-01-10T12:00:00Z").getTime());
-  });
+      .setSystemTime(new Date('2025-01-10T12:00:00Z').getTime())
+  })
 
-  describe("execute", () => {
+  describe('execute', () => {
     beforeEach(() => {
-      vi.clearAllMocks();
+      vi.clearAllMocks()
       createSchedulingUseCase = new CreateSchedulingUseCase(
         mockSchedulingRepository,
         mockBlockScheduleRepository,
         mockClinicianRepository,
         eventsStub,
-      );
-      mockClinicianRepository.findById.mockResolvedValue({} as Clinician);
-    });
+      )
+      mockClinicianRepository.findById.mockResolvedValue({} as Clinician)
+    })
 
-    it("should call the repository create method with the correct Data", async () => {
-      const patientId = "test-patient-id";
+    it('should call the repository create method with the correct Data', async () => {
+      const patientId = 'test-patient-id'
 
       const schedulingData: SchedulingDTO & {
         userId: string;
         clinicId: string;
         date: string;
       } = {
-        userId: "test-user-id",
-        clinicId: "test-clinic-id",
-        id: "test-Scheduling-id",
+        userId: 'test-user-id',
+        clinicId: 'test-clinic-id',
+        id: 'test-Scheduling-id',
         patientId,
-        date: "2025-01-10T00:00",
+        date: '2025-01-10T00:00',
         duration: 3600,
-        status: "Atendido",
-        service: "Quiropraxia",
-      };
+        status: 'Atendido',
+        service: 'Quiropraxia',
+      }
 
-      mockSchedulingRepository.list.mockResolvedValue([]);
+      mockSchedulingRepository.list.mockResolvedValue([])
 
-      await createSchedulingUseCase.execute(schedulingData);
+      await createSchedulingUseCase.execute(schedulingData)
 
-      expect(mockSchedulingRepository.save).toHaveBeenCalledTimes(1);
+      expect(mockSchedulingRepository.save).toHaveBeenCalledTimes(1)
       expect(mockSchedulingRepository.save).toHaveBeenCalledWith(
         schedulingData,
-      );
-    });
+      )
+    })
 
-    it("should call the repository create method with status param equal Atrasado if date is in the past and status is Agendado, Atrasado or undefined", async () => {
-      const patientId = "test-patient-id";
+    it('should call the repository create method with status param equal Atrasado if date is in the past and status is Agendado, Atrasado or undefined', async () => {
+      const patientId = 'test-patient-id'
 
       const schedulingData: SchedulingDTO & {
         userId: string;
         clinicId: string;
         date: string;
       } = {
-        userId: "test-user-id",
-        clinicId: "test-clinic-id",
-        id: "test-Scheduling-id",
+        userId: 'test-user-id',
+        clinicId: 'test-clinic-id',
+        id: 'test-Scheduling-id',
         patientId,
-        date: "2025-01-11T00:00",
+        date: '2025-01-11T00:00',
         duration: 3600,
-        status: "Agendado",
-        service: "Quiropraxia",
-      };
+        status: 'Agendado',
+        service: 'Quiropraxia',
+      }
 
-      mockSchedulingRepository.list.mockResolvedValue([]);
+      mockSchedulingRepository.list.mockResolvedValue([])
 
-      await createSchedulingUseCase.execute(schedulingData);
+      await createSchedulingUseCase.execute(schedulingData)
       await createSchedulingUseCase.execute({
         ...schedulingData,
-        status: "Atrasado",
-      });
+        status: 'Atrasado',
+      })
       await createSchedulingUseCase.execute({
         ...schedulingData,
         status: undefined,
-      });
+      })
 
-      expect(mockSchedulingRepository.save).toHaveBeenCalled();
+      expect(mockSchedulingRepository.save).toHaveBeenCalled()
       expect(mockSchedulingRepository.save).toHaveBeenCalledWith({
         ...schedulingData,
-        status: "Agendado",
-      });
-    });
+        status: 'Agendado',
+      })
+    })
 
-    it("should call the repository create method with status param equal Agendado if date is in the past and status is Agendado, Atrasado or undefined", async () => {
-      const patientId = "test-patient-id";
+    it('should call the repository create method with status param equal Agendado if date is in the past and status is Agendado, Atrasado or undefined', async () => {
+      const patientId = 'test-patient-id'
 
       const schedulingData: SchedulingDTO & {
         userId: string;
         clinicId: string;
         date: string;
       } = {
-        userId: "test-user-id",
-        clinicId: "test-clinic-id",
-        id: "test-Scheduling-id",
+        userId: 'test-user-id',
+        clinicId: 'test-clinic-id',
+        id: 'test-Scheduling-id',
         patientId,
-        date: "2025-01-09T00:00",
+        date: '2025-01-09T00:00',
         duration: 3600,
-        status: "Agendado",
-      };
+        status: 'Agendado',
+      }
 
-      mockSchedulingRepository.list.mockResolvedValue([]);
+      mockSchedulingRepository.list.mockResolvedValue([])
 
-      await createSchedulingUseCase.execute(schedulingData);
+      await createSchedulingUseCase.execute(schedulingData)
       await createSchedulingUseCase.execute({
         ...schedulingData,
-        status: "Atrasado",
-      });
+        status: 'Atrasado',
+      })
       await createSchedulingUseCase.execute({
         ...schedulingData,
         status: undefined,
-      });
+      })
 
-      expect(mockSchedulingRepository.save).toHaveBeenCalled();
+      expect(mockSchedulingRepository.save).toHaveBeenCalled()
       expect(mockSchedulingRepository.save).toHaveBeenCalledWith({
         ...schedulingData,
-        status: "Agendado",
-      });
-    });
+        status: 'Agendado',
+      })
+    })
 
-    it("should throw an ApiError if scheduling are not available", async () => {
-      const patientId = "test-patient-id";
+    it('should throw an ApiError if scheduling are not available', async () => {
+      const patientId = 'test-patient-id'
 
       const schedulingData: SchedulingDTO & {
         userId: string;
         clinicId: string;
         date: string;
       } = {
-        userId: "test-user-id",
-        clinicId: "test-clinic-id",
-        id: "test-Scheduling-id",
+        userId: 'test-user-id',
+        clinicId: 'test-clinic-id',
+        id: 'test-Scheduling-id',
         patientId,
-        date: "2025-01-10T14:00",
+        date: '2025-01-10T14:00',
         duration: 3600,
-        status: "Agendado",
-        service: "Quiropraxia",
-      };
+        status: 'Agendado',
+        service: 'Quiropraxia',
+      }
 
       mockSchedulingRepository.list.mockResolvedValue([
         {
           ...schedulingData,
-          id: "test-Scheduling-id2",
-          date: "2025-01-10T14:30",
-          patient: "Lucas Fernando",
-          phone: "(99) 99999 9999",
+          id: 'test-Scheduling-id2',
+          date: '2025-01-10T14:30',
+          patient: 'Lucas Fernando',
+          phone: '(99) 99999 9999',
         },
-      ]);
+      ])
 
-      const responsePromise = createSchedulingUseCase.execute(schedulingData);
+      const responsePromise = createSchedulingUseCase.execute(schedulingData)
 
-      expect(responsePromise).rejects.toThrow(ApiError);
-      expect(responsePromise).rejects.toThrow("Horário indisponível");
-      expect(mockSchedulingRepository.save).not.toHaveBeenCalled();
-    });
+      expect(responsePromise).rejects.toThrow(ApiError)
+      expect(responsePromise).rejects.toThrow('Horário indisponível')
+      expect(mockSchedulingRepository.save).not.toHaveBeenCalled()
+    })
 
-    it("should save when overlapping scheduling is Atendido", async () => {
-      const patientId = "test-patient-id";
+    it('should save when overlapping scheduling is Atendido', async () => {
+      const patientId = 'test-patient-id'
 
       const schedulingData: SchedulingDTO & {
         userId: string;
         clinicId: string;
         date: string;
       } = {
-        userId: "test-user-id",
-        clinicId: "test-clinic-id",
-        id: "test-Scheduling-id",
+        userId: 'test-user-id',
+        clinicId: 'test-clinic-id',
+        id: 'test-Scheduling-id',
         patientId,
-        date: "2025-01-10T14:00",
+        date: '2025-01-10T14:00',
         duration: 3600,
-        status: "Agendado",
-        service: "Quiropraxia",
-      };
+        status: 'Agendado',
+        service: 'Quiropraxia',
+      }
 
       mockSchedulingRepository.list.mockResolvedValue([
         {
           ...schedulingData,
-          id: "test-Scheduling-id2",
-          date: "2025-01-10T14:30",
-          status: "Atendido",
-          patient: "Lucas Fernando",
-          phone: "(99) 99999 9999",
+          id: 'test-Scheduling-id2',
+          date: '2025-01-10T14:30',
+          status: 'Atendido',
+          patient: 'Lucas Fernando',
+          phone: '(99) 99999 9999',
         },
-      ]);
+      ])
 
-      await createSchedulingUseCase.execute(schedulingData);
+      await createSchedulingUseCase.execute(schedulingData)
 
-      expect(mockSchedulingRepository.save).toHaveBeenCalledTimes(1);
-    });
+      expect(mockSchedulingRepository.save).toHaveBeenCalledTimes(1)
+    })
 
-    it("should throw an ApiError if scheduling are overlaps with block scheduling event", async () => {
-      const patientId = "test-patient-id";
+    it('should throw an ApiError if scheduling are overlaps with block scheduling event', async () => {
+      const patientId = 'test-patient-id'
 
       const blockScheduling = new BlockSchedule({
-        date: new DateTime("2025-01-10T14:00"),
-        endDate: new DateTime("2025-02-10T14:00"),
-        description: "event",
-      });
+        date: new DateTime('2025-01-10T14:00'),
+        endDate: new DateTime('2025-02-10T14:00'),
+        description: 'event',
+      })
 
       mockBlockScheduleRepository.listBetweenDates.mockResolvedValue([
         blockScheduling,
-      ]);
+      ])
 
       const schedulingData: SchedulingDTO & {
         userId: string;
         clinicId: string;
         date: string;
       } = {
-        userId: "test-user-id",
-        clinicId: "test-clinic-id",
-        id: "test-Scheduling-id",
+        userId: 'test-user-id',
+        clinicId: 'test-clinic-id',
+        id: 'test-Scheduling-id',
         patientId,
-        date: "2025-01-10T14:00",
+        date: '2025-01-10T14:00',
         duration: 3600,
-        status: "Agendado",
-        service: "Quiropraxia",
-      };
+        status: 'Agendado',
+        service: 'Quiropraxia',
+      }
 
-      mockSchedulingRepository.list.mockResolvedValue([]);
+      mockSchedulingRepository.list.mockResolvedValue([])
 
-      const responsePromise = createSchedulingUseCase.execute(schedulingData);
+      const responsePromise = createSchedulingUseCase.execute(schedulingData)
 
-      expect(responsePromise).rejects.toThrow(ApiError);
+      expect(responsePromise).rejects.toThrow(ApiError)
       expect(responsePromise).rejects.toThrow(
         `O horário informado está bloqueado por um evento ${blockScheduling.description}`,
-      );
-      expect(mockSchedulingRepository.save).not.toHaveBeenCalled();
-    });
+      )
+      expect(mockSchedulingRepository.save).not.toHaveBeenCalled()
+    })
 
-    it("should throw ApiError when userId is not a clinician", async () => {
-      mockClinicianRepository.findById.mockResolvedValueOnce(null);
+    it('should throw ApiError when userId is not a clinician', async () => {
+      mockClinicianRepository.findById.mockResolvedValueOnce(null)
 
       await expect(
         createSchedulingUseCase.execute({
-          userId: "not-a-clinician",
-          clinicId: "test-clinic-id",
-          patientId: "test-patient-id",
-          date: "2025-01-10T00:00",
+          userId: 'not-a-clinician',
+          clinicId: 'test-clinic-id',
+          patientId: 'test-patient-id',
+          date: '2025-01-10T00:00',
           duration: 3600,
         }),
       ).rejects.toMatchObject({
-        message: "O usuário informado não é um clínico",
+        message: 'O usuário informado não é um clínico',
         statusCode: 400,
-        type: "userId",
-      });
+        type: 'userId',
+      })
 
-      expect(mockSchedulingRepository.save).not.toHaveBeenCalled();
-      expect(mockSchedulingRepository.list).not.toHaveBeenCalled();
-    });
+      expect(mockSchedulingRepository.save).not.toHaveBeenCalled()
+      expect(mockSchedulingRepository.list).not.toHaveBeenCalled()
+    })
 
-    it("should propagate an error if the repository create method throws", async () => {
-      const patientId = "test-patient-id";
-      const userId = "test-user-id";
-      const errorMessage = "Failed to create patient";
+    it('should propagate an error if the repository create method throws', async () => {
+      const patientId = 'test-patient-id'
+      const userId = 'test-user-id'
+      const errorMessage = 'Failed to create patient'
 
       mockSchedulingRepository.list.mockRejectedValueOnce(
         new Error(errorMessage),
-      );
+      )
 
       await expect(
         createSchedulingUseCase.execute({
           patientId,
           userId,
-          clinicId: "test-clinic-id",
-          date: "2025-01-10T00:00",
+          clinicId: 'test-clinic-id',
+          date: '2025-01-10T00:00',
           duration: 3600,
         }),
-      ).rejects.toThrow(errorMessage);
-    });
-  });
-});
+      ).rejects.toThrow(errorMessage)
+    })
+  })
+})

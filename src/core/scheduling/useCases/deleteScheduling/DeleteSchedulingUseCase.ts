@@ -1,8 +1,8 @@
-import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
+import { ISchedulingRepository } from '../../../../repositories/scheduling/ISchedulingRepository'
 import {
   appEventListener,
   IAppEventListener,
-} from "../../../shared/observers/EventListener";
+} from '../../../shared/observers/EventListener'
 
 export class DeleteSchedulingUseCase {
   constructor(
@@ -19,7 +19,7 @@ export class DeleteSchedulingUseCase {
     userId: string;
     clinicId: string;
   }) {
-    await this.SchedulingRepository.delete({ id, clinicId });
-    this.events.emit("deleteSchedule", { scheduleId: id, userId, clinicId });
+    await this.SchedulingRepository.delete({ id, clinicId })
+    this.events.emit('deleteSchedule', { scheduleId: id, userId, clinicId })
   }
 }

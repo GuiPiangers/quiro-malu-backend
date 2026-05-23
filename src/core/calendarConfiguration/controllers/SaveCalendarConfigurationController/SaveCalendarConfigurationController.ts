@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
-import { SaveCalendarConfigurationUseCase } from "../../useCases/saveCalendarConfiguration/SaveCalendarConfiguration";
-import { responseError } from "../../../../utils/ResponseError";
-import { DayConfiguration } from "../../models/CalendarConfiguration";
-import { ApiError } from "../../../../utils/ApiError";
+import { Request, Response } from 'express'
+import { SaveCalendarConfigurationUseCase } from '../../useCases/saveCalendarConfiguration/SaveCalendarConfiguration'
+import { responseError } from '../../../../utils/ResponseError'
+import { DayConfiguration } from '../../models/CalendarConfiguration'
+import { ApiError } from '../../../../utils/ApiError'
 
 export class SaveCalendarConfigurationController {
   constructor(
@@ -11,7 +11,7 @@ export class SaveCalendarConfigurationController {
 
   async handle(request: Request, response: Response) {
     try {
-      const userId = request.user.id;
+      const userId = request.user.id
       const body = request.body as {
         workTimeIncrementInMinutes?: number;
         domingo?: DayConfiguration;
@@ -21,22 +21,22 @@ export class SaveCalendarConfigurationController {
         quinta?: DayConfiguration;
         sexta?: DayConfiguration;
         sabado?: DayConfiguration;
-      };
+      }
 
       if (!userId) {
-        throw new ApiError("Unauthorized", 401);
+        throw new ApiError('Unauthorized', 401)
       }
 
       await this.saveCalendarConfigurationUseCase.execute({
         userId,
         ...body,
-      });
+      })
 
       return response
         .status(200)
-        .json({ message: "Calendar configuration saved successfully" });
+        .json({ message: 'Calendar configuration saved successfully' })
     } catch (err: any) {
-      return responseError(response, err);
+      return responseError(response, err)
     }
   }
 }

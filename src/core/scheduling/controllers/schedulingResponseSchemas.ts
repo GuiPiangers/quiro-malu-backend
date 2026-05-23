@@ -1,5 +1,5 @@
-import { z } from "../../../schemas/zodOpenApi";
-import { SchedulingStatusSchema } from "./schedulingSharedSchemas";
+import { z } from '../../../schemas/zodOpenApi'
+import { SchedulingStatusSchema } from './schedulingSharedSchemas'
 
 /** Retorno de `Scheduling.getDTO()` (POST create / PATCH update — update pode omitir `id`). */
 export const SchedulingPersistedSchema = z
@@ -12,13 +12,13 @@ export const SchedulingPersistedSchema = z
     service: z.string().optional(),
     reminderSentAt: z.string().nullable().optional(),
   })
-  .openapi("SchedulingPersisted");
+  .openapi('SchedulingPersisted')
 
 /** Retorno de `SchedulingWithPatient.getDTO()` (GET lista / GET por id). */
 export const SchedulingWithPatientResponseSchema = SchedulingPersistedSchema.extend({
   patient: z.string(),
   phone: z.string(),
-}).openapi("SchedulingWithPatientResponse");
+}).openapi('SchedulingWithPatientResponse')
 
 export const ListSchedulesResponseSchema = z
   .object({
@@ -26,18 +26,18 @@ export const ListSchedulesResponseSchema = z
     total: z.number(),
     limit: z.number(),
   })
-  .openapi("ListSchedulesResponse");
+  .openapi('ListSchedulesResponse')
 
 export const QtdScheduleByDayItemSchema = z
   .object({
     date: z.string(),
     qtd: z.number(),
   })
-  .openapi("QtdScheduleByDayItem");
+  .openapi('QtdScheduleByDayItem')
 
 export const QtdSchedulesResponseSchema = z
   .array(QtdScheduleByDayItemSchema)
-  .openapi("QtdSchedulesResponse");
+  .openapi('QtdSchedulesResponse')
 
 /** Item de bloqueio retornado por `ListBlockSchedulingUseCase` / `BlockSchedule.getDTO()`. */
 export const BlockScheduleResponseSchema = z
@@ -47,11 +47,11 @@ export const BlockScheduleResponseSchema = z
     endDate: z.string(),
     description: z.string().optional(),
   })
-  .openapi("BlockScheduleResponse");
+  .openapi('BlockScheduleResponse')
 
 export const ListBlockSchedulesResponseSchema = z
   .array(BlockScheduleResponseSchema)
-  .openapi("ListBlockSchedulesResponse");
+  .openapi('ListBlockSchedulesResponse')
 
 /**
  * Agendamento em `ListEventsUseCase`: objeto vindo do Knex (join com paciente),
@@ -72,7 +72,7 @@ export const SchedulingCalendarRowSchema = z
     updateAt: z.string().optional(),
   })
   .passthrough()
-  .openapi("SchedulingCalendarRow");
+  .openapi('SchedulingCalendarRow')
 
 export const ListEventsResponseSchema = z
   .object({
@@ -80,7 +80,7 @@ export const ListEventsResponseSchema = z
       z.union([SchedulingCalendarRowSchema, BlockScheduleResponseSchema]),
     ),
   })
-  .openapi("ListEventsResponse");
+  .openapi('ListEventsResponse')
 
 /** Retorno de `EventSuggestion.getDTO()`. */
 export const EventSuggestionItemSchema = z
@@ -90,10 +90,10 @@ export const EventSuggestionItemSchema = z
     durationInMinutes: z.number(),
     frequency: z.number(),
   })
-  .openapi("EventSuggestionItem");
+  .openapi('EventSuggestionItem')
 
 export const ListEventSuggestionsResponseSchema = z
   .object({
     data: z.array(EventSuggestionItemSchema),
   })
-  .openapi("ListEventSuggestionsResponse");
+  .openapi('ListEventSuggestionsResponse')

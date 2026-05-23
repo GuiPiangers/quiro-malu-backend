@@ -1,9 +1,9 @@
-import { ISchedulingRepository } from "../../../../repositories/scheduling/ISchedulingRepository";
-import { IMessageSendStrategy, SendStrategyContext } from "../IMessageSendStrategy";
-import { SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS } from "../sendStrategyKind";
+import { ISchedulingRepository } from '../../../../repositories/scheduling/ISchedulingRepository'
+import { IMessageSendStrategy, SendStrategyContext } from '../IMessageSendStrategy'
+import { SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS } from '../sendStrategyKind'
 
 export class SendMostFrequencyPatientsStrategy implements IMessageSendStrategy {
-  readonly kind = SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS;
+  readonly kind = SEND_STRATEGY_KIND_SEND_MOST_FREQUENCY_PATIENTS
 
   constructor(
     private readonly amount: number,
@@ -15,9 +15,9 @@ export class SendMostFrequencyPatientsStrategy implements IMessageSendStrategy {
       await this.schedulingRepository.listPatientIdsByClinicIdOrderBySchedulingCountDesc(
         ctx.clinicId,
         this.amount,
-      );
+      )
 
-    const set = new Set(ids);
-    return set.has(ctx.patientId);
+    const set = new Set(ids)
+    return set.has(ctx.patientId)
   }
 }

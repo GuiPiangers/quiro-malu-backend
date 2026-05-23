@@ -5,7 +5,7 @@ export type SaveBeforeScheduleMessageProps = {
   minutesBeforeSchedule: number;
   textTemplate: string;
   isActive: boolean;
-};
+}
 
 export type BeforeScheduleMessageConfigDTO = {
   id: string;
@@ -14,12 +14,12 @@ export type BeforeScheduleMessageConfigDTO = {
   minutesBeforeSchedule: number;
   textTemplate: string;
   isActive: boolean;
-};
+}
 
 export type GetBeforeScheduleMessageByIdProps = {
   id: string;
   userId: string;
-};
+}
 
 export type UpdateBeforeScheduleMessageProps = {
   id: string;
@@ -28,27 +28,27 @@ export type UpdateBeforeScheduleMessageProps = {
   minutesBeforeSchedule?: number;
   textTemplate?: string;
   isActive?: boolean;
-};
+}
 
 export type ListBeforeScheduleMessagesByUserIdProps = {
   userId: string;
-};
+}
 
 export type ListBeforeScheduleMessagesByUserIdPagedProps = {
   userId: string;
   limit: number;
   offset: number;
-};
+}
 
 export type ListBeforeScheduleMessagesPagedResult = {
   items: BeforeScheduleMessageConfigDTO[];
   total: number;
-};
+}
 
 export type DeleteBeforeScheduleMessageProps = {
   id: string;
   userId: string;
-};
+}
 
 export interface IBeforeScheduleMessageRepository {
   save(data: SaveBeforeScheduleMessageProps): Promise<void>;

@@ -1,6 +1,6 @@
-import type { Knex } from "knex";
-import { ETableNames } from "../../database/ETableNames";
-import { ApiError } from "../../utils/ApiError";
+import type { Knex } from 'knex'
+import { ETableNames } from '../../database/ETableNames'
+import { ApiError } from '../../utils/ApiError'
 import {
   GetBySchedulingAndCampaignIdProps,
   IWhatsAppMessageLogRepository,
@@ -12,7 +12,7 @@ import {
   WhatsAppMessageLogDTO,
   WhatsAppMessageLogStatus,
   WhatsAppMessageLogsSummaryDTO,
-} from "./IWhatsAppMessageLogRepository";
+} from './IWhatsAppMessageLogRepository'
 
 type MessageLogRow = {
   id: string;
@@ -32,19 +32,23 @@ type MessageLogRow = {
   readAt: Date | string | null;
   created_at: Date | string;
   updated_at: Date | string;
-};
+}
 
 function toIso(d: Date | string | null | undefined): string | null {
-  if (d == null) return null;
-  const t = d instanceof Date ? d : new Date(d);
-  if (Number.isNaN(t.getTime())) return null;
-  return t.toISOString();
+  if (d == null) return null
+  const t = d instanceof Date
+    ? d
+    : new Date(d)
+  if (Number.isNaN(t.getTime())) return null
+  return t.toISOString()
 }
 
 function countTotal(result: unknown): number {
-  const rows = Array.isArray(result) ? result : [result];
-  const r = rows[0] as { total?: string | number } | undefined;
-  return Number(r?.total ?? 0);
+  const rows = Array.isArray(result)
+    ? result
+    : [result]
+  const r = rows[0] as { total?: string | number } | undefined
+  return Number(r?.total ?? 0)
 }
 
 function rowToDto(row: MessageLogRow): WhatsAppMessageLogDTO {
@@ -64,24 +68,25 @@ function rowToDto(row: MessageLogRow): WhatsAppMessageLogDTO {
     sentAt: toIso(row.sentAt),
     deliveredAt: toIso(row.deliveredAt),
     readAt: toIso(row.readAt),
-    createdAt: toIso(row.created_at) ?? "",
-    updatedAt: toIso(row.updated_at) ?? "",
-  };
+    createdAt: toIso(row.created_at) ?? '',
+    updatedAt: toIso(row.updated_at) ?? '',
+  }
 }
 
 export class KnexWhatsAppMessageLogRepository
-  implements IWhatsAppMessageLogRepository
-{
+implements IWhatsAppMessageLogRepository {
   constructor(private readonly knex: Knex) {}
 
   async findById(id: string): Promise<WhatsAppMessageLogDTO | null> {
     try {
       const row = await this.knex(ETableNames.WHATSAPP_MESSAGE_LOGS)
         .where({ id })
-        .first();
-      return row ? rowToDto(row as MessageLogRow) : null;
+        .first()
+      return row
+        ? rowToDto(row as MessageLogRow)
+        : null
     } catch (error: any) {
-      throw new ApiError(error.message, 500);
+      throw new ApiError(error.message, 500)
     }
   }
 
@@ -92,10 +97,12 @@ export class KnexWhatsAppMessageLogRepository
           schedulingId: props.schedulingId,
           scheduleMessageConfigId: props.campaignId,
         })
-        .first();
-      return row ? rowToDto(row) : null;
+        .first()
+      return row
+        ? rowToDto(row)
+        : null
     } catch (error: any) {
-      throw new ApiError(error.message, 500);
+      throw new ApiError(error.message, 500)
     }
   }
 
@@ -115,9 +122,9 @@ export class KnexWhatsAppMessageLogRepository
         providerMessageId: data.providerMessageId,
         errorMessage: data.errorMessage ?? null,
         sentAt: this.knex.fn.now(),
-      });
+      })
     } catch (error: any) {
-      throw new ApiError(error.message, 500);
+      throw new ApiError(error.message, 500)
     }
   }
 
@@ -125,22 +132,22 @@ export class KnexWhatsAppMessageLogRepository
     data: UpdateWhatsAppMessageLogByProviderIdProps,
   ): Promise<void> {
     try {
-      const patch: Record<string, unknown> = { status: data.status };
+      const patch: Record<string, unknown> = { status: data.status }
       if (data.errorMessage !== undefined) {
-        patch.errorMessage = data.errorMessage;
+        patch.errorMessage = data.errorMessage
       }
       if (data.deliveredAt !== undefined) {
-        patch.deliveredAt = data.deliveredAt;
+        patch.deliveredAt = data.deliveredAt
       }
       if (data.readAt !== undefined) {
-        patch.readAt = data.readAt;
+        patch.readAt = data.readAt
       }
 
       await this.knex(ETableNames.WHATSAPP_MESSAGE_LOGS)
         .where({ providerMessageId: data.providerMessageId })
-        .update(patch);
+        .update(patch)
     } catch (error: any) {
-      throw new ApiError(error.message, 500);
+      throw new ApiError(error.message, 500)
     }
   }
 
@@ -151,44 +158,44 @@ export class KnexWhatsAppMessageLogRepository
       const base = () => {
         let q = this.knex(ETableNames.WHATSAPP_MESSAGE_LOGS).where({
           userId: filter.userId,
-        });
+        })
 
         if (filter.patientId) {
-          q = q.andWhere({ patientId: filter.patientId });
+          q = q.andWhere({ patientId: filter.patientId })
         }
 
         if (filter.scheduleMessageType) {
-          q = q.andWhere({ scheduleMessageType: filter.scheduleMessageType });
+          q = q.andWhere({ scheduleMessageType: filter.scheduleMessageType })
         }
 
         if (filter.scheduleMessageConfigId) {
           q = q.andWhere({
             scheduleMessageConfigId: filter.scheduleMessageConfigId,
-          });
+          })
         }
 
         if (filter.status) {
-          q = q.andWhere({ status: filter.status });
+          q = q.andWhere({ status: filter.status })
         }
 
-        return q;
-      };
+        return q
+      }
 
-      const countResult = await base().clone().count("* as total");
-      const total = countTotal(countResult);
+      const countResult = await base().clone().count('* as total')
+      const total = countTotal(countResult)
 
       const rows = (await base()
         .clone()
-        .orderBy("created_at", "desc")
+        .orderBy('created_at', 'desc')
         .limit(filter.limit)
-        .offset(filter.offset)) as MessageLogRow[];
+        .offset(filter.offset)) as MessageLogRow[]
 
       return {
         items: rows.map(rowToDto),
         total,
-      };
+      }
     } catch (error: any) {
-      throw new ApiError(error.message, 500);
+      throw new ApiError(error.message, 500)
     }
   }
 
@@ -201,29 +208,29 @@ export class KnexWhatsAppMessageLogRepository
     },
   ): Promise<WhatsAppMessageLogsSummaryDTO> {
     try {
-      let base = this.knex(ETableNames.WHATSAPP_MESSAGE_LOGS).where({ userId });
+      let base = this.knex(ETableNames.WHATSAPP_MESSAGE_LOGS).where({ userId })
 
       if (filter?.patientId) {
-        base = base.andWhere({ patientId: filter.patientId });
+        base = base.andWhere({ patientId: filter.patientId })
       }
       if (filter?.scheduleMessageType) {
-        base = base.andWhere({ scheduleMessageType: filter.scheduleMessageType });
+        base = base.andWhere({ scheduleMessageType: filter.scheduleMessageType })
       }
       if (filter?.scheduleMessageConfigId) {
         base = base.andWhere({
           scheduleMessageConfigId: filter.scheduleMessageConfigId,
-        });
+        })
       }
 
       const groupedResult = await base
         .clone()
-        .groupBy("status")
-        .select("status")
-        .count("* as total");
+        .groupBy('status')
+        .select('status')
+        .count('* as total')
 
       const rows = Array.isArray(groupedResult)
         ? groupedResult
-        : [groupedResult];
+        : [groupedResult]
 
       const byStatus: Record<WhatsAppMessageLogStatus, number> = {
         PENDING: 0,
@@ -231,33 +238,37 @@ export class KnexWhatsAppMessageLogRepository
         DELIVERED: 0,
         READ: 0,
         FAILED: 0,
-      };
+      }
 
-      let total = 0;
+      let total = 0
       for (const row of rows as {
         status: WhatsAppMessageLogStatus;
         total: string | number;
       }[]) {
-        const c = Number(row.total);
-        const st = row.status;
+        const c = Number(row.total)
+        const st = row.status
         if (st in byStatus) {
-          byStatus[st] = c;
+          byStatus[st] = c
         }
-        total += c;
+        total += c
       }
 
-      const deliveredOrRead = byStatus.DELIVERED + byStatus.READ;
+      const deliveredOrRead = byStatus.DELIVERED + byStatus.READ
       const denomDelivery =
-        byStatus.SENT + byStatus.DELIVERED + byStatus.READ + byStatus.FAILED;
+        byStatus.SENT + byStatus.DELIVERED + byStatus.READ + byStatus.FAILED
       const deliveryRate =
-        denomDelivery > 0 ? deliveredOrRead / denomDelivery : null;
+        denomDelivery > 0
+          ? deliveredOrRead / denomDelivery
+          : null
 
-      const denomRead = byStatus.DELIVERED + byStatus.READ;
-      const readRate = denomRead > 0 ? byStatus.READ / denomRead : null;
+      const denomRead = byStatus.DELIVERED + byStatus.READ
+      const readRate = denomRead > 0
+        ? byStatus.READ / denomRead
+        : null
 
-      return { total, byStatus, deliveryRate, readRate };
+      return { total, byStatus, deliveryRate, readRate }
     } catch (error: any) {
-      throw new ApiError(error.message, 500);
+      throw new ApiError(error.message, 500)
     }
   }
 }

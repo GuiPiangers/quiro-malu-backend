@@ -1,8 +1,8 @@
-import { ApiError } from "../../../utils/ApiError";
-import { DateTime } from "../../shared/Date";
-import { Entity } from "../../shared/Entity";
-import { patientFirstNameFromFullName } from "../utils/patientFirstNameFromFullName";
-import { MessageTemplate, MessageTemplateDTO } from "./MessageTemplate";
+import { ApiError } from '../../../utils/ApiError'
+import { DateTime } from '../../shared/Date'
+import { Entity } from '../../shared/Entity'
+import { patientFirstNameFromFullName } from '../utils/patientFirstNameFromFullName'
+import { MessageTemplate, MessageTemplateDTO } from './MessageTemplate'
 
 export type AfterScheduleMessageDTO = {
   id?: string;
@@ -10,13 +10,13 @@ export type AfterScheduleMessageDTO = {
   minutesAfterSchedule: number;
   isActive: boolean;
   messageTemplate: MessageTemplateDTO;
-};
+}
 
 export class AfterScheduleMessage extends Entity {
-  readonly name: string;
-  readonly minutesAfterSchedule: number;
-  readonly isActive: boolean;
-  readonly messageTemplate: MessageTemplate;
+  readonly name: string
+  readonly minutesAfterSchedule: number
+  readonly isActive: boolean
+  readonly messageTemplate: MessageTemplate
 
   constructor({
     id,
@@ -31,28 +31,28 @@ export class AfterScheduleMessage extends Entity {
     messageTemplate: MessageTemplate;
     isActive?: boolean;
   }) {
-    super(id);
+    super(id)
 
-    if (typeof name !== "string") {
-      throw new ApiError("name deve ser uma string", 400, "name");
+    if (typeof name !== 'string') {
+      throw new ApiError('name deve ser uma string', 400, 'name')
     }
 
     if (!Number.isInteger(minutesAfterSchedule) || minutesAfterSchedule <= 0) {
       throw new ApiError(
-        "minutesAfterSchedule deve ser um inteiro maior que zero",
+        'minutesAfterSchedule deve ser um inteiro maior que zero',
         400,
-        "minutesAfterSchedule",
-      );
+        'minutesAfterSchedule',
+      )
     }
 
-    if (typeof isActive !== "boolean") {
-      throw new ApiError("isActive deve ser um booleano", 400, "isActive");
+    if (typeof isActive !== 'boolean') {
+      throw new ApiError('isActive deve ser um booleano', 400, 'isActive')
     }
 
-    this.name = name.trim();
-    this.minutesAfterSchedule = minutesAfterSchedule;
-    this.isActive = isActive;
-    this.messageTemplate = messageTemplate;
+    this.name = name.trim()
+    this.minutesAfterSchedule = minutesAfterSchedule
+    this.isActive = isActive
+    this.messageTemplate = messageTemplate
   }
 
   render({
@@ -64,7 +64,7 @@ export class AfterScheduleMessage extends Entity {
   }): string {
     return this.messageTemplate.replaceVariables(
       this.buildTemplateVariables({ patient, scheduling }),
-    );
+    )
   }
 
   private buildTemplateVariables({
@@ -75,20 +75,26 @@ export class AfterScheduleMessage extends Entity {
     scheduling?: { date?: string; service?: string; status?: string };
   }): Record<string, string> {
     const dateTime =
-      scheduling?.date != null ? new DateTime(scheduling.date) : null;
+      scheduling?.date != null
+        ? new DateTime(scheduling.date)
+        : null
 
-    const nomeCompleto = `${patient.name}`.trim();
+    const nomeCompleto = `${patient.name}`.trim()
 
     return {
       nome_paciente: patientFirstNameFromFullName(patient.name),
       nome_completo_paciente: nomeCompleto,
       telefone_paciente: patient.phone,
-      genero_paciente: patient.gender ?? "",
-      data_consulta: dateTime ? DateTime.toLocaleDate(dateTime.date) : "",
-      horario_consulta: dateTime ? dateTime.time : "",
-      servico_consulta: scheduling?.service ?? "",
-      status_consulta: scheduling?.status ?? "",
-    };
+      genero_paciente: patient.gender ?? '',
+      data_consulta: dateTime
+        ? DateTime.toLocaleDate(dateTime.date)
+        : '',
+      horario_consulta: dateTime
+        ? dateTime.time
+        : '',
+      servico_consulta: scheduling?.service ?? '',
+      status_consulta: scheduling?.status ?? '',
+    }
   }
 
   getDTO(): AfterScheduleMessageDTO {
@@ -98,6 +104,6 @@ export class AfterScheduleMessage extends Entity {
       minutesAfterSchedule: this.minutesAfterSchedule,
       isActive: this.isActive,
       messageTemplate: this.messageTemplate.getDTO(),
-    };
+    }
   }
 }

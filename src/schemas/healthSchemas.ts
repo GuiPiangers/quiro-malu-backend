@@ -1,9 +1,9 @@
-import { z } from "./zodOpenApi";
+import { z } from './zodOpenApi'
 
 export const HealthResponseSchema = z
   .object({
-    status: z.literal("ok"),
+    status: z.literal('ok'),
   })
-  .openapi("HealthResponse");
+  .openapi('HealthResponse')
 
-export type HealthResponse = z.infer<typeof HealthResponseSchema>;
+export type HealthResponse = z.infer<typeof HealthResponseSchema>

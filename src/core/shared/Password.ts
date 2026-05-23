@@ -1,48 +1,51 @@
-import { ApiError } from "../../utils/ApiError";
-import { Crypto } from "./helpers/Crypto";
+import { ApiError } from '../../utils/ApiError'
+import { Crypto } from './helpers/Crypto'
 
-const BCRYPT_HASH_RE = /^\$2[aby]?\$\d{2}\$/;
+const BCRYPT_HASH_RE = /^\$2[aby]?\$\d{2}\$/
 
 function isStoredPasswordHash(value: string): boolean {
-  return BCRYPT_HASH_RE.test(value) && value.length >= 59;
+  return BCRYPT_HASH_RE.test(value) && value.length >= 59
 }
 
 export class Password {
-  private readonly isStoredHash: boolean;
+  private readonly isStoredHash: boolean
 
   constructor(readonly value: string) {
-    this.isStoredHash = isStoredPasswordHash(value);
+    this.isStoredHash = isStoredPasswordHash(value)
     if (this.isStoredHash) {
-      return;
+      return
     }
 
-    if (value.length < 5)
+    if (value.length < 5) {
       throw new ApiError(
-        "A senha deve conter pelo menos 5 caracteres",
+        'A senha deve conter pelo menos 5 caracteres',
         400,
-        "password",
-      );
+        'password',
+      )
+    }
 
-    if (!value.match(/[A-Z]/))
+    if (!value.match(/[A-Z]/)) {
       throw new ApiError(
-        "A senha deve conter pelo menos uma letra maiúscula",
+        'A senha deve conter pelo menos uma letra maiúscula',
         400,
-        "password",
-      );
+        'password',
+      )
+    }
 
-    if (!value.match(/[0-9!"#$%&'(.)*+,/:;<=>?@[\]^_`{|}~-]/))
+    if (!value.match(/[0-9!"#$%&'(.)*+,/:;<=>?@[\]^_`{|}~-]/)) {
       throw new ApiError(
-        "A senha deve conter pelo menos um número ou carácter especial",
+        'A senha deve conter pelo menos um número ou carácter especial',
         400,
-        "password",
-      );
+        'password',
+      )
+    }
   }
 
   async getHash() {
     if (this.isStoredHash) {
-      return this.value;
+      return this.value
     }
-    const hash = await Crypto.createRandomHash(this.value);
-    return hash;
+    const hash = await Crypto.createRandomHash(this.value)
+    return hash
   }
 }

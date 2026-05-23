@@ -1,7 +1,7 @@
-import { IBlockScheduleRepository } from "../../../../../repositories/blockScheduleRepository/IBlockScheduleRepository";
-import { ApiError } from "../../../../../utils/ApiError";
-import { DateTime } from "../../../../shared/Date";
-import { BlockScheduleDto } from "../../../models/dtos/BlockSchedule.dto";
+import { IBlockScheduleRepository } from '../../../../../repositories/blockScheduleRepository/IBlockScheduleRepository'
+import { ApiError } from '../../../../../utils/ApiError'
+import { DateTime } from '../../../../shared/Date'
+import { BlockScheduleDto } from '../../../models/dtos/BlockSchedule.dto'
 
 export interface ListBlockSchedulingDTO {
   startDate: string;
@@ -15,17 +15,17 @@ export class ListBlockSchedulingUseCase {
   async execute(
     blockSchedulingDTO: ListBlockSchedulingDTO,
   ): Promise<BlockScheduleDto[]> {
-    const { startDate, endDate, userId } = blockSchedulingDTO;
+    const { startDate, endDate, userId } = blockSchedulingDTO
 
-    const startDateTime = new DateTime(startDate);
-    const endDateTime = new DateTime(endDate);
+    const startDateTime = new DateTime(startDate)
+    const endDateTime = new DateTime(endDate)
 
     if (startDateTime.dateTime >= endDateTime.dateTime) {
       throw new ApiError(
-        "Start date must be before end date",
+        'Start date must be before end date',
         400,
-        "INVALID_DATE_RANGE",
-      );
+        'INVALID_DATE_RANGE',
+      )
     }
 
     const blockSchedules =
@@ -33,13 +33,13 @@ export class ListBlockSchedulingUseCase {
         userId,
         startDate: startDateTime,
         endDate: endDateTime,
-      });
+      })
 
     return blockSchedules.map((blockSchedule) => ({
       id: blockSchedule.id,
       date: blockSchedule.date.dateTime,
       endDate: blockSchedule.endDate.dateTime,
       description: blockSchedule.description,
-    }));
+    }))
   }
 }
