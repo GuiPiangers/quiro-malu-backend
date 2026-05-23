@@ -5,6 +5,7 @@ import { SchedulingStatusSchema } from './schedulingSharedSchemas'
 export const SchedulingPersistedSchema = z
   .object({
     id: z.string().optional(),
+    userId: z.string().optional(),
     patientId: z.string(),
     date: z.string().optional(),
     duration: z.number().optional(),

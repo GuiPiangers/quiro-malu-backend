@@ -27,6 +27,9 @@ const runIntegrationTests = ['1', 'true', 'yes'].includes(
 
 const shouldRunIntegrationSuite = integrationEnvReady && runIntegrationTests
 
+const integrationUserPasswordHash =
+  '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy'
+
 async function insertUserAndPatient(trx: Knex.Transaction) {
   const userId = uuidv4()
   const patientId = uuidv4()
@@ -40,7 +43,7 @@ async function insertUserAndPatient(trx: Knex.Transaction) {
     name: 'Integration user',
     email: `${userId}@integration.test`,
     phone: '(51) 99999 9999',
-    password: 'not-used',
+    password: integrationUserPasswordHash,
   })
   await trx(ETableNames.CLINICIANS).insert({ id: userId })
   await trx(ETableNames.PATIENTS).insert({

@@ -1,22 +1,21 @@
 import { createMockBlockScheduleRepository } from '../../../../repositories/_mocks/BlockScheduleRepositoryMock'
 import { createMockSchedulingRepository } from '../../../../repositories/_mocks/SchedulingRepositoryMock'
+import { createMockClinicianRepository } from '../../../../repositories/_mocks/ClinicianRepositoryMock'
 import { ApiError } from '../../../../utils/ApiError'
 import { DateTime } from '../../../shared/Date'
 import { BlockSchedule } from '../../models/BlockSchedule'
-import { SchedulingDTO } from '../../models/Scheduling'
+import type { Clinician } from '../../../clinician/models/Clinician'
 import { IAppEventListener } from '../../../shared/observers/EventListener'
-import { UpdateSchedulingUseCase } from './UpdateSchedulingUseCase'
-
-type SchedulingUpdateTestInput = SchedulingDTO & {
-  userId: string
-  clinicId: string
-  date?: string
-}
+import {
+  UpdateSchedulingInput,
+  UpdateSchedulingUseCase,
+} from './UpdateSchedulingUseCase'
 
 const eventsStub: IAppEventListener = { emit: vi.fn() }
 
 const defaultExistingSchedule = {
   id: 'test-Scheduling-id',
+  userId: 'test-user-id',
   patientId: 'test-patient-id',
   date: '2025-01-10T00:00',
   duration: 3600,
@@ -30,6 +29,7 @@ describe('updateSchedulingUseCase', () => {
   let updateSchedulingUseCase: UpdateSchedulingUseCase
   const mockSchedulingRepository = createMockSchedulingRepository()
   const mockBlockScheduleRepository = createMockBlockScheduleRepository()
+  const mockClinicianRepository = createMockClinicianRepository()
 
   describe('execute', () => {
     beforeAll(() => {
@@ -41,9 +41,11 @@ describe('updateSchedulingUseCase', () => {
     beforeEach(() => {
       vi.clearAllMocks()
       mockBlockScheduleRepository.listBetweenDates.mockResolvedValue([])
+      mockClinicianRepository.findById.mockResolvedValue({} as Clinician)
       updateSchedulingUseCase = new UpdateSchedulingUseCase(
         mockSchedulingRepository,
         mockBlockScheduleRepository,
+        mockClinicianRepository,
         eventsStub,
       )
       mockSchedulingRepository.get.mockResolvedValue([
@@ -54,9 +56,9 @@ describe('updateSchedulingUseCase', () => {
     it('should call the repository update method with the correct Data', async () => {
       const patientId = 'test-patient-id'
 
-      const schedulingData: SchedulingUpdateTestInput = {
-        userId: 'test-user-id',
+      const schedulingData: UpdateSchedulingInput = {
         clinicId: 'test-clinic-id',
+        requestUserId: 'request-user-id',
         id: 'test-Scheduling-id',
         patientId,
         date: '2025-01-10T00:00',
@@ -67,10 +69,14 @@ describe('updateSchedulingUseCase', () => {
 
       mockSchedulingRepository.list.mockResolvedValue([])
 
-      await updateSchedulingUseCase.execute(schedulingData)
+      const result = await updateSchedulingUseCase.execute(schedulingData)
 
       expect(mockSchedulingRepository.get).toHaveBeenCalledWith({
         id: 'test-Scheduling-id',
+        clinicId: 'test-clinic-id',
+      })
+      expect(mockClinicianRepository.findById).toHaveBeenCalledWith({
+        id: 'test-user-id',
         clinicId: 'test-clinic-id',
       })
       expect(mockSchedulingRepository.update).toHaveBeenCalledTimes(1)
@@ -78,6 +84,7 @@ describe('updateSchedulingUseCase', () => {
         expect.objectContaining({
           clinicId: 'test-clinic-id',
           id: schedulingData.id,
+          userId: 'test-user-id',
           patientId: schedulingData.patientId,
           date: schedulingData.date,
           duration: schedulingData.duration,
@@ -85,13 +92,70 @@ describe('updateSchedulingUseCase', () => {
           service: schedulingData.service,
         }),
       )
+      expect(result.userId).toBe('test-user-id')
+    })
+
+    it('should update userId when a new clinician is informed in the body', async () => {
+      const newClinicianId = 'new-clinician-id'
+
+      mockSchedulingRepository.list.mockResolvedValue([])
+
+      const result = await updateSchedulingUseCase.execute({
+        clinicId: 'test-clinic-id',
+        id: 'test-Scheduling-id',
+        patientId: 'test-patient-id',
+        userId: newClinicianId,
+      })
+
+      expect(mockClinicianRepository.findById).toHaveBeenCalledWith({
+        id: newClinicianId,
+        clinicId: 'test-clinic-id',
+      })
+      expect(mockSchedulingRepository.update).toHaveBeenCalledWith(
+        expect.objectContaining({ userId: newClinicianId }),
+      )
+      expect(result.userId).toBe(newClinicianId)
+    })
+
+    it('should throw when current scheduling user is not a clinician and no new userId is informed', async () => {
+      mockClinicianRepository.findById.mockResolvedValue(null)
+
+      await expect(
+        updateSchedulingUseCase.execute({
+          clinicId: 'test-clinic-id',
+          id: 'test-Scheduling-id',
+          patientId: 'test-patient-id',
+        }),
+      ).rejects.toMatchObject({
+        message: 'O usuário informado não é um clínico',
+        statusCode: 400,
+      })
+
+      expect(mockSchedulingRepository.update).not.toHaveBeenCalled()
+    })
+
+    it('should throw when informed userId is not a clinician', async () => {
+      mockClinicianRepository.findById.mockResolvedValue(null)
+
+      await expect(
+        updateSchedulingUseCase.execute({
+          clinicId: 'test-clinic-id',
+          id: 'test-Scheduling-id',
+          patientId: 'test-patient-id',
+          userId: 'invalid-clinician-id',
+        }),
+      ).rejects.toMatchObject({
+        message: 'O usuário informado não é um clínico',
+        statusCode: 400,
+      })
+
+      expect(mockSchedulingRepository.update).not.toHaveBeenCalled()
     })
 
     it('should call the repository update method with status param equal Atrasado if date is in the past and status is Agendado, Atrasado or undefined', async () => {
       const patientId = 'test-patient-id'
 
-      const schedulingData: SchedulingUpdateTestInput = {
-        userId: 'test-user-id',
+      const schedulingData: UpdateSchedulingInput = {
         clinicId: 'test-clinic-id',
         id: 'test-Scheduling-id',
         patientId,
@@ -121,6 +185,7 @@ describe('updateSchedulingUseCase', () => {
         expect.objectContaining({
           clinicId: 'test-clinic-id',
           id: schedulingData.id,
+          userId: 'test-user-id',
           patientId: schedulingData.patientId,
           date: schedulingData.date,
           duration: schedulingData.duration,
@@ -133,8 +198,7 @@ describe('updateSchedulingUseCase', () => {
     it('should call the repository update method with status param equal Agendado if date is in the past and status is Agendado, Atrasado or undefined', async () => {
       const patientId = 'test-patient-id'
 
-      const schedulingData: SchedulingUpdateTestInput = {
-        userId: 'test-user-id',
+      const schedulingData: UpdateSchedulingInput = {
         clinicId: 'test-clinic-id',
         id: 'test-Scheduling-id',
         patientId,
@@ -164,6 +228,7 @@ describe('updateSchedulingUseCase', () => {
         expect.objectContaining({
           clinicId: 'test-clinic-id',
           id: schedulingData.id,
+          userId: 'test-user-id',
           patientId: schedulingData.patientId,
           date: schedulingData.date,
           duration: schedulingData.duration,
@@ -176,8 +241,7 @@ describe('updateSchedulingUseCase', () => {
     it('should throw an ApiError if scheduling is not available', async () => {
       const patientId = 'test-patient-id'
 
-      const schedulingData: SchedulingUpdateTestInput = {
-        userId: 'test-user-id',
+      const schedulingData: UpdateSchedulingInput = {
         clinicId: 'test-clinic-id',
         id: 'test-Scheduling-id',
         patientId,
@@ -215,8 +279,7 @@ describe('updateSchedulingUseCase', () => {
     it('should not validate if is available if date param is not passed to be updated', async () => {
       const patientId = 'test-patient-id'
 
-      const schedulingData: SchedulingUpdateTestInput = {
-        userId: 'test-user-id',
+      const schedulingData: UpdateSchedulingInput = {
         clinicId: 'test-clinic-id',
         id: 'test-Scheduling-id',
         patientId,
@@ -228,6 +291,7 @@ describe('updateSchedulingUseCase', () => {
       mockSchedulingRepository.get.mockResolvedValue([
         {
           id: 'test-Scheduling-id',
+          userId: 'test-user-id',
           patientId,
           duration: 3600,
           status: 'Agendado',
@@ -259,8 +323,7 @@ describe('updateSchedulingUseCase', () => {
         blockScheduling,
       ])
 
-      const schedulingData: SchedulingUpdateTestInput = {
-        userId: 'test-user-id',
+      const schedulingData: UpdateSchedulingInput = {
         clinicId: 'test-clinic-id',
         id: 'test-Scheduling-id',
         patientId,
@@ -283,8 +346,7 @@ describe('updateSchedulingUseCase', () => {
     it('should throw an ApiError if schedulingId parameter is not passed', async () => {
       const patientId = 'test-patient-id'
 
-      const schedulingData: SchedulingUpdateTestInput = {
-        userId: 'test-user-id',
+      const schedulingData: UpdateSchedulingInput = {
         clinicId: 'test-clinic-id',
         patientId,
         date: '2025-01-10T14:00',
@@ -305,7 +367,6 @@ describe('updateSchedulingUseCase', () => {
 
       await expect(
         updateSchedulingUseCase.execute({
-          userId: 'test-user-id',
           clinicId: 'test-clinic-id',
           id: 'non-existent-scheduling-id',
           patientId: 'test-patient-id',
@@ -324,7 +385,6 @@ describe('updateSchedulingUseCase', () => {
 
     it('should propagate an error if the repository update method throws', async () => {
       const patientId = 'test-patient-id'
-      const userId = 'test-user-id'
       const errorMessage = 'Failed to update patient'
 
       mockSchedulingRepository.list.mockRejectedValueOnce(
@@ -339,7 +399,6 @@ describe('updateSchedulingUseCase', () => {
         updateSchedulingUseCase.execute({
           id: 'test-Scheduling-id',
           patientId,
-          userId,
           clinicId: 'test-clinic-id',
           date: '2025-01-10T00:00',
           duration: 3600,

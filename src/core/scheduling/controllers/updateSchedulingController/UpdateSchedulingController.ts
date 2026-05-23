@@ -1,6 +1,5 @@
 import { UpdateSchedulingUseCase } from '../../useCases/updateScheduling/UpdateSchedulingUseCase'
 import { Request, Response } from 'express'
-import { SchedulingDTO } from '../../models/Scheduling'
 import { responseError } from '../../../../utils/ResponseError'
 import {
   parseWithSchema,
@@ -17,15 +16,14 @@ export class UpdateSchedulingController {
     }
 
     try {
-      const data = parsed.data
-      const userId = request.user.id
       const clinicId = request.user.clinicId as string
+      const requestUserId = request.user.id as string
 
       const scheduling = await this.updateSchedulingUseCase.execute({
-        ...data,
-        userId: userId!,
+        ...parsed.data,
         clinicId,
-      } as SchedulingDTO & { userId: string; clinicId: string })
+        requestUserId,
+      })
 
       response.status(201).json(scheduling)
     } catch (err: any) {

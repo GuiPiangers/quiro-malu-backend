@@ -135,6 +135,8 @@ openApiRegistry.registerPath({
   path: '/schedules',
   tags: ['Scheduling'],
   summary: 'Atualiza agendamento',
+  description:
+    'Corpo opcional `userId` troca o profissional (clínico) do agendamento; omitir mantém o atual. Resposta inclui `userId` efetivo.',
   security: bearer,
   request: {
     body: {

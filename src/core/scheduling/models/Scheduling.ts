@@ -12,6 +12,7 @@ export type SchedulingStatus =
 
 export interface SchedulingDTO {
   id?: string
+  userId?: string
   patientId: string
   date?: string
   duration?: number
@@ -23,6 +24,7 @@ export interface SchedulingDTO {
 }
 
 export class Scheduling extends Entity {
+  readonly userId?: string
   readonly patientId: string
   readonly date?: DateTime
   readonly duration?: number
@@ -36,6 +38,7 @@ export class Scheduling extends Entity {
   constructor(
     {
       id,
+      userId,
       date,
       duration,
       status,
@@ -49,6 +52,7 @@ export class Scheduling extends Entity {
   ) {
     super(id || `${Date.now()}`)
     this.statusStrategy = statusStrategy || new ClientStatusStrategy()
+    this.userId = userId
     this.patientId = patientId
     this.date = date ? new DateTime(date) : undefined
     this.service = service
@@ -77,6 +81,7 @@ export class Scheduling extends Entity {
   getDTO() {
     return {
       id: this.id,
+      userId: this.userId,
       patientId: this.patientId,
       date: this.date?.dateTime,
       duration: this.duration,

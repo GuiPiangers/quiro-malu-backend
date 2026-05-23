@@ -8,6 +8,7 @@ import { DateTime } from '../../core/shared/Date'
 export type UpdateSchedulingParams = Partial<SchedulingDTO> & {
   clinicId: string
   id: string
+  userId?: string
 }
 
 export type ListBetweenDatesParams = {

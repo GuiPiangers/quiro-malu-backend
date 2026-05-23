@@ -32,7 +32,7 @@ export class CreateSchedulingUseCase {
     }
 
     const dataBaseStatusStrategy = new DatabaseStatusStrategy()
-    const scheduling = new Scheduling(data, dataBaseStatusStrategy)
+    const scheduling = new Scheduling({ ...data, userId }, dataBaseStatusStrategy)
 
     const blockSchedules =
       scheduling.date && scheduling.endDate

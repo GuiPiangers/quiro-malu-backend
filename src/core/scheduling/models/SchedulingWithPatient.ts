@@ -15,6 +15,7 @@ export class SchedulingWithPatient extends Scheduling {
       patient,
       patientId,
       phone,
+      userId,
       createAt,
       date,
       duration,
@@ -29,6 +30,7 @@ export class SchedulingWithPatient extends Scheduling {
     super(
       {
         patientId,
+        userId,
         createAt,
         date,
         duration,

@@ -36,6 +36,11 @@ export const CreateSchedulingBodySchema = z
 export const UpdateSchedulingBodySchema = z
   .object({
     id: z.string().min(1),
+    userId: z
+      .string()
+      .min(1)
+      .optional()
+      .describe('Profissional (clínico) que realizará o agendamento'),
     patientId: z.string().min(1).optional(),
     date: z.string().describe(SCHEDULING_DATE_TIME_WRITE_DOC).optional(),
     duration: z.number().positive().optional(),

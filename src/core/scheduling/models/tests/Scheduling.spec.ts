@@ -58,6 +58,7 @@ describe('Scheduling', () => {
 
     expect(dto).toEqual({
       id: scheduling.id,
+      userId: undefined,
       patientId: scheduling.patientId,
       date: validDate,
       duration: scheduling.duration,

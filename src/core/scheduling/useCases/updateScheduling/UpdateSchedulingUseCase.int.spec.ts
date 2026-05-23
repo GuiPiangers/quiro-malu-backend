@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid'
 import type { Knex } from 'knex'
 import { ETableNames } from '../../../../database/ETableNames'
 import { BlockScheduleRepository } from '../../../../repositories/blockScheduleRepository/BlockScheduleRepository'
+import { KnexClinicianRepository } from '../../../../repositories/clinician/KnexClinicianRepository'
 import { KnexSchedulingRepository } from '../../../../repositories/scheduling/KnexSchedulingRepository'
 import { ApiError } from '../../../../utils/ApiError'
 import { createKnexForIntegrationTests } from '../../../../test/integration/knexTestConnection'
@@ -26,6 +27,9 @@ const runIntegrationTests = ['1', 'true', 'yes'].includes(
 
 const shouldRunIntegrationSuite = integrationEnvReady && runIntegrationTests
 
+const integrationUserPasswordHash =
+  '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy'
+
 async function insertUserAndPatient(trx: Knex.Transaction) {
   const userId = uuidv4()
   const patientId = uuidv4()
@@ -38,8 +42,10 @@ async function insertUserAndPatient(trx: Knex.Transaction) {
     clinicId: userId,
     name: 'Integration user',
     email: `${userId}@integration.test`,
-    password: 'not-used',
+    phone: '(51) 99999 9999',
+    password: integrationUserPasswordHash,
   })
+  await trx(ETableNames.CLINICIANS).insert({ id: userId })
   await trx(ETableNames.PATIENTS).insert({
     id: patientId,
     name: 'Integration patient',
@@ -80,6 +86,7 @@ function createUpdateSchedulingUseCase(
   return new UpdateSchedulingUseCase(
     new KnexSchedulingRepository(trx),
     new BlockScheduleRepository(trx),
+    new KnexClinicianRepository(trx),
     events,
   )
 }

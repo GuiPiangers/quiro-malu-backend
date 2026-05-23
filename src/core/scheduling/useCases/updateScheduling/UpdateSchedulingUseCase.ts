@@ -1,6 +1,7 @@
 import { Scheduling, SchedulingDTO } from '../../models/Scheduling'
 import { IBlockScheduleRepository } from '../../../../repositories/blockScheduleRepository/IBlockScheduleRepository'
 import { ISchedulingRepository } from '../../../../repositories/scheduling/ISchedulingRepository'
+import type { IClinicianRepository } from '../../../../repositories/clinician/IClinicianRepository'
 import { ApiError } from '../../../../utils/ApiError'
 import { getValidObjectValues } from '../../../../utils/getValidObjectValues'
 import { DateTime } from '../../../shared/Date'
@@ -10,18 +11,27 @@ import {
   IAppEventListener,
 } from '../../../shared/observers/EventListener'
 
+export type UpdateSchedulingInput = Omit<SchedulingDTO, 'patientId'> & {
+  patientId?: string
+  clinicId: string
+  /** Usuário autenticado; reservado para validações de permissão futuras. */
+  requestUserId?: string
+}
+
 export class UpdateSchedulingUseCase {
   constructor(
     private SchedulingRepository: ISchedulingRepository,
     private BlockSchedulingRepository: IBlockScheduleRepository,
+    private readonly clinicianRepository: IClinicianRepository,
     private readonly events: IAppEventListener = appEventListener,
   ) {}
 
   async execute({
-    userId,
+    requestUserId: _requestUserId,
     clinicId,
+    userId: requestedUserId,
     ...data
-  }: SchedulingDTO & { userId: string; clinicId: string }) {
+  }: UpdateSchedulingInput) {
     if (!data.id) {
       throw new ApiError('O id deve ser informado', 400, 'Scheduling')
     }
@@ -37,30 +47,68 @@ export class UpdateSchedulingUseCase {
       throw new ApiError('Agendamento não encontrado', 404)
     }
 
+    const effectiveUserId = await this.resolveClinicianUserId({
+      requestedUserId,
+      currentUserId: repositorySchedule.userId,
+      clinicId,
+    })
+
     const scheduling = new Scheduling(
-      { ...repositorySchedule, ...getValidObjectValues(data) },
+      {
+        ...repositorySchedule,
+        ...getValidObjectValues(data),
+        userId: effectiveUserId,
+      },
       dataBaseStatusStrategy,
     )
 
-    const { id: _, ...schedulingDTO } = scheduling.getDTO()
+    const { id: _schedulingId, ...schedulingDTO } = scheduling.getDTO()
 
-    await this.validateBlockSchedules({ scheduling, userId })
-    await this.validateDate({ scheduling, clinicId, userId })
+    await this.validateBlockSchedules({ scheduling, userId: effectiveUserId })
+    await this.validateDate({ scheduling, clinicId, userId: effectiveUserId })
 
     await this.SchedulingRepository.update({
       clinicId,
       id: data.id,
       ...schedulingDTO,
+      userId: effectiveUserId,
     })
 
     this.events.emit('updateSchedule', {
       ...schedulingDTO,
-      userId,
+      userId: effectiveUserId,
       clinicId,
       scheduleId: data.id,
     })
 
-    return schedulingDTO
+    return { ...schedulingDTO, id: data.id, userId: effectiveUserId }
+  }
+
+  private async resolveClinicianUserId({
+    requestedUserId,
+    currentUserId,
+    clinicId,
+  }: {
+    requestedUserId?: string
+    currentUserId?: string
+    clinicId: string
+  }): Promise<string> {
+    const userId = requestedUserId ?? currentUserId
+
+    if (!userId) {
+      throw new ApiError('O usuário informado não é um clínico', 400, 'userId')
+    }
+
+    const clinician = await this.clinicianRepository.findById({
+      id: userId,
+      clinicId,
+    })
+
+    if (!clinician) {
+      throw new ApiError('O usuário informado não é um clínico', 400, 'userId')
+    }
+
+    return userId
   }
 
   private async validateBlockSchedules({
