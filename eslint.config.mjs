@@ -4,11 +4,35 @@
 import rocketseatNode from '@rocketseat/eslint-config/node.mjs'
 
 /** @type {import('eslint').Linter.Config[]} */
+const maxParamsMessage =
+  'Máximo de 2 parâmetros; prefira um objeto de opções (constructors são isentos).'
+
+const maxParamsSelectors = [
+  {
+    selector: 'FunctionDeclaration[params.length>2]',
+    message: maxParamsMessage,
+  },
+  {
+    selector: 'FunctionExpression[params.length>2]',
+    message: maxParamsMessage,
+  },
+  {
+    selector: 'ArrowFunctionExpression[params.length>2]',
+    message: maxParamsMessage,
+  },
+  {
+    selector:
+      'MethodDefinition:not([kind="constructor"]) > FunctionExpression[params.length>2]',
+    message: maxParamsMessage,
+  },
+]
+
 const objectCalisthenicsRules = {
   // object-calisthenics/max-depth
   'max-depth': ['error', 2],
-  // object-calisthenics/max-params
-  'max-params': ['error', 2],
+  // object-calisthenics/max-params (funções/métodos; constructors isentos via selectors)
+  'max-params': 'off',
+  '@typescript-eslint/max-params': 'off',
   // object-calisthenics/no-var
   'no-var': 'error',
   // object-calisthenics/no-else
@@ -77,6 +101,17 @@ export default [
     rules: {
       ...objectCalisthenicsRules,
       'no-useless-constructor': 'off',
+    },
+  },
+  {
+    rules: {
+      'no-restricted-syntax': ['error', ...maxParamsSelectors],
+    },
+  },
+  {
+    files: ['**/*.spec.ts', '**/*.int.spec.ts'],
+    rules: {
+      'no-undef': 'off',
     },
   },
 ]
