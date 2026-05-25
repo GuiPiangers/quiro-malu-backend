@@ -17,12 +17,11 @@ export class AddBlockScheduleController {
     }
 
     try {
-      const data = parsed.data
-      const userId = request.user.id as string
+      const { userId, ...blockInput } = parsed.data
       const clinicId = request.user.clinicId as string
 
       await this.addBlockScheduleUseCase.execute({
-        ...data,
+        ...blockInput,
         userId,
         clinicId,
       })

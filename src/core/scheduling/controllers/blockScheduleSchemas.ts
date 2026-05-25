@@ -6,6 +6,10 @@ import {
 
 export const AddBlockScheduleBodySchema = z
   .object({
+    userId: z
+      .string()
+      .min(1)
+      .describe('Profissional (clínico) dono do bloqueio na agenda'),
     date: z.string().min(1).describe(SCHEDULING_DATE_TIME_WRITE_DOC),
     endDate: z.string().min(1).describe(SCHEDULING_DATE_TIME_WRITE_DOC),
     description: z.string().optional(),

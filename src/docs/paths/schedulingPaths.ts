@@ -212,6 +212,8 @@ openApiRegistry.registerPath({
   path: '/blockSchedules',
   tags: ['Scheduling'],
   summary: 'Bloqueia intervalo na agenda',
+  description:
+    'O `userId` no corpo identifica o profissional; `clinicId` vem do token.',
   security: bearer,
   request: {
     body: {
