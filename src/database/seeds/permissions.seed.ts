@@ -12,34 +12,18 @@ export const SYSTEM_PERMISSIONS = [
     description: 'Criar e alterar pacientes',
   },
   {
-    key: 'schedules:read',
-    module: 'schedules',
-    action: 'read' as const,
-    description: 'Consultar agendamentos',
-  },
-  {
-    key: 'schedules:write',
-    module: 'schedules',
-    action: 'write' as const,
-    description: 'Criar e alterar agendamentos',
-  },
-  {
-    key: 'block_schedules:read',
-    module: 'block_schedules',
-    action: 'read' as const,
-    description: 'Consultar bloqueios de agenda',
-  },
-  {
-    key: 'block_schedules:write',
-    module: 'block_schedules',
-    action: 'write' as const,
-    description: 'Criar e alterar bloqueios de agenda',
-  },
-  {
     key: 'events:read',
     module: 'events',
     action: 'read' as const,
-    description: 'Consultar eventos e sugestões',
+    description:
+      'Consultar agendamentos, bloqueios de agenda, eventos e sugestões',
+  },
+  {
+    key: 'events:write',
+    module: 'events',
+    action: 'write' as const,
+    description:
+      'Criar e alterar agendamentos, bloqueios de agenda e configuração de calendário',
   },
   {
     key: 'services:read',

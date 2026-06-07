@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Router } from 'express'
 import { createUserController } from './core/authentication/controllers/createUserController'
 import { loginUserController } from './core/authentication/controllers/loginUserController'
@@ -408,7 +409,7 @@ router.delete(
 router.get(
   '/schedules',
   authMiddleware,
-  authorize('schedules:read'),
+  authorize('events:read'),
   (request, response) => {
     listSchedulingController.handle(request, response)
   },
@@ -416,7 +417,7 @@ router.get(
 router.get(
   '/schedules/qtd/:userId',
   authMiddleware,
-  authorize('schedules:read'),
+  authorize('events:read'),
   (request, response) => {
     qtdSchedulesController.handle(request, response)
   },
@@ -424,7 +425,7 @@ router.get(
 router.get(
   '/schedules/:id',
   authMiddleware,
-  authorize('schedules:read'),
+  authorize('events:read'),
   (request, response) => {
     getSchedulingController.handle(request, response)
   },
@@ -432,7 +433,7 @@ router.get(
 router.post(
   '/schedules',
   authMiddleware,
-  authorize('schedules:write'),
+  authorize('events:write'),
   (request, response) => {
     createSchedulingController.handle(request, response)
   },
@@ -440,7 +441,7 @@ router.post(
 router.patch(
   '/schedules',
   authMiddleware,
-  authorize('schedules:write'),
+  authorize('events:write'),
   (request, response) => {
     updateSchedulingController.handle(request, response)
   },
@@ -448,7 +449,7 @@ router.patch(
 router.post(
   '/realizeScheduling',
   authMiddleware,
-  authorize('schedules:write'),
+  authorize('events:write'),
   (request, response) => {
     realizeSchedulingController.handle(request, response)
   },
@@ -456,7 +457,7 @@ router.post(
 router.delete(
   '/schedules',
   authMiddleware,
-  authorize('schedules:write'),
+  authorize('events:write'),
   (request, response) => {
     deleteSchedulingController.handle(request, response)
   },
@@ -465,7 +466,7 @@ router.delete(
 router.post(
   '/blockSchedules',
   authMiddleware,
-  authorize('block_schedules:write'),
+  authorize('events:write'),
   (request, response) => {
     addBlockSchedulingController.handle(request, response)
   },
@@ -473,7 +474,7 @@ router.post(
 router.get(
   '/blockSchedules',
   authMiddleware,
-  authorize('block_schedules:read'),
+  authorize('events:read'),
   (request, response) => {
     listBlockSchedulingController.handle(request, response)
   },
@@ -482,7 +483,7 @@ router.get(
 router.patch(
   '/blockSchedules/:id',
   authMiddleware,
-  authorize('block_schedules:write'),
+  authorize('events:write'),
   (request, response) => {
     editBlockScheduleController.handle(request, response)
   },
@@ -491,7 +492,7 @@ router.patch(
 router.delete(
   '/blockSchedules/:id',
   authMiddleware,
-  authorize('block_schedules:write'),
+  authorize('events:write'),
   (request, response) => {
     deleteBlockScheduleController.handle(request, response)
   },
@@ -526,7 +527,7 @@ router.get(
 router.put(
   '/calendar-configuration',
   authMiddleware,
-  authorize('schedules:write'),
+  authorize('events:write'),
   (request, response) => {
     saveCalendarConfigurationController.handle(request, response)
   },
@@ -535,7 +536,7 @@ router.put(
 router.get(
   '/calendar-configuration',
   authMiddleware,
-  authorize('schedules:read'),
+  authorize('events:read'),
   (request, response) => {
     getCalendarConfigurationController.handle(request, response)
   },

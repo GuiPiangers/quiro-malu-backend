@@ -14,7 +14,7 @@ Esse fluxo devolve **agendamentos e bloqueios de agenda no mesmo array** (`data`
 
 - **Caso de uso:** `src/core/scheduling/useCases/listScheduling/ListSchedulingUseCase.ts` — `ListSchedulingUseCase`
 - **Controller:** `src/core/scheduling/controllers/listSchedulingController/` — `ListSchedulingController`
-- **Rota HTTP:** `GET /schedules` (permissão `schedules:read`)
+- **Rota HTTP:** `GET /schedules` (permissão `events:read`)
 
 Lista apenas agendamentos com dados de paciente (paginação implícita via `limit`), **sem** mesclar bloqueios. Mantido por compatibilidade; **não** estender esse caminho para novas features de calendário.
 

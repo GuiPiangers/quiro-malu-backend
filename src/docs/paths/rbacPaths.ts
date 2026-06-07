@@ -260,7 +260,7 @@ openApiRegistry.registerPath({
           schema: ReplaceRolePermissionsBodySchema,
           example: [
             { permissionKey: 'patients:read', scope: null },
-            { permissionKey: 'schedules:read', scope: { type: 'own' } },
+            { permissionKey: 'events:read', scope: { type: 'own' } },
           ],
         },
       },
