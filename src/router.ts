@@ -5,6 +5,7 @@ import { loginUserController } from './core/authentication/controllers/loginUser
 import { refreshTokenController } from './core/authentication/controllers/refreshTokenController'
 import { authMiddleware } from './middlewares/auth'
 import { authorize } from './middlewares/authorize.middleware'
+import { authorizeAny } from './middlewares/authorizeAny.middleware'
 import { getUserProfileController } from './core/authentication/controllers/getUserProfile'
 import { listUsersController } from './core/authentication/controllers/listUsersController'
 import { deleteClinicUserController } from './core/authentication/controllers/deleteClinicUserController'
@@ -230,7 +231,7 @@ router.delete(
 router.get(
   '/clinicians',
   authMiddleware,
-  authorize('users:read'),
+  authorizeAny('users:read', 'events:read'),
   (request, response) => listClinicianUsersController.handle(request, response),
 )
 router.post(
