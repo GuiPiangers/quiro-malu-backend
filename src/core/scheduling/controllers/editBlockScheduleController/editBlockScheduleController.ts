@@ -31,13 +31,12 @@ export class EditBlockScheduleController {
 
     try {
       const { id } = parsedParams.data
-      const userId = request.user.id
+      const { userId, ...blockInput } = parsedBody.data
       const clinicId = request.user.clinicId as string
-      const data = parsedBody.data
 
       await this.editBlockScheduleUseCase.execute(
-        { ...data, id },
-        userId!,
+        { ...blockInput, id },
+        userId,
         clinicId,
       )
 

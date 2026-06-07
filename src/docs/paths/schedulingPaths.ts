@@ -258,6 +258,8 @@ openApiRegistry.registerPath({
   path: '/blockSchedules/{id}',
   tags: ['Scheduling'],
   summary: 'Atualiza bloqueio',
+  description:
+    'O `userId` no corpo identifica o profissional dono do bloqueio; `clinicId` vem do token.',
   security: bearer,
   request: {
     params: BlockScheduleIdParamSchema,

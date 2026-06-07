@@ -31,6 +31,10 @@ export const BlockScheduleIdParamSchema = z
 
 export const EditBlockScheduleBodySchema = z
   .object({
+    userId: z
+      .string()
+      .min(1)
+      .describe('Profissional (clínico) dono do bloqueio na agenda'),
     date: z.string().describe(SCHEDULING_DATE_TIME_WRITE_DOC).optional(),
     endDate: z.string().describe(SCHEDULING_DATE_TIME_WRITE_DOC).optional(),
     description: z.string().optional(),
