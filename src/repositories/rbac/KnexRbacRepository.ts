@@ -270,7 +270,7 @@ export class KnexRbacRepository implements IRbacRepository {
       id: randomUUID(),
       roleId,
       permissionId: perm.id,
-      scope: null,
+      scope: { type: 'all' },
     }))
     await this.knex(ETableNames.ROLE_PERMISSIONS).insert(rpRows)
     return roleId

@@ -6,6 +6,11 @@ import { DateTime } from '../../../../shared/Date'
 import { EditBlockScheduleUseCase } from './editBlockScheduleUseCase'
 import type { Mocked } from 'vitest'
 
+const defaultScopeAuth = {
+  requestUserId: 'user-1',
+  eventsWriteScope: { type: 'all' as const },
+}
+
 describe('EditBlockScheduleUseCase', () => {
   let editBlockScheduleUseCase: EditBlockScheduleUseCase
   let blockScheduleRepository: Mocked<
@@ -35,15 +40,16 @@ describe('EditBlockScheduleUseCase', () => {
     blockScheduleRepository.listBetweenDates.mockResolvedValue([])
     schedulingRepository.listBetweenDates.mockResolvedValue([])
 
-    await editBlockScheduleUseCase.execute(
-      {
+    await editBlockScheduleUseCase.execute({
+      dto: {
         id: '1',
         date: '2025-01-01T11:00:00',
         endDate: '2025-01-01T12:00:00',
       },
-      'user-1',
-      'clinic-1',
-    )
+      userId: 'user-1',
+      clinicId: 'clinic-1',
+      ...defaultScopeAuth,
+    })
 
     expect(blockScheduleRepository.edit).toHaveBeenCalledWith(
       expect.any(BlockSchedule),
@@ -70,15 +76,16 @@ describe('EditBlockScheduleUseCase', () => {
     schedulingRepository.listBetweenDates.mockResolvedValue([existingSchedule])
 
     await expect(
-      editBlockScheduleUseCase.execute(
-        {
+      editBlockScheduleUseCase.execute({
+        dto: {
           id: '1',
           date: '2025-01-01T11:00:00',
           endDate: '2025-01-01T12:00:00',
         },
-        'user-1',
-        'clinic-1',
-      ),
+        userId: 'user-1',
+        clinicId: 'clinic-1',
+        ...defaultScopeAuth,
+      }),
     ).rejects.toThrow(
       'O horário selecionado para o bloqueio está indisponível.',
     )
@@ -104,15 +111,16 @@ describe('EditBlockScheduleUseCase', () => {
     schedulingRepository.listBetweenDates.mockResolvedValue([])
 
     await expect(
-      editBlockScheduleUseCase.execute(
-        {
+      editBlockScheduleUseCase.execute({
+        dto: {
           id: '1',
           date: '2025-01-01T11:00:00',
           endDate: '2025-01-01T12:00:00',
         },
-        'user-1',
-        'clinic-1',
-      ),
+        userId: 'user-1',
+        clinicId: 'clinic-1',
+        ...defaultScopeAuth,
+      }),
     ).rejects.toThrow(
       'O horário selecionado para o bloqueio está indisponível.',
     )

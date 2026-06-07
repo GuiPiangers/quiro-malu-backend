@@ -6,16 +6,14 @@ import { ApiError } from '../../../../utils/ApiError'
 import { getValidObjectValues } from '../../../../utils/getValidObjectValues'
 import { DateTime } from '../../../shared/Date'
 import DatabaseStatusStrategy from '../../models/status/DatabaseStatusStrategy'
-import {
-  appEventListener,
-  IAppEventListener,
-} from '../../../shared/observers/EventListener'
+import type { PermissionScope } from '../../../../types/permissions'
+import { assertEventsScopeAccess } from '../../../../utils/eventsPermissionScope'
 
 export type UpdateSchedulingInput = Omit<SchedulingDTO, 'patientId'> & {
   patientId?: string
   clinicId: string
-  /** Usuário autenticado; reservado para validações de permissão futuras. */
-  requestUserId?: string
+  requestUserId: string
+  eventsWriteScope?: PermissionScope | null
 }
 
 export class UpdateSchedulingUseCase {
@@ -27,7 +25,8 @@ export class UpdateSchedulingUseCase {
   ) {}
 
   async execute({
-    requestUserId: _requestUserId,
+    requestUserId,
+    eventsWriteScope,
     clinicId,
     userId: requestedUserId,
     ...data
@@ -51,6 +50,11 @@ export class UpdateSchedulingUseCase {
       requestedUserId,
       currentUserId: repositorySchedule.userId,
       clinicId,
+    })
+
+    assertEventsScopeAccess(effectiveUserId, {
+      requestUserId,
+      eventsScope: eventsWriteScope,
     })
 
     const scheduling = new Scheduling(
@@ -121,10 +125,10 @@ export class UpdateSchedulingUseCase {
     const blockSchedules =
       scheduling.date && scheduling.endDate
         ? await this.BlockSchedulingRepository.listBetweenDates({
-            userId,
-            endDate: scheduling.date,
-            startDate: scheduling.endDate,
-          })
+          userId,
+          endDate: scheduling.date,
+          startDate: scheduling.endDate,
+        })
         : []
 
     blockSchedules?.forEach((blockSchedule) => {

@@ -2,11 +2,15 @@ import { IBlockScheduleRepository } from '../../../../../repositories/blockSched
 import { ApiError } from '../../../../../utils/ApiError'
 import { DateTime } from '../../../../shared/Date'
 import { BlockScheduleDto } from '../../../models/dtos/BlockSchedule.dto'
+import type { PermissionScope } from '../../../../../types/permissions'
+import { assertEventsScopeAccess } from '../../../../../utils/eventsPermissionScope'
 
 export interface ListBlockSchedulingDTO {
   startDate: string
   endDate: string
   userId: string
+  requestUserId: string
+  eventsReadScope?: PermissionScope | null
 }
 
 export class ListBlockSchedulingUseCase {
@@ -15,7 +19,13 @@ export class ListBlockSchedulingUseCase {
   async execute(
     blockSchedulingDTO: ListBlockSchedulingDTO,
   ): Promise<BlockScheduleDto[]> {
-    const { startDate, endDate, userId } = blockSchedulingDTO
+    const { startDate, endDate, userId, requestUserId, eventsReadScope } =
+      blockSchedulingDTO
+
+    assertEventsScopeAccess(userId, {
+      requestUserId,
+      eventsScope: eventsReadScope,
+    })
 
     const startDateTime = new DateTime(startDate)
     const endDateTime = new DateTime(endDate)

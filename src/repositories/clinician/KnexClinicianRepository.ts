@@ -114,6 +114,22 @@ export class KnexClinicianRepository implements IClinicianRepository {
     )
   }
 
+  async findClinicianIdsInClinic(params: {
+    clinicId: string
+    userIds: string[]
+  }): Promise<string[]> {
+    const uniqueUserIds = [...new Set(params.userIds)]
+    if (uniqueUserIds.length === 0) return []
+
+    const rows = await this.knex(`${ETableNames.USERS} as u`)
+      .innerJoin(`${ETableNames.CLINICIANS} as c`, 'c.id', 'u.id')
+      .where('u.clinicId', params.clinicId)
+      .whereIn('u.id', uniqueUserIds)
+      .select('u.id')
+
+    return rows.map((row) => row.id as string)
+  }
+
   async save(clinician: Clinician): Promise<void> {
     const userDTO = await clinician.getUserDTO()
     const { services = [] } = clinician.toClinicianDTO()

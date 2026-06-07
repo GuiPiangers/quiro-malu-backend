@@ -29,6 +29,8 @@ export class SaveCalendarConfigurationController {
 
       await this.saveCalendarConfigurationUseCase.execute({
         userId,
+        requestUserId: userId,
+        eventsWriteScope: request.permissionScope,
         ...body,
       })
 

@@ -21,7 +21,17 @@ describe('DeleteSchedulingUseCase', () => {
       const userId = 'test-user-id'
       const clinicId = 'test-clinic-id'
 
-      await deleteSchedulingUseCase.execute({ id, userId, clinicId })
+      mockSchedulingRepository.get.mockResolvedValueOnce([
+        { id, userId, clinicId },
+      ])
+
+      await deleteSchedulingUseCase.execute({
+        id,
+        userId,
+        clinicId,
+        requestUserId: userId,
+        eventsWriteScope: { type: 'all' },
+      })
 
       expect(mockSchedulingRepository.delete).toHaveBeenCalledTimes(1)
       expect(mockSchedulingRepository.delete).toHaveBeenCalledWith({
@@ -36,12 +46,21 @@ describe('DeleteSchedulingUseCase', () => {
       const clinicId = 'test-clinic-id'
       const errorMessage = 'Failed to delete Scheduling'
 
+      mockSchedulingRepository.get.mockResolvedValueOnce([
+        { id, userId, clinicId },
+      ])
       mockSchedulingRepository.delete.mockRejectedValueOnce(
         new Error(errorMessage),
       )
 
       await expect(
-        deleteSchedulingUseCase.execute({ id, userId, clinicId }),
+        deleteSchedulingUseCase.execute({
+          id,
+          userId,
+          clinicId,
+          requestUserId: userId,
+          eventsWriteScope: { type: 'all' },
+        }),
       ).rejects.toThrow(errorMessage)
     })
   })

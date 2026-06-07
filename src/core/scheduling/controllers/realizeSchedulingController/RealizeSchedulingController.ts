@@ -19,11 +19,14 @@ export class RealizeSchedulingController {
     try {
       const data = parsed.data
       const clinicId = request.user.clinicId
+      const requestUserId = request.user.id as string
 
       await this.realizeSchedulingUseCase.execute({
         clinicId: clinicId!,
         patientId: data.patientId,
         schedulingId: data.id,
+        requestUserId,
+        eventsWriteScope: request.permissionScope,
       })
       response.status(201).json({ message: 'Consulta realizada com sucesso!' })
     } catch (err: any) {

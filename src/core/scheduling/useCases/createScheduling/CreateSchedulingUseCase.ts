@@ -9,6 +9,8 @@ import {
 } from '../../../shared/observers/EventListener'
 import { IBlockScheduleRepository } from '../../../../repositories/blockScheduleRepository/IBlockScheduleRepository'
 import type { IClinicianRepository } from '../../../../repositories/clinician/IClinicianRepository'
+import type { PermissionScope } from '../../../../types/permissions'
+import { assertEventsScopeAccess } from '../../../../utils/eventsPermissionScope'
 
 export class CreateSchedulingUseCase {
   constructor(
@@ -21,8 +23,21 @@ export class CreateSchedulingUseCase {
   async execute({
     clinicId,
     userId,
+    requestUserId,
+    eventsWriteScope,
     ...data
-  }: SchedulingDTO & { userId: string; clinicId: string; date: string }) {
+  }: SchedulingDTO & {
+    userId: string
+    clinicId: string
+    date: string
+    requestUserId: string
+    eventsWriteScope?: PermissionScope | null
+  }) {
+    assertEventsScopeAccess(userId, {
+      requestUserId,
+      eventsScope: eventsWriteScope,
+    })
+
     const clinician = await this.clinicianRepository.findById({
       id: userId,
       clinicId,

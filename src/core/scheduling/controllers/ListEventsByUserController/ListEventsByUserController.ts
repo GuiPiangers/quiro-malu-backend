@@ -24,6 +24,8 @@ export class ListEventsByUserController {
         date,
         clinicId,
         userId,
+        requestUserId: request.user.id as string,
+        eventsReadScope: request.permissionScope,
       })
 
       return response.status(200).json(events)

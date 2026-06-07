@@ -73,16 +73,18 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           new KnexSchedulingRepository(trx),
         )
 
-        await useCase.execute(
-          {
+        await useCase.execute({
+          dto: {
             id: blockId,
             date: '2038-03-01T09:30',
             endDate: '2038-03-01T11:00',
             description: 'Novo texto',
           },
           userId,
-          userId,
-        )
+          clinicId: userId,
+          requestUserId: userId,
+          eventsWriteScope: { type: 'all' },
+        })
 
         const row = await trx(ETableNames.BLOCK_SCHEDULES)
           .where({ id: blockId, userId })
@@ -101,7 +103,13 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         )
 
         await expect(
-          useCase.execute({ id: uuidv4(), description: 'X' }, userId, userId),
+          useCase.execute({
+            dto: { id: uuidv4(), description: 'X' },
+            userId,
+            clinicId: userId,
+            requestUserId: userId,
+            eventsWriteScope: { type: 'all' },
+          }),
         ).rejects.toMatchObject({ message: 'Agendamento não encontrado' })
       })
     })
@@ -135,15 +143,17 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         )
 
         await expect(
-          useCase.execute(
-            {
+          useCase.execute({
+            dto: {
               id: blockId,
               date: '2038-03-05T10:00',
               endDate: '2038-03-05T11:30',
             },
             userId,
-            userId,
-          ),
+            clinicId: userId,
+            requestUserId: userId,
+            eventsWriteScope: { type: 'all' },
+          }),
         ).rejects.toThrow(/indisponível/)
 
         const row = await trx(ETableNames.BLOCK_SCHEDULES)

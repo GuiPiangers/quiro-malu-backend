@@ -30,6 +30,14 @@ export class BlockScheduleRepository implements IBlockScheduleRepository {
       .andWhere('userId', userId)
   }
 
+  async findUserIdById(id: string): Promise<string | null> {
+    const row = await this.knex(ETableNames.BLOCK_SCHEDULES)
+      .first<{ userId: string }>('userId')
+      .where({ id })
+
+    return row?.userId ?? null
+  }
+
   async findById(id: string, userId: string): Promise<BlockSchedule | null> {
     const blockSchedulesDto: BlockScheduleDto | null = await this.knex(
       ETableNames.BLOCK_SCHEDULES,

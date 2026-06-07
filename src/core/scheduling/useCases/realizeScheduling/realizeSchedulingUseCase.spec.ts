@@ -8,6 +8,11 @@ const mockedProgressRepository = {
   getByScheduling: vi.fn(),
 }
 
+const authParams = {
+  requestUserId: 'test-user-id',
+  eventsWriteScope: { type: 'all' as const },
+}
+
 describe('Realize scheduling use case', () => {
   let realizeSchedulingUseCase: RealizeSchedulingUseCase
   const mockSchedulingRepository = createMockSchedulingRepository()
@@ -25,7 +30,16 @@ describe('Realize scheduling use case', () => {
       clinicId: 'clinicId1',
       patientId: 'patientId1',
       schedulingId: 'schedulingId1',
+      ...authParams,
     }
+
+    mockSchedulingRepository.get.mockResolvedValueOnce([
+      {
+        id: realizeSchedulingData.schedulingId,
+        userId: authParams.requestUserId,
+        clinicId: realizeSchedulingData.clinicId,
+      },
+    ])
 
     mockedProgressRepository.getByScheduling.mockResolvedValue([
       {
@@ -57,7 +71,16 @@ describe('Realize scheduling use case', () => {
       clinicId: 'clinicId1',
       patientId: 'patientId1',
       schedulingId: 'schedulingId1',
+      ...authParams,
     }
+
+    mockSchedulingRepository.get.mockResolvedValue([
+      {
+        id: realizeSchedulingData.schedulingId,
+        userId: authParams.requestUserId,
+        clinicId: realizeSchedulingData.clinicId,
+      },
+    ])
 
     mockedProgressRepository.getByScheduling.mockResolvedValue([])
 
@@ -83,6 +106,10 @@ describe('Realize scheduling use case', () => {
     const schedulingId = 'test-scheduling-id'
     const errorMessage = 'Failed to listQtdSchedulesByDay'
 
+    mockSchedulingRepository.get.mockResolvedValueOnce([
+      { id: schedulingId, userId: authParams.requestUserId, clinicId },
+    ])
+
     mockedProgressRepository.getByScheduling.mockResolvedValue([
       {
         patientId,
@@ -92,7 +119,12 @@ describe('Realize scheduling use case', () => {
     mockSchedulingRepository.update.mockRejectedValue(new Error(errorMessage))
 
     await expect(
-      realizeSchedulingUseCase.execute({ clinicId, patientId, schedulingId }),
+      realizeSchedulingUseCase.execute({
+        clinicId,
+        patientId,
+        schedulingId,
+        ...authParams,
+      }),
     ).rejects.toThrow(errorMessage)
   })
 
@@ -102,12 +134,21 @@ describe('Realize scheduling use case', () => {
     const schedulingId = 'test-scheduling-id'
     const errorMessage = 'Failed to listQtdSchedulesByDay'
 
+    mockSchedulingRepository.get.mockResolvedValueOnce([
+      { id: schedulingId, userId: authParams.requestUserId, clinicId },
+    ])
+
     mockedProgressRepository.getByScheduling.mockRejectedValue(
       new Error(errorMessage),
     )
 
     await expect(
-      realizeSchedulingUseCase.execute({ clinicId, patientId, schedulingId }),
+      realizeSchedulingUseCase.execute({
+        clinicId,
+        patientId,
+        schedulingId,
+        ...authParams,
+      }),
     ).rejects.toThrow(errorMessage)
   })
 })

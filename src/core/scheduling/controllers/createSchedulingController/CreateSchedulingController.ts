@@ -24,6 +24,8 @@ export class CreateSchedulingController {
         ...schedulingInput,
         userId,
         clinicId,
+        requestUserId: request.user.id as string,
+        eventsWriteScope: request.permissionScope,
       })
       response.status(201).json(scheduling)
     } catch (err: any) {

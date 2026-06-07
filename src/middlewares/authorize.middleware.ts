@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import type { PermissionKey } from '../database/seeds/permissions.seed'
-import type { PermissionScope } from '../types/permissions'
+import { normalizePermissionScope } from '../utils/eventsPermissionScope'
 import { ApiError } from '../utils/ApiError'
 import { responseError } from '../utils/ResponseError'
 
@@ -12,7 +12,7 @@ export function authorize(requiredPermission: PermissionKey) {
       if (!granted) {
         throw new ApiError('Acesso negado.', 403, 'forbidden')
       }
-      const scope = (granted.scope ?? { type: 'all' }) as PermissionScope
+      const scope = normalizePermissionScope(granted.scope)
       req.permissionScope = scope
       next()
     } catch (err) {

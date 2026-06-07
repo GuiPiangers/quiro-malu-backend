@@ -6,6 +6,7 @@ export const createMockBlockScheduleRepository =
     save: vi.fn(),
     edit: vi.fn(),
     findById: vi.fn(),
+    findUserIdById: vi.fn(),
     listBetweenDates: vi.fn(),
     list: vi.fn(),
     count: vi.fn(),

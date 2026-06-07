@@ -26,7 +26,10 @@ export class GetSchedulingController {
       const scheduling = await this.getSchedulingUseCase.execute({
         id,
         clinicId,
+        requestUserId: request.user.id as string,
+        eventsReadScope: request.permissionScope,
       })
+
       response.status(200).json(scheduling)
     } catch (err: any) {
       return responseError(response, err)

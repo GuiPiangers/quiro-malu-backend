@@ -41,6 +41,8 @@ describe('createSchedulingUseCase', () => {
         date: string
       } = {
         userId: 'test-user-id',
+        requestUserId: 'test-user-id',
+        eventsWriteScope: { type: 'all' },
         clinicId: 'test-clinic-id',
         id: 'test-Scheduling-id',
         patientId,
@@ -55,7 +57,18 @@ describe('createSchedulingUseCase', () => {
       await createSchedulingUseCase.execute(schedulingData)
 
       expect(mockSchedulingRepository.save).toHaveBeenCalledTimes(1)
-      expect(mockSchedulingRepository.save).toHaveBeenCalledWith(schedulingData)
+      expect(mockSchedulingRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          userId: 'test-user-id',
+          clinicId: 'test-clinic-id',
+          id: 'test-Scheduling-id',
+          patientId,
+          date: '2025-01-10T00:00',
+          duration: 3600,
+          status: 'Atendido',
+          service: 'Quiropraxia',
+        }),
+      )
     })
 
     it('should call the repository create method with status param equal Atrasado if date is in the past and status is Agendado, Atrasado or undefined', async () => {
@@ -67,6 +80,8 @@ describe('createSchedulingUseCase', () => {
         date: string
       } = {
         userId: 'test-user-id',
+        requestUserId: 'test-user-id',
+        eventsWriteScope: { type: 'all' },
         clinicId: 'test-clinic-id',
         id: 'test-Scheduling-id',
         patientId,
@@ -89,10 +104,18 @@ describe('createSchedulingUseCase', () => {
       })
 
       expect(mockSchedulingRepository.save).toHaveBeenCalled()
-      expect(mockSchedulingRepository.save).toHaveBeenCalledWith({
-        ...schedulingData,
-        status: 'Agendado',
-      })
+      expect(mockSchedulingRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          userId: 'test-user-id',
+          clinicId: 'test-clinic-id',
+          id: 'test-Scheduling-id',
+          patientId,
+          date: '2025-01-11T00:00',
+          duration: 3600,
+          status: 'Agendado',
+          service: 'Quiropraxia',
+        }),
+      )
     })
 
     it('should call the repository create method with status param equal Agendado if date is in the past and status is Agendado, Atrasado or undefined', async () => {
@@ -104,6 +127,8 @@ describe('createSchedulingUseCase', () => {
         date: string
       } = {
         userId: 'test-user-id',
+        requestUserId: 'test-user-id',
+        eventsWriteScope: { type: 'all' },
         clinicId: 'test-clinic-id',
         id: 'test-Scheduling-id',
         patientId,
@@ -125,10 +150,17 @@ describe('createSchedulingUseCase', () => {
       })
 
       expect(mockSchedulingRepository.save).toHaveBeenCalled()
-      expect(mockSchedulingRepository.save).toHaveBeenCalledWith({
-        ...schedulingData,
-        status: 'Agendado',
-      })
+      expect(mockSchedulingRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          userId: 'test-user-id',
+          clinicId: 'test-clinic-id',
+          id: 'test-Scheduling-id',
+          patientId,
+          date: '2025-01-09T00:00',
+          duration: 3600,
+          status: 'Agendado',
+        }),
+      )
     })
 
     it('should throw an ApiError if scheduling are not available', async () => {
@@ -140,6 +172,8 @@ describe('createSchedulingUseCase', () => {
         date: string
       } = {
         userId: 'test-user-id',
+        requestUserId: 'test-user-id',
+        eventsWriteScope: { type: 'all' },
         clinicId: 'test-clinic-id',
         id: 'test-Scheduling-id',
         patientId,
@@ -175,6 +209,8 @@ describe('createSchedulingUseCase', () => {
         date: string
       } = {
         userId: 'test-user-id',
+        requestUserId: 'test-user-id',
+        eventsWriteScope: { type: 'all' },
         clinicId: 'test-clinic-id',
         id: 'test-Scheduling-id',
         patientId,
@@ -219,6 +255,8 @@ describe('createSchedulingUseCase', () => {
         date: string
       } = {
         userId: 'test-user-id',
+        requestUserId: 'test-user-id',
+        eventsWriteScope: { type: 'all' },
         clinicId: 'test-clinic-id',
         id: 'test-Scheduling-id',
         patientId,
@@ -245,6 +283,8 @@ describe('createSchedulingUseCase', () => {
       await expect(
         createSchedulingUseCase.execute({
           userId: 'not-a-clinician',
+          requestUserId: 'test-user-id',
+          eventsWriteScope: { type: 'all' },
           clinicId: 'test-clinic-id',
           patientId: 'test-patient-id',
           date: '2025-01-10T00:00',

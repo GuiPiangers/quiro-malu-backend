@@ -21,9 +21,12 @@ export class DeleteBlockScheduleController {
 
     try {
       const { id } = parsedParams.data
-      const userId = request.user.id
 
-      await this.deleteBlockScheduleUseCase.execute({ id, userId: userId! })
+      await this.deleteBlockScheduleUseCase.execute({
+        id,
+        requestUserId: request.user.id as string,
+        eventsWriteScope: request.permissionScope,
+      })
 
       return response
         .status(200)

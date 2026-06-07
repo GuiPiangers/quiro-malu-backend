@@ -59,6 +59,7 @@ describe('updateSchedulingUseCase', () => {
       const schedulingData: UpdateSchedulingInput = {
         clinicId: 'test-clinic-id',
         requestUserId: 'request-user-id',
+        eventsWriteScope: { type: 'all' },
         id: 'test-Scheduling-id',
         patientId,
         date: '2025-01-10T00:00',
@@ -102,6 +103,8 @@ describe('updateSchedulingUseCase', () => {
 
       const result = await updateSchedulingUseCase.execute({
         clinicId: 'test-clinic-id',
+        requestUserId: 'test-user-id',
+        eventsWriteScope: { type: 'all' },
         id: 'test-Scheduling-id',
         patientId: 'test-patient-id',
         userId: newClinicianId,
@@ -157,6 +160,8 @@ describe('updateSchedulingUseCase', () => {
 
       const schedulingData: UpdateSchedulingInput = {
         clinicId: 'test-clinic-id',
+        requestUserId: 'test-user-id',
+        eventsWriteScope: { type: 'all' },
         id: 'test-Scheduling-id',
         patientId,
         date: '2025-01-11T00:00',
@@ -200,6 +205,8 @@ describe('updateSchedulingUseCase', () => {
 
       const schedulingData: UpdateSchedulingInput = {
         clinicId: 'test-clinic-id',
+        requestUserId: 'test-user-id',
+        eventsWriteScope: { type: 'all' },
         id: 'test-Scheduling-id',
         patientId,
         date: '2025-01-09T00:00',
@@ -243,6 +250,8 @@ describe('updateSchedulingUseCase', () => {
 
       const schedulingData: UpdateSchedulingInput = {
         clinicId: 'test-clinic-id',
+        requestUserId: 'test-user-id',
+        eventsWriteScope: { type: 'all' },
         id: 'test-Scheduling-id',
         patientId,
         date: '2025-01-10T14:00',
@@ -281,6 +290,8 @@ describe('updateSchedulingUseCase', () => {
 
       const schedulingData: UpdateSchedulingInput = {
         clinicId: 'test-clinic-id',
+        requestUserId: 'test-user-id',
+        eventsWriteScope: { type: 'all' },
         id: 'test-Scheduling-id',
         patientId,
         duration: 3600,
@@ -325,6 +336,8 @@ describe('updateSchedulingUseCase', () => {
 
       const schedulingData: UpdateSchedulingInput = {
         clinicId: 'test-clinic-id',
+        requestUserId: 'test-user-id',
+        eventsWriteScope: { type: 'all' },
         id: 'test-Scheduling-id',
         patientId,
         date: '2025-01-10T14:00',
@@ -378,6 +391,26 @@ describe('updateSchedulingUseCase', () => {
       ).rejects.toMatchObject({
         message: 'Agendamento não encontrado',
         statusCode: 404,
+      })
+
+      expect(mockSchedulingRepository.update).not.toHaveBeenCalled()
+    })
+
+    it('should throw when effective userId is outside events write scope', async () => {
+      mockSchedulingRepository.list.mockResolvedValue([])
+
+      await expect(
+        updateSchedulingUseCase.execute({
+          clinicId: 'test-clinic-id',
+          id: 'test-Scheduling-id',
+          patientId: 'test-patient-id',
+          userId: 'other-clinician-id',
+          requestUserId: 'test-user-id',
+          eventsWriteScope: { type: 'own' },
+        }),
+      ).rejects.toMatchObject({
+        message: 'Acesso negado.',
+        statusCode: 403,
       })
 
       expect(mockSchedulingRepository.update).not.toHaveBeenCalled()

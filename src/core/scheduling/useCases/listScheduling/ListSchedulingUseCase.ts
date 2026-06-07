@@ -2,6 +2,8 @@ import { ISchedulingRepository } from '../../../../repositories/scheduling/ISche
 import { DateTime } from '../../../shared/Date'
 import { SchedulingWithPatient } from '../../models/SchedulingWithPatient'
 import ClientStatusStrategy from '../../models/status/ClientStatusStrategy'
+import type { PermissionScope } from '../../../../types/permissions'
+import { isUserIdAllowedInEventsScope } from '../../../../utils/eventsPermissionScope'
 
 /**
  * @deprecated Fluxo legado ligado a `GET /schedules`. O produto usa `ListEventsUseCase` com
@@ -14,37 +16,41 @@ export class ListSchedulingUseCase {
   async execute({
     clinicId,
     date: schedulingDate,
+    requestUserId,
+    eventsReadScope,
   }: {
     clinicId: string
     date: string
     page?: number
+    requestUserId: string
+    eventsReadScope?: PermissionScope | null
   }) {
     const limit = 20
     const clientStatusStrategy = new ClientStatusStrategy()
     const date = schedulingDate || DateTime.now().dateTime
 
-    const schedulingData = this.SchedulingRepository.list({
-      clinicId,
-      date,
-    })
-    const totalScheduling = this.SchedulingRepository.count({
+    const schedules = await this.SchedulingRepository.list({
       clinicId,
       date,
     })
 
-    const [schedules, total] = await Promise.all([
-      schedulingData,
-      totalScheduling,
-    ])
+    const filteredSchedules = schedules.filter((scheduling) => {
+      if (!scheduling.userId) return true
+      return isUserIdAllowedInEventsScope({
+        requestUserId,
+        targetUserId: scheduling.userId,
+        scope: eventsReadScope,
+      })
+    })
 
     return {
-      schedules: schedules.map((scheduling) => {
+      schedules: filteredSchedules.map((scheduling) => {
         return new SchedulingWithPatient(
           scheduling,
           clientStatusStrategy,
         ).getDTO()
       }),
-      total: total[0].total,
+      total: filteredSchedules.length,
       limit,
     }
   }

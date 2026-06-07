@@ -81,6 +81,7 @@ export class KnexSchedulingRepository implements ISchedulingRepository {
         })
         .select(
           's.id',
+          's.userId',
           's.patientId',
           this.knex.raw('p.name as patient'),
           'p.phone',

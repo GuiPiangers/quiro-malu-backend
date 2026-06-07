@@ -31,6 +31,8 @@ describe('ListBlockScheduleUseCase', () => {
   describe('execute', () => {
     const validDTO: ListBlockSchedulingDTO = {
       userId: 'user-123',
+      requestUserId: 'user-123',
+      eventsReadScope: { type: 'all' },
       startDate: '2025-01-01T10:00:00Z',
       endDate: '2025-01-01T18:00:00Z',
     }
@@ -99,6 +101,8 @@ describe('ListBlockScheduleUseCase', () => {
     it('should throw ApiError when startDate is equal to endDate', async () => {
       const invalidDTO: ListBlockSchedulingDTO = {
         userId: 'user-123',
+        requestUserId: 'user-123',
+        eventsReadScope: { type: 'all' },
         startDate: '2025-01-01T10:00:00Z',
         endDate: '2025-01-01T10:00:00Z',
       }
@@ -116,6 +120,8 @@ describe('ListBlockScheduleUseCase', () => {
     it('should throw ApiError when startDate is after endDate', async () => {
       const invalidDTO: ListBlockSchedulingDTO = {
         userId: 'user-123',
+        requestUserId: 'user-123',
+        eventsReadScope: { type: 'all' },
         startDate: '2025-01-01T18:00:00Z',
         endDate: '2025-01-01T10:00:00Z',
       }
@@ -147,6 +153,8 @@ describe('ListBlockScheduleUseCase', () => {
     it('should handle different date formats correctly', async () => {
       const dtoWithDifferentFormat: ListBlockSchedulingDTO = {
         userId: 'user-123',
+        requestUserId: 'user-123',
+        eventsReadScope: { type: 'all' },
         startDate: '2025-01-01T10:00',
         endDate: '2025-01-01T18:00',
       }

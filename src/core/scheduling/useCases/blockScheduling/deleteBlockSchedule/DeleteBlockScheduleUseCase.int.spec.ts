@@ -70,7 +70,11 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           new BlockScheduleRepository(trx),
         )
 
-        await useCase.execute({ id: blockId, userId })
+        await useCase.execute({
+          id: blockId,
+          requestUserId: userId,
+          eventsWriteScope: { type: 'all' },
+        })
 
         const row = await trx(ETableNames.BLOCK_SCHEDULES)
           .where({ id: blockId, userId })
@@ -98,7 +102,13 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           new BlockScheduleRepository(trx),
         )
 
-        await useCase.execute({ id: blockId, userId: other.userId })
+        await expect(
+          useCase.execute({
+            id: blockId,
+            requestUserId: other.userId,
+            eventsWriteScope: { type: 'own' },
+          }),
+        ).rejects.toMatchObject({ statusCode: 403 })
 
         const row = await trx(ETableNames.BLOCK_SCHEDULES)
           .where({ id: blockId, userId: owner.userId })

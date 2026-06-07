@@ -250,7 +250,7 @@ openApiRegistry.registerPath({
   tags: ['RBAC'],
   summary: 'Substitui permissões do papel (corpo completo)',
   description:
-    'Não permite alterar permissões de um papel de sistema (`isSystem`). `scope` é JSON opcional (ex.: `{ "type": "all" }`).',
+    'Não permite alterar permissões de um papel de sistema (`isSystem`). `scope`: `null` (acesso total em runtime), `{ "type": "all" }`, `{ "type": "own" }` ou `{ "type": "list", "userIds": ["uuid-clinico"] }` (somente clínicos da clínica). Leitura e escrita de `events:*` aceitam escopos independentes.',
   security: bearer,
   request: {
     params: RoleIdParamsSchema,
@@ -260,7 +260,11 @@ openApiRegistry.registerPath({
           schema: ReplaceRolePermissionsBodySchema,
           example: [
             { permissionKey: 'patients:read', scope: null },
-            { permissionKey: 'events:read', scope: { type: 'own' } },
+            {
+              permissionKey: 'events:read',
+              scope: { type: 'list', userIds: ['00000000-0000-4000-8000-000000000010'] },
+            },
+            { permissionKey: 'events:write', scope: { type: 'own' } },
           ],
         },
       },

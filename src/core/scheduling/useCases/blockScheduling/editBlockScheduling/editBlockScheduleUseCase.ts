@@ -4,8 +4,18 @@ import { ISchedulingRepository } from '../../../../../repositories/scheduling/IS
 import { ApiError } from '../../../../../utils/ApiError'
 import { DateTime } from '../../../../shared/Date'
 import { BlockScheduleDto } from '../../../models/dtos/BlockSchedule.dto'
+import type { PermissionScope } from '../../../../../types/permissions'
+import { assertEventsScopeAccess } from '../../../../../utils/eventsPermissionScope'
 
 export type EditBlockScheduleDTO = Partial<BlockScheduleDto> & { id: string }
+
+export type EditBlockScheduleInput = {
+  dto: EditBlockScheduleDTO
+  userId: string
+  clinicId: string
+  requestUserId: string
+  eventsWriteScope?: PermissionScope | null
+}
 
 export class EditBlockScheduleUseCase {
   constructor(
@@ -13,7 +23,18 @@ export class EditBlockScheduleUseCase {
     private schedulingRepository: ISchedulingRepository,
   ) {}
 
-  async execute(dto: EditBlockScheduleDTO, userId: string, clinicId: string) {
+  async execute({
+    dto,
+    userId,
+    clinicId,
+    requestUserId,
+    eventsWriteScope,
+  }: EditBlockScheduleInput) {
+    assertEventsScopeAccess(userId, {
+      requestUserId,
+      eventsScope: eventsWriteScope,
+    })
+
     const { id, date, endDate, description } = dto
 
     const blockSchedule = await this.blockScheduleRepository.findById(

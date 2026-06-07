@@ -24,6 +24,8 @@ export class AddBlockScheduleController {
         ...blockInput,
         userId,
         clinicId,
+        requestUserId: request.user.id as string,
+        eventsWriteScope: request.permissionScope,
       })
 
       response.status(201).json({ message: 'Agenda bloqueada com sucesso!' })

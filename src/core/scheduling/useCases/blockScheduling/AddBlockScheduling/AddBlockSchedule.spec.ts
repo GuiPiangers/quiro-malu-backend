@@ -36,6 +36,8 @@ describe('AddBlockScheduleUseCase', () => {
       description: 'Descrição',
       userId: 'userId',
       clinicId: 'clinic-1',
+      requestUserId: 'userId',
+      eventsWriteScope: { type: 'all' },
     }
 
     await addBlockSchedulingUseCase.execute(blockSchedulingDTO)
@@ -60,6 +62,8 @@ describe('AddBlockScheduleUseCase', () => {
       description: 'Descrição',
       userId: 'userId',
       clinicId: 'clinic-1',
+      requestUserId: 'userId',
+      eventsWriteScope: { type: 'all' },
     }
 
     mockSchedulingRepository.listBetweenDates.mockResolvedValue([
@@ -84,6 +88,8 @@ describe('AddBlockScheduleUseCase', () => {
       description: 'Descrição',
       userId: 'userId',
       clinicId: 'clinic-1',
+      requestUserId: 'userId',
+      eventsWriteScope: { type: 'all' },
     }
 
     mockSchedulingRepository.listBetweenDates.mockResolvedValue([])

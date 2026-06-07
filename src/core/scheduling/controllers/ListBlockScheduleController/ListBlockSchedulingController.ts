@@ -24,6 +24,8 @@ export class ListBlockScheduleController {
         endDate,
         startDate,
         userId,
+        requestUserId: userId,
+        eventsReadScope: request.permissionScope,
       })
 
       response.status(200).json(blockSchedules)

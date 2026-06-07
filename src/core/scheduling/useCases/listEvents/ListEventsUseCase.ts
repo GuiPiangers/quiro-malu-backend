@@ -4,11 +4,15 @@ import { ISchedulingRepository } from '../../../../repositories/scheduling/ISche
 import { IBlockScheduleRepository } from '../../../../repositories/blockScheduleRepository/IBlockScheduleRepository'
 import { DateTime } from '../../../shared/Date'
 import { BlockScheduleDto } from '../../models/dtos/BlockSchedule.dto'
+import type { PermissionScope } from '../../../../types/permissions'
+import { assertEventsScopeAccess } from '../../../../utils/eventsPermissionScope'
 
 export interface IListEventsUseCaseRequest {
   date: string
   clinicId: string
   userId: string
+  requestUserId: string
+  eventsReadScope?: PermissionScope | null
 }
 
 export interface IListEventsUseCaseResponse {
@@ -25,7 +29,14 @@ export class ListEventsUseCase {
     date,
     clinicId,
     userId,
+    requestUserId,
+    eventsReadScope,
   }: IListEventsUseCaseRequest): Promise<IListEventsUseCaseResponse> {
+    assertEventsScopeAccess(userId, {
+      requestUserId,
+      eventsScope: eventsReadScope,
+    })
+
     const onlyDate = date.substring(0, 10)
     const startDate = new DateTime(`${onlyDate}T00:00`)
     const endDate = new DateTime(`${onlyDate}T23:59`)

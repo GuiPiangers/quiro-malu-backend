@@ -7,6 +7,8 @@ import {
   IAppEventListener,
 } from '../../../../shared/observers/EventListener'
 import { BlockSchedule } from '../../../models/BlockSchedule'
+import type { PermissionScope } from '../../../../../types/permissions'
+import { assertEventsScopeAccess } from '../../../../../utils/eventsPermissionScope'
 
 export interface AddBlockSchedulingDTO {
   description?: string
@@ -14,6 +16,8 @@ export interface AddBlockSchedulingDTO {
   endDate: string
   userId: string
   clinicId: string
+  requestUserId: string
+  eventsWriteScope?: PermissionScope | null
 }
 
 export class AddBlockSchedulingUseCase {
@@ -24,6 +28,11 @@ export class AddBlockSchedulingUseCase {
   ) {}
 
   async execute(blockSchedulingDTO: AddBlockSchedulingDTO) {
+    assertEventsScopeAccess(blockSchedulingDTO.userId, {
+      requestUserId: blockSchedulingDTO.requestUserId,
+      eventsScope: blockSchedulingDTO.eventsWriteScope,
+    })
+
     const date = new DateTime(blockSchedulingDTO.date)
     const endDate = new DateTime(blockSchedulingDTO.endDate)
 

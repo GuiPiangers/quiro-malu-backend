@@ -20,6 +20,8 @@ export interface IBlockScheduleRepository {
 
   findById(id: string, userId: string): Promise<BlockSchedule | null>
 
+  findUserIdById(id: string): Promise<string | null>
+
   listBetweenDates(
     data: BlockScheduleListBetweenDatesParams,
   ): Promise<BlockSchedule[]>

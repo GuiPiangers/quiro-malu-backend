@@ -23,6 +23,7 @@ export class UpdateSchedulingController {
         ...parsed.data,
         clinicId,
         requestUserId,
+        eventsWriteScope: request.permissionScope,
       })
 
       response.status(201).json(scheduling)

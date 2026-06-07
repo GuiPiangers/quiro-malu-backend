@@ -28,7 +28,10 @@ export class ListSchedulingController {
         clinicId,
         page,
         date,
+        requestUserId: request.user.id as string,
+        eventsReadScope: request.permissionScope,
       })
+
       response.status(200).json(scheduling)
     } catch (err: any) {
       return responseError(response, err)

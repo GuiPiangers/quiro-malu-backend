@@ -16,6 +16,8 @@ export class GetCalendarConfigurationController {
 
       const result = await this.getCalendarConfigurationUseCase.execute({
         userId,
+        requestUserId: userId,
+        eventsReadScope: request.permissionScope,
       })
 
       if (!result) throw new ApiError('Configuração não encontrada', 404)

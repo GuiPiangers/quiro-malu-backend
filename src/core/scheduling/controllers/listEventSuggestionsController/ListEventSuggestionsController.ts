@@ -22,11 +22,13 @@ export class ListEventSuggestionsController {
     }
 
     try {
-      const userId = request.user.id
+      const userId = request.user.id as string
       const { filter } = parsed.data
 
       const result = await this.listEventSuggestionsUseCase.execute({
-        userId: userId!,
+        userId,
+        requestUserId: userId,
+        eventsReadScope: request.permissionScope,
         config: { filter },
       })
 

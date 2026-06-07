@@ -103,7 +103,13 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           new AppEventListener(),
         )
 
-        await useCase.execute({ id: scheduleId, userId, clinicId: userId })
+        await useCase.execute({
+          id: scheduleId,
+          userId,
+          clinicId: userId,
+          requestUserId: userId,
+          eventsWriteScope: { type: 'all' },
+        })
 
         const row = await trx(ETableNames.SCHEDULES)
           .where({ id: scheduleId, userId })
@@ -134,11 +140,15 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           new AppEventListener(),
         )
 
-        await useCase.execute({
-          id: scheduleId,
-          userId: other.userId,
-          clinicId: other.userId,
-        })
+        await expect(
+          useCase.execute({
+            id: scheduleId,
+            userId: other.userId,
+            clinicId: owner.userId,
+            requestUserId: other.userId,
+            eventsWriteScope: { type: 'own' },
+          }),
+        ).rejects.toMatchObject({ statusCode: 403 })
 
         const row = await trx(ETableNames.SCHEDULES)
           .where({ id: scheduleId, userId: owner.userId })
@@ -174,7 +184,13 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           events,
         )
 
-        await useCase.execute({ id: scheduleId, userId, clinicId: userId })
+        await useCase.execute({
+          id: scheduleId,
+          userId,
+          clinicId: userId,
+          requestUserId: userId,
+          eventsWriteScope: { type: 'all' },
+        })
 
         expect(emitSpy).toHaveBeenCalledWith('deleteSchedule', {
           scheduleId,

@@ -1,6 +1,8 @@
 import { IProgressRepository } from '../../../../repositories/progress/IProgressRepository'
 import { ISchedulingRepository } from '../../../../repositories/scheduling/ISchedulingRepository'
 import { ApiError } from '../../../../utils/ApiError'
+import type { PermissionScope } from '../../../../types/permissions'
+import { assertEventsScopeAccess } from '../../../../utils/eventsPermissionScope'
 
 export class RealizeSchedulingUseCase {
   constructor(
@@ -12,11 +14,28 @@ export class RealizeSchedulingUseCase {
     clinicId,
     patientId,
     schedulingId,
+    requestUserId,
+    eventsWriteScope,
   }: {
     clinicId: string
     patientId: string
     schedulingId: string
+    requestUserId: string
+    eventsWriteScope?: PermissionScope | null
   }) {
+    const [schedule] = await this.schedulingRepository.get({
+      id: schedulingId,
+      clinicId,
+    })
+    if (!schedule?.userId) {
+      throw new ApiError('Agendamento não encontrado', 404)
+    }
+
+    assertEventsScopeAccess(schedule.userId, {
+      requestUserId,
+      eventsScope: eventsWriteScope,
+    })
+
     const [[progress]] = await Promise.all([
       this.progressRepository.getByScheduling({
         schedulingId,

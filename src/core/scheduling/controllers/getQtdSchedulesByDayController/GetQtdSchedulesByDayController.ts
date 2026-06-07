@@ -40,6 +40,8 @@ export class GetQtdSchedulesByDayController {
         year,
         clinicId,
         userId,
+        requestUserId: request.user.id as string,
+        eventsReadScope: request.permissionScope,
       })
       response.status(200).json(qtdSchedules)
     } catch (err: any) {

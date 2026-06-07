@@ -34,11 +34,13 @@ export class EditBlockScheduleController {
       const { userId, ...blockInput } = parsedBody.data
       const clinicId = request.user.clinicId as string
 
-      await this.editBlockScheduleUseCase.execute(
-        { ...blockInput, id },
+      await this.editBlockScheduleUseCase.execute({
+        dto: { ...blockInput, id },
         userId,
         clinicId,
-      )
+        requestUserId: request.user.id as string,
+        eventsWriteScope: request.permissionScope,
+      })
 
       return response.status(200).json({ message: 'Atualizado com sucesso!' })
     } catch (err: any) {

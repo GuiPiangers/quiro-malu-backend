@@ -1,5 +1,6 @@
 import { SYSTEM_PERMISSIONS } from '../../../database/seeds/permissions.seed'
 import { z } from '../../../schemas/zodOpenApi'
+import { PermissionScopeInputSchema } from './permissionScopeSchemas'
 
 const permissionKeyEnumValues = SYSTEM_PERMISSIONS.map((p) => p.key) as [
   string,
@@ -15,7 +16,7 @@ export const ReplaceRolePermissionsBodySchema = z
     z
       .object({
         permissionKey: PermissionKeySchema,
-        scope: z.unknown().optional().nullable(),
+        scope: PermissionScopeInputSchema.optional(),
       })
       .openapi('RbacReplaceRolePermissionItem'),
   )
@@ -86,7 +87,7 @@ export const ListPermissionCatalogResponseSchema = z
 export const RolePermissionEntryResponseSchema = z
   .object({
     permissionKey: PermissionKeySchema,
-    scope: z.unknown().nullable().optional(),
+    scope: PermissionScopeInputSchema.nullable().optional(),
   })
   .openapi('RbacRolePermissionEntry')
 
