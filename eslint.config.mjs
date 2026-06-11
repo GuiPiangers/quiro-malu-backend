@@ -13,16 +13,12 @@ const maxParamsSelectors = [
     message: maxParamsMessage,
   },
   {
-    selector: 'FunctionExpression[params.length>2]',
+    selector:
+      'FunctionExpression[params.length>2]:not(MethodDefinition[kind="constructor"] > FunctionExpression)',
     message: maxParamsMessage,
   },
   {
     selector: 'ArrowFunctionExpression[params.length>2]',
-    message: maxParamsMessage,
-  },
-  {
-    selector:
-      'MethodDefinition:not([kind="constructor"]) > FunctionExpression[params.length>2]',
     message: maxParamsMessage,
   },
 ]
