@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bem-vindo ao QuiroMalu</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f0fa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f0fa; padding: 32px 16px;">
+    <tr>
+      <td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="max-width: 560px; width: 100%; background-color: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e0d6f0;">
+
+          <!-- Header -->
+          <tr>
+            <td style="background-color: #8A48C7; padding: 40px 32px; text-align: center;">
+              <!-- <table cellpadding="0" cellspacing="0" style="margin: 0 auto 16px;">
+                <tr>
+                  <td style="width: 56px; height: 56px; background-color: rgba(255,255,255,0.15); border-radius: 50%; text-align: center; vertical-align: middle;">
+                    <img src="https://quiromalu.com.br/logo-icon.png" alt="QuiroMalu" width="28" height="28" style="display: block; margin: 14px auto;" />
+                  </td>
+                </tr>
+              </table> -->
+              <h1 style="color: #ffffff; font-size: 22px; font-weight: 500; margin: 0 0 6px;">Bem-vindo ao QuiroMalu</h1>
+              <p style="color: rgba(255,255,255,0.75); font-size: 14px; margin: 0;">Sistema de Gestão para Quiropraxia</p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding: 32px 32px 24px;">
+
+              <p style="color: #3d3d3d; font-size: 15px; line-height: 1.7; margin: 0 0 20px;">
+                Olá, <strong style="font-weight: 500;">{{name}}</strong> 👋
+              </p>
+
+              <p style="color: #555555; font-size: 15px; line-height: 1.7; margin: 0 0 24px;">
+                Sua conta no <strong style="font-weight: 500; color: #8A48C7;">QuiroMalu</strong> foi criada com sucesso.
+                Agora você tem acesso à nossa plataforma para acompanhar seu histórico de consultas,
+                visualizar evoluções e manter contato com sua equipe de cuidados.
+              </p>
+
+              <!-- Dados de acesso -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9f5ff; border-left: 3px solid #8A48C7; border-radius: 0 8px 8px 0; margin-bottom: 28px;">
+                <tr>
+                  <td style="padding: 16px 20px;">
+                    <p style="color: #6b3fa0; font-size: 12px; font-weight: 500; margin: 0 0 12px; text-transform: uppercase; letter-spacing: 0.05em;">Seus dados de acesso</p>
+                    <table cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="color: #8a7aa0; font-size: 13px; padding-bottom: 6px; padding-right: 16px;">E-mail</td>
+                        <td style="color: #3d2b5c; font-size: 14px; font-weight: 500; padding-bottom: 6px;">{{email}}</td>
+                      </tr>
+                      <tr>
+                        <td style="color: #8a7aa0; font-size: 13px; padding-right: 16px;">Senha</td>
+                        <td style="color: #3d2b5c; font-size: 14px; font-weight: 500;">Definida no cadastro</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- CTA Button -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 28px;">
+                <tr>
+                  <td align="center">
+                    <a href="{{loginUrl}}"
+                       style="display: inline-block; background-color: #8A48C7; color: #ffffff; text-decoration: none;
+                              padding: 12px 36px; border-radius: 8px; font-size: 15px; font-weight: 500; letter-spacing: 0.01em;">
+                      Acessar minha conta
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Feature cards -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 28px;">
+                <tr>
+                  <td width="48%" style="background-color: #fafafa; border: 1px solid #ede8f5; border-radius: 8px; padding: 16px; vertical-align: top;">
+                    <div style="width: 32px; height: 32px; background-color: #ede8f5; border-radius: 50%; margin-bottom: 10px; text-align: center; line-height: 32px;">
+                      📅
+                    </div>
+                    <p style="font-size: 13px; font-weight: 500; color: #3d2b5c; margin: 0 0 4px;">Consultas</p>
+                    <p style="font-size: 12px; color: #8a7aa0; margin: 0; line-height: 1.5;">Acompanhe seu histórico e próximos agendamentos</p>
+                  </td>
+                  <td width="4%"></td>
+                  <td width="48%" style="background-color: #fafafa; border: 1px solid #ede8f5; border-radius: 8px; padding: 16px; vertical-align: top;">
+                    <div style="width: 32px; height: 32px; background-color: #ede8f5; border-radius: 50%; margin-bottom: 10px; text-align: center; line-height: 32px;">
+                      📈
+                    </div>
+                    <p style="font-size: 13px; font-weight: 500; color: #3d2b5c; margin: 0 0 4px;">Evolução</p>
+                    <p style="font-size: 12px; color: #8a7aa0; margin: 0; line-height: 1.5;">Visualize sua progressão de tratamento</p>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="color: #888888; font-size: 13px; line-height: 1.6; margin: 0;">
+                Em caso de dúvidas, entre em contato com nossa equipe pelo e-mail
+                <a href="mailto:contato@quiromalu.com.br" style="color: #8A48C7; text-decoration: none;">contato@quiromalu.com.br</a>.
+              </p>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #f9f5ff; padding: 20px 32px; text-align: center; border-top: 1px solid #ede8f5;">
+              <p style="color: #8a7aa0; font-size: 12px; margin: 0 0 4px;">© 2025 QuiroMalu · Todos os direitos reservados</p>
+              <p style="color: #b0a4c0; font-size: 12px; margin: 0;">Você recebeu este e-mail porque realizou um cadastro em nosso sistema.</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
