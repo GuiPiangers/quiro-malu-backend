@@ -1,5 +1,6 @@
 import { IBirthdayMessageRepository } from '../messages/IBirthdayMessageRepository'
 import type { Mocked } from 'vitest'
+import { vi } from 'vitest'
 
 export const createMockBirthdayMessageRepository =
   (): Mocked<IBirthdayMessageRepository> => ({

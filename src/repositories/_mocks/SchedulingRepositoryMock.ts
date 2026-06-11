@@ -1,5 +1,6 @@
 import { ISchedulingRepository } from '../scheduling/ISchedulingRepository'
 import type { Mocked } from 'vitest'
+import { vi } from 'vitest'
 
 export const createMockSchedulingRepository =
   (): Mocked<ISchedulingRepository> => ({

@@ -1,5 +1,6 @@
 import { IFinanceRepository } from '../finance/IFinanceRepository'
 import type { Mocked } from 'vitest'
+import { vi } from 'vitest'
 
 export const createMockFinanceRepository = (): Mocked<IFinanceRepository> => ({
   create: vi.fn(),

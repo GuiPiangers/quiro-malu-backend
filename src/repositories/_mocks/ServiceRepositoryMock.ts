@@ -1,5 +1,6 @@
 import { IServiceRepository } from '../service/IServiceRepository'
 import type { Mocked } from 'vitest'
+import { vi } from 'vitest'
 
 export const createMockServiceRepository = (): Mocked<IServiceRepository> => ({
   save: vi.fn(),

@@ -1,5 +1,6 @@
 import { IBlockScheduleRepository } from '../blockScheduleRepository/IBlockScheduleRepository'
 import type { Mocked } from 'vitest'
+import { vi } from 'vitest'
 
 export const createMockBlockScheduleRepository =
   (): Mocked<IBlockScheduleRepository> => ({

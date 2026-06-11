@@ -1,5 +1,6 @@
 import { IDiagnosticRepository } from '../diagnostic/IDiagnosticRepository'
 import type { Mocked } from 'vitest'
+import { vi } from 'vitest'
 
 export const createMockDiagnosticRepository =
   (): Mocked<IDiagnosticRepository> => ({

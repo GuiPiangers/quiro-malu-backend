@@ -1,5 +1,6 @@
 import type { Mocked } from 'vitest'
 import type { IRbacRepository } from '../rbac/IRbacRepository'
+import { vi } from 'vitest'
 
 export const createMockRbacRepository = (): Mocked<IRbacRepository> => ({
   findResolvedPermissionsByUser: vi.fn(),

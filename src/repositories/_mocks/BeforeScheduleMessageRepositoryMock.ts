@@ -1,5 +1,6 @@
 import { IBeforeScheduleMessageRepository } from '../messages/IBeforeScheduleMessageRepository'
 import type { Mocked } from 'vitest'
+import { vi } from 'vitest'
 
 export const createMockBeforeScheduleMessageRepository =
   (): Mocked<IBeforeScheduleMessageRepository> => ({

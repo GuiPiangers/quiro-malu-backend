@@ -1,5 +1,6 @@
 import { IPushNotificationProvider } from '../notification/IPushNotificationProvider'
 import type { Mocked } from 'vitest'
+import { vi } from 'vitest'
 
 export const createMockPushNotificationProvider =
   (): Mocked<IPushNotificationProvider> => ({

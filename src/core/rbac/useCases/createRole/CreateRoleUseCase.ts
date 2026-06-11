@@ -13,7 +13,9 @@ export class CreateRoleUseCase {
   }): Promise<RoleRow> {
     const existing = await this.rbac.listRolesByClinic(data.clinicId)
     const normalized = data.name.trim().toLowerCase()
-    if (existing.some((r) => r.name.trim().toLowerCase() === normalized)) {
+    if (existing.some((dbRole) =>
+      dbRole.name.trim().toLowerCase() === normalized,
+    )) {
       throw new ApiError('Já existe um papel com este nome', 400, 'role')
     }
 

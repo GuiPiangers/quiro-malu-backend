@@ -1,5 +1,6 @@
 import { INotificationRepository } from '../notification/INotificationRepository'
 import type { Mocked } from 'vitest'
+import { vi } from 'vitest'
 
 export const createMockNotificationRepository =
   (): Mocked<INotificationRepository> => ({

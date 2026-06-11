@@ -1,5 +1,6 @@
 import { ILocationRepository } from '../location/ILocationRepository'
 import type { Mocked } from 'vitest'
+import { vi } from 'vitest'
 
 export const createMockLocationRepository =
   (): Mocked<ILocationRepository> => ({

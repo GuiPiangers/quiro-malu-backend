@@ -1,5 +1,6 @@
 import { IWhatsAppMessageLogRepository } from '../whatsapp/IWhatsAppMessageLogRepository'
 import type { Mocked } from 'vitest'
+import { vi } from 'vitest'
 
 export const createMockWhatsAppMessageLogRepository =
   (): Mocked<IWhatsAppMessageLogRepository> => ({

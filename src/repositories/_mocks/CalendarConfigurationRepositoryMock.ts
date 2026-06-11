@@ -1,5 +1,6 @@
 import { ICalendarConfigurationRepository } from '../calendarConfiguration/ICalendarConfigurationRepository'
 import type { Mocked } from 'vitest'
+import { vi } from 'vitest'
 
 export const createMockCalendarConfigurationRepository =
   (): Mocked<ICalendarConfigurationRepository> => ({

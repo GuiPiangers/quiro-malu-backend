@@ -2,6 +2,7 @@ import { IGenerateTokenProvider } from '../token/IGenerateTokenProvider'
 import { IRefreshTokenProvider } from '../token/IRefreshTokenProvider'
 import { IUserRepository } from '../user/IUserRepository'
 import type { Mocked } from 'vitest'
+import { vi } from 'vitest'
 
 export const createMockUserRepository = (): Mocked<IUserRepository> => ({
   getByEmail: vi.fn(),

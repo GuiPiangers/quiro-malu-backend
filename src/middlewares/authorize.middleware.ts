@@ -10,7 +10,8 @@ export function authorize(requiredPermission: PermissionKey) {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
       const permissions = req.user?.permissions ?? []
-      const granted = permissions.find((p) => p.key === requiredPermission)
+      const granted =
+        permissions.find((permission) => permission.key === requiredPermission)
       if (!granted) {
         throw new ApiError('Acesso negado.', 403, 'forbidden')
       }

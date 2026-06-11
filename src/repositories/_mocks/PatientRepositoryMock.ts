@@ -1,5 +1,6 @@
 import { IPatientRepository } from '../patient/IPatientRepository'
 import type { Mocked } from 'vitest'
+import { vi } from 'vitest'
 
 export const createMockPatientRepository = (): Mocked<IPatientRepository> => ({
   getById: vi.fn(),

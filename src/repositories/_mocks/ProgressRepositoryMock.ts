@@ -1,5 +1,6 @@
 import { IProgressRepository } from '../progress/IProgressRepository'
 import type { Mocked } from 'vitest'
+import { vi } from 'vitest'
 
 export const createMockProgressRepository =
   (): Mocked<IProgressRepository> => ({

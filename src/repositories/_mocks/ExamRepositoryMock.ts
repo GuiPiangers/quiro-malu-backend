@@ -1,6 +1,7 @@
 import { IExamsFileStorageRepository } from '../examsFileStorage/IExamsFileStorageRepository'
 import { IExamsRepository } from '../examsRepository/IExamsRepository'
 import type { Mocked } from 'vitest'
+import { vi } from 'vitest'
 
 export const createMockExamRepository = (): Mocked<IExamsRepository> => ({
   save: vi.fn(),
