@@ -2,6 +2,7 @@ import { createMockClinicianRepository } from '../../../../../repositories/_mock
 import { createMockClinicRepository } from '../../../../../repositories/_mocks/ClinicRepositoryMock'
 import { createMockServiceRepository } from '../../../../../repositories/_mocks/ServiceRepositoryMock'
 import { createMockUserRepository } from '../../../../../repositories/_mocks/UserRepositoryMock'
+import { Role } from '../../../../rbac/models/Role'
 import { CreateClinicianUseCase } from '../CreateClinicianUseCase'
 
 describe('CreateClinicianUseCase', () => {
@@ -26,12 +27,12 @@ describe('CreateClinicianUseCase', () => {
       name: 'Clínica Teste',
       getDTO: () => ({ id: clinicId, name: 'Clínica Teste' }),
     } as any)
-    rbacRepository.findRoleByIdForClinic.mockResolvedValue({
+    rbacRepository.findRoleByIdForClinic.mockResolvedValue(new Role({
       id: roleId,
       clinicId,
       name: 'Papel teste',
       description: '',
-    })
+    }))
     serviceRepository.get.mockResolvedValue({
       id: serviceId,
       name: 'Sessão',

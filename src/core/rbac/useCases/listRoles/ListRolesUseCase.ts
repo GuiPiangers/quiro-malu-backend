@@ -5,6 +5,7 @@ export class ListRolesUseCase {
   constructor(private rbac: IRbacRepository) {}
 
   async execute(clinicId: string): Promise<RoleRow[]> {
-    return this.rbac.listRolesByClinic(clinicId)
+    const roles = await this.rbac.listRolesByClinic(clinicId)
+    return roles.map((role) => role.getDTO() as RoleRow)
   }
 }

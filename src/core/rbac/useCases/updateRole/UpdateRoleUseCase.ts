@@ -1,4 +1,5 @@
 import type { IRbacRepository } from '../../../../repositories/rbac/IRbacRepository'
+import { Role } from '../../models/Role'
 import { ApiError } from '../../../../utils/ApiError'
 
 export class UpdateRoleUseCase {
@@ -19,14 +20,25 @@ export class UpdateRoleUseCase {
       throw new ApiError('Papel não encontrado', 404, 'role')
     }
 
-    if (role.isSystem) {
-      throw new ApiError(
-        'Não é permitido alterar um papel de sistema',
-        400,
-        'role',
-      )
-    }
+    role.assertCanBeChanged()
 
-    await this.rbac.updateRole(data)
+    const updatedRole = new Role({
+      ...role.getDTO(),
+      name: data.name ?? role.name,
+      description: data.description ?? role.description,
+    })
+
+    await this.rbac.updateRole({
+      id: updatedRole.id,
+      clinicId: updatedRole.clinicId,
+      name:
+        data.name === undefined
+          ? undefined
+          : updatedRole.name,
+      description:
+        data.description === undefined
+          ? undefined
+          : updatedRole.description,
+    })
   }
 }

@@ -3,9 +3,9 @@ import { randomUUID } from 'node:crypto'
 import { ETableNames } from '../../database/ETableNames'
 import type { PermissionKey } from '../../database/seeds/permissions.seed'
 import { SYSTEM_PERMISSIONS } from '../../database/seeds/permissions.seed'
+import { Role } from '../../core/rbac/models/Role'
 import type { ResolvedPermission } from '../../types/permissions'
 import { mergeScopesForSamePermission } from '../../utils/mergePermissionScopes'
-import { RBAC_DEFAULT_ADMIN_ROLE_NAME } from '../../core/rbac/constants'
 import { ApiError } from '../../utils/ApiError'
 import type {
   IRbacRepository,
@@ -72,31 +72,61 @@ export class KnexRbacRepository implements IRbacRepository {
     }))
   }
 
-  async listRolesByClinic(clinicId: string): Promise<RoleRow[]> {
+  async listRolesByClinic(clinicId: string): Promise<Role[]> {
     const rows = await this.knex(ETableNames.ROLES)
       .select('id', 'clinicId', 'name', 'description', 'isSystem')
       .where({ clinicId })
       .orderBy('name', 'asc')
-    return rows as RoleRow[]
+    return rows.map((row) => this.createRoleEntity(row))
   }
 
-  async createRole(data: {
-    clinicId: string
-    name: string
-    description?: string
-  }): Promise<RoleRow> {
-    const id = randomUUID()
-    await this.knex(ETableNames.ROLES).insert({
-      id,
-      clinicId: data.clinicId,
-      name: data.name.trim(),
-      description: (data.description ?? '').trim(),
-      isSystem: false,
+  async createRole(role: Role): Promise<Role> {
+    const permissions = role.getPermissionsDTO()
+
+    await this.knex.transaction(async (trx) => {
+      await trx(ETableNames.ROLES).insert({
+        id: role.id,
+        clinicId: role.clinicId,
+        name: role.name,
+        description: role.description,
+        isSystem: role.isSystem,
+      })
+
+      if (permissions.length === 0) return
+
+      const permRows = (await trx(ETableNames.PERMISSIONS)
+        .select('id', 'key')
+        .whereIn(
+          'key',
+          permissions.map((permission) => permission.permissionKey),
+        )) as { id: string; key: string }[]
+      const idByKey = new Map(permRows.map((permission) => {
+        return [permission.key, permission.id]
+      }))
+
+      for (const permission of permissions) {
+        if (idByKey.has(permission.permissionKey)) continue
+
+        throw new ApiError(
+          `Permissão inválida: ${permission.permissionKey}`,
+          400,
+          'permission',
+        )
+      }
+
+      const inserts = permissions.map((permission) => ({
+        id: randomUUID(),
+        roleId: role.id,
+        permissionId: idByKey.get(permission.permissionKey)!,
+        scope:
+          permission.scope === undefined || permission.scope === null
+            ? null
+            : (permission.scope as object),
+      }))
+      await trx(ETableNames.ROLE_PERMISSIONS).insert(inserts)
     })
-    const row = await this.knex(ETableNames.ROLES)
-      .first<RoleRow>('id', 'clinicId', 'name', 'description', 'isSystem')
-      .where({ id })
-    return row!
+
+    return role
   }
 
   async updateRole(data: {
@@ -106,9 +136,8 @@ export class KnexRbacRepository implements IRbacRepository {
     description?: string
   }): Promise<void> {
     const patch: Record<string, string> = {}
-    if (data.name !== undefined) patch.name = data.name.trim()
-    if (data.description !== undefined)
-      patch.description = data.description.trim()
+    if (data.name !== undefined) patch.name = data.name
+    if (data.description !== undefined) patch.description = data.description
     if (Object.keys(patch).length === 0) return
     await this.knex(ETableNames.ROLES).update(patch).where({
       id: data.id,
@@ -133,11 +162,13 @@ export class KnexRbacRepository implements IRbacRepository {
   async findRoleByIdForClinic(data: {
     id: string
     clinicId: string
-  }): Promise<RoleRow | null> {
+  }): Promise<Role | null> {
     const row = await this.knex(ETableNames.ROLES)
       .first<RoleRow>('id', 'clinicId', 'name', 'description', 'isSystem')
       .where({ id: data.id, clinicId: data.clinicId })
-    return row ?? null
+    if (!row) return null
+
+    return this.createRoleEntity(row)
   }
 
   async listRolePermissions(data: {
@@ -188,14 +219,6 @@ export class KnexRbacRepository implements IRbacRepository {
     }
 
     const keys = data.items.map((i) => i.permissionKey)
-    if (new Set(keys).size !== keys.length) {
-      throw new ApiError(
-        'Permissões duplicadas no corpo da requisição.',
-        400,
-        'permission',
-      )
-    }
-
     const permRows = (await this.knex(ETableNames.PERMISSIONS)
       .select('id', 'key')
       .whereIn('key', keys)) as { id: string; key: string }[]
@@ -241,38 +264,13 @@ export class KnexRbacRepository implements IRbacRepository {
     }
   }
 
-  async createClinicAdminRole(clinicId: string): Promise<string> {
-    const existing = await this.knex(ETableNames.ROLES)
-      .first<{ id: string }>('id')
-      .where({ clinicId, isSystem: true })
-    if (existing) return existing.id
-
-    const permIds = (await this.knex(ETableNames.PERMISSIONS).select('id')) as {
-      id: string
-    }[]
-    if (permIds.length === 0) {
-      throw new ApiError(
-        'Catálogo de permissões não encontrado. Execute as migrações do RBAC.',
-        500,
-        'permissions',
-      )
-    }
-
-    const roleId = randomUUID()
-    await this.knex(ETableNames.ROLES).insert({
-      id: roleId,
-      clinicId,
-      name: RBAC_DEFAULT_ADMIN_ROLE_NAME,
-      description: 'Acesso total (papel de sistema)',
-      isSystem: true,
+  private createRoleEntity(row: RoleRow): Role {
+    return new Role({
+      id: row.id,
+      clinicId: row.clinicId,
+      name: row.name,
+      description: row.description,
+      isSystem: row.isSystem,
     })
-    const rpRows = permIds.map((perm) => ({
-      id: randomUUID(),
-      roleId,
-      permissionId: perm.id,
-      scope: { type: 'all' },
-    }))
-    await this.knex(ETableNames.ROLE_PERMISSIONS).insert(rpRows)
-    return roleId
   }
 }

@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+
 import { NextFunction, Request, Response } from 'express'
 import type { PermissionKey } from '../database/seeds/permissions.seed'
 import { ApiError } from '../utils/ApiError'

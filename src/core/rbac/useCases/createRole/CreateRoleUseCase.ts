@@ -1,6 +1,7 @@
 import type { IRbacRepository } from '../../../../repositories/rbac/IRbacRepository'
 import type { RoleRow } from '../../../../repositories/rbac/IRbacRepository'
 import { ApiError } from '../../../../utils/ApiError'
+import { Role } from '../../models/Role'
 
 export class CreateRoleUseCase {
   constructor(private rbac: IRbacRepository) {}
@@ -15,10 +16,14 @@ export class CreateRoleUseCase {
     if (existing.some((r) => r.name.trim().toLowerCase() === normalized)) {
       throw new ApiError('Já existe um papel com este nome', 400, 'role')
     }
-    return this.rbac.createRole({
+
+    const role = new Role({
       clinicId: data.clinicId,
       name: data.name,
       description: data.description,
     })
+
+    const createdRole = await this.rbac.createRole(role)
+    return createdRole.getDTO() as RoleRow
   }
 }

@@ -30,21 +30,16 @@ export class ReplaceRolePermissionsUseCase {
     if (!role) {
       throw new ApiError('Papel não encontrado', 404, 'role')
     }
-    if (role.isSystem) {
-      throw new ApiError(
-        'Não é permitido alterar permissões de um papel de sistema',
-        400,
-        'role',
-      )
-    }
+    role.assertPermissionsCanBeChanged()
 
     const normalizedItems = await Promise.all(
       data.items.map((item) => this.validateItem(item, data.clinicId)),
     )
+    const updatedRole = role.replacePermissions(normalizedItems)
 
     await this.rbac.replaceRolePermissions({
       ...data,
-      items: normalizedItems,
+      items: updatedRole.getPermissionsDTO(),
     })
   }
 

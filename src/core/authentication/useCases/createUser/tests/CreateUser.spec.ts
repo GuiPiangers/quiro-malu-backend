@@ -2,6 +2,7 @@ import { UserDTO } from '../../../models/User'
 import { IUserRepository } from '../../../../../repositories/user/IUserRepository'
 import { InMemoryUserRepository } from '../../../../../repositories/user/inMemory/InMemoryUserRepository'
 import { createMockClinicRepository } from '../../../../../repositories/_mocks/ClinicRepositoryMock'
+import { Role } from '../../../../rbac/models/Role'
 import { CreateUserUseCase } from '../CreateUserUseCase'
 
 describe('Create user', () => {
@@ -11,12 +12,12 @@ describe('Create user', () => {
   const roleId = 'aaaaaaaa-bbbb-4ccc-dddd-eeeeeeeeeeee'
   const clinicRepository = createMockClinicRepository()
   const rbacRepository = {
-    findRoleByIdForClinic: vi.fn().mockResolvedValue({
+    findRoleByIdForClinic: vi.fn().mockResolvedValue(new Role({
       id: roleId,
       clinicId,
       name: 'Papel teste',
       description: '',
-    }),
+    })),
   }
 
   beforeEach(() => {
@@ -27,12 +28,12 @@ describe('Create user', () => {
       name: 'Clínica Teste',
       getDTO: () => ({ id: clinicId, name: 'Clínica Teste' }),
     } as any)
-    rbacRepository.findRoleByIdForClinic.mockResolvedValue({
+    rbacRepository.findRoleByIdForClinic.mockResolvedValue(new Role({
       id: roleId,
       clinicId,
       name: 'Papel teste',
       description: '',
-    })
+    }))
     createUserUseCase = new CreateUserUseCase(
       userRepository,
       clinicRepository,

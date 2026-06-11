@@ -1,4 +1,5 @@
 import type { PermissionKey } from '../../database/seeds/permissions.seed'
+import type { Role, RolePermissionDTO } from '../../core/rbac/models/Role'
 import type { ResolvedPermission } from '../../types/permissions'
 
 export type PermissionCatalogRow = {
@@ -17,10 +18,7 @@ export type RoleRow = {
   isSystem: boolean
 }
 
-export type RolePermissionItem = {
-  permissionKey: PermissionKey
-  scope: unknown | null
-}
+export type RolePermissionItem = RolePermissionDTO
 
 export interface IRbacRepository {
   findResolvedPermissionsByUser(data: {
@@ -30,13 +28,9 @@ export interface IRbacRepository {
 
   findAllPermissionsCatalog(): Promise<PermissionCatalogRow[]>
 
-  listRolesByClinic(clinicId: string): Promise<RoleRow[]>
+  listRolesByClinic(clinicId: string): Promise<Role[]>
 
-  createRole(data: {
-    clinicId: string
-    name: string
-    description?: string
-  }): Promise<RoleRow>
+  createRole(role: Role): Promise<Role>
 
   updateRole(data: {
     id: string
@@ -50,7 +44,7 @@ export interface IRbacRepository {
   findRoleByIdForClinic(data: {
     id: string
     clinicId: string
-  }): Promise<RoleRow | null>
+  }): Promise<Role | null>
 
   listRolePermissions(data: {
     roleId: string
@@ -68,7 +62,4 @@ export interface IRbacRepository {
     clinicId: string
     roleId: string
   }): Promise<void>
-
-  /** Garante o papel de sistema (Administrador) com todas as permissões para a clínica. */
-  createClinicAdminRole(clinicId: string): Promise<string>
 }

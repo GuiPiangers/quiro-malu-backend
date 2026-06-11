@@ -4,6 +4,7 @@ import type { IRbacRepository } from '../../../../repositories/rbac/IRbacReposit
 import { IUserRepository } from '../../../../repositories/user/IUserRepository'
 import { IClinicianRepository } from '../../../../repositories/clinician/IClinicianRepository'
 import { ApiError } from '../../../../utils/ApiError'
+import { Role } from '../../../rbac/models/Role'
 
 export interface CreateClinicInputDTO {
   name: string
@@ -38,19 +39,23 @@ export class CreateClinicUseCase {
       throw new ApiError('Usuário já cadastrado', 400, 'email')
     }
 
+    const permissions = await this.rbacRepository.findAllPermissionsCatalog()
+
     const clinic = new Clinic({ name: data.name })
-    await this.clinicRepository.save(clinic)
-
-    const roleId = await this.rbacRepository.createClinicAdminRole(clinic.id)
-
+    const adminRole = Role.createClinicAdmin({
+      clinicId: clinic.id,
+      permissions: permissions.map((permission) => permission.key),
+    })
     const owner = clinic.createOwner({
       name: data.owner.name,
       email: data.owner.email,
       phone: data.owner.phone,
       password: data.owner.password,
-      roleId,
+      roleId: adminRole.id,
     })
 
+    await this.clinicRepository.save(clinic)
+    await this.rbacRepository.createRole(adminRole)
     await this.clinicianRepository.save(owner)
 
     return clinic.getDTO()

@@ -17,6 +17,12 @@ openApiRegistry.registerPath({
           schema: CreateClinicBodySchema,
           example: {
             name: 'Clínica Quiro Malu',
+            owner: {
+              name: 'Dr. João',
+              email: 'joao@example.com',
+              phone: '(11) 98765 4321',
+              password: 'StrongP@ssw0rd',
+            },
           },
         },
       },

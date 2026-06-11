@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import { Request, Response, NextFunction } from 'express'
 import { randomUUID } from 'crypto'
 import { NODE_ENV } from '../config/nodeEnv'
@@ -38,7 +39,11 @@ export const requestLoggerMiddleware = (
     event.durationMs = Date.now() - startTime
 
     const level =
-      res.statusCode >= 500 ? 'error' : res.statusCode >= 400 ? 'warn' : 'info'
+      res.statusCode >= 500
+        ? 'error'
+        : res.statusCode >= 400
+          ? 'warn'
+          : 'info'
 
     if (!isObservedRoute(event.path as string)) {
       return

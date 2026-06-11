@@ -2,6 +2,7 @@ import { createMockClinicianRepository } from '../../../../repositories/_mocks/C
 import { createMockRbacRepository } from '../../../../repositories/_mocks/RbacRepositoryMock'
 import type { Clinician } from '../../../clinician/models/Clinician'
 import { ApiError } from '../../../../utils/ApiError'
+import { Role } from '../../models/Role'
 import { ReplaceRolePermissionsUseCase } from './ReplaceRolePermissionsUseCase'
 
 describe('ReplaceRolePermissionsUseCase', () => {
@@ -12,13 +13,13 @@ describe('ReplaceRolePermissionsUseCase', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     useCase = new ReplaceRolePermissionsUseCase(rbac, clinicianRepository)
-    rbac.findRoleByIdForClinic.mockResolvedValue({
+    rbac.findRoleByIdForClinic.mockResolvedValue(new Role({
       id: 'role-1',
       clinicId: 'clinic-1',
       name: 'Recepção',
       description: '',
       isSystem: false,
-    })
+    }))
     clinicianRepository.findById.mockResolvedValue({} as Clinician)
     clinicianRepository.findClinicianIdsInClinic.mockResolvedValue(['clinician-1'])
   })
@@ -100,13 +101,13 @@ describe('ReplaceRolePermissionsUseCase', () => {
   })
 
   it('blocks changes to system roles', async () => {
-    rbac.findRoleByIdForClinic.mockResolvedValue({
+    rbac.findRoleByIdForClinic.mockResolvedValue(new Role({
       id: 'role-admin',
       clinicId: 'clinic-1',
       name: 'Administrador',
       description: '',
       isSystem: true,
-    })
+    }))
 
     await expect(
       useCase.execute({

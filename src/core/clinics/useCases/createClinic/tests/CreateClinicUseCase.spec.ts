@@ -24,7 +24,15 @@ describe('CreateClinicUseCase', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    rbacRepository.createClinicAdminRole.mockResolvedValue('role-id')
+    rbacRepository.findAllPermissionsCatalog.mockResolvedValue([
+      {
+        id: 'permission-id',
+        key: 'users:write',
+        module: 'users',
+        action: 'write',
+        description: 'Gerenciar usuários, papéis e permissões',
+      },
+    ])
     createClinicUseCase = new CreateClinicUseCase(
       clinicRepository,
       rbacRepository,
@@ -41,7 +49,7 @@ describe('CreateClinicUseCase', () => {
 
     expect(clinic).toHaveProperty('id')
     expect(clinicRepository.save).toHaveBeenCalledTimes(1)
-    expect(rbacRepository.createClinicAdminRole).toHaveBeenCalledTimes(1)
+    expect(rbacRepository.createRole).toHaveBeenCalledTimes(1)
     expect(clinicianRepository.save).toHaveBeenCalledTimes(1)
   })
 
