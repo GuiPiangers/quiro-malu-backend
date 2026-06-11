@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable max-lines */
 import { Router } from 'express'
 import { createUserController } from './core/authentication/controllers/createUserController'
@@ -119,7 +120,7 @@ import {
 
 const router = Router()
 const multerConfig = multer({
-  fileFilter: (req, file, cb) => {
+  fileFilter: (_req, file, cb) => {
     file.originalname = Buffer.from(file.originalname, 'latin1').toString(
       'utf8',
     )
