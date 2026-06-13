@@ -16,7 +16,7 @@ describe('User (integration)', () => {
     expect(user.email).toBe('john.doe@example.com')
     expect(user.phone).toBe('(51) 98765 4321')
 
-    const passwordHash = await user.password.getHash()
+    const passwordHash = await user.password!.getHash()
     expect(passwordHash).not.toBe('plainPassword!')
     expect(passwordHash).toMatch(/^\$2[aby]\$.{56}$/) // Verificação básica de hash bcrypt
   })
@@ -40,6 +40,8 @@ describe('User (integration)', () => {
       name: 'Jane Doe',
       phone: '(51) 98765 4321',
       clinicId: 'clinic-id',
+      status: 'pending',
+      roleId: undefined,
     })
 
     expect(userDTO.password).not.toBe('securePassword!')

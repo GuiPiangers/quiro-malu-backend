@@ -30,7 +30,8 @@ export class CreateUserUseCase {
     const [userAlreadyExist] = await this.userRepository.getByEmail(data.email)
     if (userAlreadyExist) throw new ApiError('Usuário já cadastrado')
 
-    const user = new User(data)
+    // Senha não é obrigatória na criação — usuário começa com status 'pending'
+    const user = new User({ ...data, password: null, status: 'pending' })
     const userDTO = await user.getUserDTO()
 
     await this.userRepository.save(userDTO)

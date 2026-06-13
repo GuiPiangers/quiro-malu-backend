@@ -20,11 +20,11 @@ export class LoginUserController {
     try {
       const { email, password } = parsed.data
       const fingerprintHash = generateRequestFingerprint(request)
-      const { token, refreshToken, user } = await this.loginUserUseCase.execute(
+      const { token, refreshToken, user } = await this.loginUserUseCase.execute({
         email,
         password,
         fingerprintHash,
-      )
+      })
 
       return response.status(200).json({
         token: String(token).trim(),

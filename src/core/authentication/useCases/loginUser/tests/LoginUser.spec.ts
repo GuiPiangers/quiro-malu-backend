@@ -50,17 +50,18 @@ describe('Login user', () => {
       name: 'Guilherme Eduardo',
       phone: '(51) 99999 9999',
       clinicId,
+      status: 'active',
     }
 
     const user = new User(userData)
     const userDTO = await user.getUserDTO()
 
     await userRepository.save(userDTO)
-    const resolve = await loginUserUseCase.execute(
+    const resolve = await loginUserUseCase.execute({
       email,
       password,
-      stubFingerprint,
-    )
+      fingerprintHash: stubFingerprint,
+    })
 
     expect(resolve).toHaveProperty('token')
     expect(resolve).toHaveProperty('refreshToken')
@@ -92,6 +93,7 @@ describe('Login user', () => {
       name: 'Guilherme Eduardo',
       phone: '(51) 99999 9999',
       clinicId,
+      status: 'active',
     }
 
     const user = new User(userData)

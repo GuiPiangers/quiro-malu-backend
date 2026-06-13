@@ -8,6 +8,12 @@ import { Crypto } from '../../../shared/helpers/Crypto'
 import { ApiError } from '../../../../utils/ApiError'
 import type { RegisterUserFingerprintUseCase } from '../userFingerprint/RegisterUserFingerprintUseCase'
 
+interface LoginUserUseCaseProps {
+  email: string
+  password: string
+  fingerprintHash: string
+}
+
 export class LoginUserUseCase {
   constructor(
     private userRepository: IUserRepository,
@@ -17,9 +23,18 @@ export class LoginUserUseCase {
     private registerUserFingerprintUseCase: RegisterUserFingerprintUseCase,
   ) {}
 
-  async execute(email: string, password: string, fingerprintHash: string) {
+  async execute({ email, password, fingerprintHash }: LoginUserUseCaseProps) {
     const [user] = await this.userRepository.getByEmail(email)
     if (!user || !user.id) throw new ApiError('Email ou senha inválidos', 400)
+
+    if (user.status === 'pending') {
+      throw new ApiError('Conta não ativada. Verifique seu e-mail.', 403)
+    }
+    if (user.status === 'inactive') {
+      throw new ApiError('Conta desativada. Entre em contato com o suporte.', 403)
+    }
+
+    if (!user.password) throw new ApiError('Email ou senha inválidos', 400)
 
     const passwordMatch = await Crypto.compareRandomHash(
       password,

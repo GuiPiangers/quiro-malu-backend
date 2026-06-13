@@ -45,4 +45,16 @@ export class KnexUserRepository implements IUserRepository {
       .where({ id: params.id, clinicId: params.clinicId })
       .del()
   }
+
+  async updatePassword(userId: string, passwordHash: string): Promise<void> {
+    await this.knex(ETableNames.USERS)
+      .where({ id: userId })
+      .update({ password: passwordHash })
+  }
+
+  async activateIfPending(userId: string): Promise<void> {
+    await this.knex(ETableNames.USERS)
+      .where({ id: userId, status: 'pending' })
+      .update({ status: 'active' })
+  }
 }

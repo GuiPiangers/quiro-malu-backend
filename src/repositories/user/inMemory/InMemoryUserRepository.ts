@@ -54,4 +54,14 @@ export class InMemoryUserRepository implements IUserRepository {
     this.dbUsers.splice(idx, 1)
     return 1
   }
+
+  async updatePassword(userId: string, passwordHash: string): Promise<void> {
+    const user = this.dbUsers.find((u) => u.id === userId)
+    if (user) user.password = passwordHash
+  }
+
+  async activateIfPending(userId: string): Promise<void> {
+    const user = this.dbUsers.find((u) => u.id === userId)
+    if (user && user.status === 'pending') user.status = 'active'
+  }
 }

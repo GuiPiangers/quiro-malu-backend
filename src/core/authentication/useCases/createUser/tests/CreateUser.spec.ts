@@ -125,48 +125,21 @@ describe('Create user', () => {
       'Número de telefone fora do padrão esperado',
     )
   })
-  it('The password should not contain only letters', async () => {
-    const user: UserDTO = {
-      email: 'existingUser@gmail.com',
-      password: 'Senha',
-      name: 'Guilherme Piangers',
+  it('Should create user with status pending and no password', async () => {
+    const userData: UserDTO = {
+      email: 'pending@gmail.com',
+      password: 'Senha123', // será ignorada pelo use case
+      name: 'Pending User',
       phone: '(51) 99999 9999',
       clinicId,
       roleId,
     }
 
-    await expect(createUserUseCase.execute(user)).rejects.toThrow(
-      'A senha deve conter pelo menos um número ou carácter especial',
-    )
+    const result = await createUserUseCase.execute(userData)
+    expect(result.status).toBe('pending')
+    expect(result.password).toBeNull()
   })
-  it('The password should not be short than 5 caracteres', async () => {
-    const user: UserDTO = {
-      email: 'existingUser@gmail.com',
-      password: 'Sen1',
-      name: 'Guilherme Piangers',
-      phone: '(51) 99999 9999',
-      clinicId,
-      roleId,
-    }
 
-    await expect(createUserUseCase.execute(user)).rejects.toThrow(
-      'A senha deve conter pelo menos 5 caracteres',
-    )
-  })
-  it('The password should not contain only lowercase letters', async () => {
-    const user: UserDTO = {
-      email: 'existingUser@gmail.com',
-      password: 'senha123',
-      name: 'Guilherme Piangers',
-      phone: '(51) 99999 9999',
-      clinicId,
-      roleId,
-    }
-
-    await expect(createUserUseCase.execute(user)).rejects.toThrow(
-      'A senha deve conter pelo menos uma letra maiúscula',
-    )
-  })
   it('Should not be able to create an existing user', async () => {
     const user: UserDTO = {
       email: 'existingUser@gmail.com',
