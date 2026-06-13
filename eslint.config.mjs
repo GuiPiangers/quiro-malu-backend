@@ -98,6 +98,8 @@ export default [
       ...objectCalisthenicsRules,
       'no-useless-constructor': 'off',
       'no-restricted-syntax': ['error', ...maxParamsSelectors],
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'error',
     },
   },
   {
