@@ -1,7 +1,6 @@
 import { createMockClinicRepository } from '../../../../../repositories/_mocks/ClinicRepositoryMock'
 import { createMockRbacRepository } from '../../../../../repositories/_mocks/RbacRepositoryMock'
 import { createMockUserRepository } from '../../../../../repositories/_mocks/UserRepositoryMock'
-import { createMockClinicianRepository } from '../../../../../repositories/_mocks/ClinicianRepositoryMock'
 import { ApiError } from '../../../../../utils/ApiError'
 import { CreateClinicUseCase } from '../CreateClinicUseCase'
 
@@ -9,7 +8,6 @@ describe('CreateClinicUseCase', () => {
   const clinicRepository = createMockClinicRepository()
   const rbacRepository = createMockRbacRepository()
   const userRepository = createMockUserRepository()
-  const clinicianRepository = createMockClinicianRepository()
   let createClinicUseCase: CreateClinicUseCase
 
   const validPayload = {
@@ -37,11 +35,10 @@ describe('CreateClinicUseCase', () => {
       clinicRepository,
       rbacRepository,
       userRepository,
-      clinicianRepository,
     )
   })
 
-  it('should create clinic and owner clinician', async () => {
+  it('should create clinic and owner user', async () => {
     clinicRepository.findByName.mockResolvedValue(null)
     userRepository.getByEmail.mockResolvedValue([])
 
@@ -50,7 +47,7 @@ describe('CreateClinicUseCase', () => {
     expect(clinic).toHaveProperty('id')
     expect(clinicRepository.save).toHaveBeenCalledTimes(1)
     expect(rbacRepository.createRole).toHaveBeenCalledTimes(1)
-    expect(clinicianRepository.save).toHaveBeenCalledTimes(1)
+    expect(userRepository.save).toHaveBeenCalledTimes(1)
   })
 
   it('should reject duplicated clinic name', async () => {

@@ -19,6 +19,7 @@ export interface IClinicianRepository {
     userIds: string[]
   }): Promise<string[]>
   save(clinician: Clinician): Promise<void>
+  setAsClinician(userId: string): Promise<void>
   /** Substitui todos os vínculos em `clinician_services` do clínico. */
   setServices(params: SetClinicianServicesParams): Promise<void>
 }

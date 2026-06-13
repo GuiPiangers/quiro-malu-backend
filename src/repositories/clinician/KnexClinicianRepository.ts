@@ -170,6 +170,10 @@ export class KnexClinicianRepository implements IClinicianRepository {
     })
   }
 
+  async setAsClinician(userId: string): Promise<void> {
+    await this.knex(ETableNames.CLINICIANS).insert({ id: userId })
+  }
+
   async setServices(params: {
     id: string
     clinicId: string

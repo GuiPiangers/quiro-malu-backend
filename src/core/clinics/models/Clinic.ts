@@ -1,5 +1,5 @@
 import { Entity } from '../../shared/Entity'
-import { Clinician } from '../../clinician/models/Clinician'
+import { User } from '../../authentication/models/User'
 
 export interface ClinicDTO {
   id?: string
@@ -20,11 +20,11 @@ export class Clinic extends Entity {
     phone: string
     password: string
     roleId: string
-  }): Clinician {
-    return new Clinician({
+  }): User {
+    return new User({
       ...ownerProps,
       clinicId: this.id,
-      services: [],
+      status: 'active',
     })
   }
 

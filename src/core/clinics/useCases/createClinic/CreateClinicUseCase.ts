@@ -2,7 +2,6 @@ import { Clinic, ClinicDTO } from '../../models/Clinic'
 import { IClinicRepository } from '../../../../repositories/clinic/IClinicRepository'
 import type { IRbacRepository } from '../../../../repositories/rbac/IRbacRepository'
 import { IUserRepository } from '../../../../repositories/user/IUserRepository'
-import { IClinicianRepository } from '../../../../repositories/clinician/IClinicianRepository'
 import { ApiError } from '../../../../utils/ApiError'
 import { Role } from '../../../rbac/models/Role'
 
@@ -21,7 +20,6 @@ export class CreateClinicUseCase {
     private clinicRepository: IClinicRepository,
     private rbacRepository: IRbacRepository,
     private userRepository: IUserRepository,
-    private clinicianRepository: IClinicianRepository,
   ) {}
 
   async execute(data: CreateClinicInputDTO): Promise<ClinicDTO> {
@@ -56,7 +54,8 @@ export class CreateClinicUseCase {
 
     await this.clinicRepository.save(clinic)
     await this.rbacRepository.createRole(adminRole)
-    await this.clinicianRepository.save(owner)
+    const ownerDTO = await owner.getUserDTO()
+    await this.userRepository.save(ownerDTO)
 
     return clinic.getDTO()
   }

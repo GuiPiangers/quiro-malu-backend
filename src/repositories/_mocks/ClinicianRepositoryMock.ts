@@ -8,5 +8,6 @@ export const createMockClinicianRepository =
     findByClinic: vi.fn(),
     findClinicianIdsInClinic: vi.fn(),
     save: vi.fn(),
+    setAsClinician: vi.fn(),
     setServices: vi.fn(),
   })
