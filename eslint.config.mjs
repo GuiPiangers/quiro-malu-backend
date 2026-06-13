@@ -97,16 +97,14 @@ export default [
     rules: {
       ...objectCalisthenicsRules,
       'no-useless-constructor': 'off',
-    },
-  },
-  {
-    rules: {
       'no-restricted-syntax': ['error', ...maxParamsSelectors],
     },
   },
   {
     files: ['**/*.spec.ts', '**/*.int.spec.ts'],
     rules: {
+      'no-undef': 'off',
+      'max-nested-callbacks': 'off',
       'no-undef': 'off',
     },
   },
