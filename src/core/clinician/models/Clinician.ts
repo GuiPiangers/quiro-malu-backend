@@ -70,11 +70,12 @@ export class Clinician extends User {
     return {
       id: this.id,
       email: this.email,
-      password: this.password.value,
+      password: this.password?.value ?? null,
       name: this.name.value,
       phone: this.phone,
       clinicId: this.clinicId,
       roleId: this.roleId,
+      status: this.status,
       services: this._services.map((s) => s.getDTO()),
     }
   }

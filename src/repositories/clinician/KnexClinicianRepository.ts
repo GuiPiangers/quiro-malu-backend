@@ -8,11 +8,17 @@ import type {
   IClinicianRepository,
 } from './IClinicianRepository'
 
-async function loadServicesForClinicians(
-  knex: Knex,
-  clinicianIds: string[],
-  clinicId: string,
-): Promise<Map<string, ServiceDTO[]>> {
+type LoadServicesForCliniciansParams = {
+  knex: Knex
+  clinicianIds: string[]
+  clinicId: string
+}
+
+async function loadServicesForClinicians({
+  knex,
+  clinicianIds,
+  clinicId,
+}: LoadServicesForCliniciansParams): Promise<Map<string, ServiceDTO[]>> {
   const byClinician = new Map<string, ServiceDTO[]>()
   if (clinicianIds.length === 0) return byClinician
 
@@ -53,16 +59,17 @@ export class KnexClinicianRepository implements IClinicianRepository {
         'u.password',
         'u.clinicId',
         'u.roleId',
+        'u.status',
       )
       .first()
 
     if (!row) return null
 
-    const servicesByClinician = await loadServicesForClinicians(
-      this.knex,
-      [params.id],
-      params.clinicId,
-    )
+    const servicesByClinician = await loadServicesForClinicians({
+      knex: this.knex,
+      clinicianIds: [params.id],
+      clinicId: params.clinicId,
+    })
 
     return new Clinician({
       id: row.id,
@@ -72,6 +79,7 @@ export class KnexClinicianRepository implements IClinicianRepository {
       password: row.password,
       clinicId: row.clinicId,
       roleId: row.roleId ?? undefined,
+      status: row.status,
       services: servicesByClinician.get(params.id) ?? [],
     })
   }
@@ -88,16 +96,17 @@ export class KnexClinicianRepository implements IClinicianRepository {
         'u.password',
         'u.clinicId',
         'u.roleId',
+        'u.status',
       )
 
     const ids = rows.map((r) => r.id)
     if (ids.length === 0) return []
 
-    const servicesByClinician = await loadServicesForClinicians(
-      this.knex,
-      ids,
-      params.clinicId,
-    )
+    const servicesByClinician = await loadServicesForClinicians({
+      knex: this.knex,
+      clinicianIds: ids,
+      clinicId: params.clinicId,
+    })
 
     return rows.map(
       (row) =>
@@ -109,6 +118,7 @@ export class KnexClinicianRepository implements IClinicianRepository {
           password: row.password,
           clinicId: row.clinicId,
           roleId: row.roleId ?? undefined,
+          status: row.status,
           services: servicesByClinician.get(row.id) ?? [],
         }),
     )
@@ -143,6 +153,7 @@ export class KnexClinicianRepository implements IClinicianRepository {
         password: userDTO.password,
         clinicId: userDTO.clinicId,
         roleId: userDTO.roleId ?? null,
+        status: userDTO.status,
       })
 
       await trx(ETableNames.CLINICIANS).insert({ id: clinician.id })

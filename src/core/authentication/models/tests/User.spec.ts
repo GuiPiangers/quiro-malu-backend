@@ -1,4 +1,5 @@
 import { User, UserDTO } from '../User'
+import { ApiError } from '../../../../utils/ApiError'
 
 describe('User (integration)', () => {
   test('should create User with valid values', async () => {
@@ -71,6 +72,42 @@ describe('User (integration)', () => {
 
     expect(() => new User(userData)).toThrow(
       'Número de telefone fora do padrão esperado',
+    )
+  })
+
+  test('should return a new active user when changing password', async () => {
+    const user = new User({
+      name: 'Pending User',
+      email: 'pending@example.com',
+      phone: '(51) 98765 4321',
+      password: null,
+      clinicId: 'clinic-id',
+      status: 'pending',
+    })
+
+    const changedUser = user.changePassword('NovaSenha1')
+    const dto = await changedUser.getUserDTO()
+
+    expect(user.status).toBe('pending')
+    expect(user.password).toBeNull()
+    expect(changedUser.status).toBe('active')
+    expect(dto.password).not.toBe('NovaSenha1')
+    expect(dto.password).toMatch(/^\$2[aby]\$.{56}$/)
+  })
+
+  test('should reject password change for inactive user', () => {
+    const user = new User({
+      name: 'Inactive User',
+      email: 'inactive@example.com',
+      phone: '(51) 98765 4321',
+      password: null,
+      clinicId: 'clinic-id',
+      status: 'inactive',
+    })
+
+    expect(() => user.changePassword('NovaSenha1')).toThrow(ApiError)
+    expect(() => user.changePassword('NovaSenha1')).toThrow(
+      'Conta desativada. Entre em contato com o suporte.',
     )
   })
 })

@@ -6,11 +6,13 @@ import { vi } from 'vitest'
 
 export const createMockUserRepository = (): Mocked<IUserRepository> => ({
   getByEmail: vi.fn(),
+  findById: vi.fn(),
   getById: vi.fn(),
   save: vi.fn(),
   listByClinicId: vi.fn(),
   deleteByIdForClinic: vi.fn(),
   updatePassword: vi.fn(),
+  updatePasswordAndStatus: vi.fn(),
   activateIfPending: vi.fn(),
 })
 

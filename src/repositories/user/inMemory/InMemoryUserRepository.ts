@@ -15,6 +15,10 @@ export class InMemoryUserRepository implements IUserRepository {
     return []
   }
 
+  async findById(userId: string): Promise<UserDTO | null> {
+    return this.dbUsers.find((user) => user.id === userId) ?? null
+  }
+
   async getById(params: {
     userId: string
     clinicId: string
@@ -58,6 +62,18 @@ export class InMemoryUserRepository implements IUserRepository {
   async updatePassword(userId: string, passwordHash: string): Promise<void> {
     const user = this.dbUsers.find((u) => u.id === userId)
     if (user) user.password = passwordHash
+  }
+
+  async updatePasswordAndStatus(params: {
+    userId: string
+    passwordHash: string
+    status: UserDTO['status']
+  }): Promise<void> {
+    const user = this.dbUsers.find((u) => u.id === params.userId)
+    if (!user) return
+
+    user.password = params.passwordHash
+    user.status = params.status
   }
 
   async activateIfPending(userId: string): Promise<void> {

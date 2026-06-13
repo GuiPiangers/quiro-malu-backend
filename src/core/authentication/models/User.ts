@@ -3,6 +3,7 @@ import { Entity } from '../../shared/Entity'
 import { Name } from '../../shared/Name'
 import { Password } from '../../shared/Password'
 import { Phone } from '../../shared/Phone'
+import { ApiError } from '../../../utils/ApiError'
 
 export type UserStatus = 'pending' | 'active' | 'inactive'
 
@@ -45,6 +46,27 @@ export class User extends Entity {
 
   get phone() {
     return this._phone.value
+  }
+
+  changePassword(newPassword: string): User {
+    if (this.status === 'inactive') {
+      throw new ApiError(
+        'Conta desativada. Entre em contato com o suporte.',
+        403,
+        'status',
+      )
+    }
+
+    return new User({
+      id: this.id,
+      email: this.email,
+      password: newPassword,
+      name: this.name.value,
+      phone: this.phone,
+      clinicId: this.clinicId,
+      roleId: this.roleId,
+      status: 'active',
+    })
   }
 
   async getUserDTO(): Promise<UserDTO> {

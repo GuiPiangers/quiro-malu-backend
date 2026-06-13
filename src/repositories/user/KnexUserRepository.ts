@@ -33,6 +33,15 @@ export class KnexUserRepository implements IUserRepository {
     return await this.knex(ETableNames.USERS).select('*').where({ email })
   }
 
+  async findById(userId: string): Promise<UserDTO | null> {
+    const user = await this.knex(ETableNames.USERS)
+      .select('*')
+      .where({ id: userId })
+      .first()
+
+    return user ?? null
+  }
+
   async save(data: UserDTO): Promise<void> {
     return await this.knex(ETableNames.USERS).insert(data)
   }
@@ -50,6 +59,19 @@ export class KnexUserRepository implements IUserRepository {
     await this.knex(ETableNames.USERS)
       .where({ id: userId })
       .update({ password: passwordHash })
+  }
+
+  async updatePasswordAndStatus(params: {
+    userId: string
+    passwordHash: string
+    status: UserDTO['status']
+  }): Promise<void> {
+    await this.knex(ETableNames.USERS)
+      .where({ id: params.userId })
+      .update({
+        password: params.passwordHash,
+        status: params.status,
+      })
   }
 
   async activateIfPending(userId: string): Promise<void> {
