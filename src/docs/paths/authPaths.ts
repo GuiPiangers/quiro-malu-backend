@@ -15,6 +15,10 @@ import {
   RefreshTokenResponseSchema,
 } from '../../core/authentication/controllers/refreshTokenController/refreshTokenSchemas'
 import { GetUserProfileResponseSchema } from '../../core/authentication/controllers/getUserProfile/getUserProfileSchemas'
+import {
+  ResetPasswordBodySchema,
+  ResetPasswordResponseSchema,
+} from '../../core/authentication/controllers/resetPasswordController/resetPasswordSchemas'
 import { openApiRegistry } from '../registry'
 
 const bearer = [{ bearerAuth: [] }]
@@ -144,6 +148,35 @@ openApiRegistry.registerPath({
     401: {
       description: 'Refresh token inválido, expirado ou dispositivo incorreto',
     },
+  },
+})
+
+openApiRegistry.registerPath({
+  method: 'post',
+  path: '/reset-password',
+  tags: ['Auth'],
+  summary: 'Redefinição de senha',
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: ResetPasswordBodySchema,
+          example: {
+            token: 'a1b2c3d4...',
+            password: 'NovaSenha123!',
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: 'Senha redefinida com sucesso',
+      content: {
+        'application/json': { schema: ResetPasswordResponseSchema },
+      },
+    },
+    400: { description: 'Token inválido ou expirado, ou corpo inválido' },
   },
 })
 

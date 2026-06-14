@@ -3,7 +3,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import type { NextFunction, Request, Response } from 'express'
 
-const AUTH_JSON_PATHS = new Set(['/login', '/register', '/logout', '/clinics'])
+const AUTH_JSON_PATHS = new Set(['/login', '/register', '/logout', '/clinics', '/reset-password'])
 
 /** Expõe a normalização para testes e para reuso interno. */
 export function normalizeAuthJsonPayload(raw: string): string {
