@@ -26,3 +26,5 @@ export class ResendMailProvider implements IMailProvider {
     }
   }
 }
+
+export const resendMailProvider = new ResendMailProvider()
