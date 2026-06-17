@@ -3,12 +3,14 @@ import { IUserRepository } from '../../../../repositories/user/IUserRepository'
 import { ApiError } from '../../../../utils/ApiError'
 import { IClinicRepository } from '../../../../repositories/clinic/IClinicRepository'
 import type { IRbacRepository } from '../../../../repositories/rbac/IRbacRepository'
+import type { IAppEventListener } from '../../../shared/observers/EventListener'
 
 export class CreateUserUseCase {
   constructor(
     private userRepository: IUserRepository,
     private clinicRepository: IClinicRepository,
     private rbacRepository: IRbacRepository,
+    private appEventListener: IAppEventListener,
   ) {}
 
   async execute(data: UserDTO) {
@@ -35,6 +37,13 @@ export class CreateUserUseCase {
     const userDTO = await user.getUserDTO()
 
     await this.userRepository.save(userDTO)
+
+    this.appEventListener.emit('user:pending_user_created', {
+      id: userDTO.id!,
+      email: userDTO.email,
+      name: userDTO.name,
+    })
+
     return userDTO
   }
 }

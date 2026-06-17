@@ -8,6 +8,7 @@ import { getPatientUseCase } from '../core/patients/controllers/getPatientContro
 import { factoryEventSuggestionWithStartEndDate } from '../core/scheduling/models/EventSuggestion'
 import { saveEventSuggestionUseCase } from '../core/scheduling/useCases/saveEventSuggestion'
 import { appEventListener } from '../core/shared/observers/EventListener'
+import { sendNewUserTokenUseCase } from '../core/authentication/useCases/sendNewUserToken'
 import { beforeScheduleQueue } from '../queues/beforeScheduleMessage'
 import { afterScheduleQueue } from '../queues/afterScheduleMessage'
 import {
@@ -100,6 +101,17 @@ export async function start() {
       )
     } catch (error) {
       logger.error({ err: error, event: data }, 'error creating block schedule')
+    }
+  })
+
+  appEventListener.on('user:pending_user_created', async ({ id, email, name }) => {
+    try {
+      await sendNewUserTokenUseCase.execute({ email, name })
+    } catch (error) {
+      logger.error(
+        { err: error, userId: id },
+        'user:pending_user_created — falha ao enviar email de boas-vindas',
+      )
     }
   })
 }

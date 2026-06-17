@@ -20,6 +20,10 @@ describe('Create user', () => {
     })),
   }
 
+  const appEventListenerMock = {
+    emit: vi.fn(),
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
     userRepository = new InMemoryUserRepository()
@@ -38,6 +42,7 @@ describe('Create user', () => {
       userRepository,
       clinicRepository,
       rbacRepository as any,
+      appEventListenerMock,
     )
   })
 

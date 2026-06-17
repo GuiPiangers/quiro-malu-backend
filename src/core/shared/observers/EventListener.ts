@@ -130,6 +130,13 @@ type AppEvents = {
   }
 
   createBlockSchedule: BlockScheduleDto & { userId: string }
+
+  // New naming pattern: <domain>:<event>  (legacy events above will be migrated later)
+  'user:pending_user_created': {
+    id: string
+    email: string
+    name: string
+  }
 }
 
 type Listener<T> = (data: T) => Promise<void>
