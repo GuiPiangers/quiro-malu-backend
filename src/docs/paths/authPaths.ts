@@ -38,7 +38,6 @@ openApiRegistry.registerPath({
             name: 'Maria Silva',
             email: 'maria@exemplo.com',
             phone: '(51) 99999 9999',
-            password: 'Senha123',
             clinicId: '00000000-0000-4000-8000-000000000001',
             roleId: 'aaaaaaaa-bbbb-4ccc-dddd-eeeeeeeeeeee',
           },
