@@ -20,6 +20,7 @@ export class CreateClinicUseCase {
     private clinicRepository: IClinicRepository,
     private rbacRepository: IRbacRepository,
     private userRepository: IUserRepository,
+
   ) {}
 
   async execute(data: CreateClinicInputDTO): Promise<ClinicDTO> {
@@ -48,7 +49,6 @@ export class CreateClinicUseCase {
       name: data.owner.name,
       email: data.owner.email,
       phone: data.owner.phone,
-      password: data.owner.password,
       roleId: adminRole.id,
     })
 

@@ -7,7 +7,6 @@ export const CreateClinicBodySchema = z
       name: z.string(),
       email: z.email(),
       phone: z.string(),
-      password: z.string(),
     }),
   })
   .openapi('CreateClinicBody')

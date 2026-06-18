@@ -18,13 +18,12 @@ export class Clinic extends Entity {
     name: string
     email: string
     phone: string
-    password: string
     roleId: string
   }): User {
     return new User({
       ...ownerProps,
       clinicId: this.id,
-      status: 'active',
+      status: 'pending',
     })
   }
 

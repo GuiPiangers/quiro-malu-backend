@@ -16,7 +16,6 @@ describe('CreateClinicUseCase', () => {
       name: 'Proprietário Teste',
       email: 'owner@teste.com',
       phone: '(51) 99999 9999',
-      password: 'SenhaForte123!',
     },
   }
 
