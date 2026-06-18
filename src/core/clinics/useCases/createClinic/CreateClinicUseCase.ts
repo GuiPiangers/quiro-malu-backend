@@ -4,6 +4,7 @@ import type { IRbacRepository } from '../../../../repositories/rbac/IRbacReposit
 import { IUserRepository } from '../../../../repositories/user/IUserRepository'
 import { ApiError } from '../../../../utils/ApiError'
 import { Role } from '../../../rbac/models/Role'
+import type { IAppEventListener } from '../../../shared/observers/EventListener'
 
 export interface CreateClinicInputDTO {
   name: string
@@ -11,7 +12,6 @@ export interface CreateClinicInputDTO {
     name: string
     email: string
     phone: string
-    password: string
   }
 }
 
@@ -20,7 +20,7 @@ export class CreateClinicUseCase {
     private clinicRepository: IClinicRepository,
     private rbacRepository: IRbacRepository,
     private userRepository: IUserRepository,
-
+    private appEventListener: IAppEventListener,
   ) {}
 
   async execute(data: CreateClinicInputDTO): Promise<ClinicDTO> {
@@ -56,6 +56,12 @@ export class CreateClinicUseCase {
     await this.rbacRepository.createRole(adminRole)
     const ownerDTO = await owner.getUserDTO()
     await this.userRepository.save(ownerDTO)
+
+    this.appEventListener.emit('user:pending_user_created', {
+      id: ownerDTO.id!,
+      email: ownerDTO.email,
+      name: ownerDTO.name,
+    })
 
     return clinic.getDTO()
   }

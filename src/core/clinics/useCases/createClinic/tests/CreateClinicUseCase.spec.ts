@@ -1,6 +1,7 @@
 import { createMockClinicRepository } from '../../../../../repositories/_mocks/ClinicRepositoryMock'
 import { createMockRbacRepository } from '../../../../../repositories/_mocks/RbacRepositoryMock'
 import { createMockUserRepository } from '../../../../../repositories/_mocks/UserRepositoryMock'
+import type { IAppEventListener } from '../../../../shared/observers/EventListener'
 import { ApiError } from '../../../../../utils/ApiError'
 import { CreateClinicUseCase } from '../CreateClinicUseCase'
 
@@ -8,6 +9,7 @@ describe('CreateClinicUseCase', () => {
   const clinicRepository = createMockClinicRepository()
   const rbacRepository = createMockRbacRepository()
   const userRepository = createMockUserRepository()
+  const appEventListener: IAppEventListener = { emit: vi.fn() }
   let createClinicUseCase: CreateClinicUseCase
 
   const validPayload = {
@@ -34,6 +36,7 @@ describe('CreateClinicUseCase', () => {
       clinicRepository,
       rbacRepository,
       userRepository,
+      appEventListener,
     )
   })
 
@@ -47,6 +50,13 @@ describe('CreateClinicUseCase', () => {
     expect(clinicRepository.save).toHaveBeenCalledTimes(1)
     expect(rbacRepository.createRole).toHaveBeenCalledTimes(1)
     expect(userRepository.save).toHaveBeenCalledTimes(1)
+    expect(appEventListener.emit).toHaveBeenCalledWith(
+      'user:pending_user_created',
+      expect.objectContaining({
+        email: validPayload.owner.email,
+        name: validPayload.owner.name,
+      }),
+    )
   })
 
   it('should reject duplicated clinic name', async () => {
