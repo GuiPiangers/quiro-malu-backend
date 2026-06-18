@@ -28,8 +28,8 @@ export class SendNewUserTokenUseCase {
       throw new ApiError('Template de email "newUser" não encontrado', 500)
     }
 
-    const appUrl = process.env.APP_URL || 'http://localhost:3000'
-    const loginUrl = `${appUrl}/?token=${token}`
+    const appUrl = process.env.FRONTEND_URL || 'http://localhost:3000'
+    const loginUrl = `${appUrl}/redefinir-senha?token=${token}`
 
     const html = template.replaceVariables({
       name,
