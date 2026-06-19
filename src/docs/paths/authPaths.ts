@@ -19,6 +19,10 @@ import {
   ResetPasswordBodySchema,
   ResetPasswordResponseSchema,
 } from '../../core/authentication/controllers/resetPasswordController/resetPasswordSchemas'
+import {
+  SendResetPasswordTokenBodySchema,
+  SendResetPasswordTokenResponseSchema,
+} from '../../core/authentication/controllers/sendResetPasswordTokenController/sendResetPasswordTokenSchemas'
 import { openApiRegistry } from '../registry'
 
 const bearer = [{ bearerAuth: [] }]
@@ -176,6 +180,34 @@ openApiRegistry.registerPath({
       },
     },
     400: { description: 'Token inválido ou expirado, ou corpo inválido' },
+  },
+})
+
+openApiRegistry.registerPath({
+  method: 'post',
+  path: '/send-reset-password-token',
+  tags: ['Auth'],
+  summary: 'Solicitação de e-mail com token para redefinir a senha',
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: SendResetPasswordTokenBodySchema,
+          example: {
+            email: 'usuario@exemplo.com',
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: 'E-mail enviado com sucesso (ou ignorado caso o usuário não exista)',
+      content: {
+        'application/json': { schema: SendResetPasswordTokenResponseSchema },
+      },
+    },
+    400: { description: 'Corpo inválido ou usuário não encontrado' },
   },
 })
 

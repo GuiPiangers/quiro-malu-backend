@@ -5,6 +5,7 @@ import { createUserController } from './core/authentication/controllers/createUs
 import { loginUserController } from './core/authentication/controllers/loginUserController'
 import { refreshTokenController } from './core/authentication/controllers/refreshTokenController'
 import { resetPasswordController } from './core/authentication/controllers/resetPasswordController'
+import { sendResetPasswordTokenController } from './core/authentication/controllers/sendResetPasswordTokenController'
 import { authMiddleware } from './middlewares/auth'
 import { authorize } from './middlewares/authorize.middleware'
 import { authorizeAny } from './middlewares/authorizeAny.middleware'
@@ -156,6 +157,9 @@ router.post('/refresh-token', (request, response) => {
 })
 router.post('/reset-password', (request, response) => {
   resetPasswordController.handle(request, response)
+})
+router.post('/send-reset-password-token', (request, response) => {
+  sendResetPasswordTokenController.handle(request, response)
 })
 router.post('/clinics', (request, response) => {
   createClinicController.handle(request, response)
