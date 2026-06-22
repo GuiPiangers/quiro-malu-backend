@@ -22,13 +22,12 @@ export class InMemoryUserRepository implements IUserRepository {
   async getById(params: {
     userId: string
     clinicId: string
-  }): Promise<UserDTO[]> {
+  }): Promise<UserDTO | null> {
     const selectedUser = await this.dbUsers.find(
       (user) => user.id === params.userId && user.clinicId === params.clinicId,
     )
 
-    if (selectedUser) return [selectedUser]
-    return []
+    return selectedUser ?? null
   }
 
   async listByClinicId(params: {

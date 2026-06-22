@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import 'express-async-errors'
 import express from 'express'
 import swaggerUi from 'swagger-ui-express'
@@ -32,7 +33,7 @@ app.use(parseAuthRoutesJsonBody)
 
 app.use(requestLoggerMiddleware)
 
-app.use((req, res, next) => {
+app.use((_req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
   res.header(
     'Access-Control-Allow-Methods',
@@ -53,12 +54,12 @@ app.use(httpRequestCounterMiddleware)
 app.use(httpErrorsCounterMiddleware)
 app.use(httpResponseSizeMiddleware)
 
-app.get('/metrics', async (req, res) => {
+app.get('/metrics', async (_req, res) => {
   res.set('Content-Type', register.contentType)
   res.end(await register.metrics())
 })
 
-app.get('/health', (req, res) => {
+app.get('/health', (_req, res) => {
   res.status(200).json({ status: 'ok' })
 })
 

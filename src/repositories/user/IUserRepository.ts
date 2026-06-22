@@ -9,13 +9,14 @@ export type ClinicUserListItem = {
   phone: string
   clinicId: string
   roleId: string | null
+  status?: UserStatus
 }
 
 export interface IUserRepository {
   save(user: UserDTO): Promise<void>
   getByEmail(email: string): Promise<UserDTO[]>
   findById(userId: string): Promise<UserDTO | null>
-  getById(params: UserGetByIdParams): Promise<UserDTO[]>
+  getById(params: UserGetByIdParams): Promise<UserDTO | null>
   listByClinicId(params: { clinicId: string }): Promise<ClinicUserListItem[]>
   /** Retorna quantidade de linhas removidas (0 ou 1). */
   deleteByIdForClinic(params: { id: string; clinicId: string }): Promise<number>

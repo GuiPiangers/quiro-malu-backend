@@ -14,7 +14,7 @@ describe('SetUserAsClinicianUseCase', () => {
   })
 
   it('should set user as clinician', async () => {
-    userRepository.getById.mockResolvedValue([{ id: 'user-id', clinicId: 'clinic-id' } as any])
+    userRepository.getById.mockResolvedValue({ id: 'user-id', clinicId: 'clinic-id' } as any)
     clinicianRepository.findClinicianIdsInClinic.mockResolvedValue([])
 
     await useCase.execute({ userId: 'user-id' }, 'clinic-id')
@@ -23,7 +23,7 @@ describe('SetUserAsClinicianUseCase', () => {
   })
 
   it('should reject if user is not found in clinic', async () => {
-    userRepository.getById.mockResolvedValue([])
+    userRepository.getById.mockResolvedValue(null)
 
     await expect(useCase.execute({ userId: 'user-id' }, 'clinic-id')).rejects.toThrow(
       new ApiError('Usuário não encontrado nesta clínica', 404, 'userId'),
@@ -31,7 +31,7 @@ describe('SetUserAsClinicianUseCase', () => {
   })
 
   it('should reject if user is already a clinician', async () => {
-    userRepository.getById.mockResolvedValue([{ id: 'user-id', clinicId: 'clinic-id' } as any])
+    userRepository.getById.mockResolvedValue({ id: 'user-id', clinicId: 'clinic-id' } as any)
     clinicianRepository.findClinicianIdsInClinic.mockResolvedValue(['user-id'])
 
     await expect(useCase.execute({ userId: 'user-id' }, 'clinic-id')).rejects.toThrow(

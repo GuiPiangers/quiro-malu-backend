@@ -10,7 +10,7 @@ export class KnexUserRepository implements IUserRepository {
     clinicId: string
   }): Promise<ClinicUserListItem[]> {
     const rows = await this.knex(ETableNames.USERS)
-      .select('id', 'name', 'email', 'phone', 'clinicId', 'roleId')
+      .select('id', 'name', 'email', 'phone', 'clinicId', 'roleId', 'status')
       .where({ clinicId: params.clinicId })
       .orderBy('name', 'asc')
 
@@ -23,10 +23,13 @@ export class KnexUserRepository implements IUserRepository {
   async getById(params: {
     userId: string
     clinicId: string
-  }): Promise<UserDTO[]> {
-    return await this.knex(ETableNames.USERS)
+  }): Promise<UserDTO | null> {
+    const user = await this.knex(ETableNames.USERS)
       .select('*')
       .where({ id: params.userId, clinicId: params.clinicId })
+      .first()
+
+    return user ?? null
   }
 
   async getByEmail(email: string): Promise<UserDTO[]> {

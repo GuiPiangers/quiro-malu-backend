@@ -16,7 +16,7 @@ export class SetUserAsClinicianUseCase {
     data: SetUserAsClinicianInputDTO,
     clinicId: string,
   ): Promise<void> {
-    const [user] = await this.userRepository.getById({
+    const user = await this.userRepository.getById({
       userId: data.userId,
       clinicId,
     })

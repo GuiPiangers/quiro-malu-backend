@@ -17,7 +17,7 @@ export class GetUserUseCase {
     id: string
     clinicId: string
   }): Promise<UserDetailDTO> {
-    const [user] = await this.userRepository.getById({
+    const user = await this.userRepository.getById({
       userId: params.id,
       clinicId: params.clinicId,
     })

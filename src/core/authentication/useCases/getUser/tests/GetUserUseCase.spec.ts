@@ -16,18 +16,16 @@ describe('GetUserUseCase', () => {
   })
 
   it('returns kind user when not a clinician', async () => {
-    userRepository.getById.mockResolvedValue([
-      {
-        id: userId,
-        name: 'Maria',
-        email: 'maria@teste.com',
-        phone: '(51) 99999 9999',
-        password:
-          '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
-        clinicId,
-        roleId: 'role-1',
-      },
-    ])
+    userRepository.getById.mockResolvedValue({
+      id: userId,
+      name: 'Maria',
+      email: 'maria@teste.com',
+      phone: '(51) 99999 9999',
+      password:
+        '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+      clinicId,
+      roleId: 'role-1',
+    })
     clinicianRepository.findById.mockResolvedValue(null)
 
     const result = await useCase.execute({ id: userId, clinicId })
@@ -45,18 +43,16 @@ describe('GetUserUseCase', () => {
   })
 
   it('returns kind clinician with services when profile exists', async () => {
-    userRepository.getById.mockResolvedValue([
-      {
-        id: userId,
-        name: 'Dr. João',
-        email: 'joao@teste.com',
-        phone: '(51) 98888 7777',
-        password:
-          '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
-        clinicId,
-        roleId: 'role-1',
-      },
-    ])
+    userRepository.getById.mockResolvedValue({
+      id: userId,
+      name: 'Dr. João',
+      email: 'joao@teste.com',
+      phone: '(51) 98888 7777',
+      password:
+        '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+      clinicId,
+      roleId: 'role-1',
+    })
     clinicianRepository.findById.mockResolvedValue(
       new Clinician({
         id: userId,
@@ -82,7 +78,7 @@ describe('GetUserUseCase', () => {
   })
 
   it('throws when user not found in clinic', async () => {
-    userRepository.getById.mockResolvedValue([])
+    userRepository.getById.mockResolvedValue(null)
 
     await expect(useCase.execute({ id: userId, clinicId })).rejects.toThrow(
       'Usuário não encontrado',

@@ -39,7 +39,7 @@ export class RefreshTokenUseCase {
 
     await this.refreshTokenProvider.markAsUsed(refreshTokenId)
 
-    const [user] = await this.userRepository.getById({
+    const user = await this.userRepository.getById({
       userId: refreshToken.userId,
       clinicId: refreshToken.clinicId,
     })

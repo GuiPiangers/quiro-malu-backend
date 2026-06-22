@@ -81,16 +81,14 @@ describe('RefreshTokenUseCase', () => {
       mockRefreshTokenProvider.getRefreshToken.mockResolvedValueOnce(
         validRefreshToken.getDTO(),
       )
-      vi.mocked(mockUserRepository.getById).mockResolvedValueOnce([
-        {
-          id: mockUserId,
-          name: 'User Test',
-          email: 'user@test.com',
-          phone: '(51) 99999 9999',
-          password: 'hash',
-          clinicId,
-        },
-      ])
+      vi.mocked(mockUserRepository.getById).mockResolvedValueOnce({
+        id: mockUserId,
+        name: 'User Test',
+        email: 'user@test.com',
+        phone: '(51) 99999 9999',
+        password: 'hash',
+        clinicId,
+      })
       mockGenerateTokenProvider.execute.mockResolvedValueOnce(mockToken)
 
       const result = await refreshTokenUseCase.execute(

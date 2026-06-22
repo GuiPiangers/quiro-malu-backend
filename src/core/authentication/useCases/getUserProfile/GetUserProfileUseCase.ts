@@ -9,7 +9,7 @@ export class GetUserProfileUseCase {
     userId: string
     clinicId: string
   }): Promise<UserDTO> {
-    const [user] = await this.userRepository.getById({
+    const user = await this.userRepository.getById({
       userId: params.userId,
       clinicId: params.clinicId,
     })
