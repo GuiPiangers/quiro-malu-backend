@@ -8,6 +8,7 @@ export const UserItemSchema = z
     phone: z.string(),
     clinicId: z.string(),
     roleId: z.string().nullable(),
+    status: z.enum(['pending', 'active', 'disabled']),
   })
   .openapi('UserItem')
 

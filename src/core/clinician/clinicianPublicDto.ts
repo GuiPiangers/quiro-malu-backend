@@ -8,6 +8,7 @@ export type ClinicianPublicDTO = {
   phone: string
   clinicId: string
   roleId?: string
+  status?: string
   services: ServiceDTO[]
 }
 
@@ -20,6 +21,7 @@ export function toClinicianPublicDTO(clinician: Clinician): ClinicianPublicDTO {
     phone: dto.phone,
     clinicId: dto.clinicId,
     roleId: dto.roleId,
+    status: dto.status,
     services: dto.services ?? [],
   }
 }

@@ -11,6 +11,7 @@ export type UserDetailBase = {
   phone: string
   clinicId: string
   roleId: string | null
+  status?: string
 }
 
 export type StandardUserDetailDTO = UserDetailBase & {
@@ -44,5 +45,6 @@ export function toClinicianUserDetail(
     clinicId: publicDto.clinicId,
     roleId: publicDto.roleId ?? null,
     services: publicDto.services,
+    status: publicDto.status,
   }
 }

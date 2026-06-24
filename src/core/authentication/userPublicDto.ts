@@ -9,5 +9,6 @@ export function toUserPublicDTO(user: UserDTO): ClinicUserListItem {
     phone: user.phone,
     clinicId: user.clinicId,
     roleId: user.roleId ?? null,
+    status: user.status,
   }
 }
