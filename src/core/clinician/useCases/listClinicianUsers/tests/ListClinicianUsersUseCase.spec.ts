@@ -35,6 +35,7 @@ describe('ListClinicianUsersUseCase', () => {
       phone: '(51) 99999 9999',
       clinicId,
       roleId: 'role-1',
+      status: 'pending',
       services: [{ id: 'svc-1', name: 'Sessão', value: 100, duration: 3600 }],
     })
     expect(result[0]).not.toHaveProperty('password')

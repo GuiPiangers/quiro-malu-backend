@@ -1,5 +1,6 @@
 import type { Clinician } from './models/Clinician'
 import type { ServiceDTO } from '../service/models/Service'
+import { UserStatus } from '../authentication/models/User'
 
 export type ClinicianPublicDTO = {
   id: string
@@ -8,7 +9,7 @@ export type ClinicianPublicDTO = {
   phone: string
   clinicId: string
   roleId?: string
-  status?: string
+  status?: UserStatus
   services: ServiceDTO[]
 }
 

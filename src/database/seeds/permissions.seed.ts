@@ -12,6 +12,20 @@ export const SYSTEM_PERMISSIONS = [
     description: 'Criar e alterar pacientes',
   },
   {
+    key: 'patients_clinical_data:read',
+    module: 'patients_clinical_data',
+    action: 'read' as const,
+    description:
+      'Consultar dados clínicos dos pacientes (anamnese, evolução, diagnóstico e exames)',
+  },
+  {
+    key: 'patients_clinical_data:write',
+    module: 'patients_clinical_data',
+    action: 'write' as const,
+    description:
+      'Criar e alterar dados clínicos dos pacientes (anamnese, evolução, diagnóstico e exames)',
+  },
+  {
     key: 'events:read',
     module: 'events',
     action: 'read' as const,

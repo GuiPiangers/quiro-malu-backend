@@ -301,7 +301,7 @@ router.delete(
 router.get(
   '/patients/anamnesis/:patientId',
   authMiddleware,
-  authorize('patients:read'),
+  authorize('patients_clinical_data:read'),
   (request, response) => {
     getAnamnesisController.handle(request, response)
   },
@@ -309,7 +309,7 @@ router.get(
 router.put(
   '/patients/anamnesis',
   authMiddleware,
-  authorize('patients:write'),
+  authorize('patients_clinical_data:write'),
   (request, response) => {
     setAnamnesisController.handle(request, response)
   },
@@ -318,7 +318,7 @@ router.put(
 router.get(
   '/patients/diagnostic/:patientId',
   authMiddleware,
-  authorize('patients:read'),
+  authorize('patients_clinical_data:read'),
   (request, response) => {
     getDiagnosticController.handle(request, response)
   },
@@ -326,7 +326,7 @@ router.get(
 router.put(
   '/patients/diagnostic',
   authMiddleware,
-  authorize('patients:write'),
+  authorize('patients_clinical_data:write'),
   (request, response) => {
     setDiagnosticController.handle(request, response)
   },
@@ -335,7 +335,7 @@ router.put(
 router.put(
   '/patients/progress',
   authMiddleware,
-  authorize('patients:write'),
+  authorize('patients_clinical_data:write'),
   (request, response) => {
     setProgressController.handle(request, response)
   },
@@ -343,7 +343,7 @@ router.put(
 router.delete(
   '/patients/progress',
   authMiddleware,
-  authorize('patients:write'),
+  authorize('patients_clinical_data:write'),
   (request, response) => {
     deleteProgressController.handle(request, response)
   },
@@ -352,7 +352,7 @@ router.delete(
 router.get(
   '/patients/progress/:patientId',
   authMiddleware,
-  authorize('patients:read'),
+  authorize('patients_clinical_data:read'),
   (request, response) => {
     listProgressController.handle(request, response)
   },
@@ -360,7 +360,7 @@ router.get(
 router.get(
   '/patients/progress/:patientId/:id',
   authMiddleware,
-  authorize('patients:read'),
+  authorize('patients_clinical_data:read'),
   (request, response) => {
     getProgressController.handle(request, response)
   },
@@ -368,7 +368,7 @@ router.get(
 router.get(
   '/patients/progress/scheduling/:patientId/:schedulingId',
   authMiddleware,
-  authorize('patients:read'),
+  authorize('patients_clinical_data:read'),
   (request, response) => {
     getProgressBySchedulingController.handle(request, response)
   },
@@ -614,7 +614,7 @@ router.delete(
 router.post(
   '/exams/:patientId',
   authMiddleware,
-  authorize('patients:write'),
+  authorize('patients_clinical_data:write'),
   multerConfig.single('file'),
   (request, response) => {
     saveExamController.handle(request, response)
@@ -624,7 +624,7 @@ router.post(
 router.delete(
   '/exams/:patientId/:id',
   authMiddleware,
-  authorize('patients:write'),
+  authorize('patients_clinical_data:write'),
   (request, response) => {
     deleteExamController.handle(request, response)
   },
@@ -633,7 +633,7 @@ router.delete(
 router.post(
   '/exams/:patientId/:id',
   authMiddleware,
-  authorize('patients:write'),
+  authorize('patients_clinical_data:write'),
   (request, response) => {
     restoreExamController.handle(request, response)
   },
@@ -641,7 +641,7 @@ router.post(
 router.get(
   '/exams/:patientId',
   authMiddleware,
-  authorize('patients:read'),
+  authorize('patients_clinical_data:read'),
   (request, response) => {
     listExamController.handle(request, response)
   },
