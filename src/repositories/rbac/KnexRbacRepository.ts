@@ -25,7 +25,7 @@ export class KnexRbacRepository implements IRbacRepository {
     userId: string
     clinicId: string
   }): Promise<ResolvedPermission[]> {
-    const rows = (await this.knex(`${ETableNames.ROLE_PERMISSIONS} as rp`)
+    const rolePermsQuery = this.knex(`${ETableNames.ROLE_PERMISSIONS} as rp`)
       .join(`${ETableNames.ROLES} as r`, 'r.id', 'rp.roleId')
       .join(`${ETableNames.USERS} as u`, 'u.roleId', 'r.id')
       .join(`${ETableNames.PERMISSIONS} as p`, 'p.id', 'rp.permissionId')
@@ -34,7 +34,18 @@ export class KnexRbacRepository implements IRbacRepository {
         'u.clinicId': data.clinicId,
         'r.clinicId': data.clinicId,
       })
-      .select('p.key as key', 'rp.scope as scope')) as {
+      .select('p.key as key', 'rp.scope as scope')
+
+    const userPermsQuery = this.knex(`${ETableNames.USER_PERMISSIONS} as up`)
+      .join(`${ETableNames.USERS} as u`, 'u.id', 'up.userId')
+      .join(`${ETableNames.PERMISSIONS} as p`, 'p.id', 'up.permissionId')
+      .where({
+        'up.userId': data.userId,
+        'u.clinicId': data.clinicId,
+      })
+      .select('p.key as key', 'up.scope as scope')
+
+    const rows = (await rolePermsQuery.unionAll(userPermsQuery)) as {
       key: string
       scope: unknown
     }[]
@@ -218,7 +229,7 @@ export class KnexRbacRepository implements IRbacRepository {
       }
     }
 
-    const keys = data.items.map((i) => i.permissionKey)
+    const keys = [...new Set(data.items.map((i) => i.permissionKey))]
     const permRows = (await this.knex(ETableNames.PERMISSIONS)
       .select('id', 'key')
       .whereIn('key', keys)) as { id: string; key: string }[]
@@ -262,6 +273,52 @@ export class KnexRbacRepository implements IRbacRepository {
     if (updated === 0) {
       throw new ApiError('Usuário não encontrado', 404, 'user')
     }
+  }
+
+  async setUserPermissions(data: {
+    userId: string
+    items: RolePermissionItem[]
+  }): Promise<void> {
+    console.log('data.items', data.items)
+
+    if (data.items.length === 0) return
+
+    const keys = [...new Set(data.items.map((item) => item.permissionKey))]
+    const permRows = (await this.knex(ETableNames.PERMISSIONS)
+      .select('id', 'key')
+      .whereIn('key', keys)) as { id: string; key: string }[]
+    const idByKey = new Map(permRows.map((permission) => {
+      return [permission.key, permission.id]
+    }))
+
+    for (const item of data.items) {
+      if (!idByKey.has(item.permissionKey)) {
+        throw new ApiError(
+          `Permissão inválida: ${item.permissionKey}`,
+          400,
+          'permission',
+        )
+      }
+    }
+
+    const inserts = data.items.map((item) => {
+      const permissionId = idByKey.get(item.permissionKey)!
+
+      return {
+        id: randomUUID(),
+        userId: data.userId,
+        permissionId,
+        scope:
+          item.scope === undefined || item.scope === null
+            ? null
+            : (item.scope as object),
+      }
+    })
+
+    await this.knex(ETableNames.USER_PERMISSIONS)
+      .insert(inserts)
+      .onConflict(['userId', 'permissionId'])
+      .ignore()
   }
 
   private createRoleEntity(row: RoleRow): Role {

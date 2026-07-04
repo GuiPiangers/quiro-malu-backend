@@ -13,4 +13,5 @@ export const createMockRbacRepository = (): Mocked<IRbacRepository> => ({
   listRolePermissions: vi.fn(),
   replaceRolePermissions: vi.fn(),
   setUserRole: vi.fn(),
+  setUserPermissions: vi.fn(),
 })

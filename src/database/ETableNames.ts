@@ -31,4 +31,5 @@ export enum ETableNames {
   ROLE_PERMISSIONS = 'role_permissions',
   CLINICIANS = 'clinicians',
   CLINICIAN_SERVICES = 'clinician_services',
+  USER_PERMISSIONS = 'user_permissions',
 }

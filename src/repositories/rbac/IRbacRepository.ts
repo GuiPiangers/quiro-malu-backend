@@ -62,4 +62,13 @@ export interface IRbacRepository {
     clinicId: string
     roleId: string
   }): Promise<void>
+
+  /**
+   * Garante que o usuário possui as permissões diretas informadas.
+   * Realiza upsert: insere caso não exista; ignora (mantém) caso já exista.
+   */
+  setUserPermissions(data: {
+    userId: string
+    items: RolePermissionItem[]
+  }): Promise<void>
 }

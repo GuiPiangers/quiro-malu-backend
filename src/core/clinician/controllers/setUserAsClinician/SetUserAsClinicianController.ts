@@ -8,7 +8,7 @@ export class SetUserAsClinicianController {
   async handle(request: Request, response: Response) {
     try {
       const { userId } = request.body
-      const clinicId = request.user.clinicId
+      const clinicId = request.user.clinicId!
 
       await this.setUserAsClinicianUseCase.execute({ userId }, clinicId)
       response.status(204).send()
