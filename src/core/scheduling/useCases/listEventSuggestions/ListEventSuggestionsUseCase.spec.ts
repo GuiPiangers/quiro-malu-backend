@@ -32,6 +32,7 @@ describe('ListEventSuggestionsUseCase', () => {
     expect(result.data[1]).toEqual(suggestion2.getDTO())
     expect(eventSuggestionRepository.list).toHaveBeenCalledWith({
       userId: 'user-id',
+      requestUserId: 'user-id',
     })
   })
 })
