@@ -133,6 +133,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           duration: 3600,
           status: 'Agendado',
           service: 'Massagem',
+          requestUserId: userId,
         })
 
         const row = await trx(ETableNames.SCHEDULES)
@@ -158,6 +159,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
             duration: 3600,
             status: 'Agendado',
             service: 'Quiropraxia',
+            requestUserId: userId,
           }),
         ).rejects.toMatchObject({
           message: 'Agendamento não encontrado',
@@ -181,6 +183,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
             duration: 3600,
             status: 'Agendado',
             service: 'Quiropraxia',
+            requestUserId: userId,
           }),
         ).rejects.toMatchObject({
           message: 'O id deve ser informado',
@@ -225,6 +228,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
             duration: 3600,
             status: 'Agendado',
             service: 'A',
+            requestUserId: userId,
           }),
         ).rejects.toMatchObject({
           message: 'Horário indisponível',
@@ -268,6 +272,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           duration: 3600,
           status: 'Agendado',
           service: 'A',
+          requestUserId: userId,
         })
 
         const rowA = await trx(ETableNames.SCHEDULES).where({ id: idA }).first()
@@ -303,6 +308,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           duration: 3600,
           status: 'Agendado',
           service: 'C',
+          requestUserId: userId,
         })
       })
     })
@@ -342,6 +348,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
             duration: 3600,
             status: 'Agendado',
             service: 'Dentro do bloco',
+            requestUserId: userId,
           }),
         ).rejects.toSatisfy((err: unknown) => {
           expect(err).toBeInstanceOf(ApiError)
@@ -381,6 +388,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           duration: 1800,
           status: 'Agendado',
           service: 'Sessão revisada',
+          requestUserId: userId,
         })
 
         expect(emitSpy).toHaveBeenCalledWith(

@@ -134,6 +134,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         const result = sortByDate(
           await useCase.execute({
+            requestUserId: userId,
             clinicId: userId,
             userId,
             month: 3,
@@ -190,6 +191,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         )
 
         const result = await useCase.execute({
+          requestUserId: owner.userId,
           clinicId: owner.userId,
           userId: owner.userId,
           month: 6,
@@ -219,6 +221,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         )
 
         const result = await useCase.execute({
+          requestUserId: userId,
           clinicId: userId,
           userId,
           month: 2,

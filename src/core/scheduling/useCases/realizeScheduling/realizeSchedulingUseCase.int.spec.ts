@@ -98,6 +98,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
           clinicId: userId,
           patientId,
           schedulingId,
+          requestUserId: userId,
         })
 
         const row = await trx(ETableNames.SCHEDULES)
@@ -131,6 +132,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
             clinicId: userId,
             patientId,
             schedulingId,
+            requestUserId: userId,
           }),
         ).rejects.toMatchObject({
           message: 'A evolução deve ser salva para poder realizar a consulta',
@@ -187,6 +189,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
             clinicId: userId,
             patientId,
             schedulingId,
+            requestUserId: userId,
           }),
         ).rejects.toBeInstanceOf(ApiError)
 

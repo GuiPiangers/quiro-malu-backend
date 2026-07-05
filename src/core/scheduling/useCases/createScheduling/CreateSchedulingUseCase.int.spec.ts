@@ -91,6 +91,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const useCase = createCreateSchedulingUseCase(trx)
 
         await useCase.execute({
+          requestUserId: userId,
           userId,
           clinicId: userId,
           patientId,
@@ -132,6 +133,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         await expect(
           useCase.execute({
+            requestUserId: userId,
             userId,
             clinicId: userId,
             patientId,
@@ -171,6 +173,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         const newId = uuidv4()
         await useCase.execute({
+          requestUserId: userId,
           userId,
           clinicId: userId,
           patientId,
@@ -203,6 +206,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const useCase = createCreateSchedulingUseCase(trx)
 
         await useCase.execute({
+          requestUserId: userId,
           userId,
           clinicId: userId,
           patientId,
@@ -234,6 +238,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         await expect(
           useCase.execute({
+            requestUserId: userId,
             userId,
             clinicId: userId,
             patientId,
@@ -263,6 +268,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const useCase = createCreateSchedulingUseCase(trx, events)
 
         await useCase.execute({
+          requestUserId: userId,
           userId,
           clinicId: userId,
           patientId,

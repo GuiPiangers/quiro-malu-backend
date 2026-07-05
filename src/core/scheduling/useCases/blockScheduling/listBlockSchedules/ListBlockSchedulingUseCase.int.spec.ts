@@ -89,6 +89,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         const result = await useCase.execute({
           userId,
+          requestUserId: userId,
           startDate: '2038-04-01T07:00',
           endDate: '2038-04-02T15:00',
         })
@@ -109,6 +110,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         await expect(
           useCase.execute({
             userId,
+            requestUserId: userId,
             startDate: '2038-05-01T12:00',
             endDate: '2038-05-01T12:00',
           }),

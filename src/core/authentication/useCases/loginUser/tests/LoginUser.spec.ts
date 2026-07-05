@@ -8,10 +8,11 @@ import { InMemoryUserRepository } from '../../../../../repositories/user/inMemor
 import { LoginUserUseCase } from '../LoginUserUseCase'
 import { createMockRbacRepository } from '../../../../../repositories/_mocks/RbacRepositoryMock'
 import type { Mock } from 'vitest'
+import { ResolvedPermission } from '../../../../../types/permissions'
 
 const stubFingerprint = 'stub-fingerprint-hash'
 const clinicId = '00000000-0000-4000-8000-000000000001'
-const mockPermissions = [
+const mockPermissions: ResolvedPermission[] = [
   { key: 'patients:read', scope: { type: 'all' as const } },
 ]
 
@@ -80,7 +81,7 @@ describe('Login user', () => {
     const email = 'emailfake@gmail.com'
     const password = 'Senha123'
     await expect(
-      loginUserUseCase.execute(email, password, stubFingerprint),
+      loginUserUseCase.execute({ email, password, fingerprintHash: stubFingerprint }),
     ).rejects.toThrow('Email ou senha inválidos')
   })
 
@@ -101,7 +102,11 @@ describe('Login user', () => {
 
     await userRepository.save(userDTO)
     await expect(
-      loginUserUseCase.execute(email, wrongPassword, stubFingerprint),
+      loginUserUseCase.execute({
+        email,
+        password: wrongPassword,
+        fingerprintHash: stubFingerprint,
+      }),
     ).rejects.toThrow('Email ou senha inválidos')
   })
 })

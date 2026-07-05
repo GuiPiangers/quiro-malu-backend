@@ -37,7 +37,9 @@ describe('Realize scheduling use case', () => {
       {
         id: realizeSchedulingData.schedulingId,
         userId: authParams.requestUserId,
-        clinicId: realizeSchedulingData.clinicId,
+        patient: 'Guilherme Piangers',
+        patientId: 'patientId1',
+        phone: '(47) 99999-9999',
       },
     ])
 
@@ -78,7 +80,9 @@ describe('Realize scheduling use case', () => {
       {
         id: realizeSchedulingData.schedulingId,
         userId: authParams.requestUserId,
-        clinicId: realizeSchedulingData.clinicId,
+        patient: 'Guilherme Piangers',
+        patientId: 'patientId1',
+        phone: '(47) 99999-9999',
       },
     ])
 
@@ -107,7 +111,13 @@ describe('Realize scheduling use case', () => {
     const errorMessage = 'Failed to listQtdSchedulesByDay'
 
     mockSchedulingRepository.get.mockResolvedValueOnce([
-      { id: schedulingId, userId: authParams.requestUserId, clinicId },
+      {
+        id: schedulingId,
+        userId: authParams.requestUserId,
+        patient: 'Guilherme Piangers',
+        patientId: 'patientId1',
+        phone: '(47) 99999-9999',
+      },
     ])
 
     mockedProgressRepository.getByScheduling.mockResolvedValue([
@@ -135,7 +145,13 @@ describe('Realize scheduling use case', () => {
     const errorMessage = 'Failed to listQtdSchedulesByDay'
 
     mockSchedulingRepository.get.mockResolvedValueOnce([
-      { id: schedulingId, userId: authParams.requestUserId, clinicId },
+      {
+        id: schedulingId,
+        userId: authParams.requestUserId,
+        patient: 'Guilherme Piangers',
+        patientId: 'patientId1',
+        phone: '(47) 99999-9999',
+      },
     ])
 
     mockedProgressRepository.getByScheduling.mockRejectedValue(

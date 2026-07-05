@@ -24,6 +24,7 @@ describe('ListEventSuggestionsUseCase', () => {
 
     const result = await listEventSuggestionsUseCase.execute({
       userId: 'user-id',
+      requestUserId: 'user-id',
     })
 
     expect(result.data).toHaveLength(2)

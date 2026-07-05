@@ -12,6 +12,7 @@ export const CreateClinicianBodySchema = CreateUserBodySchema.omit({
   clinicId: true,
 })
   .extend({
+    password: z.string().min(5),
     services: z.array(ClinicianServiceRefSchema).optional().default([]),
   })
   .openapi('CreateClinicianBody')

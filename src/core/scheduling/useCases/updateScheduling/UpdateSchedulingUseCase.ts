@@ -8,6 +8,7 @@ import { DateTime } from '../../../shared/Date'
 import DatabaseStatusStrategy from '../../models/status/DatabaseStatusStrategy'
 import type { PermissionScope } from '../../../../types/permissions'
 import { assertEventsScopeAccess } from '../../../../utils/eventsPermissionScope'
+import { appEventListener, IAppEventListener } from '../../../shared/observers/EventListener'
 
 export type UpdateSchedulingInput = Omit<SchedulingDTO, 'patientId'> & {
   patientId?: string
@@ -66,15 +67,15 @@ export class UpdateSchedulingUseCase {
       dataBaseStatusStrategy,
     )
 
-    const { id: _schedulingId, ...schedulingDTO } = scheduling.getDTO()
+    const { ...schedulingDTO } = scheduling.getDTO()
 
     await this.validateBlockSchedules({ scheduling, userId: effectiveUserId })
     await this.validateDate({ scheduling, clinicId, userId: effectiveUserId })
 
     await this.SchedulingRepository.update({
       clinicId,
-      id: data.id,
       ...schedulingDTO,
+      id: data.id,
       userId: effectiveUserId,
     })
 

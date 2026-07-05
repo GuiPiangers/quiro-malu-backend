@@ -33,7 +33,11 @@ describe('listSchedulingUseCase', () => {
       mockSchedulingRepository.list.mockResolvedValue(listSchedulingData)
       mockSchedulingRepository.count.mockResolvedValue([{ total: 1 }])
 
-      const result = await listSchedulingUseCase.execute({ clinicId, date })
+      const result = await listSchedulingUseCase.execute({
+        clinicId,
+        date,
+        requestUserId: 'test-user-id',
+      })
 
       expect(result).toEqual({
         total: 1,
@@ -56,7 +60,11 @@ describe('listSchedulingUseCase', () => {
         },
       ])
 
-      await listSchedulingUseCase.execute({ clinicId, date })
+      await listSchedulingUseCase.execute({
+        clinicId,
+        date,
+        requestUserId: 'test-user-id',
+      })
 
       expect(mockSchedulingRepository.list).toHaveBeenCalledTimes(1)
       expect(mockSchedulingRepository.list).toHaveBeenCalledWith({
@@ -73,7 +81,7 @@ describe('listSchedulingUseCase', () => {
       mockSchedulingRepository.list.mockRejectedValue(new Error(errorMessage))
 
       await expect(
-        listSchedulingUseCase.execute({ clinicId, date }),
+        listSchedulingUseCase.execute({ clinicId, date, requestUserId: 'test-user-id' }),
       ).rejects.toThrow(errorMessage)
     })
   })

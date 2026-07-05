@@ -128,6 +128,7 @@ describe('updateSchedulingUseCase', () => {
           clinicId: 'test-clinic-id',
           id: 'test-Scheduling-id',
           patientId: 'test-patient-id',
+          requestUserId: 'test-user-id',
         }),
       ).rejects.toMatchObject({
         message: 'O usuário informado não é um clínico',
@@ -146,6 +147,7 @@ describe('updateSchedulingUseCase', () => {
           id: 'test-Scheduling-id',
           patientId: 'test-patient-id',
           userId: 'invalid-clinician-id',
+          requestUserId: 'invalid-clinician-id',
         }),
       ).rejects.toMatchObject({
         message: 'O usuário informado não é um clínico',
@@ -366,6 +368,7 @@ describe('updateSchedulingUseCase', () => {
         duration: 3600,
         status: 'Atendido',
         service: 'Quiropraxia',
+        requestUserId: 'test-user-id',
       }
 
       await expect(
@@ -387,6 +390,7 @@ describe('updateSchedulingUseCase', () => {
           duration: 3600,
           status: 'Agendado',
           service: 'Quiropraxia',
+          requestUserId: 'test-user-id',
         }),
       ).rejects.toMatchObject({
         message: 'Agendamento não encontrado',
@@ -435,6 +439,8 @@ describe('updateSchedulingUseCase', () => {
           clinicId: 'test-clinic-id',
           date: '2025-01-10T00:00',
           duration: 3600,
+          requestUserId: 'test-user-id',
+
         }),
       ).rejects.toThrow(errorMessage)
     })

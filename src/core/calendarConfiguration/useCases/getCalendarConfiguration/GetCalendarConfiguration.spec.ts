@@ -25,7 +25,7 @@ describe('GetCalendarConfigurationUseCase', () => {
     })
     repositoryMock.get.mockResolvedValue(configEntity)
 
-    const result = await useCase.execute({ userId })
+    const result = await useCase.execute({ userId, requestUserId: userId })
 
     expect(result).toEqual(configEntity.getDTO())
     expect(repositoryMock.get).toHaveBeenCalledWith({ userId })
@@ -35,7 +35,7 @@ describe('GetCalendarConfigurationUseCase', () => {
   it('should return null when calendar configuration is not found', async () => {
     repositoryMock.get.mockResolvedValue(null)
 
-    const result = await useCase.execute({ userId })
+    const result = await useCase.execute({ userId, requestUserId: userId })
 
     expect(result).toBeNull()
     expect(repositoryMock.get).toHaveBeenCalledWith({ userId })

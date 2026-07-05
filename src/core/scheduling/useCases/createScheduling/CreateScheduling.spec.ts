@@ -8,6 +8,7 @@ import { IAppEventListener } from '../../../shared/observers/EventListener'
 import type { Clinician } from '../../../clinician/models/Clinician'
 import { createMockClinicianRepository } from '../../../../repositories/_mocks/ClinicianRepositoryMock'
 import { CreateSchedulingUseCase } from './CreateSchedulingUseCase'
+import { PermissionScope } from '../../../../types/permissions'
 
 describe('createSchedulingUseCase', () => {
   let createSchedulingUseCase: CreateSchedulingUseCase
@@ -38,6 +39,8 @@ describe('createSchedulingUseCase', () => {
       const schedulingData: SchedulingDTO & {
         userId: string
         clinicId: string
+        requestUserId: string
+        eventsWriteScope: PermissionScope
         date: string
       } = {
         userId: 'test-user-id',
@@ -77,6 +80,8 @@ describe('createSchedulingUseCase', () => {
       const schedulingData: SchedulingDTO & {
         userId: string
         clinicId: string
+        requestUserId: string
+        eventsWriteScope: PermissionScope
         date: string
       } = {
         userId: 'test-user-id',
@@ -125,6 +130,8 @@ describe('createSchedulingUseCase', () => {
         userId: string
         clinicId: string
         date: string
+        requestUserId: string
+        eventsWriteScope: PermissionScope
       } = {
         userId: 'test-user-id',
         requestUserId: 'test-user-id',
@@ -170,6 +177,8 @@ describe('createSchedulingUseCase', () => {
         userId: string
         clinicId: string
         date: string
+        requestUserId: string
+        eventsWriteScope: PermissionScope
       } = {
         userId: 'test-user-id',
         requestUserId: 'test-user-id',
@@ -207,6 +216,8 @@ describe('createSchedulingUseCase', () => {
         userId: string
         clinicId: string
         date: string
+        requestUserId: string
+        eventsWriteScope: PermissionScope
       } = {
         userId: 'test-user-id',
         requestUserId: 'test-user-id',
@@ -253,6 +264,8 @@ describe('createSchedulingUseCase', () => {
         userId: string
         clinicId: string
         date: string
+        requestUserId: string
+        eventsWriteScope: PermissionScope
       } = {
         userId: 'test-user-id',
         requestUserId: 'test-user-id',
@@ -316,6 +329,8 @@ describe('createSchedulingUseCase', () => {
           clinicId: 'test-clinic-id',
           date: '2025-01-10T00:00',
           duration: 3600,
+          requestUserId: 'test-user-id',
+          eventsWriteScope: { type: 'all' },
         }),
       ).rejects.toThrow(errorMessage)
     })

@@ -77,6 +77,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const emitSpy = vi.spyOn(events, 'emit')
 
         await useCase.execute({
+          requestUserId: userId,
           userId,
           clinicId: userId,
           date: '2038-02-01T08:00',
@@ -128,6 +129,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
             date: '2038-02-10T10:00',
             endDate: '2038-02-10T12:00',
             description: 'Bloqueio',
+            requestUserId: userId,
           }),
         ).rejects.toBeInstanceOf(ApiError)
 
@@ -164,6 +166,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
             date: '2038-02-11T10:00',
             endDate: '2038-02-11T11:00',
             description: 'Conflito',
+            requestUserId: userId,
           }),
         ).rejects.toThrow(
           /Existe agendamentos marcados no horário que deseja bloquear/,

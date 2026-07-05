@@ -45,7 +45,12 @@ describe('listEventsUseCase', () => {
         blockSchedules,
       )
 
-      const result = await listEventsUseCase.execute({ date, userId, clinicId })
+      const result = await listEventsUseCase.execute({
+        date,
+        userId,
+        clinicId,
+        requestUserId: userId,
+      })
       const expected = [...schedules, ...blockSchedules.map((b) => b.getDTO())]
 
       expect(result.data).toEqual(expected)
@@ -80,6 +85,7 @@ describe('listEventsUseCase', () => {
         date: '2025-08-27',
         userId,
         clinicId,
+        requestUserId: userId,
       })
       const expected = [...blockSchedules.map((b) => b.getDTO()), ...schedules]
 
@@ -94,7 +100,12 @@ describe('listEventsUseCase', () => {
       const startDate = new DateTime(`${onlyDate}T00:00`)
       const endDate = new DateTime(`${onlyDate}T23:59`)
 
-      await listEventsUseCase.execute({ date, userId, clinicId })
+      await listEventsUseCase.execute({
+        date,
+        userId,
+        clinicId,
+        requestUserId: userId,
+      })
 
       expect(mockSchedulingRepository.list).toHaveBeenCalledWith({
         date,
@@ -119,7 +130,12 @@ describe('listEventsUseCase', () => {
       mockSchedulingRepository.list.mockRejectedValue(error)
 
       await expect(
-        listEventsUseCase.execute({ date, userId, clinicId }),
+        listEventsUseCase.execute({
+          date,
+          userId,
+          clinicId,
+          requestUserId: userId,
+        }),
       ).rejects.toThrow(error)
     })
   })

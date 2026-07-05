@@ -78,6 +78,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const result = await useCase.execute({
           clinicId: userId,
           id: scheduleId,
+          requestUserId: userId,
         })
 
         expect(result.date).toBe('2030-10-05T14:25')
@@ -110,6 +111,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const result = await useCase.execute({
           clinicId: userId,
           id: scheduleId,
+          requestUserId: userId,
         })
 
         expect(result.date).toBe('2031-01-01T09:00')

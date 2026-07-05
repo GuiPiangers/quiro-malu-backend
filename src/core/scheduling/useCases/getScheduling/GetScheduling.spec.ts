@@ -29,7 +29,7 @@ describe('getSchedulingUseCase', () => {
 
       mockSchedulingRepository.get.mockResolvedValue([schedulingData])
 
-      const result = await getSchedulingUseCase.execute({ clinicId, id })
+      const result = await getSchedulingUseCase.execute({ clinicId, id, requestUserId: clinicId })
 
       expect(result).toEqual(schedulingData)
     })
@@ -48,7 +48,7 @@ describe('getSchedulingUseCase', () => {
         },
       ])
 
-      await getSchedulingUseCase.execute({ clinicId, id })
+      await getSchedulingUseCase.execute({ clinicId, id, requestUserId: clinicId })
 
       expect(mockSchedulingRepository.get).toHaveBeenCalledTimes(1)
       expect(mockSchedulingRepository.get).toHaveBeenCalledWith({
@@ -65,7 +65,7 @@ describe('getSchedulingUseCase', () => {
       mockSchedulingRepository.get.mockRejectedValue(new Error(errorMessage))
 
       await expect(
-        getSchedulingUseCase.execute({ clinicId, id }),
+        getSchedulingUseCase.execute({ clinicId, id, requestUserId: clinicId }),
       ).rejects.toThrow(errorMessage)
     })
 
@@ -76,6 +76,7 @@ describe('getSchedulingUseCase', () => {
         getSchedulingUseCase.execute({
           clinicId: 'test-clinic-id',
           id: 'missing-id',
+          requestUserId: 'test-clinic-id',
         }),
       ).rejects.toMatchObject({
         message: 'Agendamento não encontrado',
@@ -107,7 +108,7 @@ describe('getSchedulingUseCase', () => {
 
         mockSchedulingRepository.get.mockResolvedValue([schedulingData])
 
-        const result = await getSchedulingUseCase.execute({ clinicId, id })
+        const result = await getSchedulingUseCase.execute({ clinicId, id, requestUserId: clinicId })
 
         expect(result.date).toBe(bookedDate)
         expect(typeof result.date).toBe('string')
@@ -133,7 +134,7 @@ describe('getSchedulingUseCase', () => {
         },
       ])
 
-      const result = await getSchedulingUseCase.execute({ clinicId, id })
+      const result = await getSchedulingUseCase.execute({ clinicId, id, requestUserId: clinicId })
 
       expect(result.date).toBe(clientBookedAt)
     })

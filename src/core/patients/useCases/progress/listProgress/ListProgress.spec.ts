@@ -17,7 +17,7 @@ describe('listProgressUseCase', () => {
       const patientId = 'test-patient-id'
 
       mockProgressRepository.list.mockResolvedValue([
-        { schedulingId, patientId },
+        { schedulingId, patientId, userId: 'test-user-id' },
       ])
 
       mockProgressRepository.count.mockResolvedValue([
@@ -52,7 +52,7 @@ describe('listProgressUseCase', () => {
       const patientId = 'test-patient-id'
 
       mockProgressRepository.list.mockResolvedValue([
-        { schedulingId, patientId },
+        { schedulingId, patientId, userId: 'test-user-id' },
       ])
 
       mockProgressRepository.count.mockResolvedValue([
@@ -87,7 +87,7 @@ describe('listProgressUseCase', () => {
       const patientId = 'test-patient-id'
 
       mockProgressRepository.list.mockResolvedValue([
-        { schedulingId, patientId },
+        { schedulingId, patientId, userId: 'test-user-id' },
       ])
 
       mockProgressRepository.count.mockResolvedValue([

@@ -73,6 +73,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
 
         const result = await useCase.execute({
           userId,
+          requestUserId: userId,
           clinicId: userId,
           date: '2038-01-10',
         })
@@ -99,6 +100,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const useCase = createListEventsUseCase(trx)
         const { data } = await useCase.execute({
           userId,
+          requestUserId: userId,
           clinicId: userId,
           date: '2038-02-15',
         })
@@ -131,6 +133,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const useCase = createListEventsUseCase(trx)
         const { data } = await useCase.execute({
           userId,
+          requestUserId: userId,
           clinicId: userId,
           date: '2038-03-20',
         })
@@ -177,6 +180,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const useCase = createListEventsUseCase(trx)
         const { data } = await useCase.execute({
           userId,
+          requestUserId: userId,
           clinicId: userId,
           date: '2038-04-01',
         })
@@ -243,6 +247,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const useCase = createListEventsUseCase(trx)
         const { data } = await useCase.execute({
           userId: b.userId,
+          requestUserId: b.userId,
           clinicId: b.userId,
           date: '2038-05-01',
         })
@@ -274,6 +279,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const useCase = createListEventsUseCase(trx)
         const { data } = await useCase.execute({
           userId,
+          requestUserId: userId,
           clinicId: userId,
           date: '2038-06-10T07:00:00',
         })

@@ -8,6 +8,7 @@ import {
 } from '../../../../repositories/_mocks/UserRepositoryMock'
 import { createMockRbacRepository } from '../../../../repositories/_mocks/RbacRepositoryMock'
 import { RefreshTokenUseCase } from './RefreshTokenUseCase'
+import { ResolvedPermission } from '../../../../types/permissions'
 
 const mockRefreshTokenProvider = createMockRefreshTokenProvider()
 
@@ -17,7 +18,7 @@ const mockRbacRepository = createMockRbacRepository()
 
 const fingerprint = 'device-fingerprint'
 const clinicId = '00000000-0000-4000-8000-000000000001'
-const mockPermissions = [
+const mockPermissions: ResolvedPermission[] = [
   { key: 'patients:read', scope: { type: 'all' as const } },
 ]
 

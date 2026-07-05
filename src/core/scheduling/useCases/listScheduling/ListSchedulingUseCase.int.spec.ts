@@ -120,6 +120,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const result = await useCase.execute({
           clinicId: userId,
           date: '2030-11-15',
+          requestUserId: userId,
         })
 
         expect(result.total).toBe(2)
@@ -169,6 +170,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const result = await useCase.execute({
           clinicId: a.userId,
           date: '2030-12-01',
+          requestUserId: a.userId,
         })
 
         expect(result.total).toBe(1)
@@ -198,6 +200,7 @@ describe.skipIf(!shouldRunIntegrationSuite)(
         const result = await useCase.execute({
           clinicId: userId,
           date: '2030-08-02',
+          requestUserId: userId,
         })
 
         expect(result.total).toBe(0)

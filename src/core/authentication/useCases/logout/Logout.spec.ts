@@ -13,12 +13,14 @@ describe('LogoutUseCase', () => {
 
   it('Should delete refresh token when session exists and fingerprint matches', async () => {
     const refreshTokenId = '00000000-0000-4000-8000-000000000001'
+    const clinicId = '1'
     const fingerprint = 'device-fp'
     mockRefreshTokenProvider.getRefreshToken.mockResolvedValueOnce({
       id: refreshTokenId,
       userId: 'user-1',
       fingerprint,
       expiresIn: 9999999999,
+      clinicId,
     })
 
     await logoutUseCase.execute(refreshTokenId, fingerprint)
@@ -29,12 +31,14 @@ describe('LogoutUseCase', () => {
 
   it('Should propagate errors from dependencies', async () => {
     const refreshTokenId = '00000000-0000-4000-8000-000000000002'
+    const clinicId = '1'
     const errorMessage = 'Database error'
     mockRefreshTokenProvider.getRefreshToken.mockResolvedValueOnce({
       id: refreshTokenId,
       userId: 'user-1',
       fingerprint: 'a',
       expiresIn: 9999999999,
+      clinicId,
     })
     mockRefreshTokenProvider.delete.mockRejectedValueOnce(
       new Error(errorMessage),

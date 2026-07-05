@@ -22,7 +22,13 @@ describe('DeleteSchedulingUseCase', () => {
       const clinicId = 'test-clinic-id'
 
       mockSchedulingRepository.get.mockResolvedValueOnce([
-        { id, userId, clinicId },
+        {
+          id,
+          userId,
+          patientId: 'test-patient-id',
+          phone: '(55) 51 99999-9999',
+          patient: 'Guilherme Piangers',
+        },
       ])
 
       await deleteSchedulingUseCase.execute({
@@ -47,7 +53,13 @@ describe('DeleteSchedulingUseCase', () => {
       const errorMessage = 'Failed to delete Scheduling'
 
       mockSchedulingRepository.get.mockResolvedValueOnce([
-        { id, userId, clinicId },
+        {
+          id,
+          userId,
+          patientId: 'test-patient-id',
+          phone: '(55) 51 99999-9999',
+          patient: 'Guilherme Piangers',
+        },
       ])
       mockSchedulingRepository.delete.mockRejectedValueOnce(
         new Error(errorMessage),

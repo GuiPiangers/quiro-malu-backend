@@ -30,6 +30,7 @@ describe('getQtdSchedulesByDayUseCase', () => {
 
       const userId = 'test-user-id'
       const result = await getQtdSchedulesByDayUseCase.execute({
+        requestUserId: userId,
         month,
         year,
         clinicId,
@@ -51,7 +52,7 @@ describe('getQtdSchedulesByDayUseCase', () => {
 
       mockSchedulingRepository.qdtSchedulesByDay.mockResolvedValue([])
 
-      await getQtdSchedulesByDayUseCase.execute({ month, year, clinicId, userId })
+      await getQtdSchedulesByDayUseCase.execute({ requestUserId: userId, month, year, clinicId, userId })
 
       expect(mockSchedulingRepository.qdtSchedulesByDay).toHaveBeenCalledTimes(
         1,
@@ -76,7 +77,7 @@ describe('getQtdSchedulesByDayUseCase', () => {
       )
 
       await expect(
-        getQtdSchedulesByDayUseCase.execute({ month, year, clinicId, userId }),
+        getQtdSchedulesByDayUseCase.execute({ requestUserId: userId, month, year, clinicId, userId }),
       ).rejects.toThrow(errorMessage)
     })
   })

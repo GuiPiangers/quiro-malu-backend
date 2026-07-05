@@ -16,6 +16,7 @@ schedulingSyncService.addObserver(
       service,
       userId,
       clinicId,
+      requestUserId: userId,
     })
   },
 )
