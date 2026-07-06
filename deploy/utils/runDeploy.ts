@@ -8,6 +8,7 @@ interface RunDeployParams {
   tag: string;
   services: string[];
   composeFile: string;
+  envFile: string;
 }
 
 interface RunDeployOptions {
@@ -20,12 +21,13 @@ function escapeShellArg(arg: string): string {
 }
 
 export function runDeploy(
-  { image, tag, composeFile, services }: RunDeployParams,
+  { image, tag, composeFile, envFile, services }: RunDeployParams,
   { onError, onSuccess }: RunDeployOptions,
 ) {
   const imageEscaped = escapeShellArg(image);
   const tagEscaped = escapeShellArg(tag);
   const composeFileEscaped = escapeShellArg(composeFile);
+  const envFileEscaped = escapeShellArg(envFile);
 
   const servicesFlags = services
     .map((svc) => `--service ${escapeShellArg(svc)}`)
@@ -35,6 +37,7 @@ export function runDeploy(
     --image ${imageEscaped} \
     --tag ${tagEscaped} \
     --compose-file ${composeFileEscaped} \
+    --env-file ${envFileEscaped} \
     ${servicesFlags}
   `;
 
@@ -74,10 +77,12 @@ export async function runDeployAsync({
   tag,
   composeFile,
   services,
+  envFile,
 }: RunDeployParams): Promise<string> {
   const imageEscaped = escapeShellArg(image);
   const tagEscaped = escapeShellArg(tag);
   const composeFileEscaped = escapeShellArg(composeFile);
+  const envFileEscaped = escapeShellArg(envFile);
 
   const servicesFlags = services
     .map((svc) => `--service ${escapeShellArg(svc)}`)
@@ -87,6 +92,7 @@ export async function runDeployAsync({
     --image ${imageEscaped} \
     --tag ${tagEscaped} \
     --compose-file ${composeFileEscaped} \
+    --env-file ${envFileEscaped} \
     ${servicesFlags}
   `;
 
