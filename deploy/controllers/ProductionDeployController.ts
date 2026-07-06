@@ -6,9 +6,10 @@ import {
 } from "../useCases/RunDeployUseCase";
 
 const PRODUCTION_COMPOSE_FILE = "/app/docker-compose.yml";
+const PRODUCTION_ENV_FILE = "/app/.env";
 
 export class ProductionDeployController {
-  constructor(private readonly runDeployUseCase: RunDeployUseCase) {}
+  constructor(private readonly runDeployUseCase: RunDeployUseCase) { }
 
   handle(req: RequestWithRawBody, res: Response) {
     try {
@@ -18,6 +19,7 @@ export class ProductionDeployController {
         secret: process.env.DEPLOY_SECRET,
         payload: req.body,
         composeFile: PRODUCTION_COMPOSE_FILE,
+        envFile: PRODUCTION_ENV_FILE,
       });
 
       return res.status(202).json(output);
