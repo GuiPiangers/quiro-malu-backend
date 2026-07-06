@@ -15,6 +15,7 @@ interface RunDeployInput {
   secret?: string;
   payload: DeployPayload;
   composeFile: string;
+  envFile: string;
 }
 
 interface RunDeployOutput {
@@ -44,6 +45,7 @@ export class RunDeployUseCase {
     secret,
     payload,
     composeFile,
+    envFile,
   }: RunDeployInput): RunDeployOutput {
     if (!rawBody) {
       throw new DeployValidationError("Raw body missing", 400);
@@ -97,6 +99,10 @@ export class RunDeployUseCase {
     if (normalizedPath.includes("..") || !path.isAbsolute(normalizedPath)) {
       throw new DeployValidationError("Invalid compose file path", 400);
     }
+    const normalizedEnvPath = path.normalize(envFile);
+    if (normalizedEnvPath.includes("..") || !path.isAbsolute(normalizedEnvPath)) {
+      throw new DeployValidationError("Invalid env file path", 400);
+    }
 
     if (isDeployInProgress()) {
       throw new DeployValidationError("Deploy already in progress", 409, {
@@ -117,7 +123,7 @@ export class RunDeployUseCase {
     setDeployInProgress(true);
 
     runDeploy(
-      { image, tag, services: typedServices, composeFile: normalizedPath },
+      { image, tag, services: typedServices, composeFile: normalizedPath, envFile: normalizedEnvPath },
       {
         onError: (err) => {
           console.error("[DEPLOY] Failed:", err.message);

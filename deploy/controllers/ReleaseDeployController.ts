@@ -6,6 +6,7 @@ import {
 } from "../useCases/RunDeployUseCase";
 
 const RELEASE_COMPOSE_FILE = "/app/docker-compose.release.yml";
+const RELEASE_ENV_FILE = "/app/.env.release";
 
 export class ReleaseDeployController {
   constructor(private readonly runDeployUseCase: RunDeployUseCase) { }
@@ -18,6 +19,7 @@ export class ReleaseDeployController {
         secret: process.env.DEPLOY_SECRET,
         payload: req.body,
         composeFile: RELEASE_COMPOSE_FILE,
+        envFile: RELEASE_ENV_FILE,
       });
 
       return res.status(202).json(output);
