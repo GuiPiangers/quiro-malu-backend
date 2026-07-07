@@ -1,4 +1,5 @@
 import { createMockClinicRepository } from '../../../../../repositories/_mocks/ClinicRepositoryMock'
+import { createMockClinicianRepository } from '../../../../../repositories/_mocks/ClinicianRepositoryMock'
 import { createMockRbacRepository } from '../../../../../repositories/_mocks/RbacRepositoryMock'
 import { createMockUserRepository } from '../../../../../repositories/_mocks/UserRepositoryMock'
 import type { IAppEventListener } from '../../../../shared/observers/EventListener'
@@ -9,6 +10,7 @@ describe('CreateClinicUseCase', () => {
   const clinicRepository = createMockClinicRepository()
   const rbacRepository = createMockRbacRepository()
   const userRepository = createMockUserRepository()
+  const clinicianRepository = createMockClinicianRepository()
   const appEventListener: IAppEventListener = { emit: vi.fn() }
   let createClinicUseCase: CreateClinicUseCase
 
@@ -36,6 +38,7 @@ describe('CreateClinicUseCase', () => {
       clinicRepository,
       rbacRepository,
       userRepository,
+      clinicianRepository,
       appEventListener,
     )
   })
@@ -50,6 +53,7 @@ describe('CreateClinicUseCase', () => {
     expect(clinicRepository.save).toHaveBeenCalledTimes(1)
     expect(rbacRepository.createRole).toHaveBeenCalledTimes(1)
     expect(userRepository.save).toHaveBeenCalledTimes(1)
+    expect(clinicianRepository.setUserAsClinician).toHaveBeenCalledTimes(1)
     expect(appEventListener.emit).toHaveBeenCalledWith(
       'user:pending_user_created',
       expect.objectContaining({

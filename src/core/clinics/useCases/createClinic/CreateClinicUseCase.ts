@@ -1,5 +1,6 @@
 import { Clinic, ClinicDTO } from '../../models/Clinic'
 import { IClinicRepository } from '../../../../repositories/clinic/IClinicRepository'
+import type { IClinicianRepository } from '../../../../repositories/clinician/IClinicianRepository'
 import type { IRbacRepository } from '../../../../repositories/rbac/IRbacRepository'
 import { IUserRepository } from '../../../../repositories/user/IUserRepository'
 import { ApiError } from '../../../../utils/ApiError'
@@ -20,6 +21,7 @@ export class CreateClinicUseCase {
     private clinicRepository: IClinicRepository,
     private rbacRepository: IRbacRepository,
     private userRepository: IUserRepository,
+    private clinicianRepository: IClinicianRepository,
     private appEventListener: IAppEventListener,
   ) {}
 
@@ -56,6 +58,7 @@ export class CreateClinicUseCase {
     await this.rbacRepository.createRole(adminRole)
     const ownerDTO = await owner.getUserDTO()
     await this.userRepository.save(ownerDTO)
+    await this.clinicianRepository.setAsClinician(ownerDTO.id!)
 
     this.appEventListener.emit('user:pending_user_created', {
       id: ownerDTO.id!,
