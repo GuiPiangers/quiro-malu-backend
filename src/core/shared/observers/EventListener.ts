@@ -131,6 +131,11 @@ type AppEvents = {
 
   createBlockSchedule: BlockScheduleDto & { userId: string }
 
+  'clinic:created': {
+    id: string
+    name: string
+  }
+
   // New naming pattern: <domain>:<event>  (legacy events above will be migrated later)
   'user:pending_user_created': {
     id: string

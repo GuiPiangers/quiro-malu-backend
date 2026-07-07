@@ -63,6 +63,11 @@ export class CreateClinicUseCase {
       name: ownerDTO.name,
     })
 
+    this.appEventListener.emit('clinic:created', {
+      id: clinic.id,
+      name: clinic.name,
+    })
+
     return clinic.getDTO()
   }
 }

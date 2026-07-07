@@ -1,4 +1,5 @@
 import { getExamUseCase } from '../core/exams/useCases/getExam'
+import { createDefaultRolesUseCase } from '../core/rbac/useCases/createDefaultRoles'
 import { beforeScheduleMessageEventHandlers } from '../core/messages/observers/beforeScheduleMessage'
 import { afterScheduleMessageEventHandlers } from '../core/messages/observers/afterScheduleMessage'
 import { NotificationUndoExam } from '../core/notification/models/NotificationUndoExam'
@@ -112,6 +113,14 @@ export async function start() {
         { err: error, userId: id },
         'user:pending_user_created — falha ao enviar email de boas-vindas',
       )
+    }
+  })
+
+  appEventListener.on('clinic:created', async ({ id }) => {
+    try {
+      await createDefaultRolesUseCase.execute({ clinicId: id })
+    } catch (error) {
+      logger.error({ err: error, clinicId: id }, 'error creating default roles')
     }
   })
 }

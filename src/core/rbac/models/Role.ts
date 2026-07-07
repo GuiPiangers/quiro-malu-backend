@@ -6,7 +6,7 @@ import { RBAC_DEFAULT_ADMIN_ROLE_NAME } from '../constants'
 
 export type RolePermissionDTO = {
   permissionKey: PermissionKey
-  scope: PermissionScope | unknown | null
+  scope?: PermissionScope | unknown | null
 }
 
 export type RoleDTO = {
