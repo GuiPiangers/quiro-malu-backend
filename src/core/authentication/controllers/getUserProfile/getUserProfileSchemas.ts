@@ -1,10 +1,6 @@
 import { z } from '../../../../schemas/zodOpenApi'
-import type { UserDTO } from '../../models/User'
+import type { UserDetailDTO } from '../../userDetailDto'
 
-/**
- * Perfil público (sem senha). Alinhado a `UserDTO` omitindo `password`;
- * `passthrough` permite colunas extras do `SELECT *` no repositório.
- */
 export const GetUserProfileResponseSchema = z
   .object({
     id: z.string().optional(),
@@ -12,9 +8,11 @@ export const GetUserProfileResponseSchema = z
     email: z.string().email(),
     phone: z.string(),
     clinicId: z.string(),
-    roleId: z.string().optional(),
+    roleId: z.string().nullable().optional(),
+    kind: z.enum(['user', 'clinician']),
+    services: z.array(z.any()).optional(),
   })
   .passthrough()
   .openapi('GetUserProfileResponse')
 
-export type GetUserProfileResponse = Omit<UserDTO, 'password'>
+export type GetUserProfileResponse = UserDetailDTO

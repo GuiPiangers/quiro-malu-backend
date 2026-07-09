@@ -1,8 +1,12 @@
 import { GetUserProfileController } from './GetUserProfileController'
-import { GetUserProfileUseCase } from '../../useCases/getUserProfile/GetUserProfileUseCase'
+import { GetUserUseCase } from '../../useCases/getUser/GetUserUseCase'
 import { knexUserRepository } from '../../../../repositories/user/knexInstances'
+import { knexClinicianRepository } from '../../../../repositories/clinician/knexInstances'
 
-const getProfileUseCase = new GetUserProfileUseCase(knexUserRepository)
-const getUserProfileController = new GetUserProfileController(getProfileUseCase)
+const getUserUseCase = new GetUserUseCase(
+  knexUserRepository,
+  knexClinicianRepository,
+)
+const getUserProfileController = new GetUserProfileController(getUserUseCase)
 
 export { getUserProfileController }

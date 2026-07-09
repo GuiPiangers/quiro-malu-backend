@@ -2,10 +2,10 @@ import { Request, Response } from 'express'
 import { ApiError } from '../../../../utils/ApiError'
 import { responseError } from '../../../../utils/ResponseError'
 import type { GetUserProfileResponse } from './getUserProfileSchemas'
-import { GetUserProfileUseCase } from '../../useCases/getUserProfile/GetUserProfileUseCase'
+import { GetUserUseCase } from '../../useCases/getUser/GetUserUseCase'
 
 export class GetUserProfileController {
-  constructor(private readonly getUserProfileUseCase: GetUserProfileUseCase) {}
+  constructor(private readonly getUserUseCase: GetUserUseCase) {}
 
   async handle(request: Request, response: Response): Promise<Response> {
     try {
@@ -15,13 +15,12 @@ export class GetUserProfileController {
         throw new ApiError('Acesso não autorizado', 401, 'unauthorized')
       }
 
-      const user = await this.getUserProfileUseCase.execute({
-        userId,
+      const user = await this.getUserUseCase.execute({
+        id: userId,
         clinicId,
       })
-      const { password: _password, ...profile } = user
 
-      const body: GetUserProfileResponse = profile
+      const body: GetUserProfileResponse = user
       return response.status(200).json(body)
     } catch (err: unknown) {
       return responseError(response, err)

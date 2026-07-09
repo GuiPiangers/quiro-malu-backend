@@ -30,9 +30,6 @@ export class GetUserUseCase {
       clinicId: params.clinicId,
     })
 
-    console.log('clinician', clinician)
-    console.log('user', user)
-
     if (clinician) {
       return toClinicianUserDetail(clinician)
     }

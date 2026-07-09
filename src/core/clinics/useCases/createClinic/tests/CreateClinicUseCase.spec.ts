@@ -53,7 +53,7 @@ describe('CreateClinicUseCase', () => {
     expect(clinicRepository.save).toHaveBeenCalledTimes(1)
     expect(rbacRepository.createRole).toHaveBeenCalledTimes(1)
     expect(userRepository.save).toHaveBeenCalledTimes(1)
-    expect(clinicianRepository.setUserAsClinician).toHaveBeenCalledTimes(1)
+    expect(clinicianRepository.setAsClinician).toHaveBeenCalledTimes(1)
     expect(appEventListener.emit).toHaveBeenCalledWith(
       'user:pending_user_created',
       expect.objectContaining({
