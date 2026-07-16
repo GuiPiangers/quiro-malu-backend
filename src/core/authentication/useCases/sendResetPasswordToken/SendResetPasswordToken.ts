@@ -47,7 +47,7 @@ export class SendResetPasswordTokenUseCase {
     })
 
     await this.mailProvider.send({
-      from: 'QuiroMalu <onboarding@resend.dev>',
+      from: `QuiroMalu <${process.env.MAIL_SENDER}>`,
       to: email,
       subject: 'QuiroMalu - Redefinir senha',
       html,

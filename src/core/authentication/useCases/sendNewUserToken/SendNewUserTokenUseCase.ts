@@ -38,7 +38,7 @@ export class SendNewUserTokenUseCase {
     })
 
     await this.mailProvider.send({
-      from: 'QuiroMalu <onboarding@resend.dev>',
+      from: `QuiroMalu <${process.env.MAIL_SENDER}>`,
       to: email,
       subject: 'Bem-vindo ao QuiroMalu',
       html,
